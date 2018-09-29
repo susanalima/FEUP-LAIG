@@ -237,7 +237,7 @@ class MySceneGraph {
 
         //nao sei pode ser este o valor de default  
         this.default = this.reader.getString(viewsNode, 'default');
-        if ((this.root == null || isNaN(this.root))) {
+        if ((this.default == null || isNaN(this.default))) {
             this.default = "views_default";
             this.onXMLMinorError("unable to parse value for views default; assuming 'default = views_default'");
         }
@@ -248,11 +248,11 @@ class MySceneGraph {
                 //get the id of current perspective
                 var perspectiveId = this.reader.getString(children[i], 'id');
                 if (perspectiveId == null)
-                    return "no ID defined for perspective";
+                    return "no ID defined for view";
 
                 // Checks for repeated IDs.
                 if (this.perspectives[perspectiveId] != null)
-                    return "ID must be unique for each perspective (conflict: ID = " + perspectiveId + ")";
+                    return "ID must be unique for each view (conflict: ID = " + perspectiveId + ")";
 
                 //get the near value of current perspective
                 var near = this.reader.getFloat(children[i], 'near');
@@ -282,10 +282,10 @@ class MySceneGraph {
                 var toIndex = nodeName.indexOf("to");
 
                 if (fromIndex == -1)
-                    return "perspective from position undefined for ID = " + perspectiveId;
+                    return "perspective's from position undefined for ID = " + perspectiveId;
 
                 if (fromIndex == -1)
-                    return "perspective to position undefined for ID = " + perspectiveId;
+                    return "perspective's to position undefined for ID = " + perspectiveId;
 
                 var fromPosition = [];
                 var toPosition = [];
@@ -300,7 +300,7 @@ class MySceneGraph {
                 if (!(y != null && !isNaN(y)))
                     return "unable to parse from y-coordinate of the perspective position for ID = " + perspectiveId;
                 else
-                    fromPosition.push(x);
+                    fromPosition.push(y);
                 var z = this.reader.getFloat(grandChildren[fromIndex], 'z');
                 if (!(z != null && !isNaN(z)))
                     return "unable to parse from z-coordinate of the perspective position for ID = " + perspectiveId;
@@ -317,14 +317,14 @@ class MySceneGraph {
                 if (!(y != null && !isNaN(y)))
                     return "unable to parse to y-coordinate of the perspective position for ID = " + perspectiveId;
                 else
-                    toPosition.push(x);
+                    toPosition.push(y);
                 z = this.reader.getFloat(grandChildren[toIndex], 'z');
                 if (!(z != null && !isNaN(z)))
                     return "unable to parse to z-coordinate of the perspective position for ID = " + perspectiveId;
                 else
                     toPosition.push(z);
 
-                perspectives[perspectiveId] = [near, far, angle, fromPosition, toPosition];
+               this.perspectives[perspectiveId] = [near, far, angle, fromPosition, toPosition];
 
             }
             else {
@@ -332,11 +332,11 @@ class MySceneGraph {
                     //get the id of current ortho
                     var orthoId = this.reader.getString(children[i], 'id');
                     if (orthoId == null)
-                        return "no ID defined for ortho";
+                        return "no ID defined for view";
 
                     // Checks for repeated IDs.
                     if (this.orthos[orthoId] != null)
-                        return "ID must be unique for each ortho (conflict: ID = " + orthoId + ")";
+                        return "ID must be unique for each view (conflict: ID = " + orthoId + ")";
 
                     //get the near value of current ortho
                     var near = this.reader.getFloat(children[i], 'near');
@@ -431,7 +431,325 @@ class MySceneGraph {
    * @param {lights block element} lightsNode
    */
     parseLights(lightsNode) {
-        //TODO
+        //TODO tentar eliminar o codigo duplicado
+
+        var children = viewsNode.children;
+        this.omnis = [];
+        this.spots = [];
+        var grandChildren = [];
+        var nodeNames = [];
+        var numLights = 0;
+
+        for (var i = 0; i < children.length; i++) {
+            if (children[i].nodeName == "omni") {
+
+                //get the id of current light
+                var omniId = this.reader.getString(children[i], 'id');
+                if (omniId == null)
+                    return "no ID defined for light";
+
+                // Checks for repeated IDs.
+                if (this.omnis[omniId] != null)
+                    return "ID must be unique for each light (conflict: ID = " + omniId + ")";
+
+                //get the enabled value of current omni
+                var enabled = this.reader.getFloat(children[i], 'enabled');
+                if (enabled == null)
+                    return "no enabled defined for omni";
+
+                grandChildren = children[i].children;
+               
+                nodeNames = [];
+                for (var j = 0; j < grandChildren.length; j++) {
+                    nodeNames.push(grandChildren[j].nodeName);
+                }
+
+                var locationIndex = nodeNames.indexOf("location");
+                var ambientIndex = nodeName.indexOf("ambient");
+                var diffuseIndex = nodeNames.indexOf("diffuse");
+                var specularIndex = nodeName.indexOf("specular");
+
+                if (locationIndex == -1)
+                    return "omni's location undefined for ID = " + omniId;
+                if (ambientIndex == -1)
+                    return "omni's ambient undefined for ID = " + omniId;
+                if (diffuseIndex == -1)
+                    return "omni's diffuse undefined for ID = " + omniId;
+                if (specularIndex == -1)
+                    return "omni's specular undefined for ID = " + omniId;
+
+                var location = [];
+                var ambient = [];
+                var diffuse = [];
+                var specular = [];
+
+                //reads the location values
+                var x = this.reader.getFloat(grandChildren[locationIndex], 'x');
+                if (!(x != null && !isNaN(x)))
+                    return "unable to parse location x-coordinate of the omni position for ID = " + omniId;
+                else
+                    location.push(x);
+                var y = this.reader.getFloat(grandChildren[locationIndex], 'y');
+                if (!(y != null && !isNaN(y)))
+                    return "unable to parse location y-coordinate of the omni position for ID = " + omniId;
+                else
+                    location.push(xy);
+                var z = this.reader.getFloat(grandChildren[locationIndex], 'z');
+                if (!(z != null && !isNaN(z)))
+                    return "unable to parse location z-coordinate of the omni position for ID = " + omniId;
+                else
+                    location.push(z);
+                var w = this.reader.getFloat(grandChildren[locationIndex], 'w');
+                if (!(w != null && !isNaN(w)))
+                    return "unable to parse location w-coordinate of the omni position for ID = " + omniId;
+                else
+                    location.push(w);
+
+                //reads the ambient values
+                var r = this.reader.getFloat(grandChildren[locationIndex], 'r');
+                if (!(r != null && !isNaN(r)))
+                    return "unable to parse ambient r-value of the omni position for ID = " + omniId;
+                else
+                    ambient.push(r);
+                var g = this.reader.getFloat(grandChildren[locationIndex], 'g');
+                if (!(g != null && !isNaN(g)))
+                    return "unable to parse ambient g-value of the omni position for ID = " + omniId;
+                else
+                    ambient.push(g);
+                var b = this.reader.getFloat(grandChildren[locationIndex], 'b');
+                if (!(b != null && !isNaN(b)))
+                    return "unable to parse ambient b-value of the omni position for ID = " + omniId;
+                else
+                    ambient.push(b);
+                var a = this.reader.getFloat(grandChildren[locationIndex], 'a');
+                if (!(a != null && !isNaN(a)))
+                    return "unable to parse ambient a-value of the omni position for ID = " + omniId;
+                else
+                    ambient.push(a);
+
+                //reads the diffuse values
+                r = this.reader.getFloat(grandChildren[diffuseIndex], 'r');
+                if (!(r != null && !isNaN(r)))
+                    return "unable to parse diffuse r-value of the omni position for ID = " + omniId;
+                else
+                    diffuse.push(r);
+                g = this.reader.getFloat(grandChildren[diffuseIndex], 'g');
+                if (!(g != null && !isNaN(g)))
+                    return "unable to parse diffuse g-value of the omni position for ID = " + omniId;
+                else
+                    diffuse.push(g);
+                b = this.reader.getFloat(grandChildren[diffuseIndex], 'b');
+                if (!(b != null && !isNaN(b)))
+                    return "unable to parse diffuse b-value of the omni position for ID = " + omniId;
+                else
+                    diffuse.push(b);
+                a = this.reader.getFloat(grandChildren[diffuseIndex], 'a');
+                if (!(a != null && !isNaN(a)))
+                    return "unable to parse diffuse a-value of the omni position for ID = " + omniId;
+                else
+                    diffuse.push(a);
+
+                
+                //reads the specular values
+                r = this.reader.getFloat(grandChildren[specularIndex], 'r');
+                if (!(r != null && !isNaN(r)))
+                    return "unable to parse specular r-value of the omni position for ID = " + omniId;
+                else
+                    specular.push(r);
+                g = this.reader.getFloat(grandChildren[specularIndex], 'g');
+                if (!(g != null && !isNaN(g)))
+                    return "unable to parse specular g-value of the omni position for ID = " + omniId;
+                else
+                    specular.push(g);
+                b = this.reader.getFloat(grandChildren[specularIndex], 'b');
+                if (!(b != null && !isNaN(b)))
+                    return "unable to parse specular b-value of the omni position for ID = " + omniId;
+                else
+                    specular.push(b);
+                a = this.reader.getFloat(grandChildren[specularIndex], 'a');
+                if (!(a != null && !isNaN(a)))
+                    return "unable to parse specular a-value of the omni position for ID = " + omniId;
+                else
+                    specular.push(a);
+
+                this.omnis[omniId] = [enabled,location,ambient,diffuse,specular];
+
+            }
+            else {
+                if (children[i].nodeName == "spot") {
+                  
+                //get the id of current light
+                var spotId = this.reader.getString(children[i], 'id');
+                if (spotId == null)
+                    return "no ID defined for light";
+
+                // Checks for repeated IDs.
+                if (this.spots[spotId] != null)
+                    return "ID must be unique for each light (conflict: ID = " + spotId + ")";
+
+                //get the enabled value of current spot
+                var enabled = this.reader.getFloat(children[i], 'enabled');
+                if (enabled == null)
+                    return "no enabled defined for spot";
+
+                //get the angle value of current spot
+                var angle = this.reader.getFloat(children[i], 'angle');
+                if (angle == null)
+                    return "no angle defined for spot";
+
+                 //get the exponent value of current spot
+                 var exponent = this.reader.getFloat(children[i], 'exponent');
+                 if (exponent == null)
+                     return "no exponent defined for spot";
+
+                grandChildren = children[i].children;
+                nodeNames = [];
+                for (var j = 0; j < grandChildren.length; j++) {
+                    nodeNames.push(grandChildren[j].nodeName);
+                }
+
+                var locationIndex = nodeNames.indexOf("location");
+                var targetIndex = nodeNames.indexOf("target");
+                var ambientIndex = nodeName.indexOf("ambient");
+                var diffuseIndex = nodeNames.indexOf("diffuse");
+                var specularIndex = nodeName.indexOf("specular");
+
+                if (locationIndex == -1)
+                    return "spot's location undefined for ID = " + spotId;
+                if (targetIndex == -1)
+                    return "spot's target undefined for ID = " + spotId;
+                if (ambientIndex == -1)
+                    return "spot's ambient undefined for ID = " + spotId;
+                if (diffuseIndex == -1)
+                    return "spot's diffuse undefined for ID = " + spotId;
+                if (specularIndex == -1)
+                    return "spot's specular undefined for ID = " + spotId;
+
+                var location = [];
+                var target = [];
+                var ambient = [];
+                var diffuse = [];
+                var specular = [];
+
+                //reads the location values
+                var x = this.reader.getFloat(grandChildren[locationIndex], 'x');
+                if (!(x != null && !isNaN(x)))
+                    return "unable to parse location x-coordinate of the spot position for ID = " + spotId;
+                else
+                    location.push(x);
+                var y = this.reader.getFloat(grandChildren[locationIndex], 'y');
+                if (!(y != null && !isNaN(y)))
+                    return "unable to parse location y-coordinate of the spot position for ID = " + spotId;
+                else
+                    location.push(xy);
+                var z = this.reader.getFloat(grandChildren[locationIndex], 'z');
+                if (!(z != null && !isNaN(z)))
+                    return "unable to parse location z-coordinate of the spot position for ID = " + spotId;
+                else
+                    location.push(z);
+                var w = this.reader.getFloat(grandChildren[locationIndex], 'w');
+                if (!(w != null && !isNaN(w)))
+                    return "unable to parse location w-coordinate of the spot position for ID = " + spotId;
+                else
+                    location.push(w);
+
+                 //reads the target values
+                 x = this.reader.getFloat(grandChildren[targetIndex], 'x');
+                 if (!(x != null && !isNaN(x)))
+                     return "unable to parse target x-coordinate of the spot position for ID = " + spotId;
+                 else
+                     location.push(x);
+                 y = this.reader.getFloat(grandChildren[targetIndex], 'y');
+                 if (!(y != null && !isNaN(y)))
+                     return "unable to parse target y-coordinate of the spot position for ID = " + spotId;
+                 else
+                     location.push(xy);
+                 z = this.reader.getFloat(grandChildren[targetIndex], 'z');
+                 if (!(z != null && !isNaN(z)))
+                     return "unable to parse target z-coordinate of the spot position for ID = " + spotId;
+                 else
+                     location.push(z);
+                 
+                //reads the ambient values
+                var r = this.reader.getFloat(grandChildren[locationIndex], 'r');
+                if (!(r != null && !isNaN(r)))
+                    return "unable to parse ambient r-value of the spot position for ID = " + spotId;
+                else
+                    ambient.push(r);
+                var g = this.reader.getFloat(grandChildren[locationIndex], 'g');
+                if (!(g != null && !isNaN(g)))
+                    return "unable to parse ambient g-value of the spot position for ID = " + spotId;
+                else
+                    ambient.push(g);
+                var b = this.reader.getFloat(grandChildren[locationIndex], 'b');
+                if (!(b != null && !isNaN(b)))
+                    return "unable to parse ambient b-value of the spot position for ID = " + spotId;
+                else
+                    ambient.push(b);
+                var a = this.reader.getFloat(grandChildren[locationIndex], 'a');
+                if (!(a != null && !isNaN(a)))
+                    return "unable to parse ambient a-value of the spot position for ID = " + spotId;
+                else
+                    ambient.push(a);
+
+                //reads the diffuse values
+                r = this.reader.getFloat(grandChildren[diffuseIndex], 'r');
+                if (!(r != null && !isNaN(r)))
+                    return "unable to parse diffuse r-value of the spot position for ID = " + spotId;
+                else
+                    diffuse.push(r);
+                g = this.reader.getFloat(grandChildren[diffuseIndex], 'g');
+                if (!(g != null && !isNaN(g)))
+                    return "unable to parse diffuse g-value of the spot position for ID = " + spotId;
+                else
+                    diffuse.push(g);
+                b = this.reader.getFloat(grandChildren[diffuseIndex], 'b');
+                if (!(b != null && !isNaN(b)))
+                    return "unable to parse diffuse b-value of the spot position for ID = " + spotId;
+                else
+                    diffuse.push(b);
+                a = this.reader.getFloat(grandChildren[diffuseIndex], 'a');
+                if (!(a != null && !isNaN(a)))
+                    return "unable to parse diffuse a-value of the spot position for ID = " + spotId;
+                else
+                    diffuse.push(a);
+
+                
+                //reads the specular values
+                r = this.reader.getFloat(grandChildren[specularIndex], 'r');
+                if (!(r != null && !isNaN(r)))
+                    return "unable to parse specular r-value of the spot position for ID = " + spotId;
+                else
+                    specular.push(r);
+                g = this.reader.getFloat(grandChildren[specularIndex], 'g');
+                if (!(g != null && !isNaN(g)))
+                    return "unable to parse specular g-value of the spot position for ID = " + spotId;
+                else
+                    specular.push(g);
+                b = this.reader.getFloat(grandChildren[specularIndex], 'b');
+                if (!(b != null && !isNaN(b)))
+                    return "unable to parse specular b-value of the spot position for ID = " + spotId;
+                else
+                    specular.push(b);
+                a = this.reader.getFloat(grandChildren[specularIndex], 'a');
+                if (!(a != null && !isNaN(a)))
+                    return "unable to parse specular a-value of the spot position for ID = " + spotId;
+                else
+                    specular.push(a);
+
+                this.spots[spotId] = [enabled,angle, exponent,location,target,ambient,diffuse,specular];
+                }
+                else {
+                    this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
+                    continue;
+                }
+            }
+            numLights++;
+        }
+
+        if (numLights == 0)
+            return "at least one light must be defined";
+
         this.log("Parsed lights");
         return null;
     }
