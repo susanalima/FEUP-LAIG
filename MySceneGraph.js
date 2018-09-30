@@ -434,7 +434,7 @@ class MySceneGraph {
     parseLights(lightsNode) {
         //TODO tentar eliminar o codigo duplicado
 
-        var children = viewsNode.children;
+        var children =lightsNode.children;
         this.omnis = [];
         this.spots = [];
         var grandChildren = [];
@@ -494,7 +494,7 @@ class MySceneGraph {
                 if (!(y != null && !isNaN(y)))
                     return "unable to parse location y-coordinate of the omni position for ID = " + omniId;
                 else
-                    location.push(xy);
+                    location.push(y);
                 var z = this.reader.getFloat(grandChildren[locationIndex], 'z');
                 if (!(z != null && !isNaN(z)))
                     return "unable to parse location z-coordinate of the omni position for ID = " + omniId;
@@ -507,22 +507,22 @@ class MySceneGraph {
                     location.push(w);
 
                 //reads the ambient values
-                var r = this.reader.getFloat(grandChildren[locationIndex], 'r');
+                var r = this.reader.getFloat(grandChildren[ambientIndex], 'r');
                 if (!(r != null && !isNaN(r)))
                     return "unable to parse ambient r-value of the omni position for ID = " + omniId;
                 else
                     ambient.push(r);
-                var g = this.reader.getFloat(grandChildren[locationIndex], 'g');
+                var g = this.reader.getFloat(grandChildren[ambientIndex], 'g');
                 if (!(g != null && !isNaN(g)))
                     return "unable to parse ambient g-value of the omni position for ID = " + omniId;
                 else
                     ambient.push(g);
-                var b = this.reader.getFloat(grandChildren[locationIndex], 'b');
+                var b = this.reader.getFloat(grandChildren[ambientIndex], 'b');
                 if (!(b != null && !isNaN(b)))
                     return "unable to parse ambient b-value of the omni position for ID = " + omniId;
                 else
                     ambient.push(b);
-                var a = this.reader.getFloat(grandChildren[locationIndex], 'a');
+                var a = this.reader.getFloat(grandChildren[ambientIndex], 'a');
                 if (!(a != null && !isNaN(a)))
                     return "unable to parse ambient a-value of the omni position for ID = " + omniId;
                 else
@@ -642,7 +642,7 @@ class MySceneGraph {
                 if (!(y != null && !isNaN(y)))
                     return "unable to parse location y-coordinate of the spot position for ID = " + spotId;
                 else
-                    location.push(xy);
+                    location.push(y);
                 var z = this.reader.getFloat(grandChildren[locationIndex], 'z');
                 if (!(z != null && !isNaN(z)))
                     return "unable to parse location z-coordinate of the spot position for ID = " + spotId;
@@ -664,7 +664,7 @@ class MySceneGraph {
                  if (!(y != null && !isNaN(y)))
                      return "unable to parse target y-coordinate of the spot position for ID = " + spotId;
                  else
-                     location.push(xy);
+                     location.push(y);
                  z = this.reader.getFloat(grandChildren[targetIndex], 'z');
                  if (!(z != null && !isNaN(z)))
                      return "unable to parse target z-coordinate of the spot position for ID = " + spotId;
@@ -672,22 +672,22 @@ class MySceneGraph {
                      location.push(z);
                  
                 //reads the ambient values
-                var r = this.reader.getFloat(grandChildren[locationIndex], 'r');
+                var r = this.reader.getFloat(grandChildren[ambientIndex], 'r');
                 if (!(r != null && !isNaN(r)))
                     return "unable to parse ambient r-value of the spot position for ID = " + spotId;
                 else
                     ambient.push(r);
-                var g = this.reader.getFloat(grandChildren[locationIndex], 'g');
+                var g = this.reader.getFloat(grandChildren[ambientIndex], 'g');
                 if (!(g != null && !isNaN(g)))
                     return "unable to parse ambient g-value of the spot position for ID = " + spotId;
                 else
                     ambient.push(g);
-                var b = this.reader.getFloat(grandChildren[locationIndex], 'b');
+                var b = this.reader.getFloat(grandChildren[ambientIndex], 'b');
                 if (!(b != null && !isNaN(b)))
                     return "unable to parse ambient b-value of the spot position for ID = " + spotId;
                 else
                     ambient.push(b);
-                var a = this.reader.getFloat(grandChildren[locationIndex], 'a');
+                var a = this.reader.getFloat(grandChildren[ambientIndex], 'a');
                 if (!(a != null && !isNaN(a)))
                     return "unable to parse ambient a-value of the spot position for ID = " + spotId;
                 else
