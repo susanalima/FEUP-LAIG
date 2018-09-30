@@ -89,7 +89,7 @@ class MySceneGraph {
         if ((index = nodeNames.indexOf("scene")) == -1)
             return "tag <scene> missing";
         else {
-            if (index != INITIALS_INDEX)
+            if (index != SCENE_INDEX)
                 this.onXMLMinorError("tag <scene> out of order");
 
             //Parse scene block
@@ -237,6 +237,7 @@ class MySceneGraph {
 
         //nao sei pode ser este o valor de default  
         this.default = this.reader.getString(viewsNode, 'default');
+        //acho que este isNaN nao devia estar aqui
         if ((this.default == null || isNaN(this.default))) {
             this.default = "views_default";
             this.onXMLMinorError("unable to parse value for views default; assuming 'default = views_default'");
@@ -270,7 +271,7 @@ class MySceneGraph {
                     return "no angle defined for perspective";
 
                 grandChildren = children[i].children;
-                if (grandChildren.length() != 2)
+                if (grandChildren.length != 2)
                     return "incorrect number of children of perspective";
 
                 nodeNames = [];
@@ -279,7 +280,7 @@ class MySceneGraph {
                 }
 
                 var fromIndex = nodeNames.indexOf("from");
-                var toIndex = nodeName.indexOf("to");
+                var toIndex = nodeNames.indexOf("to");
 
                 if (fromIndex == -1)
                     return "perspective's from position undefined for ID = " + perspectiveId;
@@ -393,12 +394,12 @@ class MySceneGraph {
         this.ambientAmbient = [];
         this.backgroundAmbient = [];
         var children = ambientNode.children;
-        var nodeName = [];
+        var nodeNames = [];
         for (var i = 0; i < children.length; i++)
             nodeNames.push(children[i].nodeName);
 
-        var ambientIndex = nodeName.indexOf("ambient");
-        var backgroundIndex = nodeName.indexOf("background");
+        var ambientIndex = nodeNames.indexOf("ambient");
+        var backgroundIndex = nodeNames.indexOf("background");
 
         //validar ambientIndex e backgroundIndex saber se retorna com erro ou se da valores de default
 
@@ -465,9 +466,9 @@ class MySceneGraph {
                 }
 
                 var locationIndex = nodeNames.indexOf("location");
-                var ambientIndex = nodeName.indexOf("ambient");
+                var ambientIndex = nodeNames.indexOf("ambient");
                 var diffuseIndex = nodeNames.indexOf("diffuse");
-                var specularIndex = nodeName.indexOf("specular");
+                var specularIndex = nodeNames.indexOf("specular");
 
                 if (locationIndex == -1)
                     return "omni's location undefined for ID = " + omniId;
@@ -610,9 +611,9 @@ class MySceneGraph {
 
                 var locationIndex = nodeNames.indexOf("location");
                 var targetIndex = nodeNames.indexOf("target");
-                var ambientIndex = nodeName.indexOf("ambient");
+                var ambientIndex = nodeNames.indexOf("ambient");
                 var diffuseIndex = nodeNames.indexOf("diffuse");
-                var specularIndex = nodeName.indexOf("specular");
+                var specularIndex = nodeNames.indexOf("specular");
 
                 if (locationIndex == -1)
                     return "spot's location undefined for ID = " + spotId;
