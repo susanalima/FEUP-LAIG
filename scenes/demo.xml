@@ -14,7 +14,7 @@
 
  <ambient>
  	<ambient r="0.3" g="0.2" b="0.1" a="0.4" />
- 	<background r="0.1" g="0.4" b="0.4" a="0.5" />
+ 	<background r="0.1" g="0.4" b="0.6" a="0.5" />
  </ambient>
 
  <lights>
@@ -37,12 +37,12 @@
 	 <texture id="t1" file="/images/leaves.jpg" />
  </textures>
 
- <materials>
+<materials>
  	<material id="mat1" shininess = "0.5" >
 		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
-		 <ambientr= "0.2" g="0.2" b="0.2" a="0.3" />
-		 <diffuse "0.4" g="0.4" b="0.4" a="0.5" />
-		 <specular "0.2" g="0.2" b="0.2" a="0.5" />
+		 <ambient r="0.2" g="0.2" b="0.2" a="0.3" />
+		 <diffuse r="0.4" g="0.4" b="ff" a="0.4" />
+		 <specular r="0.2" g="0.2" b="0.2" a="0.5" />
 	 </material>
  </materials>
 
