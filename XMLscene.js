@@ -81,14 +81,16 @@ class XMLscene extends CGFscene {
      * As loading is asynchronous, this may be called already after the application has started the run loop
      */
     onGraphLoaded() {
-        this.camera.near = this.graph.near;
-        this.camera.far = this.graph.far;
+       // this.camera.near = this.graph.near;
+       // this.camera.far = this.graph.far;
 
-        //TODO: Change reference length according to parsed graph
-        //this.axis = new CGFaxis(this, this.graph.referenceLength);
+        //Change reference length according to parsed graph
+       this.axis = new CGFaxis(this, this.graph.axisLength);
 
         // TODO: Change ambient and background details according to parsed graph
-
+         //changes de background color
+        this.gl.clearColor(this.graph.backgroundAmbient[0], this.graph.backgroundAmbient[1], this.graph.backgroundAmbient[2], this.graph.backgroundAmbient[3]);
+        
         this.initLights();
 
         // Adds lights group.
