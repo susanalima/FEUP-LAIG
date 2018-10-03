@@ -210,7 +210,7 @@ class MySceneGraph {
         this.root = this.reader.getString(sceneNode, 'root');
         this.axisLength = this.reader.getFloat(sceneNode, 'axis_length');
 
-        if ((this.root == null || isNaN(this.root))) {
+        if (this.root == null) {
             this.root = "scene_root";
             this.onXMLMinorError("unable to parse value for scene root; assuming 'root = scene_root'");
         }
@@ -238,7 +238,7 @@ class MySceneGraph {
         //nao sei pode ser este o valor de default  
         this.default = this.reader.getString(viewsNode, 'default');
         //acho que este isNaN nao devia estar aqui
-        if ((this.default == null || isNaN(this.default))) {
+        if (this.default == null) {
             this.default = "views_default";
             this.onXMLMinorError("unable to parse value for views default; assuming 'default = views_default'");
         }
@@ -948,7 +948,7 @@ class MySceneGraph {
         }
 
         if (numMaterials == 0)
-        return "at least one material must be defined";
+            return "at least one material must be defined";
 
 
         this.log("Parsed materials");
@@ -961,7 +961,86 @@ class MySceneGraph {
      * @param {transformations block element} transformationsNode
      */
     parseTransformations(transformationsNode) {
-        //TODO
+        var children = transformationsNode.children;
+        this.transformations = [];
+        var numTransformations = 0;
+        var grandChildren = [];
+        var nodeNames = [];
+        var translations = [];
+        var rotations = [];
+        var scales = [];
+        for (var i = 0; i < children.length; i++) {
+            if (children[i].nodeName == "transformation") {
+                translations = [];
+                rotations = [];
+                scales = [];    
+                var numT = 0;
+                //get the id of current transformation
+                var transformationId = this.reader.getString(children[i], 'id');
+                if (transformationId == null)
+                    return "no ID defined for transformation";
+
+                // Checks for repeated IDs.
+                if (this.transformations[transformationId] != null)
+                    return "ID must be unique for each transformation (conflict: ID = " + transformationId + ")";
+                
+                grandChildren = children[i].children;
+                nodeNames = [];
+                for (var j = 0; j < grandChildren.length; j++) {
+                    nodeNames.push(grandChildren[j].nodeName);
+                }
+
+                for (var j = 0; j < grandChildren.length; j++) 
+                {
+                   var nodeName = grandChildren[j].nodeName;
+                   switch(nodeName)
+                   {
+                       case "translate":
+                       var translate = [];
+                       var x = this.reader.getFloat(grandChildren[j],'x');
+                       var y = this.reader.getFloat(grandChildren[j],'y');
+                       var z = this.reader.getFloat(grandChildren[j],'z');
+                       translate.push(x,y,z);
+                       translations.push(translate);
+                       numT++;
+                       break;
+                       case "rotate":
+                       var rotate = [];
+                       var axis = this.reader.getString(grandChildren[j],'axis');
+                       var angle = this.reader.getFloat(grandChildren[j],'angle');
+                       rotate.push(axis,angle);
+                       rotations.push(rotate);
+                       numT++;
+                       break;
+                       case "scale":
+                       var scale = [];
+                       var x = this.reader.getFloat(grandChildren[j],'x');
+                       var y = this.reader.getFloat(grandChildren[j],'y');
+                       var z = this.reader.getFloat(grandChildren[j],'z');
+                       scale.push(x,y,z);
+                       scales.push(scale);
+                       numT++;
+                       break;
+                       default:
+                       this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
+                       break;
+                   }
+                }
+                if (numT == 0)
+                return "at least one transformation must be defined";
+
+                this.transformations[transformationId] = [translations,rotations,scales];
+            }
+            else {
+                this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
+                continue;
+            }
+            numTransformations++;
+        }
+
+        if (numTransformations == 0)
+            return "at least one transformation must be defined";
+
         this.log("Parsed transformations");
         return null;
     }
