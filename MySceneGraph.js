@@ -1051,7 +1051,128 @@ class MySceneGraph {
      * @param {primitives block element} primitivesNode
      */
     parsePrimitives(primitivesNode) {
-        //TODO
+        //Important new arrays should be added according to new primitives
+        var children = primitivesNode.children;
+        this.primitives = [];
+        var numPrimitives = 0;
+        var grandChildren = [];
+        var nodeNames = [];
+        var triangles = [];
+        var rectangles = [];
+        var spheres = [];
+        var cylinders = [];
+        var torus = [];
+        for(var i = 0; i < children.length(); i++){
+            if(children[i].nodeName == "primitive")
+            {
+                var triangles = [];
+                var rectangles = [];
+                var spheres = [];
+                var cylinders = [];
+                var torus2 = [];
+                var numP = 0;
+                
+                var primitiveId = this.reader.getString(children[i], 'id');
+                if(primitiveId = null)
+                    return "no Id defined for primitive";
+                if(this.primitives[primitiveId] != null)
+                    return "Id must be unique for each primitive  (conflict: ID = " + primitiveId + ")";
+
+                grandChildren = children[i].children;
+                nodeNames = [];
+
+                for(var j = 0; j < grandChildren.length; j++)
+                {
+                    nodeNames.push(grandChildren[j].nodeName);
+                }
+
+                for(var j = 0; j < grandChildren.length; j++){
+                    var nodeName = grandChildren[j].nodeName;
+                   switch(nodeName)
+                   {
+                       case "triangle":
+                       var triangle = [];
+                       var x = this.reader.getFloat(grandChildren[j],'x1');
+                       var y = this.reader.getFloat(grandChildren[j],'y1');
+                       var z = this.reader.getFloat(grandChildren[j],'z1');
+                       triangle.push(x,y,z);
+                       var x = this.reader.getFloat(grandChildren[j],'x2');
+                       var y = this.reader.getFloat(grandChildren[j],'y2');
+                       var z = this.reader.getFloat(grandChildren[j],'z2');
+                       triangle.push(x,y,z);
+                       var x = this.reader.getFloat(grandChildren[j],'x3');
+                       var y = this.reader.getFloat(grandChildren[j],'y3');
+                       var z = this.reader.getFloat(grandChildren[j],'z3');
+                       triangle.push(x,y,z);
+                       triangles.push(triangle);
+                       numP++;
+                       break;
+
+                       case "rectangle":
+                       var rectangle = [];
+                       var x = this.reader.getFloat(grandChildren[j],'x1');
+                       var y = this.reader.getFloat(grandChildren[j],'y1');
+                       rectangle.push(x,y);
+                       var x = this.reader.getFloat(grandChildren[j],'x2');
+                       var y = this.reader.getFloat(grandChildren[j],'y2');
+                       rectangle.push(x,y);
+                       rectangles.push(rectangle);
+                       numP++;
+                       break;
+
+                       case "cylinder":
+                       var cylinder = [];
+                       var base = this.reader.getFloat(grandChildren[j],'base');
+                       var top = this.reader.getFloat(grandChildren[j],'top');
+                       var height = this.reader.getFloat(grandChildren[j],'height');
+                       var stacks = this.reader.getInt(grandChildren[j],'stacks');
+                       var slices = this.reader.getInt(grandChildren[j],'slices');
+                       cylinder.push(base,top,height,stacks,slices);
+                       cylinders.push(cylinder);
+                       numP++;
+                       break;
+                       
+                       case "sphere":
+                       var sphere = [];
+                       var radius = this.reader.getFloat(grandChildren[j],'radius');
+                       var stacks = this.reader.getInt(grandChildren[j],'stacks');
+                       var slices = this.reader.getInt(grandChildren[j],'slices');
+                       sphere.push(radius,stacks,slices);
+                       spheres.push(sphere);
+                       numP++;
+                       break;
+
+                       case "torus":
+                       var torus = [];
+                       var inner = this.reader.getFloat(grandChildren[j],'inner');
+                       var outer = this.reader.getFloat(grandChildren[j],'outer');
+                       var slices = this.reader.getInt(grandChildren[j],'slices');
+                       var loops = this.reader.getInt(grandChildren[j],'loops');
+                       torus.push(inner,outer,slices,loops);
+                       torus2.push(torus);
+                       numP++;
+                       break;
+
+                       default:
+                       this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
+                       break;
+                   }
+                }
+                if(numP == 0)
+                return "at least one primitive must be defined";
+
+                this.primitives[primitiveId] = [triangles, rectangles, cylinders, spheres, torus2];
+
+            }
+            else{
+                this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
+                continue;
+            }
+            numPrimitives++;
+        }
+        if (numPrimitives == 0)
+        return "at least one primitive must be defined";
+
         this.log("Parsed primitives");
         return null;
     }
@@ -1062,7 +1183,7 @@ class MySceneGraph {
      * @param {components block element} componentsNode
      */
     parseComponents(componentsNode) {
-        //TODO
+        
         this.log("Parsed components");
         return null;
     }
