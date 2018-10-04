@@ -851,94 +851,94 @@ class MySceneGraph {
                 //reads the emission values
                 var r = this.reader.getFloat(grandChildren[emissionIndex], 'r');
                 if (!(r != null && !isNaN(r)))
-                     return "unable to parse emission r-value of ambient for ID = " + materialId;
+                    return "unable to parse emission r-value of ambient for ID = " + materialId;
                 else
                     emission.push(r);
                 var g = this.reader.getFloat(grandChildren[emissionIndex], 'g');
                 if (!(g != null && !isNaN(g)))
-                     return "unable to parse emission g-value of ambient for ID = " + materialId;
+                    return "unable to parse emission g-value of ambient for ID = " + materialId;
                 else
                     emission.push(g);
                 var b = this.reader.getFloat(grandChildren[emissionIndex], 'b');
                 if (!(b != null && !isNaN(b)))
-                     return "unable to parse emission b-value of ambient for ID = " + materialId;
+                    return "unable to parse emission b-value of ambient for ID = " + materialId;
                 else
-                     emission.push(b);
+                    emission.push(b);
                 var a = this.reader.getFloat(grandChildren[emissionIndex], 'a');
                 if (!(a != null && !isNaN(a)))
                     return "unable to parse emission a-value of ambient for ID = " + materialId;
                 else
-                     emission.push(a);
+                    emission.push(a);
 
 
-                 //reads the ambient values
-                  r = this.reader.getFloat(grandChildren[ambientIndex], 'r');
-                 if (!(r != null && !isNaN(r)))
-                     return "unable to parse ambient r-value of ambient for ID = " + materialId;
-                 else
-                     ambient.push(r);
-                 g = this.reader.getFloat(grandChildren[ambientIndex], 'g');
-                 if (!(g != null && !isNaN(g)))
-                     return "unable to parse ambient g-value of ambient for ID = " + materialId;
-                 else
-                     ambient.push(g);
-                 b = this.reader.getFloat(grandChildren[ambientIndex], 'b');
-                 if (!(b != null && !isNaN(b)))
-                     return "unable to parse ambient b-value of ambient for ID = " + materialId;
-                 else
-                     ambient.push(b);
-                 a = this.reader.getFloat(grandChildren[ambientIndex], 'a');
-                 if (!(a != null && !isNaN(a)))
-                     return "unable to parse ambient a-value of ambient for ID = " + materialId;
-                 else
-                     ambient.push(a);
+                //reads the ambient values
+                r = this.reader.getFloat(grandChildren[ambientIndex], 'r');
+                if (!(r != null && !isNaN(r)))
+                    return "unable to parse ambient r-value of ambient for ID = " + materialId;
+                else
+                    ambient.push(r);
+                g = this.reader.getFloat(grandChildren[ambientIndex], 'g');
+                if (!(g != null && !isNaN(g)))
+                    return "unable to parse ambient g-value of ambient for ID = " + materialId;
+                else
+                    ambient.push(g);
+                b = this.reader.getFloat(grandChildren[ambientIndex], 'b');
+                if (!(b != null && !isNaN(b)))
+                    return "unable to parse ambient b-value of ambient for ID = " + materialId;
+                else
+                    ambient.push(b);
+                a = this.reader.getFloat(grandChildren[ambientIndex], 'a');
+                if (!(a != null && !isNaN(a)))
+                    return "unable to parse ambient a-value of ambient for ID = " + materialId;
+                else
+                    ambient.push(a);
 
-                 //reads the diffuse values
-                 r = this.reader.getFloat(grandChildren[diffuseIndex], 'r');
-                 if (!(r != null && !isNaN(r)))
-                     return "unable to parse diffuse r-value of diffuse for ID = " + materialId;
-                 else
-                     diffuse.push(r);
-                 g = this.reader.getFloat(grandChildren[diffuseIndex], 'g');
-                 if (!(g != null && !isNaN(g)))
-                     return "unable to parse diffuse g-value of the diffuse for ID = " + materialId;
-                 else
-                     diffuse.push(g);
-                 b = this.reader.getFloat(grandChildren[diffuseIndex], 'b');
-                 if (!(b != null && !isNaN(b)))
-                     return "unable to parse diffuse b-value of the diffuse for ID = " + materialId;
-                 else
-                     diffuse.push(b);
-                 a = this.reader.getFloat(grandChildren[diffuseIndex], 'a');
-                 if (!(a != null && !isNaN(a)))
-                     return "unable to parse diffuse a-value of the diffuse for ID = " + materialId;
-                 else
-                     diffuse.push(a);
+                //reads the diffuse values
+                r = this.reader.getFloat(grandChildren[diffuseIndex], 'r');
+                if (!(r != null && !isNaN(r)))
+                    return "unable to parse diffuse r-value of diffuse for ID = " + materialId;
+                else
+                    diffuse.push(r);
+                g = this.reader.getFloat(grandChildren[diffuseIndex], 'g');
+                if (!(g != null && !isNaN(g)))
+                    return "unable to parse diffuse g-value of the diffuse for ID = " + materialId;
+                else
+                    diffuse.push(g);
+                b = this.reader.getFloat(grandChildren[diffuseIndex], 'b');
+                if (!(b != null && !isNaN(b)))
+                    return "unable to parse diffuse b-value of the diffuse for ID = " + materialId;
+                else
+                    diffuse.push(b);
+                a = this.reader.getFloat(grandChildren[diffuseIndex], 'a');
+                if (!(a != null && !isNaN(a)))
+                    return "unable to parse diffuse a-value of the diffuse for ID = " + materialId;
+                else
+                    diffuse.push(a);
 
 
-                 //reads the specular values
-                 r = this.reader.getFloat(grandChildren[specularIndex], 'r');
-                 if (!(r != null && !isNaN(r)))
-                     return "unable to parse specular r-value of specular for ID = " + materialId;
-                 else
-                     specular.push(r);
-                 g = this.reader.getFloat(grandChildren[specularIndex], 'g');
-                 if (!(g != null && !isNaN(g)))
-                     return "unable to parse specular g-value of specular for ID = " + materialId;
-                 else
-                     specular.push(g);
-                 b = this.reader.getFloat(grandChildren[specularIndex], 'b');
-                 if (!(b != null && !isNaN(b)))
-                     return "unable to parse specular b-value of specularfor ID = " + materialId;
-                 else
-                     specular.push(b);
-                 a = this.reader.getFloat(grandChildren[specularIndex], 'a');
-                 if (!(a != null && !isNaN(a)))
-                     return "unable to parse specular a-value of specular for ID = " + materialId;
-                 else
-                     specular.push(a);
+                //reads the specular values
+                r = this.reader.getFloat(grandChildren[specularIndex], 'r');
+                if (!(r != null && !isNaN(r)))
+                    return "unable to parse specular r-value of specular for ID = " + materialId;
+                else
+                    specular.push(r);
+                g = this.reader.getFloat(grandChildren[specularIndex], 'g');
+                if (!(g != null && !isNaN(g)))
+                    return "unable to parse specular g-value of specular for ID = " + materialId;
+                else
+                    specular.push(g);
+                b = this.reader.getFloat(grandChildren[specularIndex], 'b');
+                if (!(b != null && !isNaN(b)))
+                    return "unable to parse specular b-value of specularfor ID = " + materialId;
+                else
+                    specular.push(b);
+                a = this.reader.getFloat(grandChildren[specularIndex], 'a');
+                if (!(a != null && !isNaN(a)))
+                    return "unable to parse specular a-value of specular for ID = " + materialId;
+                else
+                    specular.push(a);
 
-                this.materials[materialId] = [shininess,emission,ambient,diffuse,specular];
+                this.materials[materialId] = [shininess, emission, ambient, diffuse, specular];
             }
             else {
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
@@ -973,7 +973,7 @@ class MySceneGraph {
             if (children[i].nodeName == "transformation") {
                 translations = [];
                 rotations = [];
-                scales = [];    
+                scales = [];
                 var numT = 0;
                 //get the id of current transformation
                 var transformationId = this.reader.getString(children[i], 'id');
@@ -983,53 +983,51 @@ class MySceneGraph {
                 // Checks for repeated IDs.
                 if (this.transformations[transformationId] != null)
                     return "ID must be unique for each transformation (conflict: ID = " + transformationId + ")";
-                
+
                 grandChildren = children[i].children;
                 nodeNames = [];
                 for (var j = 0; j < grandChildren.length; j++) {
                     nodeNames.push(grandChildren[j].nodeName);
                 }
 
-                for (var j = 0; j < grandChildren.length; j++) 
-                {
-                   var nodeName = grandChildren[j].nodeName;
-                   switch(nodeName)
-                   {
-                       case "translate":
-                       var translate = [];
-                       var x = this.reader.getFloat(grandChildren[j],'x');
-                       var y = this.reader.getFloat(grandChildren[j],'y');
-                       var z = this.reader.getFloat(grandChildren[j],'z');
-                       translate.push(x,y,z);
-                       translations.push(translate);
-                       numT++;
-                       break;
-                       case "rotate":
-                       var rotate = [];
-                       var axis = this.reader.getString(grandChildren[j],'axis');
-                       var angle = this.reader.getFloat(grandChildren[j],'angle');
-                       rotate.push(axis,angle);
-                       rotations.push(rotate);
-                       numT++;
-                       break;
-                       case "scale":
-                       var scale = [];
-                       var x = this.reader.getFloat(grandChildren[j],'x');
-                       var y = this.reader.getFloat(grandChildren[j],'y');
-                       var z = this.reader.getFloat(grandChildren[j],'z');
-                       scale.push(x,y,z);
-                       scales.push(scale);
-                       numT++;
-                       break;
-                       default:
-                       this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
-                       break;
-                   }
+                for (var j = 0; j < grandChildren.length; j++) {
+                    var nodeName = grandChildren[j].nodeName;
+                    switch (nodeName) {
+                        case "translate":
+                            var translate = [];
+                            var x = this.reader.getFloat(grandChildren[j], 'x');
+                            var y = this.reader.getFloat(grandChildren[j], 'y');
+                            var z = this.reader.getFloat(grandChildren[j], 'z');
+                            translate.push(x, y, z);
+                            translations.push(translate);
+                            numT++;
+                            break;
+                        case "rotate":
+                            var rotate = [];
+                            var axis = this.reader.getString(grandChildren[j], 'axis');
+                            var angle = this.reader.getFloat(grandChildren[j], 'angle');
+                            rotate.push(axis, angle);
+                            rotations.push(rotate);
+                            numT++;
+                            break;
+                        case "scale":
+                            var scale = [];
+                            var x = this.reader.getFloat(grandChildren[j], 'x');
+                            var y = this.reader.getFloat(grandChildren[j], 'y');
+                            var z = this.reader.getFloat(grandChildren[j], 'z');
+                            scale.push(x, y, z);
+                            scales.push(scale);
+                            numT++;
+                            break;
+                        default:
+                            this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
+                            break;
+                    }
                 }
                 if (numT == 0)
-                return "at least one transformation must be defined";
+                    return "at least one transformation must be defined";
 
-                this.transformations[transformationId] = [translations,rotations,scales];
+                this.transformations[transformationId] = [translations, rotations, scales];
             }
             else {
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
@@ -1045,7 +1043,7 @@ class MySceneGraph {
         return null;
     }
 
-
+    //nao existe get int
     /**
      * Parses the <primitives> node.
      * @param {primitives block element} primitivesNode
@@ -1053,125 +1051,111 @@ class MySceneGraph {
     parsePrimitives(primitivesNode) {
         //Important new arrays should be added according to new primitives
         var children = primitivesNode.children;
-        this.primitives = [];
+        //this.primitives = [];
         var numPrimitives = 0;
         var grandChildren = [];
         var nodeNames = [];
-        var triangles = [];
-        var rectangles = [];
-        var spheres = [];
-        var cylinders = [];
-        var torus = [];
-        for(var i = 0; i < children.length(); i++){
-            if(children[i].nodeName == "primitive")
-            {
-                var triangles = [];
-                var rectangles = [];
-                var spheres = [];
-                var cylinders = [];
-                var torus2 = [];
-                var numP = 0;
-                
+        this.triangles = [];
+        this.rectangles = [];
+        this.spheres = [];
+        this.cylinders = [];
+        this.torus = [];
+        for (var i = 0; i < children.length; i++) {
+            if (children[i].nodeName == "primitive") {
+
+
                 var primitiveId = this.reader.getString(children[i], 'id');
-                if(primitiveId = null)
+                if (primitiveId == null)
                     return "no Id defined for primitive";
-                if(this.primitives[primitiveId] != null)
+                if (this.triangles[primitiveId] != null || this.rectangles[primitiveId] != null || this.spheres[primitiveId] != null
+                    || this.cylinders[primitiveId] != null || this.torus[primitiveId] != null)
                     return "Id must be unique for each primitive  (conflict: ID = " + primitiveId + ")";
 
                 grandChildren = children[i].children;
                 nodeNames = [];
 
-                for(var j = 0; j < grandChildren.length; j++)
-                {
+                for (var j = 0; j < grandChildren.length; j++) {
                     nodeNames.push(grandChildren[j].nodeName);
                 }
+                var nodeName = grandChildren[0].nodeName;
+                switch (nodeName) {
+                    case "triangle":
+                        var triangle = [];
+                        var x = this.reader.getFloat(grandChildren[0], 'x1');
+                        var y = this.reader.getFloat(grandChildren[0], 'y1');
+                        var z = this.reader.getFloat(grandChildren[0], 'z1');
+                        triangle.push(x, y, z);
+                        var x = this.reader.getFloat(grandChildren[0], 'x2');
+                        var y = this.reader.getFloat(grandChildren[0], 'y2');
+                        var z = this.reader.getFloat(grandChildren[0], 'z2');
+                        triangle.push(x, y, z);
+                        var x = this.reader.getFloat(grandChildren[0], 'x3');
+                        var y = this.reader.getFloat(grandChildren[0], 'y3');
+                        var z = this.reader.getFloat(grandChildren[0], 'z3');
+                        triangle.push(x, y, z);
+                        this.triangles[primitiveId] = [triangle];
+                        break;
 
-                for(var j = 0; j < grandChildren.length; j++){
-                    var nodeName = grandChildren[j].nodeName;
-                   switch(nodeName)
-                   {
-                       case "triangle":
-                       var triangle = [];
-                       var x = this.reader.getFloat(grandChildren[j],'x1');
-                       var y = this.reader.getFloat(grandChildren[j],'y1');
-                       var z = this.reader.getFloat(grandChildren[j],'z1');
-                       triangle.push(x,y,z);
-                       var x = this.reader.getFloat(grandChildren[j],'x2');
-                       var y = this.reader.getFloat(grandChildren[j],'y2');
-                       var z = this.reader.getFloat(grandChildren[j],'z2');
-                       triangle.push(x,y,z);
-                       var x = this.reader.getFloat(grandChildren[j],'x3');
-                       var y = this.reader.getFloat(grandChildren[j],'y3');
-                       var z = this.reader.getFloat(grandChildren[j],'z3');
-                       triangle.push(x,y,z);
-                       triangles.push(triangle);
-                       numP++;
-                       break;
+                    case "rectangle":
+                        var rectangle = [];
+                        var x = this.reader.getFloat(grandChildren[0], 'x1');
+                        var y = this.reader.getFloat(grandChildren[0], 'y1');
+                        rectangle.push(x, y);
+                        var x = this.reader.getFloat(grandChildren[0], 'x2');
+                        var y = this.reader.getFloat(grandChildren[0], 'y2');
+                        rectangle.push(x, y);
+                        this.rectangles[primitiveId] = [rectangle];
+                        break;
 
-                       case "rectangle":
-                       var rectangle = [];
-                       var x = this.reader.getFloat(grandChildren[j],'x1');
-                       var y = this.reader.getFloat(grandChildren[j],'y1');
-                       rectangle.push(x,y);
-                       var x = this.reader.getFloat(grandChildren[j],'x2');
-                       var y = this.reader.getFloat(grandChildren[j],'y2');
-                       rectangle.push(x,y);
-                       rectangles.push(rectangle);
-                       numP++;
-                       break;
+                    case "cylinder":
+                        var cylinder = [];
+                        var base = this.reader.getFloat(grandChildren[0], 'base');
+                        var top = this.reader.getFloat(grandChildren[0], 'top');
+                        var height = this.reader.getFloat(grandChildren[0], 'height');
+                        var stacks = this.reader.getFloat(grandChildren[0], 'stacks');
+                        var slices = this.reader.getFloat(grandChildren[0], 'slices');
+                        cylinder.push(base, top, height, stacks, slices);
+                        this.cylinders[primitiveId] = [cylinder];
+                        break;
 
-                       case "cylinder":
-                       var cylinder = [];
-                       var base = this.reader.getFloat(grandChildren[j],'base');
-                       var top = this.reader.getFloat(grandChildren[j],'top');
-                       var height = this.reader.getFloat(grandChildren[j],'height');
-                       var stacks = this.reader.getInt(grandChildren[j],'stacks');
-                       var slices = this.reader.getInt(grandChildren[j],'slices');
-                       cylinder.push(base,top,height,stacks,slices);
-                       cylinders.push(cylinder);
-                       numP++;
-                       break;
-                       
-                       case "sphere":
-                       var sphere = [];
-                       var radius = this.reader.getFloat(grandChildren[j],'radius');
-                       var stacks = this.reader.getInt(grandChildren[j],'stacks');
-                       var slices = this.reader.getInt(grandChildren[j],'slices');
-                       sphere.push(radius,stacks,slices);
-                       spheres.push(sphere);
-                       numP++;
-                       break;
+                    case "sphere":
+                        var sphere = [];
+                        var radius = this.reader.getFloat(grandChildren[0], 'radius');
+                        var stacks = this.reader.getFloat(grandChildren[0], 'stacks');
+                        var slices = this.reader.getFloat(grandChildren[0], 'slices');
+                        sphere.push(radius, stacks, slices);
+                        this.spheres[primitiveId] = [sphere];
+                        break;
 
-                       case "torus":
-                       var torus = [];
-                       var inner = this.reader.getFloat(grandChildren[j],'inner');
-                       var outer = this.reader.getFloat(grandChildren[j],'outer');
-                       var slices = this.reader.getInt(grandChildren[j],'slices');
-                       var loops = this.reader.getInt(grandChildren[j],'loops');
-                       torus.push(inner,outer,slices,loops);
-                       torus2.push(torus);
-                       numP++;
-                       break;
+                    case "torus":
+                        var g_torus = [];
+                        var inner = this.reader.getFloat(grandChildren[0], 'inner');
+                        var outer = this.reader.getFloat(grandChildren[0], 'outer');
+                        var slices = this.reader.getFloat(grandChildren[0], 'slices');
+                        var loops = this.reader.getFloat(grandChildren[0], 'loops');
+                        g_torus.push(inner, outer, slices, loops);
+                        this.torus[primitiveId] = [g_torus];
+                        break;
 
-                       default:
-                       this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
-                       break;
-                   }
+                    default:
+                        this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
+                        break;
                 }
-                if(numP == 0)
-                return "at least one primitive must be defined";
 
-                this.primitives[primitiveId] = [triangles, rectangles, cylinders, spheres, torus2];
+                /* if(numP == 0)
+                 return "at least one primitive must be defined";
+ 
+                 this.primitives[primitiveId] = [triangles, rectangles, cylinders, spheres, torus2];*/
 
             }
-            else{
+            else {
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
                 continue;
             }
             numPrimitives++;
         }
         if (numPrimitives == 0)
-        return "at least one primitive must be defined";
+            return "at least one primitive must be defined";
 
         this.log("Parsed primitives");
         return null;
@@ -1183,7 +1167,7 @@ class MySceneGraph {
      * @param {components block element} componentsNode
      */
     parseComponents(componentsNode) {
-        
+
         this.log("Parsed components");
         return null;
     }
