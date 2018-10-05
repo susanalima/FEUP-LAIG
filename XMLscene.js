@@ -42,6 +42,8 @@ class XMLscene extends CGFscene {
     initCameras() {
         this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
     }
+
+
     /**
      * Initializes the scene lights with the values read from the XML file.
      */
@@ -50,13 +52,13 @@ class XMLscene extends CGFscene {
         // Lights index.
 
         // Reads the lights from the scene graph.
-        for (var key in this.graph.lights) {
+        for (var key in this.graph.omnis) {
             if (i >= 8)
                 break;              // Only eight lights allowed by WebGL.
 
-            if (this.graph.lights.hasOwnProperty(key)) {
-                var light = this.graph.lights[key];
-
+            if (this.graph.omnis.hasOwnProperty(key)) {
+                var light = this.graph.omnis[key];
+                console.dir(light);
                 //lights are predefined in cgfscene
                 this.lights[i].setPosition(light[1][0], light[1][1], light[1][2], light[1][3]);
                 this.lights[i].setAmbient(light[2][0], light[2][1], light[2][2], light[2][3]);
@@ -64,6 +66,7 @@ class XMLscene extends CGFscene {
                 this.lights[i].setSpecular(light[4][0], light[4][1], light[4][2], light[4][3]);
 
                 this.lights[i].setVisible(true);
+
                 if (light[0])
                     this.lights[i].enable();
                 else
@@ -81,20 +84,20 @@ class XMLscene extends CGFscene {
      * As loading is asynchronous, this may be called already after the application has started the run loop
      */
     onGraphLoaded() {
-       // this.camera.near = this.graph.near;
-       // this.camera.far = this.graph.far;
+        // this.camera.near = this.graph.near;
+        // this.camera.far = this.graph.far;
 
         //Change reference length according to parsed graph
-       this.axis = new CGFaxis(this, this.graph.axisLength);
+        this.axis = new CGFaxis(this, this.graph.axisLength);
 
-        // TODO: Change ambient and background details according to parsed graph
-         //changes de background color
+        //Change ambient and background details according to parsed graph
         this.gl.clearColor(this.graph.backgroundAmbient[0], this.graph.backgroundAmbient[1], this.graph.backgroundAmbient[2], this.graph.backgroundAmbient[3]);
-        
+        this.setGlobalAmbientLight(this.graph.ambientAmbient[0], this.graph.ambientAmbient[1], this.graph.ambientAmbient[2], this.graph.ambientAmbient[3]);
+
         this.initLights();
 
         // Adds lights group.
-        this.interface.addLightsGroup(this.graph.lights);
+        this.interface.addLightsGroup(this.graph.omnis);
 
         this.sceneInited = true;
     }
