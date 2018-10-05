@@ -1225,8 +1225,8 @@ class MySceneGraph {
 
                                     case "rotate":
                                         var rotate = [];
-                                        var axis = this.reader.getString(ggrandChildren[j], 'axis');
-                                        var angle = this.reader.getFloat(ggrandChildren[j], 'angle');
+                                        var axis = this.reader.getString(ggrandChildren[k], 'axis');
+                                        var angle = this.reader.getFloat(ggrandChildren[k], 'angle');
                                         rotate.push(axis, angle);
                                         transformation.push(rotate);
                                         numT++;
@@ -1234,9 +1234,9 @@ class MySceneGraph {
                                     
                                     case "scale":
                                         var scale = [];
-                                        var x = this.reader.getFloat(ggrandChildren[j], 'x');
-                                        var y = this.reader.getFloat(ggrandChildren[j], 'y');
-                                        var z = this.reader.getFloat(ggrandChildren[j], 'z');
+                                        var x = this.reader.getFloat(ggrandChildren[k], 'x');
+                                        var y = this.reader.getFloat(ggrandChildren[k], 'y');
+                                        var z = this.reader.getFloat(ggrandChildren[k], 'z');
                                         scale.push(x, y, z);
                                         transformation.push(scale);
                                         numT++;
