@@ -1180,13 +1180,6 @@ class MySceneGraph {
         this.components2 = [];
         this.children = [];
 
-       //this variables will be moved
-      
-        var numText = 0; // number of textures
-        var numP = 0; // number of primitives
-        var numComp = 0; // number of components
-
-
         for(var i = 0; i < children.length; i++)
         {
             if(children[i].nodeName == "component"){
@@ -1279,10 +1272,39 @@ class MySceneGraph {
                             break;
                         
                         case "children":
+                            var numP = 0; // number of primitives
+                            var numComp = 0; // number of components
+                            for(var k = 0; k < ggrandChildren.length; k++)
+                            {
+                                var nodeName2 = ggrandChildren[k].nodeName;
+                                switch(nodeName2){
+                                    case "componentref":
+                                        var idC = this.reader.getString(ggrandChildren[k], 'id');
+                                        this.components2.push(idC);
+                                        numComp++;
+                                        break;
+                                    case "primitiveref":
+                                        var idP = this.reader.getString(ggrandChildren[k], 'id');
+                                        this.primitives.push(idP);
+                                        numP++;
+                                        break;
+                                    default:
+                                        this.onXMLMinorError("unknown tag <" + ggrandChildren[k].nodeName + ">");
+                                        break;
+                                }
+                            }
+                          children.push(primitives);
+                          children.push(components2);
+                          break;
+                        
+                        default:
+                            this.onXMLMinorError("unknown tag <" + grandChildren[j].nodeName + ">");
+                            break;
                     }
                 }
             }
-
+            else
+                this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
         }
         this.log("Parsed components");
         return null;
