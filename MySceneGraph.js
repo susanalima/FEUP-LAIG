@@ -1168,6 +1168,99 @@ class MySceneGraph {
      */
     parseComponents(componentsNode) {
 
+        var children = primitivesNode.children;
+        this.components = [];
+        var numComponents = 0;
+        var grandChildren = [];
+        var nodeNames = [];
+        this.transformations = [];
+        this.materials = [];
+        this.textures = [];
+        this.primitives = [];
+        this.components2 = [];
+        this.children = [];
+
+       //this variables will be moved
+        var numM = 0; //number of materials
+        var numText = 0; // number of textures
+        var numP = 0; // number of primitives
+        var numComp = 0; // number of components
+
+
+        for(var i = 0; i < children.length; i++)
+        {
+            if(children[i].nodeName == "component"){
+                var componentId = this.reader.getString(children[i], "id");
+                if(componentId == null)
+                    return "no Id defined for component";
+                
+                grandChildren = children[i].children;
+                nodeNames = [];
+
+                for(var j = 0; j < grandChildren.length; j++){
+                    nodeNames.push(grandChildren[j].nodeName);
+                }
+                for(var j = 0; j < grandChildren.length; j++){    
+                    
+                    var nodeName = grandChildren[j].nodeName;
+                    var ggrandChildren = grandChildren[j].children; //g(rand)grandchildren
+                    
+                    switch(nodeName){
+                        case "transformation":
+                            var numT = 0; //number of transformations
+                            var transformation = [];
+                            for(var k = 0; k < ggrandChildren.length; k++){
+                                var nodeName2 = ggrandChildren[k].nodeName;
+                                switch(nodeName2){
+                                    case "transformationref":
+                                        //var transformationRef = [];
+                                        var tref = this.reader.getString(ggrandChildren[k], 'id');
+                                        //transformationRef.push(tref)
+                                        //transformation.push(transformationRef);
+                                        transformation.push(tref);
+                                        break;
+
+                                    case "translate":
+                                        var translate = [];
+                                        var x = this.reader.getFloat(ggrandChildren[k], 'x');
+                                        var y = this.reader.getFloat(ggrandChildren[k], 'y');
+                                        var z = this.reader.getFloat(ggrandChildren[k], 'z');
+                                        translate.push(x,y,z);
+                                        transformation.push(translate);
+                                        numT++
+                                        break;
+
+                                    case "rotate":
+                                        var rotate = [];
+                                        var axis = this.reader.getString(grandChildren[j], 'axis');
+                                        var angle = this.reader.getFloat(grandChildren[j], 'angle');
+                                        rotate.push(axis, angle);
+                                        transformation.push(rotate);
+                                        numT++;
+                                        break;
+                                    
+                                    case "scale":
+                                        var scale = [];
+                                        var x = this.reader.getFloat(grandChildren[j], 'x');
+                                        var y = this.reader.getFloat(grandChildren[j], 'y');
+                                        var z = this.reader.getFloat(grandChildren[j], 'z');
+                                        scale.push(x, y, z);
+                                        transformation.push(scale);
+                                        numT++;
+                                        break;
+                                    default:
+                                        this.onXMLMinorError("unknown tag <" + ggrandChildren[k].nodeName + ">");
+                                        break;
+                                }
+                           }
+                           break;
+
+                          // case "materials":
+                    }
+                }
+            }
+        }
+
         this.log("Parsed components");
         return null;
     }

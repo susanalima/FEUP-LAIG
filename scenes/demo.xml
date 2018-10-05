@@ -119,10 +119,12 @@
 
 
 		<texture id="t1" length_s="2" length_t="1" />
-			 <children>
-				 <componentref id="comp2" />
-				 <primitiveref id="prim1" />
-			 </children>
+		
+		<children>
+			<componentref id="comp2" />
+			<primitiveref id="prim1" />
+		</children>
+	 
 	 </component>
  </components>
  
