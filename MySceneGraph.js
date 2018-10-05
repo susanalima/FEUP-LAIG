@@ -1173,15 +1173,15 @@ class MySceneGraph {
         var numComponents = 0;
         var grandChildren = [];
         var nodeNames = [];
-        this.transformations = [];
-        this.materials = [];
-        this.textures = [];
+        this.transformation = [];
+        this.materials = []; 
+        this.texture = [];  
         this.primitives = [];
         this.components2 = [];
         this.children = [];
 
        //this variables will be moved
-        var numM = 0; //number of materials
+      
         var numText = 0; // number of textures
         var numP = 0; // number of primitives
         var numComp = 0; // number of components
@@ -1232,8 +1232,8 @@ class MySceneGraph {
 
                                     case "rotate":
                                         var rotate = [];
-                                        var axis = this.reader.getString(grandChildren[j], 'axis');
-                                        var angle = this.reader.getFloat(grandChildren[j], 'angle');
+                                        var axis = this.reader.getString(ggrandChildren[j], 'axis');
+                                        var angle = this.reader.getFloat(ggrandChildren[j], 'angle');
                                         rotate.push(axis, angle);
                                         transformation.push(rotate);
                                         numT++;
@@ -1241,9 +1241,9 @@ class MySceneGraph {
                                     
                                     case "scale":
                                         var scale = [];
-                                        var x = this.reader.getFloat(grandChildren[j], 'x');
-                                        var y = this.reader.getFloat(grandChildren[j], 'y');
-                                        var z = this.reader.getFloat(grandChildren[j], 'z');
+                                        var x = this.reader.getFloat(ggrandChildren[j], 'x');
+                                        var y = this.reader.getFloat(ggrandChildren[j], 'y');
+                                        var z = this.reader.getFloat(ggrandChildren[j], 'z');
                                         scale.push(x, y, z);
                                         transformation.push(scale);
                                         numT++;
@@ -1255,12 +1255,35 @@ class MySceneGraph {
                            }
                            break;
 
-                          // case "materials":
+                        case "materials":
+                            var numM = 0; //number of materials
+                            for(var k = 0; k < ggrandChildren.length; k++){
+                                var nodeName2 = ggrandChildren[k].nodeName;
+                                if(nodeName2 == "material")
+                                {
+                                    var id = this.reader.getString(ggrandChildren[k], 'id');
+                                    materials.push(id);
+                                    numM++;
+                                }
+                                else
+                                    this.onXMLMinorError("unknown tag <" + ggrandChildren[k].nodeName + ">");
+
+                            }
+                            break;
+                        
+                        case "texture":
+                            var id = this.reader.getString(grandChildren[j], 'id');
+                            var s = this.reader.getInt(grandChildren[j], 'length_s');
+                            var t = this.reader.getInt(grandChildren[j], 'length_t');
+                            texture.push(id,s,t);
+                            break;
+                        
+                        case "children":
                     }
                 }
             }
-        }
 
+        }
         this.log("Parsed components");
         return null;
     }
