@@ -1168,7 +1168,7 @@ class MySceneGraph {
      */
     parseComponents(componentsNode) {
 
-        var children = primitivesNode.children;
+        var children = componentsNode.children;
         this.components = [];
         var numComponents = 0;
         var grandChildren = [];
@@ -1255,7 +1255,7 @@ class MySceneGraph {
                                 if(nodeName2 == "material")
                                 {
                                     var id = this.reader.getString(ggrandChildren[k], 'id');
-                                    materials.push(id);
+                                    this.materials.push(id);
                                     numM++;
                                 }
                                 else
@@ -1266,9 +1266,9 @@ class MySceneGraph {
                         
                         case "texture":
                             var id = this.reader.getString(grandChildren[j], 'id');
-                            var s = this.reader.getInt(grandChildren[j], 'length_s');
-                            var t = this.reader.getInt(grandChildren[j], 'length_t');
-                            texture.push(id,s,t);
+                            var s = this.reader.getFloat(grandChildren[j], 'length_s');
+                            var t = this.reader.getFloat(grandChildren[j], 'length_t');
+                            this.texture.push(id,s,t);
                             break;
                         
                         case "children":
@@ -1293,8 +1293,8 @@ class MySceneGraph {
                                         break;
                                 }
                             }
-                          children.push(primitives);
-                          children.push(components2);
+                          this.children.push(this.primitives);
+                          this.children.push(this.components2);
                           break;
                         
                         default:
