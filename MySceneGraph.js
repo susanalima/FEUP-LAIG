@@ -1161,6 +1161,18 @@ class MySceneGraph {
         return null;
     }
 
+    /*
+    1) nao guarda cada component individualmente 
+    ex: this.componets[componentId] = [transformations, materials, textures, etc...]
+    2) tem umas variaves que nunca sao usadas
+    ex: numT, numM....
+    3) uma transformation ou tem transformationref ou um bloco com transformaçoes nao pode ter as duas
+    4) se nas transformations tiver um bloco de transformacoes e as diferentes transformacoes forem guardadas 
+    individualmente nesse bloco, vai ser impossivel le las sem saber a ordem delas...
+    tem que se guardar as rotacoes num array de rotacoes, os scales num array de scales...etc, e depois guardar esses
+    arrays dentro do array transformations (de modo a definir qual a posicao do array transformations vai 
+    corresponder a cada tipo de transformacao ) ou usar uma struct....
+    */
 
     /**
      * Parses the <components> node.
@@ -1174,37 +1186,36 @@ class MySceneGraph {
         var grandChildren = [];
         var nodeNames = [];
         this.transformation = [];
-        this.materials = []; 
-        this.texture = [];  
+        this.materials = [];
+        this.texture = [];
         this.primitives = [];
         this.components2 = [];
         this.children = [];
 
-        for(var i = 0; i < children.length; i++)
-        {
-            if(children[i].nodeName == "component"){
+        for (var i = 0; i < children.length; i++) {
+            if (children[i].nodeName == "component") {
                 var componentId = this.reader.getString(children[i], "id");
-                if(componentId == null)
+                if (componentId == null)
                     return "no Id defined for component";
-                
+
                 grandChildren = children[i].children;
                 nodeNames = [];
 
-                for(var j = 0; j < grandChildren.length; j++){
+                for (var j = 0; j < grandChildren.length; j++) {
                     nodeNames.push(grandChildren[j].nodeName);
                 }
-                for(var j = 0; j < grandChildren.length; j++){    
-                    
+                for (var j = 0; j < grandChildren.length; j++) {
+
                     var nodeName = grandChildren[j].nodeName;
                     var ggrandChildren = grandChildren[j].children; //g(rand)grandchildren
-                    
-                    switch(nodeName){
+
+                    switch (nodeName) {
                         case "transformation":
                             var numT = 0; //number of transformations
                             var transformation = [];
-                            for(var k = 0; k < ggrandChildren.length; k++){
+                            for (var k = 0; k < ggrandChildren.length; k++) {
                                 var nodeName2 = ggrandChildren[k].nodeName;
-                                switch(nodeName2){
+                                switch (nodeName2) {
                                     case "transformationref":
                                         //var transformationRef = [];
                                         var tref = this.reader.getString(ggrandChildren[k], 'id');
@@ -1218,7 +1229,7 @@ class MySceneGraph {
                                         var x = this.reader.getFloat(ggrandChildren[k], 'x');
                                         var y = this.reader.getFloat(ggrandChildren[k], 'y');
                                         var z = this.reader.getFloat(ggrandChildren[k], 'z');
-                                        translate.push(x,y,z);
+                                        translate.push(x, y, z);
                                         transformation.push(translate);
                                         numT++
                                         break;
@@ -1231,7 +1242,7 @@ class MySceneGraph {
                                         transformation.push(rotate);
                                         numT++;
                                         break;
-                                    
+
                                     case "scale":
                                         var scale = [];
                                         var x = this.reader.getFloat(ggrandChildren[k], 'x');
@@ -1245,15 +1256,14 @@ class MySceneGraph {
                                         this.onXMLMinorError("unknown tag <" + ggrandChildren[k].nodeName + ">");
                                         break;
                                 }
-                           }
-                           break;
+                            }
+                            break;
 
                         case "materials":
                             var numM = 0; //number of materials
-                            for(var k = 0; k < ggrandChildren.length; k++){
+                            for (var k = 0; k < ggrandChildren.length; k++) {
                                 var nodeName2 = ggrandChildren[k].nodeName;
-                                if(nodeName2 == "material")
-                                {
+                                if (nodeName2 == "material") {
                                     var id = this.reader.getString(ggrandChildren[k], 'id');
                                     this.materials.push(id);
                                     numM++;
@@ -1263,21 +1273,20 @@ class MySceneGraph {
 
                             }
                             break;
-                        
+
                         case "texture":
                             var id = this.reader.getString(grandChildren[j], 'id');
                             var s = this.reader.getFloat(grandChildren[j], 'length_s');
                             var t = this.reader.getFloat(grandChildren[j], 'length_t');
-                            this.texture.push(id,s,t);
+                            this.texture.push(id, s, t);
                             break;
-                        
+
                         case "children":
                             var numP = 0; // number of primitives
                             var numComp = 0; // number of components
-                            for(var k = 0; k < ggrandChildren.length; k++)
-                            {
+                            for (var k = 0; k < ggrandChildren.length; k++) {
                                 var nodeName2 = ggrandChildren[k].nodeName;
-                                switch(nodeName2){
+                                switch (nodeName2) {
                                     case "componentref":
                                         var idC = this.reader.getString(ggrandChildren[k], 'id');
                                         this.components2.push(idC);
@@ -1293,10 +1302,10 @@ class MySceneGraph {
                                         break;
                                 }
                             }
-                          this.children.push(this.primitives);
-                          this.children.push(this.components2);
-                          break;
-                        
+                            this.children.push(this.primitives);
+                            this.children.push(this.components2);
+                            break;
+
                         default:
                             this.onXMLMinorError("unknown tag <" + grandChildren[j].nodeName + ">");
                             break;
