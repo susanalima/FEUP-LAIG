@@ -997,10 +997,7 @@ class MySceneGraph {
 
 
     /*
-    1) nao guarda cada component individualmente 
-    ex: this.componets[componentId] = [transformations, materials, textures, etc...]
-    2) tem umas variaves que nunca sao usadas
-    ex: numT, numM....
+  
     3) uma transformation ou tem transformationref ou um bloco com transformaçoes nao pode ter as duas
     4) se nas transformations tiver um bloco de transformacoes e as diferentes transformacoes forem guardadas 
     individualmente nesse bloco, vai ser impossivel le las sem saber a ordem delas...
@@ -1020,14 +1017,9 @@ class MySceneGraph {
         var numComponents = 0;
         var grandChildren = [];
         var nodeNames = [];
-        this.transformation = [];
-        this.materials = [];
-        this.texture = [];
-        this.primitives = [];
-        this.components2 = [];
-        this.children = [];
-
+        
         for (var i = 0; i < children.length; i++) {
+            var component = [];
             if (children[i].nodeName == "component") {
                 var componentId = this.reader.getString(children[i], "id");
                 if (componentId == null)
@@ -1043,22 +1035,21 @@ class MySceneGraph {
 
                     var nodeName = grandChildren[j].nodeName;
                     var ggrandChildren = grandChildren[j].children; //g(rand)grandchildren
-
                     switch (nodeName) {
                         case "transformation":
-                            var numT = 0; //number of transformations
                             var transformation = [];
                             for (var k = 0; k < ggrandChildren.length; k++) {
                                 var nodeName2 = ggrandChildren[k].nodeName;
+                                if(nodeName == "transformationref")
+                                {
+                                       //var transformationRef = [];
+                                       var tref = this.reader.getString(ggrandChildren[k], 'id');
+                                       //transformationRef.push(tref)
+                                       //transformation.push(transformationRef);
+                                       transformation.push(tref);
+                                }
+                                else{
                                 switch (nodeName2) {
-                                    case "transformationref":
-                                        //var transformationRef = [];
-                                        var tref = this.reader.getString(ggrandChildren[k], 'id');
-                                        //transformationRef.push(tref)
-                                        //transformation.push(transformationRef);
-                                        transformation.push(tref);
-                                        break;
-
                                     case "translate":
                                         var translate = [];
                                         var x = this.reader.getFloat(ggrandChildren[k], 'x');
@@ -1066,7 +1057,6 @@ class MySceneGraph {
                                         var z = this.reader.getFloat(ggrandChildren[k], 'z');
                                         translate.push(x, y, z);
                                         transformation.push(translate);
-                                        numT++
                                         break;
 
                                     case "rotate":
@@ -1075,7 +1065,6 @@ class MySceneGraph {
                                         var angle = this.reader.getFloat(ggrandChildren[k], 'angle');
                                         rotate.push(axis, angle);
                                         transformation.push(rotate);
-                                        numT++;
                                         break;
 
                                     case "scale":
@@ -1085,23 +1074,23 @@ class MySceneGraph {
                                         var z = this.reader.getFloat(ggrandChildren[k], 'z');
                                         scale.push(x, y, z);
                                         transformation.push(scale);
-                                        numT++;
                                         break;
                                     default:
                                         this.onXMLMinorError("unknown tag <" + ggrandChildren[k].nodeName + ">");
                                         break;
+                                    }
                                 }
                             }
                             break;
 
                         case "materials":
                             var numM = 0; //number of materials
+                            var materials = [];
                             for (var k = 0; k < ggrandChildren.length; k++) {
                                 var nodeName2 = ggrandChildren[k].nodeName;
                                 if (nodeName2 == "material") {
                                     var id = this.reader.getString(ggrandChildren[k], 'id');
-                                    this.materials.push(id);
-                                    numM++;
+                                    materials.push(id);
                                 }
                                 else
                                     this.onXMLMinorError("unknown tag <" + ggrandChildren[k].nodeName + ">");
@@ -1110,35 +1099,37 @@ class MySceneGraph {
                             break;
 
                         case "texture":
+                            var texture = [];
                             var id = this.reader.getString(grandChildren[j], 'id');
                             var s = this.reader.getFloat(grandChildren[j], 'length_s');
                             var t = this.reader.getFloat(grandChildren[j], 'length_t');
-                            this.texture.push(id, s, t);
+                            texture.push(id, s, t);
                             break;
 
                         case "children":
                             var numP = 0; // number of primitives
                             var numComp = 0; // number of components
+                            var children =[];
+                            var primitives =[];
+                            var components2 = [];
                             for (var k = 0; k < ggrandChildren.length; k++) {
                                 var nodeName2 = ggrandChildren[k].nodeName;
                                 switch (nodeName2) {
                                     case "componentref":
                                         var idC = this.reader.getString(ggrandChildren[k], 'id');
-                                        this.components2.push(idC);
-                                        numComp++;
+                                        components2.push(idC);
                                         break;
                                     case "primitiveref":
                                         var idP = this.reader.getString(ggrandChildren[k], 'id');
-                                        this.primitives.push(idP);
-                                        numP++;
+                                        primitives.push(idP);
                                         break;
                                     default:
                                         this.onXMLMinorError("unknown tag <" + ggrandChildren[k].nodeName + ">");
                                         break;
                                 }
                             }
-                            this.children.push(this.primitives);
-                            this.children.push(this.components2);
+                            children.push(primitives);
+                            children.push(components2);
                             break;
 
                         default:
@@ -1149,6 +1140,10 @@ class MySceneGraph {
             }
             else
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
+            
+            component.push(transformation, materials, texture, transformation, children);
+            numComponents++;
+            this.components.push(component);
         }
         this.log("Parsed components");
         return null;
