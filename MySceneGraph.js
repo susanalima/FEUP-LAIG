@@ -292,24 +292,24 @@ class MySceneGraph {
                 var toPosition = [];
 
                 //reads the from position
-                var {x,y,z} = this.parsePointXYZ(grandChildren,'x','y','z',fromIndex);
-                if(!this.validateFloat(x))
-                     return "unable to parse from x-coordinate of the perspective position for ID = " + perspectiveId;
-                if(!this.validateFloat(y))
-                     return "unable to parse from y-coordinate of the perspective position for ID = " + perspectiveId;
-                if(!this.validateFloat(z))
-                     return "unable to parse from z-coordinate of the perspective position for ID = " + perspectiveId;
-                fromPosition.push(x,y,z);
+                var { x, y, z } = this.parsePointXYZ(grandChildren, 'x', 'y', 'z', fromIndex);
+                if (!this.validateFloat(x))
+                    return "unable to parse from x-coordinate of the perspective position for ID = " + perspectiveId;
+                if (!this.validateFloat(y))
+                    return "unable to parse from y-coordinate of the perspective position for ID = " + perspectiveId;
+                if (!this.validateFloat(z))
+                    return "unable to parse from z-coordinate of the perspective position for ID = " + perspectiveId;
+                fromPosition.push(x, y, z);
 
                 //reads the to position
-                var {x,y,z} = this.parsePointXYZ(grandChildren,'x','y','z',toIndex);
-                if(!this.validateFloat(x))
+                var { x, y, z } = this.parsePointXYZ(grandChildren, 'x', 'y', 'z', toIndex);
+                if (!this.validateFloat(x))
                     return "unable to parse to x-coordinate of the perspective position for ID = " + perspectiveId;
-                if(!this.validateFloat(y))
+                if (!this.validateFloat(y))
                     return "unable to parse to y-coordinate of the perspective position for ID = " + perspectiveId;
-                if(!this.validateFloat(z))
+                if (!this.validateFloat(z))
                     return "unable to parse to z-coordinate of the perspective position for ID = " + perspectiveId;
-                toPosition.push(x,y,z);
+                toPosition.push(x, y, z);
 
                 this.perspectives[perspectiveId] = [near, far, angle, fromPosition, toPosition];
 
@@ -372,7 +372,6 @@ class MySceneGraph {
         return null;
     }
 
-    //falta validar
     /**
     * Parses the <ambient> block. 
     * @param {ambient block element} ambientNode
@@ -388,15 +387,46 @@ class MySceneGraph {
         var ambientIndex = nodeNames.indexOf("ambient");
         var backgroundIndex = nodeNames.indexOf("background");
 
-        //validar ambientIndex e backgroundIndex saber se retorna com erro ou se da valores de default
+        //get and validate the ambient values
+        var { x, y, z, w } = this.parsePointRGBA(children, ambientIndex);
+        if (!this.validateFloat(x)) {
+            x = 0;
+            this.onXMLMinorError("unable to parse r-value for ambient ambient; assuming 'r = 0'");
+        }
+        if (!this.validateFloat(y)) {
+            y = 0;
+            this.onXMLMinorError("unable to parse g-value for ambient ambient; assuming 'g = 0'");
+        }
+        if (!this.validateFloat(z)) {
+            z = 0;
+            this.onXMLMinorError("unable to parse b-value for ambient ambient; assuming 'b = 0'");
+        }
+        if (!this.validateFloat(w)) {
+            w = 1;
+            this.onXMLMinorError("unable to parse a-value for ambient ambient; assuming 'a = 1'");
+        }
+        this.ambientAmbient.push(x, y, z, w);
 
+        //get and validate the backgound values
+        var { x, y, z, w } = this.parsePointRGBA(children, backgroundIndex);
+        if (!this.validateFloat(x)) {
+            x = 0;
+            this.onXMLMinorError("unable to parse r-value for ambient background; assuming 'r = 0'");
+        }
+        if (!this.validateFloat(y)) {
+            y = 0;
+            this.onXMLMinorError("unable to parse g-value for ambient background; assuming 'g = 0'");
+        }
+        if (!this.validateFloat(z)) {
+            z = 0;
+            this.onXMLMinorError("unable to parse b-value for ambient background; assuming 'b = 0'");
+        }
+        if (!this.validateFloat(w)) {
+            w = 1;
+            this.onXMLMinorError("unable to parse a-value for ambient background; assuming 'a = 1'");
+        }
+        this.backgroundAmbient.push(x, y, z, w);
 
-        var {x,y,z,w} = this.parsePointRGBA(children,ambientIndex);
-        this.ambientAmbient.push(x,y,z,w);
-     
-        var {x,y,z,w} = this.parsePointRGBA(children,backgroundIndex);
-        this.backgroundAmbient.push(x,y,z,w);
-    
         this.log("Parsed ambient");
         return null;
     }
@@ -460,21 +490,52 @@ class MySceneGraph {
                 var specular = [];
 
                 //reads the location values 
-                var{x,y,z,w} = this.parsePointXYZW(grandChildren,'x','y','z','w',locationIndex);
-                location.push(x,y,z,w);
+                var { x, y, z, w } = this.parsePointXYZW(grandChildren, 'x', 'y', 'z', 'w', locationIndex);
+                if (!this.validateFloat(x))
+                    return "unable to parse location x-coordinate of the omni for ID = " + omniId;
+                if (!this.validateFloat(y))
+                    return "unable to parse location y-coordinate of the omni for ID = " + omniId;
+                if (!this.validateFloat(z))
+                    return "unable to parse location z-coordinate of the omni for ID = " + omniId;
+                if (!this.validateFloat(w))
+                    return "unable to parse location w-coordinate of the omni for ID = " + omniId;
+                location.push(x, y, z, w);
 
                 //reads the ambient values
-                var{x,y,z,w} = this.parsePointRGBA(grandChildren,ambientIndex);
-                ambient.push(x,y,z,w);
-               
+                var { x, y, z, w } = this.parsePointRGBA(grandChildren, ambientIndex);
+                if (!this.validateFloat(x))
+                    return "unable to parse ambient r-value of the omni for ID = " + omniId;
+                if (!this.validateFloat(y))
+                    return "unable to parse ambient g-value of the omni for ID = " + omniId;
+                if (!this.validateFloat(z))
+                    return "unable to parse ambient b-value of the omni for ID = " + omniId;
+                if (!this.validateFloat(w))
+                    return "unable to parse ambient a-value of the omni for ID = " + omniId;
+                ambient.push(x, y, z, w);
+
                 //reads the diffuse values 
-                var{x,y,z,w} = this.parsePointRGBA(grandChildren,diffuseIndex);
-                diffuse.push(x,y,z,w);
-     
+                var { x, y, z, w } = this.parsePointRGBA(grandChildren, diffuseIndex);
+                if (!this.validateFloat(x))
+                    return "unable to parse diffuse r-value of the omni for ID = " + omniId;
+                if (!this.validateFloat(y))
+                    return "unable to parse diffuse g-value of the omni for ID = " + omniId;
+                if (!this.validateFloat(z))
+                    return "unable to parse diffuse b-value of the omni for ID = " + omniId;
+                if (!this.validateFloat(w))
+                    return "unable to parse diffuse a-value of the omni for ID = " + omniId;
+                diffuse.push(x, y, z, w);
+
                 //reads the specular values
-                var{x,y,z,w} = this.parsePointRGBA(grandChildren,specularIndex);
-                specular.push(x,y,z,w);
-          
+                var { x, y, z, w } = this.parsePointRGBA(grandChildren, specularIndex);
+                if (!this.validateFloat(x))
+                    return "unable to parse specular r-value of the omni for ID = " + omniId;
+                if (!this.validateFloat(y))
+                    return "unable to parse specular g-value of the omni for ID = " + omniId;
+                if (!this.validateFloat(z))
+                    return "unable to parse specular b-value of the omni for ID = " + omniId;
+                if (!this.validateFloat(w))
+                    return "unable to parse specular a-value of the omni for ID = " + omniId;
+                specular.push(x, y, z, w);
 
 
                 this.omnis[omniId] = [enabled, location, ambient, diffuse, specular];
@@ -537,110 +598,62 @@ class MySceneGraph {
                     var specular = [];
 
                     //reads the location values
-                    var x = this.reader.getFloat(grandChildren[locationIndex], 'x');
-                    if (!(x != null && !isNaN(x)))
-                        return "unable to parse location x-coordinate of the spot position for ID = " + spotId;
-                    else
-                        location.push(x);
-                    var y = this.reader.getFloat(grandChildren[locationIndex], 'y');
-                    if (!(y != null && !isNaN(y)))
-                        return "unable to parse location y-coordinate of the spot position for ID = " + spotId;
-                    else
-                        location.push(y);
-                    var z = this.reader.getFloat(grandChildren[locationIndex], 'z');
-                    if (!(z != null && !isNaN(z)))
-                        return "unable to parse location z-coordinate of the spot position for ID = " + spotId;
-                    else
-                        location.push(z);
-                    var w = this.reader.getFloat(grandChildren[locationIndex], 'w');
-                    if (!(w != null && !isNaN(w)))
-                        return "unable to parse location w-coordinate of the spot position for ID = " + spotId;
-                    else
-                        location.push(w);
+                    var { x, y, z, w } = this.parsePointXYZW(grandChildren, 'x', 'y', 'z', 'w', locationIndex);
+                    if (!this.validateFloat(x))
+                        return "unable to parse location x-coordinate of the spot for ID = " + spotId;
+                    if (!this.validateFloat(y))
+                        return "unable to parse location y-coordinate of the spot for ID = " + spotId;
+                    if (!this.validateFloat(z))
+                        return "unable to parse location z-coordinate of the spot for ID = " + spotId;
+                    if (!this.validateFloat(w))
+                        return "unable to parse location w-coordinate of the spot for ID = " + spotId;
+                    location.push(x, y, z, w);
 
                     //reads the target values
-                    x = this.reader.getFloat(grandChildren[targetIndex], 'x');
-                    if (!(x != null && !isNaN(x)))
-                        return "unable to parse target x-coordinate of the spot position for ID = " + spotId;
-                    else
-                        location.push(x);
-                    y = this.reader.getFloat(grandChildren[targetIndex], 'y');
-                    if (!(y != null && !isNaN(y)))
-                        return "unable to parse target y-coordinate of the spot position for ID = " + spotId;
-                    else
-                        location.push(y);
-                    z = this.reader.getFloat(grandChildren[targetIndex], 'z');
-                    if (!(z != null && !isNaN(z)))
-                        return "unable to parse target z-coordinate of the spot position for ID = " + spotId;
-                    else
-                        location.push(z);
+                    var { x, y, z} = this.parsePointXYZ(grandChildren, 'x', 'y', 'z', targetIndex);
+                    if (!this.validateFloat(x))
+                        return "unable to parse target x-coordinate of the spot for ID = " + spotId;
+                    if (!this.validateFloat(y))
+                        return "unable to parse target y-coordinate of the spot for ID = " + spotId;
+                    if (!this.validateFloat(z))
+                        return "unable to parse target z-coordinate of the spot for ID = " + spotId;
+                    target.push(x, y, z);
 
                     //reads the ambient values
-                    var r = this.reader.getFloat(grandChildren[ambientIndex], 'r');
-                    if (!(r != null && !isNaN(r)))
-                        return "unable to parse ambient r-value of the spot position for ID = " + spotId;
-                    else
-                        ambient.push(r);
-                    var g = this.reader.getFloat(grandChildren[ambientIndex], 'g');
-                    if (!(g != null && !isNaN(g)))
-                        return "unable to parse ambient g-value of the spot position for ID = " + spotId;
-                    else
-                        ambient.push(g);
-                    var b = this.reader.getFloat(grandChildren[ambientIndex], 'b');
-                    if (!(b != null && !isNaN(b)))
-                        return "unable to parse ambient b-value of the spot position for ID = " + spotId;
-                    else
-                        ambient.push(b);
-                    var a = this.reader.getFloat(grandChildren[ambientIndex], 'a');
-                    if (!(a != null && !isNaN(a)))
-                        return "unable to parse ambient a-value of the spot position for ID = " + spotId;
-                    else
-                        ambient.push(a);
+                    var { x, y, z, w } = this.parsePointRGBA(grandChildren, ambientIndex);
+                    if (!this.validateFloat(x))
+                        return "unable to parse ambient r-value of the spot for ID = " + spotId;
+                    if (!this.validateFloat(y))
+                        return "unable to parse ambient g-value of the spot for ID = " + spotId;
+                    if (!this.validateFloat(z))
+                        return "unable to parse ambient b-value of the spot for ID = " + spotId;
+                    if (!this.validateFloat(w))
+                        return "unable to parse ambient a-value of the spot for ID = " + spotId;
+                    ambient.push(x, y, z, w);
 
                     //reads the diffuse values
-                    r = this.reader.getFloat(grandChildren[diffuseIndex], 'r');
-                    if (!(r != null && !isNaN(r)))
-                        return "unable to parse diffuse r-value of the spot position for ID = " + spotId;
-                    else
-                        diffuse.push(r);
-                    g = this.reader.getFloat(grandChildren[diffuseIndex], 'g');
-                    if (!(g != null && !isNaN(g)))
-                        return "unable to parse diffuse g-value of the spot position for ID = " + spotId;
-                    else
-                        diffuse.push(g);
-                    b = this.reader.getFloat(grandChildren[diffuseIndex], 'b');
-                    if (!(b != null && !isNaN(b)))
-                        return "unable to parse diffuse b-value of the spot position for ID = " + spotId;
-                    else
-                        diffuse.push(b);
-                    a = this.reader.getFloat(grandChildren[diffuseIndex], 'a');
-                    if (!(a != null && !isNaN(a)))
-                        return "unable to parse diffuse a-value of the spot position for ID = " + spotId;
-                    else
-                        diffuse.push(a);
-
+                    var { x, y, z, w } = this.parsePointRGBA(grandChildren, diffuseIndex);
+                    if (!this.validateFloat(x))
+                        return "unable to parse diffuse r-value of the spot for ID = " + spotId;
+                    if (!this.validateFloat(y))
+                        return "unable to parse diffuse g-value of the spot for ID = " + spotId;
+                    if (!this.validateFloat(z))
+                        return "unable to parse diffuse b-value of the spot for ID = " + spotId;
+                    if (!this.validateFloat(w))
+                        return "unable to parse diffuse a-value of the spot for ID = " + spotId;
+                    diffuse.push(x, y, z, w);
 
                     //reads the specular values
-                    r = this.reader.getFloat(grandChildren[specularIndex], 'r');
-                    if (!(r != null && !isNaN(r)))
-                        return "unable to parse specular r-value of the spot position for ID = " + spotId;
-                    else
-                        specular.push(r);
-                    g = this.reader.getFloat(grandChildren[specularIndex], 'g');
-                    if (!(g != null && !isNaN(g)))
-                        return "unable to parse specular g-value of the spot position for ID = " + spotId;
-                    else
-                        specular.push(g);
-                    b = this.reader.getFloat(grandChildren[specularIndex], 'b');
-                    if (!(b != null && !isNaN(b)))
-                        return "unable to parse specular b-value of the spot position for ID = " + spotId;
-                    else
-                        specular.push(b);
-                    a = this.reader.getFloat(grandChildren[specularIndex], 'a');
-                    if (!(a != null && !isNaN(a)))
-                        return "unable to parse specular a-value of the spot position for ID = " + spotId;
-                    else
-                        specular.push(a);
+                    var { x, y, z, w } = this.parsePointRGBA(grandChildren, specularIndex);
+                    if (!this.validateFloat(x))
+                        return "unable to parse specular r-value of the spot for ID = " + spotId;
+                    if (!this.validateFloat(y))
+                        return "unable to parse specular g-value of the spot for ID = " + spotId;
+                    if (!this.validateFloat(z))
+                        return "unable to parse specular b-value of the spot for ID = " + spotId;
+                    if (!this.validateFloat(w))
+                        return "unable to parse specular a-value of the spot for ID = " + spotId;
+                    specular.push(x, y, z, w);
 
                     this.spots[spotId] = [enabled, angle, exponent, location, target, ambient, diffuse, specular];
                 }
@@ -753,98 +766,54 @@ class MySceneGraph {
                 var specular = [];
 
                 //reads the emission values
-                var r = this.reader.getFloat(grandChildren[emissionIndex], 'r');
-                if (!(r != null && !isNaN(r)))
+                var{x,y,z,w} = this.parsePointRGBA(grandChildren,emissionIndex);
+                if (!this.validateFloat(x))
                     return "unable to parse emission r-value of ambient for ID = " + materialId;
-                else
-                    emission.push(r);
-                var g = this.reader.getFloat(grandChildren[emissionIndex], 'g');
-                if (!(g != null && !isNaN(g)))
+                if (!this.validateFloat(y))
                     return "unable to parse emission g-value of ambient for ID = " + materialId;
-                else
-                    emission.push(g);
-                var b = this.reader.getFloat(grandChildren[emissionIndex], 'b');
-                if (!(b != null && !isNaN(b)))
+                if (!this.validateFloat(z))
                     return "unable to parse emission b-value of ambient for ID = " + materialId;
-                else
-                    emission.push(b);
-                var a = this.reader.getFloat(grandChildren[emissionIndex], 'a');
-                if (!(a != null && !isNaN(a)))
-                    return "unable to parse emission a-value of ambient for ID = " + materialId;
-                else
-                    emission.push(a);
+                if (!this.validateFloat(w))
+                 return "unable to parse emission a-value of ambient for ID = " + materialId;
+                emission.push(x,y,z,w);
 
                 //reads the ambient values
-                r = this.reader.getFloat(grandChildren[ambientIndex], 'r');
-                if (!(r != null && !isNaN(r)))
+                var{x,y,z,w} = this.parsePointRGBA(grandChildren,ambientIndex);
+                if (!this.validateFloat(x))
                     return "unable to parse ambient r-value of ambient for ID = " + materialId;
-                else
-                    ambient.push(r);
-                g = this.reader.getFloat(grandChildren[ambientIndex], 'g');
-                if (!(g != null && !isNaN(g)))
+                if (!this.validateFloat(y))
                     return "unable to parse ambient g-value of ambient for ID = " + materialId;
-                else
-                    ambient.push(g);
-                b = this.reader.getFloat(grandChildren[ambientIndex], 'b');
-                if (!(b != null && !isNaN(b)))
+                if (!this.validateFloat(z))
                     return "unable to parse ambient b-value of ambient for ID = " + materialId;
-                else
-                    ambient.push(b);
-                a = this.reader.getFloat(grandChildren[ambientIndex], 'a');
-                if (!(a != null && !isNaN(a)))
+                if (!this.validateFloat(w))
                     return "unable to parse ambient a-value of ambient for ID = " + materialId;
-                else
-                    ambient.push(a);
+                ambient.push(x,y,z,w);
 
 
                 //reads the diffuse values
-               r = this.reader.getFloat(grandChildren[diffuseIndex], 'r');
-                if (!(r != null && !isNaN(r)))
-                    return "unable to parse diffuse r-value of diffuse for ID = " + materialId;
-                else
-                    diffuse.push(r);
-                g = this.reader.getFloat(grandChildren[diffuseIndex], 'g');
-                if (!(g != null && !isNaN(g)))
-                    return "unable to parse diffuse g-value of the diffuse for ID = " + materialId;
-                else
-                    diffuse.push(g);
-                b = this.reader.getFloat(grandChildren[diffuseIndex], 'b');
-                if (!(b != null && !isNaN(b)))
-                    return "unable to parse diffuse b-value of the diffuse for ID = " + materialId;
-                else
-                    diffuse.push(b);
-                a = this.reader.getFloat(grandChildren[diffuseIndex], 'a');
-                if (!(a != null && !isNaN(a)))
-                    return "unable to parse diffuse a-value of the diffuse for ID = " + materialId;
-                else
-                    diffuse.push(a);
-
-                var {r,g,b,a} = this.parsePointRGBA(grandChildren,diffuseIndex);
-                diffuse.push(r,g,b,a);
+                var{x,y,z,w} = this.parsePointRGBA(grandChildren,diffuseIndex);
+                if (!this.validateFloat(x))
+                    return "unable to parse diffuse r-value of ambient for ID = " + materialId;
+                if (!this.validateFloat(y))
+                    return "unable to parse diffuse g-value of ambient for ID = " + materialId;
+                if (!this.validateFloat(z))
+                    return "unable to parse diffuse b-value of ambient for ID = " + materialId;
+                if (!this.validateFloat(w))
+                    return "unable to parse diffuse a-value of ambient for ID = " + materialId;
+                diffuse.push(x,y,z,w);
 
                 //reads the specular values
-                r = this.reader.getFloat(grandChildren[specularIndex], 'r');
-                if (!(r != null && !isNaN(r)))
-                    return "unable to parse specular r-value of specular for ID = " + materialId;
-                else
-                    specular.push(r);
-                g = this.reader.getFloat(grandChildren[specularIndex], 'g');
-                if (!(g != null && !isNaN(g)))
-                    return "unable to parse specular g-value of specular for ID = " + materialId;
-                else
-                    specular.push(g);
-                b = this.reader.getFloat(grandChildren[specularIndex], 'b');
-                if (!(b != null && !isNaN(b)))
-                    return "unable to parse specular b-value of specularfor ID = " + materialId;
-                else
-                    specular.push(b);
-                a = this.reader.getFloat(grandChildren[specularIndex], 'a');
-                if (!(a != null && !isNaN(a)))
-                    return "unable to parse specular a-value of specular for ID = " + materialId;
-                else
-                    specular.push(a);
+                var{x,y,z,w} = this.parsePointRGBA(grandChildren,specularIndex);
+                if (!this.validateFloat(x))
+                    return "unable to parse specular r-value of ambient for ID = " + materialId;
+                if (!this.validateFloat(y))
+                    return "unable to parse specular g-value of ambient for ID = " + materialId;
+                if (!this.validateFloat(z))
+                    return "unable to parse specular b-value of ambient for ID = " + materialId;
+                if (!this.validateFloat(w))
+                    return "unable to parse specular a-value of ambient for ID = " + materialId;
+                specular.push(x,y,z,w);
                 
-        
                 this.materials[materialId] = [shininess, emission, ambient, diffuse, specular];
             }
             else {
@@ -939,7 +908,7 @@ class MySceneGraph {
         return null;
     }
 
-  
+
 
     //nao existe get int
     /**
@@ -978,27 +947,27 @@ class MySceneGraph {
                 var nodeName = grandChildren[0].nodeName;
                 switch (nodeName) {
                     case "triangle":
-                        var triangle = this.parseTriangle(grandChildren,0);
+                        var triangle = this.parseTriangle(grandChildren, 0);
                         this.triangles[primitiveId] = [triangle];
                         break;
 
                     case "rectangle":
-                        var rectangle = this.parseRetangle(grandChildren,0);
+                        var rectangle = this.parseRetangle(grandChildren, 0);
                         this.rectangles[primitiveId] = [rectangle];
                         break;
 
                     case "cylinder":
-                        var cylinder = this.parseCylinder(grandChildren,0);
+                        var cylinder = this.parseCylinder(grandChildren, 0);
                         this.cylinders[primitiveId] = [cylinder];
                         break;
 
                     case "sphere":
-                        var sphere = this.parseSphere(grandChildren,0);
+                        var sphere = this.parseSphere(grandChildren, 0);
                         this.spheres[primitiveId] = [sphere];
                         break;
 
                     case "torus":
-                        var g_torus = this.parseTorus(grandChildren,0);
+                        var g_torus = this.parseTorus(grandChildren, 0);
                         this.torus[primitiveId] = [g_torus];
                         break;
 
@@ -1188,17 +1157,17 @@ class MySceneGraph {
 
     /**usar na das components tambem */
     /****mudar de sitio *************/
-    parseTorus(children,index) {
+    parseTorus(children, index) {
         var g_torus = [];
         var inner = this.reader.getFloat(children[index], 'inner');
         var outer = this.reader.getFloat(children[index], 'outer');
         var slices = this.reader.getFloat(children[index], 'slices');
         var loops = this.reader.getFloat(children[index], 'loops');
         g_torus.push(inner, outer, slices, loops);
-        return  g_torus;
+        return g_torus;
     }
 
-    parseSphere(children,index) {
+    parseSphere(children, index) {
         var sphere = [];
         var radius = this.reader.getFloat(children[index], 'radius');
         var stacks = this.reader.getFloat(children[index], 'stacks');
@@ -1207,7 +1176,7 @@ class MySceneGraph {
         return sphere;
     }
 
-    parseCylinder(children,index) {
+    parseCylinder(children, index) {
         var cylinder = [];
         var base = this.reader.getFloat(children[index], 'base');
         var top = this.reader.getFloat(children[index], 'top');
@@ -1218,7 +1187,7 @@ class MySceneGraph {
         return cylinder;
     }
 
-    parseRetangle(children,index) {
+    parseRetangle(children, index) {
         var rectangle = [];
         var x = this.reader.getFloat(children[index], 'x1');
         var y = this.reader.getFloat(children[index], 'y1');
@@ -1229,49 +1198,48 @@ class MySceneGraph {
         return rectangle;
     }
 
-    parseTriangle(children,index) {
+    parseTriangle(children, index) {
         var triangle = [];
-        var { x, y, z } = this.parsePointXYZ(children,'x1','y1','z1',index );
+        var { x, y, z } = this.parsePointXYZ(children, 'x1', 'y1', 'z1', index);
         triangle.push(x, y, z);
-        var { x, y, z } = this.parsePointXYZ(children,'x2','y2','z2',index );
+        var { x, y, z } = this.parsePointXYZ(children, 'x2', 'y2', 'z2', index);
         triangle.push(x, y, z);
-        var { x, y, z } = this.parsePointXYZ(children,'x3','y3','z3',index);
+        var { x, y, z } = this.parsePointXYZ(children, 'x3', 'y3', 'z3', index);
         triangle.push(x, y, z);
         return triangle;
     }
 
 
-    parsePointXYZ(vector,x1,y1,z1, index) {
+    parsePointXYZ(vector, x1, y1, z1, index) {
         var x = this.reader.getFloat(vector[index], x1);
         var y = this.reader.getFloat(vector[index], y1);
         var z = this.reader.getFloat(vector[index], z1);
         return { x, y, z };
     }
 
-    parsePointXYZW(vector,x1,y1,z1,w1,index){
+    parsePointXYZW(vector, x1, y1, z1, w1, index) {
         var x = this.reader.getFloat(vector[index], x1);
         var y = this.reader.getFloat(vector[index], y1);
         var z = this.reader.getFloat(vector[index], z1);
         var w = this.reader.getFloat(vector[index], w1);
-        return { x, y, z , w};
+        return { x, y, z, w };
     }
 
-    parsePointRGBA(vector,index)
-    {
-        var{x,y,z,w} = this.parsePointXYZW(vector,'r','g','b','a',index);
-        return {x,y,z,w};
+    parsePointRGBA(vector, index) {
+        var { x, y, z, w } = this.parsePointXYZW(vector, 'r', 'g', 'b', 'a', index);
+        return { x, y, z, w };
 
     }
 
-      /*****mudar de sitio********/
+    /*****mudar de sitio********/
     parseScale(children, index) {
         var scale = [];
-        var { x, y, z } = this.parsePointXYZ(children,'x','y','z',index);
+        var { x, y, z } = this.parsePointXYZ(children, 'x', 'y', 'z', index);
         scale.push(x, y, z);
         return scale;
     }
 
-    parseRotate(children,index) {
+    parseRotate(children, index) {
         var rotate = [];
         var axis = this.reader.getString(children[index], 'axis');
         var angle = this.reader.getFloat(children[index], 'angle');
@@ -1281,12 +1249,12 @@ class MySceneGraph {
 
     parseTranslate(children, index) {
         var translate = [];
-        var { x, y, z } = this.parsePointXYZ(children,'x','y','z',index);
+        var { x, y, z } = this.parsePointXYZ(children, 'x', 'y', 'z', index);
         translate.push(x, y, z);
         return translate;
     }
 
-    validateFloat(x){
+    validateFloat(x) {
         if (!(x != null && !isNaN(x)))
             return false;
         else
