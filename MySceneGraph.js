@@ -998,7 +998,6 @@ class MySceneGraph {
 
     /*
   
-    3) uma transformation ou tem transformationref ou um bloco com transformaçoes nao pode ter as duas
     4) se nas transformations tiver um bloco de transformacoes e as diferentes transformacoes forem guardadas 
     individualmente nesse bloco, vai ser impossivel le las sem saber a ordem delas...
     tem que se guardar as rotacoes num array de rotacoes, os scales num array de scales...etc, e depois guardar esses
@@ -1017,6 +1016,10 @@ class MySceneGraph {
         var numComponents = 0;
         var grandChildren = [];
         var nodeNames = [];
+        var translates = [];
+        var rotates = [];
+        var scales = [];
+        var transformations = [];
         
         for (var i = 0; i < children.length; i++) {
             var component = [];
@@ -1035,9 +1038,9 @@ class MySceneGraph {
 
                     var nodeName = grandChildren[j].nodeName;
                     var ggrandChildren = grandChildren[j].children; //g(rand)grandchildren
+                    var tref = false;
                     switch (nodeName) {
                         case "transformation":
-                            var transformation = [];
                             for (var k = 0; k < ggrandChildren.length; k++) {
                                 var nodeName2 = ggrandChildren[k].nodeName;
                                 if(nodeName == "transformationref")
@@ -1046,7 +1049,8 @@ class MySceneGraph {
                                        var tref = this.reader.getString(ggrandChildren[k], 'id');
                                        //transformationRef.push(tref)
                                        //transformation.push(transformationRef);
-                                       transformation.push(tref);
+                                       transformations.push(tref);
+                                       tref = true;
                                 }
                                 else{
                                 switch (nodeName2) {
@@ -1056,7 +1060,7 @@ class MySceneGraph {
                                         var y = this.reader.getFloat(ggrandChildren[k], 'y');
                                         var z = this.reader.getFloat(ggrandChildren[k], 'z');
                                         translate.push(x, y, z);
-                                        transformation.push(translate);
+                                        translates.push(translate);
                                         break;
 
                                     case "rotate":
@@ -1064,7 +1068,7 @@ class MySceneGraph {
                                         var axis = this.reader.getString(ggrandChildren[k], 'axis');
                                         var angle = this.reader.getFloat(ggrandChildren[k], 'angle');
                                         rotate.push(axis, angle);
-                                        transformation.push(rotate);
+                                        rotates.push(rotate);
                                         break;
 
                                     case "scale":
@@ -1073,7 +1077,7 @@ class MySceneGraph {
                                         var y = this.reader.getFloat(ggrandChildren[k], 'y');
                                         var z = this.reader.getFloat(ggrandChildren[k], 'z');
                                         scale.push(x, y, z);
-                                        transformation.push(scale);
+                                        scales.push(scale);
                                         break;
                                     default:
                                         this.onXMLMinorError("unknown tag <" + ggrandChildren[k].nodeName + ">");
@@ -1081,10 +1085,11 @@ class MySceneGraph {
                                     }
                                 }
                             }
+                            if(!tref)
+                                transformations.push(translates,rotates,scales);
                             break;
 
                         case "materials":
-                            var numM = 0; //number of materials
                             var materials = [];
                             for (var k = 0; k < ggrandChildren.length; k++) {
                                 var nodeName2 = ggrandChildren[k].nodeName;
@@ -1140,8 +1145,8 @@ class MySceneGraph {
             }
             else
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
-            
-            component.push(transformation, materials, texture, transformation, children);
+           
+            component.push(transformations, materials, texture, children);
             numComponents++;
             this.components.push(component);
         }
