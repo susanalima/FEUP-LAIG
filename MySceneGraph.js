@@ -917,6 +917,16 @@ class MySceneGraph {
      */
     parsePrimitives(primitivesNode) {
         //Important new arrays should be added according to new primitives
+        primitive = {
+            prims: {
+                id: "0",
+                triangles: [],
+                rectangles: [],
+                spheres: [],
+                cylinders: [],
+                torus: []
+            }
+        }
         var children = primitivesNode.children;
         //this.primitives = [];
         var numPrimitives = 0;
@@ -1010,7 +1020,28 @@ class MySceneGraph {
      * @param {components block element} componentsNode
      */
     parseComponents(componentsNode) {
+        var component = {
+            
+            id: "0",
+            
+            materials: [],
+            
+            texture:{
+                id: "0",
+                length_s: 0,
+                length_t: 0
+            },
 
+            transformations: {
+                tref: false,
+                typesTransf : []
+            },
+
+            children:{
+                componentsRef: [],
+                primitivesRef: [],
+            }
+        }
         var children = componentsNode.children;
         this.components = [];
         var numComponents = 0;
