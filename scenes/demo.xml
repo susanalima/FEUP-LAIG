@@ -50,7 +50,7 @@
 
  <textures>
 	 <texture id="t1" file="/images/leaves.jpg" />
-	 <texture id="t2" file="images/vidral.jpg" />
+	 <texture id="t2" file="/images/vidral.jpg" />
  </textures>
 
 <materials>
