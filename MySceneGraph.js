@@ -1293,12 +1293,48 @@ class MySceneGraph {
         console.log("   " + message);
     }
 
+    applyMaterial(comp, compAppearance){
+        
+        //var mat = this.materials[comp[1][0]];
+        //compAppearance.setEmission(mat[0][0],mat[0][1],mat[0][2],mat[0][3]);
+        //compAppearance.setAmbient(mat[1][0],mat[1][1],mat[1][2],mat[1][3]);
+        //compAppearance.setDiffuse(mat[2][0],mat[2][1],mat[2][2],mat[2][3]);
+        //compAppearance.setSpecular(mat[3][0],mat[3][1],mat[3][2],mat[3][3]);
+    }   
+
+    applyTexture(comp, compAppearance){
+        //var text = this.textures[comp[2][0]];
+        //compAppearance.loadTexture(text[0]);
+    }
+
+    applyTransformations(comp){
+
+    }
+
+    displayComp(comp){
+        
+        this.compAppearance = new CGFappearance(this.scene);
+        
+        this.applyMaterial(comp,this.compAppearance);
+        this.applyTexture(comp,this.compAppearance);
+        
+
+        this.scene.pushMatrix();
+        this.compAppearance.apply();
+        this.applyTransformations(comp);
+        comp.display();
+        this.scene.popMatrix();
+    }
+
+
     /**
      * Displays the scene, processing each node, starting in the root node.
      */
     displayScene() {
         // entry point for graph rendering
-        //TODO: Render loop starting at root of graph
+        for(var l = 0; l < this.components.length; l++){
+            this.displayComp(this.components[l]);
+        }
     }
 
 
