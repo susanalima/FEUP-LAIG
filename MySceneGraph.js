@@ -195,8 +195,6 @@ class MySceneGraph {
                 return error;
         }
 
-
-
     }
 
 
@@ -610,7 +608,7 @@ class MySceneGraph {
                     location.push(x, y, z, w);
 
                     //reads the target values
-                    var { x, y, z} = this.parsePointXYZ(grandChildren, 'x', 'y', 'z', targetIndex);
+                    var { x, y, z } = this.parsePointXYZ(grandChildren, 'x', 'y', 'z', targetIndex);
                     if (!this.validateFloat(x))
                         return "unable to parse target x-coordinate of the spot for ID = " + spotId;
                     if (!this.validateFloat(y))
@@ -766,7 +764,7 @@ class MySceneGraph {
                 var specular = [];
 
                 //reads the emission values
-                var{x,y,z,w} = this.parsePointRGBA(grandChildren,emissionIndex);
+                var { x, y, z, w } = this.parsePointRGBA(grandChildren, emissionIndex);
                 if (!this.validateFloat(x))
                     return "unable to parse emission r-value of ambient for ID = " + materialId;
                 if (!this.validateFloat(y))
@@ -774,11 +772,11 @@ class MySceneGraph {
                 if (!this.validateFloat(z))
                     return "unable to parse emission b-value of ambient for ID = " + materialId;
                 if (!this.validateFloat(w))
-                 return "unable to parse emission a-value of ambient for ID = " + materialId;
-                emission.push(x,y,z,w);
+                    return "unable to parse emission a-value of ambient for ID = " + materialId;
+                emission.push(x, y, z, w);
 
                 //reads the ambient values
-                var{x,y,z,w} = this.parsePointRGBA(grandChildren,ambientIndex);
+                var { x, y, z, w } = this.parsePointRGBA(grandChildren, ambientIndex);
                 if (!this.validateFloat(x))
                     return "unable to parse ambient r-value of ambient for ID = " + materialId;
                 if (!this.validateFloat(y))
@@ -787,11 +785,11 @@ class MySceneGraph {
                     return "unable to parse ambient b-value of ambient for ID = " + materialId;
                 if (!this.validateFloat(w))
                     return "unable to parse ambient a-value of ambient for ID = " + materialId;
-                ambient.push(x,y,z,w);
+                ambient.push(x, y, z, w);
 
 
                 //reads the diffuse values
-                var{x,y,z,w} = this.parsePointRGBA(grandChildren,diffuseIndex);
+                var { x, y, z, w } = this.parsePointRGBA(grandChildren, diffuseIndex);
                 if (!this.validateFloat(x))
                     return "unable to parse diffuse r-value of ambient for ID = " + materialId;
                 if (!this.validateFloat(y))
@@ -800,10 +798,10 @@ class MySceneGraph {
                     return "unable to parse diffuse b-value of ambient for ID = " + materialId;
                 if (!this.validateFloat(w))
                     return "unable to parse diffuse a-value of ambient for ID = " + materialId;
-                diffuse.push(x,y,z,w);
+                diffuse.push(x, y, z, w);
 
                 //reads the specular values
-                var{x,y,z,w} = this.parsePointRGBA(grandChildren,specularIndex);
+                var { x, y, z, w } = this.parsePointRGBA(grandChildren, specularIndex);
                 if (!this.validateFloat(x))
                     return "unable to parse specular r-value of ambient for ID = " + materialId;
                 if (!this.validateFloat(y))
@@ -812,8 +810,8 @@ class MySceneGraph {
                     return "unable to parse specular b-value of ambient for ID = " + materialId;
                 if (!this.validateFloat(w))
                     return "unable to parse specular a-value of ambient for ID = " + materialId;
-                specular.push(x,y,z,w);
-                
+                specular.push(x, y, z, w);
+
                 this.materials[materialId] = [shininess, emission, ambient, diffuse, specular];
             }
             else {
@@ -917,7 +915,7 @@ class MySceneGraph {
      */
     parsePrimitives(primitivesNode) {
         //Important new arrays should be added according to new primitives
-        primitive = {
+        var primitive = {
             prims: {
                 id: "0",
                 triangles: [],
@@ -1021,12 +1019,12 @@ class MySceneGraph {
      */
     parseComponents(componentsNode) {
         var component = {
-            
+
             id: "0",
-            
+
             materials: [],
-            
-            texture:{
+
+            texture: {
                 id: "0",
                 length_s: 0,
                 length_t: 0
@@ -1034,10 +1032,10 @@ class MySceneGraph {
 
             transformations: {
                 tref: false,
-                typesTransf : []
+                typesTransf: []
             },
 
-            children:{
+            children: {
                 componentsRef: [],
                 primitivesRef: [],
             }
@@ -1051,7 +1049,7 @@ class MySceneGraph {
         var rotates = [];
         var scales = [];
         var transformations = [];
-        
+
         for (var i = 0; i < children.length; i++) {
             var component = [];
             if (children[i].nodeName == "component") {
@@ -1074,50 +1072,49 @@ class MySceneGraph {
                         case "transformation":
                             for (var k = 0; k < ggrandChildren.length; k++) {
                                 var nodeName2 = ggrandChildren[k].nodeName;
-                                if(nodeName == "transformationref")
-                                {
-                                       //var transformationRef = [];
-                                       var tref = this.reader.getString(ggrandChildren[k], 'id');
-                                       //transformationRef.push(tref)
-                                       //transformation.push(transformationRef);
-                                       transformations.push(tref);
-                                       tref = true;
+                                if (nodeName == "transformationref") {
+                                    //var transformationRef = [];
+                                    var tref = this.reader.getString(ggrandChildren[k], 'id');
+                                    //transformationRef.push(tref)
+                                    //transformation.push(transformationRef);
+                                    transformations.push(tref);
+                                    tref = true;
                                 }
-                                else{
-                                switch (nodeName2) {
-                                    case "translate":
-                                        var translate = [];
-                                        var x = this.reader.getFloat(ggrandChildren[k], 'x');
-                                        var y = this.reader.getFloat(ggrandChildren[k], 'y');
-                                        var z = this.reader.getFloat(ggrandChildren[k], 'z');
-                                        translate.push(x, y, z);
-                                        translates.push(translate);
-                                        break;
+                                else {
+                                    switch (nodeName2) {
+                                        case "translate":
+                                            var translate = [];
+                                            var x = this.reader.getFloat(ggrandChildren[k], 'x');
+                                            var y = this.reader.getFloat(ggrandChildren[k], 'y');
+                                            var z = this.reader.getFloat(ggrandChildren[k], 'z');
+                                            translate.push(x, y, z);
+                                            translates.push(translate);
+                                            break;
 
-                                    case "rotate":
-                                        var rotate = [];
-                                        var axis = this.reader.getString(ggrandChildren[k], 'axis');
-                                        var angle = this.reader.getFloat(ggrandChildren[k], 'angle');
-                                        rotate.push(axis, angle);
-                                        rotates.push(rotate);
-                                        break;
+                                        case "rotate":
+                                            var rotate = [];
+                                            var axis = this.reader.getString(ggrandChildren[k], 'axis');
+                                            var angle = this.reader.getFloat(ggrandChildren[k], 'angle');
+                                            rotate.push(axis, angle);
+                                            rotates.push(rotate);
+                                            break;
 
-                                    case "scale":
-                                        var scale = [];
-                                        var x = this.reader.getFloat(ggrandChildren[k], 'x');
-                                        var y = this.reader.getFloat(ggrandChildren[k], 'y');
-                                        var z = this.reader.getFloat(ggrandChildren[k], 'z');
-                                        scale.push(x, y, z);
-                                        scales.push(scale);
-                                        break;
-                                    default:
-                                        this.onXMLMinorError("unknown tag <" + ggrandChildren[k].nodeName + ">");
-                                        break;
+                                        case "scale":
+                                            var scale = [];
+                                            var x = this.reader.getFloat(ggrandChildren[k], 'x');
+                                            var y = this.reader.getFloat(ggrandChildren[k], 'y');
+                                            var z = this.reader.getFloat(ggrandChildren[k], 'z');
+                                            scale.push(x, y, z);
+                                            scales.push(scale);
+                                            break;
+                                        default:
+                                            this.onXMLMinorError("unknown tag <" + ggrandChildren[k].nodeName + ">");
+                                            break;
                                     }
                                 }
                             }
-                            if(!tref)
-                                transformations.push(translates,rotates,scales);
+                            if (!tref)
+                                transformations.push(translates, rotates, scales);
                             break;
 
                         case "materials":
@@ -1145,8 +1142,8 @@ class MySceneGraph {
                         case "children":
                             var numP = 0; // number of primitives
                             var numComp = 0; // number of components
-                            var children =[];
-                            var primitives =[];
+                            var children = [];
+                            var primitives = [];
                             var components2 = [];
                             for (var k = 0; k < ggrandChildren.length; k++) {
                                 var nodeName2 = ggrandChildren[k].nodeName;
@@ -1176,7 +1173,7 @@ class MySceneGraph {
             }
             else
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
-           
+
             component.push(transformations, materials, texture, children);
             numComponents++;
             this.components.push(component);
@@ -1324,36 +1321,36 @@ class MySceneGraph {
         console.log("   " + message);
     }
 
-    applyMaterial(comp, compAppearance){
-        
+    applyMaterial(comp, compAppearance) {
+
         //var mat = this.materials[comp[1][0]];
         //compAppearance.setEmission(mat[0][0],mat[0][1],mat[0][2],mat[0][3]);
         //compAppearance.setAmbient(mat[1][0],mat[1][1],mat[1][2],mat[1][3]);
         //compAppearance.setDiffuse(mat[2][0],mat[2][1],mat[2][2],mat[2][3]);
         //compAppearance.setSpecular(mat[3][0],mat[3][1],mat[3][2],mat[3][3]);
-    }   
+    }
 
-    applyTexture(comp, compAppearance){
+    applyTexture(comp, compAppearance) {
         //var text = this.textures[comp[2][0]];
         //compAppearance.loadTexture(text[0]);
     }
 
-    applyTransformations(comp){
+    applyTransformations(comp) {
 
     }
 
-    displayComp(comp){
-        
+    displayComp(comp) {
+
         this.compAppearance = new CGFappearance(this.scene);
-        
-        this.applyMaterial(comp,this.compAppearance);
-        this.applyTexture(comp,this.compAppearance);
-        
+
+        this.applyMaterial(comp, this.compAppearance);
+        this.applyTexture(comp, this.compAppearance);
+
 
         this.scene.pushMatrix();
         this.compAppearance.apply();
         this.applyTransformations(comp);
-        comp.display();
+        comp.display;
         this.scene.popMatrix();
     }
 
@@ -1363,7 +1360,7 @@ class MySceneGraph {
      */
     displayScene() {
         // entry point for graph rendering
-        for(var l = 0; l < this.components.length; l++){
+        for (var l = 0; l < this.components.length; l++) {
             this.displayComp(this.components[l]);
         }
     }
