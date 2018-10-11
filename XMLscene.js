@@ -25,7 +25,6 @@ class XMLscene extends CGFscene {
         this.sceneInited = false;
 
         this.initCameras();
-
         this.enableTextures(true);
 
         this.gl.clearDepth(100.0);
@@ -95,11 +94,28 @@ class XMLscene extends CGFscene {
         this.setGlobalAmbientLight(this.graph.ambientAmbient[0], this.graph.ambientAmbient[1], this.graph.ambientAmbient[2], this.graph.ambientAmbient[3]);
 
         this.initLights();
+        this.loadParsedCamera();
 
         // Adds lights group.
         this.interface.addLightsGroup(this.graph.omnis);
 
         this.sceneInited = true;
+    }
+
+
+    loadParsedCamera()
+    {
+        var defaultCam = this.graph.views.default;
+        var defaultPerspective = this.graph.views.perspectives[defaultCam];
+        var defaultOrtho = this.graph.views.orthos[defaultCam];
+        console.log("here");
+        console.dir(defaultPerspective);
+        if (defaultPerspective != null)
+        {
+           this.camera = new CGFcamera(0.4,defaultPerspective.near,defaultPerspective.far,defaultPerspective.fromPosition,defaultPerspective.toPosition);
+           //this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+           this.interface.setActiveCamera(this.camera);
+        }
     }
 
 
