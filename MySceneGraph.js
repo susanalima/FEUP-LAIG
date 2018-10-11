@@ -342,7 +342,7 @@ class MySceneGraph {
         return null;
     }
 
-    //TODO NAO SEI SE ESTA A LER O FROM E O TO
+    //FALTA VALIDAR OS PARAMETROS
     /**
      * 
      * @param {*} children 
@@ -353,7 +353,6 @@ class MySceneGraph {
         var ortho = {
             near: 0.1,
             far: 1000,
-            angle: 60,
             left: null,
             right: null,
             top: null,
@@ -361,6 +360,8 @@ class MySceneGraph {
             fromPosition: [],
             toPosition: []
         }
+
+        var error;
         //get the id of current ortho
         var orthoId = this.reader.getString(children[index], 'id');
         if (orthoId == null)
@@ -400,6 +401,10 @@ class MySceneGraph {
         if (ortho.bottom == null)
             return "no bottom defined for ortho";
 
+        grandChildren = children[index].children;
+        if (grandChildren.length != 2)
+            return "incorrect number of children of ortho";
+
         var nodeNames = [];
         for (var j = 0; j < grandChildren.length; j++) {
             nodeNames.push(grandChildren[j].nodeName);
@@ -425,6 +430,7 @@ class MySceneGraph {
 
         this.views.orthos[orthoId] = ortho;
 
+    
         return null;
     }
 
