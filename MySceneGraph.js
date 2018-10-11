@@ -915,18 +915,8 @@ class MySceneGraph {
      */
     parsePrimitives(primitivesNode) {
         //Important new arrays should be added according to new primitives
-        var primitive = {
-            prims: {
-                id: "0",
-                triangles: [],
-                rectangles: [],
-                spheres: [],
-                cylinders: [],
-                torus: []
-            }
-        }
+        this.primitives = [];
         var children = primitivesNode.children;
-        //this.primitives = [];
         var numPrimitives = 0;
         var grandChildren = [];
         var nodeNames = [];
