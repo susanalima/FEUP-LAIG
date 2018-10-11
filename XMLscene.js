@@ -103,19 +103,24 @@ class XMLscene extends CGFscene {
     }
 
 
+    //TODO ORTHO CAMERA
     loadParsedCamera()
     {
         var defaultCam = this.graph.views.default;
         var defaultPerspective = this.graph.views.perspectives[defaultCam];
-        var defaultOrtho = this.graph.views.orthos[defaultCam];
-        console.log("here");
-        console.dir(defaultPerspective);
         if (defaultPerspective != null)
-        {
            this.camera = new CGFcamera(0.4,defaultPerspective.near,defaultPerspective.far,defaultPerspective.fromPosition,defaultPerspective.toPosition);
-           //this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
-           this.interface.setActiveCamera(this.camera);
+        else{
+            var defaultOrtho = this.graph.views.orthos[defaultCam];
+            // TODO ortho camera
+            if (defaultOrtho != null)
+            {
+                this.camera = new CGFcamera(0.4,defaultOrtho.near,defaultOrtho.far,defaultOrtho.fromPosition,defaultOrtho.toPosition); 
+            }
+            else
+                this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
         }
+        this.interface.setActiveCamera(this.camera);
     }
 
 

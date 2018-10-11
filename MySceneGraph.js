@@ -21,7 +21,7 @@ class MySceneGraph {
 
         // Establish bidirectional references between scene and graph.
         this.scene = scene;
-        scene.graph = this;
+        scene.graph = this; 
 
         this.nodes = [];
 
@@ -465,8 +465,7 @@ class MySceneGraph {
                 if (!this.validateFloat(z))
                     return "unable to parse to z-coordinate of the perspective position for ID = " + perspectiveId;
                 perspective.toPosition.push(x, y, z);
-                console.dir(perspective.fromPosition);
-                console.dir(perspective.toPosition);
+               
                 this.views.perspectives[perspectiveId] = perspective;
 
             }
@@ -902,7 +901,8 @@ class MySceneGraph {
                 if (file == null)
                     return "no file defined for texture";
 
-                this.textures[textureId] = [file];
+                var texture = new CGFtexture(this.scene, file);
+                this.textures[textureId] = texture;
             }
             else {
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
@@ -929,6 +929,13 @@ class MySceneGraph {
         var nodeNames = [];
         for (var i = 0; i < children.length; i++) {
             if (children[i].nodeName == "material") {
+                var material = {
+                    shininess : null,
+                    emission : [],
+                    ambient : [],
+                    diffuse : [],
+                    specular : []
+                }
                 //get the id of current material
                 var materialId = this.reader.getString(children[i], 'id');
                 if (materialId == null)
@@ -939,8 +946,8 @@ class MySceneGraph {
                     return "ID must be unique for each material (conflict: ID = " + materialId + ")";
 
                 //get the shininess value of current material
-                var shininess = this.reader.getFloat(children[i], 'shininess');
-                if (shininess == null)
+                material.shininess = this.reader.getFloat(children[i], 'shininess');
+                if (material.shininess == null)
                     return "no shininess defined for material";
 
                 grandChildren = children[i].children;
@@ -963,11 +970,6 @@ class MySceneGraph {
                 if (specularIndex == -1)
                     return "material's specular undefined for ID = " + materialId;
 
-                var emission = [];
-                var ambient = [];
-                var diffuse = [];
-                var specular = [];
-
                 //reads the emission values
                 var{x,y,z,w} = this.parsePointRGBA(grandChildren,emissionIndex);
                 if (!this.validateFloat(x))
@@ -978,7 +980,7 @@ class MySceneGraph {
                     return "unable to parse emission b-value of ambient for ID = " + materialId;
                 if (!this.validateFloat(w))
                  return "unable to parse emission a-value of ambient for ID = " + materialId;
-                emission.push(x,y,z,w);
+                material.emission.push(x,y,z,w);
 
                 //reads the ambient values
                 var{x,y,z,w} = this.parsePointRGBA(grandChildren,ambientIndex);
@@ -990,7 +992,7 @@ class MySceneGraph {
                     return "unable to parse ambient b-value of ambient for ID = " + materialId;
                 if (!this.validateFloat(w))
                     return "unable to parse ambient a-value of ambient for ID = " + materialId;
-                ambient.push(x,y,z,w);
+                material.ambient.push(x,y,z,w);
 
 
                 //reads the diffuse values
@@ -1003,7 +1005,7 @@ class MySceneGraph {
                     return "unable to parse diffuse b-value of ambient for ID = " + materialId;
                 if (!this.validateFloat(w))
                     return "unable to parse diffuse a-value of ambient for ID = " + materialId;
-                diffuse.push(x,y,z,w);
+                material.diffuse.push(x,y,z,w);
 
                 //reads the specular values
                 var{x,y,z,w} = this.parsePointRGBA(grandChildren,specularIndex);
@@ -1015,9 +1017,9 @@ class MySceneGraph {
                     return "unable to parse specular b-value of ambient for ID = " + materialId;
                 if (!this.validateFloat(w))
                     return "unable to parse specular a-value of ambient for ID = " + materialId;
-                specular.push(x,y,z,w);
-                
-                this.materials[materialId] = [shininess, emission, ambient, diffuse, specular];
+                material.specular.push(x,y,z,w);
+
+                this.materials[materialId] = this.createAppearance(material);
             }
             else {
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
@@ -1028,10 +1030,23 @@ class MySceneGraph {
 
         if (numMaterials == 0)
             return "at least one material must be defined";
-
-
+            
         this.log("Parsed materials");
         return null;
+    }
+
+    /**
+     * Creates a new appearance with the information in the struct material received
+     * @param {*} material struct containig the necessary information to create a new appearance
+     */
+    createAppearance(material)
+    {
+        var appearance = new CGFappearance(this.scene);
+        appearance.setEmission(material.emission[0], material.emission[1], material.emission[2],material.emission[3]);
+        appearance.setAmbient(material.ambient[0], material.ambient[1], material.ambient[2],material.ambient[3]);
+        appearance.setDiffuse(material.diffuse[0], material.diffuse[1], material.diffuse[2],material.diffuse[3]);
+        appearance.setSpecular(material.specular[0], material.specular[1], material.specular[2],material.specular[3]);
+        return appearance;
     }
 
 
