@@ -494,7 +494,7 @@ class MySceneGraph {
    * @param {lights block element} lightsNode
    */
     parseLights(lightsNode) {
-        //TODO tentar eliminar o codigo duplicado
+        //TODO DIVIDIR EM FUNCOES MAIS PEQUENAS
 
         var children = lightsNode.children;
         this.omnis = [];
@@ -502,6 +502,7 @@ class MySceneGraph {
         var grandChildren = [];
         var nodeNames = [];
         var numLights = 0;
+        var error;
 
         for (var i = 0; i < children.length; i++) {
             if (children[i].nodeName == "omni") {
@@ -547,53 +548,24 @@ class MySceneGraph {
                 var specular = [];
 
                 //reads the location values 
-                var { x, y, z, w } = this.parsePointXYZW(grandChildren, 'x', 'y', 'z', 'w', locationIndex);
-                if (!this.validateFloat(x))
-                    return "unable to parse location x-coordinate of the omni for ID = " + omniId;
-                if (!this.validateFloat(y))
-                    return "unable to parse location y-coordinate of the omni for ID = " + omniId;
-                if (!this.validateFloat(z))
-                    return "unable to parse location z-coordinate of the omni for ID = " + omniId;
-                if (!this.validateFloat(w))
-                    return "unable to parse location w-coordinate of the omni for ID = " + omniId;
-                location.push(x, y, z, w);
+                error = this.parseAndValidateXYZWvalues(grandChildren,locationIndex,omniId,"location","omni",location);
+                if(error != null)
+                    return error;
 
                 //reads the ambient values
-                var { x, y, z, w } = this.parsePointRGBA(grandChildren, ambientIndex);
-                if (!this.validateFloat(x))
-                    return "unable to parse ambient r-value of the omni for ID = " + omniId;
-                if (!this.validateFloat(y))
-                    return "unable to parse ambient g-value of the omni for ID = " + omniId;
-                if (!this.validateFloat(z))
-                    return "unable to parse ambient b-value of the omni for ID = " + omniId;
-                if (!this.validateFloat(w))
-                    return "unable to parse ambient a-value of the omni for ID = " + omniId;
-                ambient.push(x, y, z, w);
+                error = this.parseAndValidateRGBAvalues(grandChildren,ambientIndex,spotId, "ambient","omni",ambient);
+                if(error != null)
+                    return error;
 
                 //reads the diffuse values 
-                var { x, y, z, w } = this.parsePointRGBA(grandChildren, diffuseIndex);
-                if (!this.validateFloat(x))
-                    return "unable to parse diffuse r-value of the omni for ID = " + omniId;
-                if (!this.validateFloat(y))
-                    return "unable to parse diffuse g-value of the omni for ID = " + omniId;
-                if (!this.validateFloat(z))
-                    return "unable to parse diffuse b-value of the omni for ID = " + omniId;
-                if (!this.validateFloat(w))
-                    return "unable to parse diffuse a-value of the omni for ID = " + omniId;
-                diffuse.push(x, y, z, w);
+                error = this.parseAndValidateRGBAvalues(grandChildren,diffuseIndex,omniId, "diffuse","omni",diffuse);
+                if(error != null)
+                     return error;
 
                 //reads the specular values
-                var { x, y, z, w } = this.parsePointRGBA(grandChildren, specularIndex);
-                if (!this.validateFloat(x))
-                    return "unable to parse specular r-value of the omni for ID = " + omniId;
-                if (!this.validateFloat(y))
-                    return "unable to parse specular g-value of the omni for ID = " + omniId;
-                if (!this.validateFloat(z))
-                    return "unable to parse specular b-value of the omni for ID = " + omniId;
-                if (!this.validateFloat(w))
-                    return "unable to parse specular a-value of the omni for ID = " + omniId;
-                specular.push(x, y, z, w);
-
+                error = this.parseAndValidateRGBAvalues(grandChildren,specularIndex,omniId, "specular","omni",specular);
+                if(error != null)
+                    return error;
 
                 this.omnis[omniId] = [enabled, location, ambient, diffuse, specular];
 
@@ -654,63 +626,26 @@ class MySceneGraph {
                     var diffuse = [];
                     var specular = [];
 
-                    //reads the location values
-                    var { x, y, z, w } = this.parsePointXYZW(grandChildren, 'x', 'y', 'z', 'w', locationIndex);
-                    if (!this.validateFloat(x))
-                        return "unable to parse location x-coordinate of the spot for ID = " + spotId;
-                    if (!this.validateFloat(y))
-                        return "unable to parse location y-coordinate of the spot for ID = " + spotId;
-                    if (!this.validateFloat(z))
-                        return "unable to parse location z-coordinate of the spot for ID = " + spotId;
-                    if (!this.validateFloat(w))
-                        return "unable to parse location w-coordinate of the spot for ID = " + spotId;
-                    location.push(x, y, z, w);
-
+                    //reads the location values 
+                    error = this.parseAndValidateXYZWvalues(grandChildren,locationIndex,spotId,"location","spot",location);
+                    if(error != null)
+                        return error;
                     //reads the target values
-                    var { x, y, z } = this.parsePointXYZ(grandChildren, 'x', 'y', 'z', targetIndex);
-                    if (!this.validateFloat(x))
-                        return "unable to parse target x-coordinate of the spot for ID = " + spotId;
-                    if (!this.validateFloat(y))
-                        return "unable to parse target y-coordinate of the spot for ID = " + spotId;
-                    if (!this.validateFloat(z))
-                        return "unable to parse target z-coordinate of the spot for ID = " + spotId;
-                    target.push(x, y, z);
-
+                    error = this.parseAndValidateXYZvalues(grandChildren,targetIndex,this.spheres,"target","spot",target);
+                    if(error != null)
+                        return error;   
                     //reads the ambient values
-                    var { x, y, z, w } = this.parsePointRGBA(grandChildren, ambientIndex);
-                    if (!this.validateFloat(x))
-                        return "unable to parse ambient r-value of the spot for ID = " + spotId;
-                    if (!this.validateFloat(y))
-                        return "unable to parse ambient g-value of the spot for ID = " + spotId;
-                    if (!this.validateFloat(z))
-                        return "unable to parse ambient b-value of the spot for ID = " + spotId;
-                    if (!this.validateFloat(w))
-                        return "unable to parse ambient a-value of the spot for ID = " + spotId;
-                    ambient.push(x, y, z, w);
-
+                    error = this.parseAndValidateRGBAvalues(grandChildren,ambientIndex,spotId, "ambient","spot",ambient);
+                    if(error != null)
+                        return error;
                     //reads the diffuse values
-                    var { x, y, z, w } = this.parsePointRGBA(grandChildren, diffuseIndex);
-                    if (!this.validateFloat(x))
-                        return "unable to parse diffuse r-value of the spot for ID = " + spotId;
-                    if (!this.validateFloat(y))
-                        return "unable to parse diffuse g-value of the spot for ID = " + spotId;
-                    if (!this.validateFloat(z))
-                        return "unable to parse diffuse b-value of the spot for ID = " + spotId;
-                    if (!this.validateFloat(w))
-                        return "unable to parse diffuse a-value of the spot for ID = " + spotId;
-                    diffuse.push(x, y, z, w);
-
+                    error = this.parseAndValidateRGBAvalues(grandChildren,diffuseIndex,spotId, "diffuse","spot",diffuse);
+                    if(error != null)
+                        return error;
                     //reads the specular values
-                    var { x, y, z, w } = this.parsePointRGBA(grandChildren, specularIndex);
-                    if (!this.validateFloat(x))
-                        return "unable to parse specular r-value of the spot for ID = " + spotId;
-                    if (!this.validateFloat(y))
-                        return "unable to parse specular g-value of the spot for ID = " + spotId;
-                    if (!this.validateFloat(z))
-                        return "unable to parse specular b-value of the spot for ID = " + spotId;
-                    if (!this.validateFloat(w))
-                        return "unable to parse specular a-value of the spot for ID = " + spotId;
-                    specular.push(x, y, z, w);
+                    error = this.parseAndValidateRGBAvalues(grandChildren,specularIndex,spotId, "specular","spot",specular);
+                    if(error != null)
+                        return error;
 
                     this.spots[spotId] = [enabled, angle, exponent, location, target, ambient, diffuse, specular];
                 }
@@ -729,15 +664,7 @@ class MySceneGraph {
         return null;
     }
 
-    /**
-     * 
-     * @param {*} children 
-     * @param {*} index 
-     * @param {*} id 
-     * @param {*} s1 
-     * @param {*} s2 
-     * @param {*} vector 
-     */
+    //TODO decidir se da erro ou se assumo valores por defeito
     parseAndValidateRGBAvalues(children,index,id, s1,s2,vector)
     {
         var { x, y, z, w } = this.parsePointRGBA(children, index);
@@ -753,15 +680,7 @@ class MySceneGraph {
         return null;
     }
 
-    /**
-     * 
-     * @param {*} children 
-     * @param {*} index 
-     * @param {*} id 
-     * @param {*} s1 
-     * @param {*} s2 
-     * @param {*} vector 
-     */
+ 
     parseAndValidateXYZvalues(children,index,id,s1,s2,vector)
     {
         var { x, y, z } = this.parsePointXYZ(children, 'x', 'y', 'z', index);
@@ -772,6 +691,23 @@ class MySceneGraph {
         if (!this.validateFloat(z))
             return "unable to parse " + s1 + " z-coordinate of " +  s2 + " position for ID = " + id;
         vector.push(x, y, z);
+        return null;
+    }
+
+ 
+    parseAndValidateXYZWvalues(children,index,id,s1,s2,vector)
+    {
+        var { x, y, z, w } = this.parsePointXYZW(children, 'x', 'y', 'z', 'w', index);
+        if (!this.validateFloat(x))
+            return "unable to parse " + s1 + " x-coordinate of " +  s2 + " position for ID = " + id;
+        if (!this.validateFloat(y))
+            return "unable to parse " + s1 + " y-coordinate of " +  s2 + " position for ID = " + id;
+        if (!this.validateFloat(z))
+            return "unable to parse " + s1 + " z-coordinate of " +  s2 + " position for ID = " + id;
+        if (!this.validateFloat(w))
+            return "unable to parse " + s1 + " w-coordinate of " +  s2 + " position for ID = " + id;
+        vector.push(x, y, z, w);
+        return null;
     }
 
 
@@ -862,7 +798,7 @@ class MySceneGraph {
         return null;
     }
 
-
+    // TODO mudar para eliminar o codigo duplicado, chamar as funcoes criadas para esse efeito
     parseMaterialsMaterial(children,index)
     {
         var material = {
