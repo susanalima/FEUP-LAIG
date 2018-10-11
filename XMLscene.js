@@ -103,7 +103,7 @@ class XMLscene extends CGFscene {
     }
 
 
-    //TODO ORTHO CAMERA
+    //TODO ORTHO CAMERA e valor near da camera
     loadParsedCamera()
     {
         var defaultCam = this.graph.views.default;

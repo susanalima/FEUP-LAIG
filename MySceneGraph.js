@@ -221,154 +221,6 @@ class MySceneGraph {
         return null;
     }
 
-    /**
-     * Parses the <views> block. 
-     * @param {views block element} viewsNode
-     */
-  /*  parseViews(viewsNode) {
-        var children = viewsNode.children;
-        this.perspectives = [];
-        this.orthos = [];
-        var grandChildren = [];
-        var nodeNames = [];
-        var numViews = 0;
-
-        //nao sei pode ser este o valor de default  
-        this.default = this.reader.getString(viewsNode, 'default');
-        //acho que este isNaN nao devia estar aqui
-        if (this.default == null) {
-            this.default = "views_default";
-            this.onXMLMinorError("unable to parse value for views default; assuming 'default = views_default'");
-        }
-
-
-        for (var i = 0; i < children.length; i++) {
-            if (children[i].nodeName == "perspective") {
-                //get the id of current perspective
-                var perspectiveId = this.reader.getString(children[i], 'id');
-                if (perspectiveId == null)
-                    return "no ID defined for view";
-
-                // Checks for repeated IDs.
-                if (this.perspectives[perspectiveId] != null)
-                    return "ID must be unique for each view (conflict: ID = " + perspectiveId + ")";
-
-                //get the near value of current perspective
-                var near = this.reader.getFloat(children[i], 'near');
-                if (near == null)
-                    return "no near defined for perspective";
-
-                //get the far value of current perspective
-                var far = this.reader.getFloat(children[i], 'far');
-                if (far == null)
-                    return "no far defined for perspective";
-
-                //get the angle value of current perspective
-                var angle = this.reader.getFloat(children[i], 'angle');
-                if (angle == null)
-                    return "no angle defined for perspective";
-
-                grandChildren = children[i].children;
-                if (grandChildren.length != 2)
-                    return "incorrect number of children of perspective";
-
-                nodeNames = [];
-                for (var j = 0; j < grandChildren.length; j++) {
-                    nodeNames.push(grandChildren[j].nodeName);
-                }
-
-                var fromIndex = nodeNames.indexOf("from");
-                var toIndex = nodeNames.indexOf("to");
-
-                if (fromIndex == -1)
-                    return "perspective's from position undefined for ID = " + perspectiveId;
-
-                if (fromIndex == -1)
-                    return "perspective's to position undefined for ID = " + perspectiveId;
-
-                var fromPosition = [];
-                var toPosition = [];
-
-                //reads the from position
-                var { x, y, z } = this.parsePointXYZ(grandChildren, 'x', 'y', 'z', fromIndex);
-                if (!this.validateFloat(x))
-                    return "unable to parse from x-coordinate of the perspective position for ID = " + perspectiveId;
-                if (!this.validateFloat(y))
-                    return "unable to parse from y-coordinate of the perspective position for ID = " + perspectiveId;
-                if (!this.validateFloat(z))
-                    return "unable to parse from z-coordinate of the perspective position for ID = " + perspectiveId;
-                fromPosition.push(x, y, z);
-
-                //reads the to position
-                var { x, y, z } = this.parsePointXYZ(grandChildren, 'x', 'y', 'z', toIndex);
-                if (!this.validateFloat(x))
-                    return "unable to parse to x-coordinate of the perspective position for ID = " + perspectiveId;
-                if (!this.validateFloat(y))
-                    return "unable to parse to y-coordinate of the perspective position for ID = " + perspectiveId;
-                if (!this.validateFloat(z))
-                    return "unable to parse to z-coordinate of the perspective position for ID = " + perspectiveId;
-                toPosition.push(x, y, z);
-
-                this.perspectives[perspectiveId] = [near, far, angle, fromPosition, toPosition];
-
-            }
-            else {
-                if (children[i].nodeName == "ortho") {
-                    //get the id of current ortho
-                    var orthoId = this.reader.getString(children[i], 'id');
-                    if (orthoId == null)
-                        return "no ID defined for view";
-
-                    // Checks for repeated IDs.
-                    if (this.orthos[orthoId] != null)
-                        return "ID must be unique for each view (conflict: ID = " + orthoId + ")";
-
-                    //get the near value of current ortho
-                    var near = this.reader.getFloat(children[i], 'near');
-                    if (near == null)
-                        return "no near defined for ortho";
-
-                    //get the far value of current ortho
-                    var far = this.reader.getFloat(children[i], 'far');
-                    if (far == null)
-                        return "no far defined for ortho";
-
-                    //get the left value of current ortho
-                    var left = this.reader.getFloat(children[i], 'left');
-                    if (left == null)
-                        return "no left defined for ortho";
-
-                    //get the right value of current ortho
-                    var right = this.reader.getFloat(children[i], 'right');
-                    if (right == null)
-                        return "no right defined for ortho";
-
-                    //get the top value of current ortho
-                    var top = this.reader.getFloat(children[i], 'top');
-                    if (top == null)
-                        return "no top defined for ortho";
-
-                    //get the bottom value of current ortho
-                    var bottom = this.reader.getFloat(children[i], 'bottom');
-                    if (bottom == null)
-                        return "no bottom defined for ortho";
-
-                    this.orthos[orthoId] = [near, far, left, right, top, bottom];
-                }
-                else {
-                    this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
-                    continue;
-                }
-            }
-            numViews++;
-        }
-
-        if (numViews == 0)
-            return "at least one view must be defined";
-
-        this.log("Parsed views");
-        return null;
-    }*/
 
      /**
      * Parses the <views> block. 
@@ -1030,7 +882,7 @@ class MySceneGraph {
 
         if (numMaterials == 0)
             return "at least one material must be defined";
-            
+
         this.log("Parsed materials");
         return null;
     }
@@ -1060,14 +912,11 @@ class MySceneGraph {
         var numTransformations = 0;
         var grandChildren = [];
         var nodeNames = [];
-        var translations = [];
+       /* var translations = [];
         var rotations = [];
-        var scales = [];
+        var scales = [];*/
         for (var i = 0; i < children.length; i++) {
             if (children[i].nodeName == "transformation") {
-                translations = [];
-                rotations = [];
-                scales = [];
                 var numT = 0;
                 //get the id of current transformation
                 var transformationId = this.reader.getString(children[i], 'id');
@@ -1083,23 +932,27 @@ class MySceneGraph {
                 for (var j = 0; j < grandChildren.length; j++) {
                     nodeNames.push(grandChildren[j].nodeName);
                 }
-
+                var tmp_transformations = [];
                 for (var j = 0; j < grandChildren.length; j++) {
                     var nodeName = grandChildren[j].nodeName;
                     switch (nodeName) {
                         case "translate":
-                            var translate = this.parseTranslate(grandChildren, j);
-                            translations.push(translate);
+                            var translate = this.parseTransformationTranslate(grandChildren, j);
+                           // translations.push(translate);
+                           tmp_transformations.push(translate);
                             numT++;
                             break;
                         case "rotate":
-                            var rotate = this.parseRotate(grandChildren, j);
-                            rotations.push(rotate);
+                            var rotate = this.parseTransformationRotate(grandChildren, j);
+                            //rotations.push(rotate);
+                            tmp_transformations.push(rotate);
                             numT++;
                             break;
                         case "scale":
-                            var scale = this.parseScale(grandChildren, j);
-                            scales.push(scale);
+                            var scale = this.parseTransformationScale(grandChildren, j);
+                           // scales.push(scale);
+                           tmp_transformations.push(scale);
+                           
                             numT++;
                             break;
                         default:
@@ -1110,7 +963,7 @@ class MySceneGraph {
                 if (numT == 0)
                     return "at least one transformation must be defined";
 
-                this.transformations[transformationId] = [translations, rotations, scales];
+                this.transformations[transformationId] = tmp_transformations;
             }
             else {
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
@@ -1480,26 +1333,43 @@ class MySceneGraph {
 
     }
 
-    /*****mudar de sitio********/
-    parseScale(children, index) {
-        var scale = [];
+
+    parseTransformationScale(children, index) {
+        var scale = {
+            class : 'scale',
+            x :null,
+            y: null,
+            z: null
+        }
         var { x, y, z } = this.parsePointXYZ(children, 'x', 'y', 'z', index);
-        scale.push(x, y, z);
+        scale.x = x;
+        scale.y = y;
+        scale.z = z;
         return scale;
     }
 
-    parseRotate(children, index) {
-        var rotate = [];
-        var axis = this.reader.getString(children[index], 'axis');
-        var angle = this.reader.getFloat(children[index], 'angle');
-        rotate.push(axis, angle);
+    parseTransformationRotate(children, index) {
+        var rotate = {
+            class : 'rotate',
+            axis : null,
+            angle : null
+        }
+        rotate.axis = this.reader.getString(children[index], 'axis');
+        rotate.angle = this.reader.getFloat(children[index], 'angle');
         return rotate;
     }
 
-    parseTranslate(children, index) {
-        var translate = [];
+    parseTransformationTranslate(children, index) {
+        var translate = {
+            class : 'translate',
+            x :null,
+            y: null,
+            z: null
+        }
         var { x, y, z } = this.parsePointXYZ(children, 'x', 'y', 'z', index);
-        translate.push(x, y, z);
+        translate.x = x;
+        translate.y = y;
+        translate.z = z;
         return translate;
     }
 
