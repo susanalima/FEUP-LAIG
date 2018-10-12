@@ -1545,12 +1545,17 @@ class MySceneGraph {
     {
         var prim = this.primitives[leaf];
         this.scene.pushMatrix();
-        //var text = textures[textures.length-1];
-        //this.textures[text.id].bind();//TODO VER SE E ESTA A FUNCAO
-        //var mat = materials[materials.length-1];
-        //this.materials[mat[0]].apply();//TODO MUDAR O ZERO
+        var text = textures[textures.length-1];
+        var mat = materials[materials.length-1];
+        var m = this.materials[mat[0]]
+        //m.loadTexture("./scenes/images/table.png");//TODO MUDAR O ZERO
+        m.apply();
+        this.textures[text.id].bind();
         prim.display();
         this.scene.popMatrix();
     }
+
+
+    
 }
 
