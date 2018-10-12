@@ -1016,7 +1016,7 @@ class MySceneGraph {
 
                     case "rectangle":
                         var rectangle = this.parseRetangle(grandChildren, 0);
-                        this.primitives[primitiveId] = rectangle;
+                        this.primitives[primitiveId] = this.createRectangle(rectangle);
                         break;
 
                     case "cylinder":
@@ -1198,7 +1198,8 @@ class MySceneGraph {
 
     createRectangle(rectangle)
     {
-
+        var ret = new MyRectangle(this.scene,rectangle.x1,rectangle.y1,rectangle.x2,rectangle.y2);
+        return ret;
     }
 
     createTriangle(triangle)
