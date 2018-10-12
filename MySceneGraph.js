@@ -1,3 +1,4 @@
+
 // Order of the groups in the XML document.
 var SCENE_INDEX = 0;
 var VIEWS_INDEX = 1;
@@ -10,8 +11,8 @@ var PRIMITIVES_INDEX = 7;
 var COMPONENTS_INDEX = 8;
 
 /**
- * MySceneGraph class, representing the scene graph.
- */
+* MySceneGraph class, representing the scene graph.
+*/
 class MySceneGraph {
     /**
      * @constructor
@@ -36,10 +37,10 @@ class MySceneGraph {
         this.reader = new CGFXMLreader();
 
         /*
-         * Read the contents of the xml file, and refer to this class for loading and error handlers.
-         * After the file is read, the reader calls onXMLReady on this object.
-         * If any error occurs, the reader calls onXMLError on this object, with an error message
-         */
+        * Read the contents of the xml file, and refer to this class for loading and error handlers.
+        * After the file is read, the reader calls onXMLReady on this object.
+        * If any error occurs, the reader calls onXMLError on this object, with an error message
+        */
 
         this.reader.open('scenes/' + filename, this);
     }
@@ -64,9 +65,9 @@ class MySceneGraph {
     }
 
     /**
- * Parses the XML file, processing each block.
- * @param {XML root element} rootElement
- */
+    * Parses the XML file, processing each block.
+    * @param {XML root element} rootElement
+    */
     parseXMLFile(rootElement) {
         if (rootElement.nodeName != "yas")
             return "root tag <yas> missing";
@@ -499,9 +500,9 @@ class MySceneGraph {
 
 
     /**
-   * Parses the <lights> node.
-   * @param {lights block element} lightsNode
-   */
+    * Parses the <lights> node.
+    * @param {lights block element} lightsNode
+    */
     parseLights(lightsNode) {
         var children = lightsNode.children;
         this.omnis = [];
@@ -1050,16 +1051,6 @@ class MySceneGraph {
         return null;
     }
 
-
-    /*
-  
-    4) se nas transformations tiver um bloco de transformacoes e as diferentes transformacoes forem guardadas 
-    individualmente nesse bloco, vai ser impossivel le las sem saber a ordem delas...
-    tem que se guardar as rotacoes num array de rotacoes, os scales num array de scales...etc, e depois guardar esses
-    arrays dentro do array transformations (de modo a definir qual a posicao do array transformations vai 
-    corresponder a cada tipo de transformacao ) ou usar uma struct....
-    */
-
     parseComponents(componentsNode) {
 
         var component = {
@@ -1213,6 +1204,32 @@ class MySceneGraph {
         }
         this.log("Parsed components");
         return null;
+    }
+
+
+    createRectangle(rectangle)
+    {
+
+    }
+
+    createTriangle(triangle)
+    {
+
+    }
+
+    createSphere(sphere)
+    {
+
+    }
+
+    createCylinder(sphere)
+    {
+        
+    }
+
+    createTorus(torus)
+    {
+
     }
 
 
@@ -1410,23 +1427,7 @@ class MySceneGraph {
         console.log("   " + message);
     }
 
-    applyMaterial(comp, compAppearance) {
-
-        //var mat = this.materials[comp[1][0]];
-        //compAppearance.setEmission(mat[0][0],mat[0][1],mat[0][2],mat[0][3]);
-        //compAppearance.setAmbient(mat[1][0],mat[1][1],mat[1][2],mat[1][3]);
-        //compAppearance.setDiffuse(mat[2][0],mat[2][1],mat[2][2],mat[2][3]);
-        //compAppearance.setSpecular(mat[3][0],mat[3][1],mat[3][2],mat[3][3]);
-    }
-
-    applyTexture(comp, compAppearance) {
-        //var text = this.textures[comp[2][0]];
-        //compAppearance.loadTexture(text[0]);
-    }
-
-    applyTransformations(comp) {
-
-    }
+   
 
     displayComp(comp) {
 
@@ -1453,8 +1454,5 @@ class MySceneGraph {
             this.displayComp(this.components[l]);
         }
     }
-
-
-
-
 }
+
