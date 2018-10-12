@@ -1548,14 +1548,10 @@ class MySceneGraph {
         var text = textures[textures.length-1];
         var mat = materials[materials.length-1];
         var m = this.materials[mat[0]]
-        //m.loadTexture("./scenes/images/table.png");//TODO MUDAR O ZERO
         m.apply();
         this.textures[text.id].bind();
         prim.display();
         this.scene.popMatrix();
     }
-
-
-    
 }
 
