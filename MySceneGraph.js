@@ -1111,10 +1111,10 @@ class MySceneGraph {
                                 var nodeName2 = ggrandChildren[k].nodeName;
                                 if (nodeName == "transformationref") {
                                     //var transformationRef = [];
-                                    component.trefID = this.reader.getString(ggrandChildren[k], 'id');
+                                    component.transformations.trefID = this.reader.getString(ggrandChildren[k], 'id');
                                     //transformationRef.push(tref)
                                     //transformation.push(transformationRef);
-                                    component.tref = true;
+                                    component.transformations.tref = true;
                                 }
                                 else {
                                     switch (nodeName2) {
