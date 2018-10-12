@@ -431,11 +431,14 @@ class MySceneGraph {
         return camera;
     }
 
-    //TODO MUDAR CAMARA PARA SER ORTHO
+    //NAO SEI SE FUNCIONA
+    //CGFcameraOrtho( left, right, bottom, top, near, far, position, target, up )
     createCameraOrtho(ortho) {
-        var camera = new CGFcamera(0.4, ortho.near, ortho.far, ortho.fromPosition, ortho.toPosition);
-        return camera;
+       var up = [0,0,1];
+       var camera = new CGFcameraOrtho(ortho.left, ortho.right, ortho.bottom, ortho.top, ortho.near,ortho.far,ortho.fromPosition,ortho.toPosition,up);
+       return camera;
     }
+
 
 
     //TODO  MUDAR PARA USAR AS OUTRAS FUNCOES, VER CENA DOS VALORES DE DEFAULT
@@ -1052,8 +1055,6 @@ class MySceneGraph {
     parseComponents(componentsNode) {
 
         var component = {
-
-            id: "0",
 
             materials: [],
 
