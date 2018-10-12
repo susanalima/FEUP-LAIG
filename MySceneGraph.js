@@ -331,7 +331,8 @@ class MySceneGraph {
         if (error != null)
             return error;
 
-        this.views.perspectives[perspectiveId] = perspective;
+    
+        this.views.perspectives[perspectiveId] =  this.createCameraPerspective(perspective);
 
         return null;
     }
@@ -417,10 +418,24 @@ class MySceneGraph {
         if (error != null)
             return error;
 
-        this.views.orthos[orthoId] = ortho;
+        this.views.orthos[orthoId] = this.createCameraOrtho(ortho);
 
 
         return null;
+    }
+
+
+    createCameraPerspective(perspective)
+    {
+        var camera = new CGFcamera(0.4,perspective.near,perspective.far,perspective.fromPosition,perspective.toPosition);
+        return camera;
+    }
+
+   //TODO MUDAR CAMARA PARA SER ORTHO
+    createCameraOrtho(ortho)
+    {
+        var camera = new CGFcamera(0.4,ortho.near,ortho.far,ortho.fromPosition,ortho.toPosition); 
+        return camera;
     }
 
 
@@ -974,35 +989,17 @@ class MySceneGraph {
      */
     parsePrimitives(primitivesNode) {
         //Important new arrays should be added according to new primitives
-        var primitive = {
-            prims: {
-                id: "0",
-                triangles: [],
-                rectangles: [],
-                spheres: [],
-                cylinders: [],
-                torus: []
-            }
-        }
         var children = primitivesNode.children;
-        //this.primitives = [];
+        this.primitives = [];
         var numPrimitives = 0;
         var grandChildren = [];
         var nodeNames = [];
-        this.triangles = [];
-        this.rectangles = [];
-        this.spheres = [];
-        this.cylinders = [];
-        this.torus = [];
         for (var i = 0; i < children.length; i++) {
             if (children[i].nodeName == "primitive") {
-
-
                 var primitiveId = this.reader.getString(children[i], 'id');
                 if (primitiveId == null)
                     return "no Id defined for primitive";
-                if (this.triangles[primitiveId] != null || this.rectangles[primitiveId] != null || this.spheres[primitiveId] != null
-                    || this.cylinders[primitiveId] != null || this.torus[primitiveId] != null)
+                if (this.primitives[primitiveId] != null)
                     return "Id must be unique for each primitive  (conflict: ID = " + primitiveId + ")";
 
                 grandChildren = children[i].children;
@@ -1015,39 +1012,33 @@ class MySceneGraph {
                 switch (nodeName) {
                     case "triangle":
                         var triangle = this.parseTriangle(grandChildren, 0);
-                        this.triangles[primitiveId] = [triangle];
+                        this.primitives[primitiveId] = triangle;
                         break;
 
                     case "rectangle":
                         var rectangle = this.parseRetangle(grandChildren, 0);
-                        this.rectangles[primitiveId] = [rectangle];
+                        this.primitives[primitiveId] = rectangle;
                         break;
 
                     case "cylinder":
                         var cylinder = this.parseCylinder(grandChildren, 0);
-                        this.cylinders[primitiveId] = [cylinder];
+                        this.primitives[primitiveId] = cylinder;
                         break;
 
                     case "sphere":
                         var sphere = this.parseSphere(grandChildren, 0);
-                        this.spheres[primitiveId] = [sphere];
+                        this.primitives[primitiveId] = sphere;
                         break;
 
                     case "torus":
                         var g_torus = this.parseTorus(grandChildren, 0);
-                        this.torus[primitiveId] = [g_torus];
+                        this.primitives[primitiveId] = [g_torus];
                         break;
 
                     default:
                         this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
                         break;
                 }
-
-                /* if(numP == 0)
-                 return "at least one primitive must be defined";
- 
-                 this.primitives[primitiveId] = [triangles, rectangles, cylinders, spheres, torus2];*/
-
             }
             else {
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
@@ -1245,54 +1236,89 @@ class MySceneGraph {
     /**usar na das components tambem */
     /****mudar de sitio *************/
     parseTorus(children, index) {
-        var g_torus = [];
-        var inner = this.reader.getFloat(children[index], 'inner');
-        var outer = this.reader.getFloat(children[index], 'outer');
-        var slices = this.reader.getFloat(children[index], 'slices');
-        var loops = this.reader.getFloat(children[index], 'loops');
-        g_torus.push(inner, outer, slices, loops);
+        var g_torus = {
+            inner : null,
+            outer : null,
+            slices : null,
+            loops : null
+        }
+        g_torus.inner = this.reader.getFloat(children[index], 'inner');
+        g_torus.outer = this.reader.getFloat(children[index], 'outer');
+        g_torus.slices = this.reader.getFloat(children[index], 'slices');
+        g_torus.loops = this.reader.getFloat(children[index], 'loops');
         return g_torus;
     }
 
     parseSphere(children, index) {
-        var sphere = [];
-        var radius = this.reader.getFloat(children[index], 'radius');
-        var stacks = this.reader.getFloat(children[index], 'stacks');
-        var slices = this.reader.getFloat(children[index], 'slices');
-        sphere.push(radius, stacks, slices);
+        var sphere = {
+            radius : null,
+            stacks : null,
+            slices : null
+        }
+        sphere.radius = this.reader.getFloat(children[index], 'radius');
+        sphere.stacks = this.reader.getFloat(children[index], 'stacks');
+        sphere.slices = this.reader.getFloat(children[index], 'slices');
         return sphere;
     }
 
     parseCylinder(children, index) {
-        var cylinder = [];
-        var base = this.reader.getFloat(children[index], 'base');
-        var top = this.reader.getFloat(children[index], 'top');
-        var height = this.reader.getFloat(children[index], 'height');
-        var stacks = this.reader.getFloat(children[index], 'stacks');
-        var slices = this.reader.getFloat(children[index], 'slices');
-        cylinder.push(base, top, height, stacks, slices);
+        var cylinder = {
+            base:null,
+            top:null,
+            height:null,
+            stacks:null,
+            slices:null
+        }
+        cylinder.base = this.reader.getFloat(children[index], 'base');
+        cylinder.top = this.reader.getFloat(children[index], 'top');
+        cylinder.height = this.reader.getFloat(children[index], 'height');
+        cylinder.stacks = this.reader.getFloat(children[index], 'stacks');
+        cylinder.slices = this.reader.getFloat(children[index], 'slices');
         return cylinder;
     }
 
     parseRetangle(children, index) {
-        var rectangle = [];
+        var rectangle = {
+            x1 : null,
+            y1 : null,
+            x2 : null,
+            y2 : null
+        }
         var x = this.reader.getFloat(children[index], 'x1');
         var y = this.reader.getFloat(children[index], 'y1');
-        rectangle.push(x, y);
-        var x = this.reader.getFloat(children[index], 'x2');
-        var y = this.reader.getFloat(children[index], 'y2');
-        rectangle.push(x, y);
+        rectangle.x1 = x;
+        rectangle.y1 = y;
+        x = this.reader.getFloat(children[index], 'x2');
+        y = this.reader.getFloat(children[index], 'y2');
+        rectangle.x2 = x;
+        rectangle.y2 = y;
         return rectangle;
     }
 
     parseTriangle(children, index) {
-        var triangle = [];
+        var triangle = {
+            x1 : null,
+            y1 : null,
+            z1 : null,
+            x2 : null,
+            y2 : null,
+            z2 : null,
+            x3 : null,
+            y3 : null,
+            z3 : null
+        }
         var { x, y, z } = this.parsePointXYZ(children, 'x1', 'y1', 'z1', index);
-        triangle.push(x, y, z);
+        triangle.x1 = x;
+        triangle.y1 = y;
+        triangle.z1 = z;
         var { x, y, z } = this.parsePointXYZ(children, 'x2', 'y2', 'z2', index);
-        triangle.push(x, y, z);
+        triangle.x2 = x;
+        triangle.y2 = y;
+        triangle.z2 = z;
         var { x, y, z } = this.parsePointXYZ(children, 'x3', 'y3', 'z3', index);
-        triangle.push(x, y, z);
+        triangle.x3 = x;
+        triangle.y3 = y;
+        triangle.z3 = z;
         return triangle;
     }
 
@@ -1319,7 +1345,7 @@ class MySceneGraph {
     }
 
       //TODO decidir se da erro ou se assumo valores por defeito
-      parseAndValidateRGBAvalues(children, index, id, s1, s2, vector) {
+    parseAndValidateRGBAvalues(children, index, id, s1, s2, vector) {
         var { x, y, z, w } = this.parsePointRGBA(children, index);
         if (!this.validateFloat(x))
             return "unable to parse " + s1 + " r-value of the " + s2 + " for ID = " + id;
