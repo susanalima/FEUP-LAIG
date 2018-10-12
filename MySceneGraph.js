@@ -1224,7 +1224,7 @@ class MySceneGraph {
 
     createCylinder(sphere)
     {
-        
+
     }
 
     createTorus(torus)
@@ -1431,17 +1431,7 @@ class MySceneGraph {
 
     displayComp(comp) {
 
-        this.compAppearance = new CGFappearance(this.scene);
-
-        this.applyMaterial(comp, this.compAppearance);
-        this.applyTexture(comp, this.compAppearance);
-
-
-        this.scene.pushMatrix();
-        this.compAppearance.apply();
-        this.applyTransformations(comp);
-        comp.display;
-        this.scene.popMatrix();
+       
     }
 
 
