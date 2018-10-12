@@ -57,7 +57,7 @@ class XMLscene extends CGFscene {
 
             if (this.graph.omnis.hasOwnProperty(key)) {
                 var light = this.graph.omnis[key];
-                console.dir(light);
+      
                 //lights are predefined in cgfscene
                 this.lights[i].setPosition(light[1][0], light[1][1], light[1][2], light[1][3]);
                 this.lights[i].setAmbient(light[2][0], light[2][1], light[2][2], light[2][3]);
@@ -94,6 +94,7 @@ class XMLscene extends CGFscene {
         this.setGlobalAmbientLight(this.graph.ambientAmbient[0], this.graph.ambientAmbient[1], this.graph.ambientAmbient[2], this.graph.ambientAmbient[3]);
 
         this.initLights();
+        //this.initCameras();
         this.loadParsedCameras();
 
         // Adds lights group.
@@ -101,6 +102,7 @@ class XMLscene extends CGFscene {
 
         this.sceneInited = true;
     }
+
 
 
     //TODO ORTHO CAMERA e valor near da camera e adicionar uma lista de camaras que se podem trocar na interface
