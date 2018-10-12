@@ -434,7 +434,7 @@ class MySceneGraph {
     //NAO SEI SE FUNCIONA
     //CGFcameraOrtho( left, right, bottom, top, near, far, position, target, up )
     createCameraOrtho(ortho) {
-       var up = [0,0,1];
+       var up = [0,1,0];
        var camera = new CGFcameraOrtho(ortho.left, ortho.right, ortho.bottom, ortho.top, ortho.near,ortho.far,ortho.fromPosition,ortho.toPosition,up);
        return camera;
     }
@@ -1021,7 +1021,7 @@ class MySceneGraph {
 
                     case "cylinder":
                         var cylinder = this.parseCylinder(grandChildren, 0);
-                        this.primitives[primitiveId] = cylinder;
+                        this.primitives[primitiveId] = this.createCylinder(cylinder);
                         break;
 
                     case "sphere":
@@ -1054,7 +1054,17 @@ class MySceneGraph {
 
     parseComponents(componentsNode) {
 
-        var component = {
+        
+
+        var children = componentsNode.children;
+        this.components = [];
+        var numComponents = 0;
+        var grandChildren = [];
+        var nodeNames = [];
+
+        for (var i = 0; i < children.length; i++) {
+
+            var component = {
 
             materials: [],
 
@@ -1073,17 +1083,9 @@ class MySceneGraph {
 
             children: {
                 componentsRef: [],
-                primitivesRef: [],
+                primitivesRef: []
             }
         }
-
-        var children = componentsNode.children;
-        this.components = [];
-        var numComponents = 0;
-        var grandChildren = [];
-        var nodeNames = [];
-
-        for (var i = 0; i < children.length; i++) {
 
             if (children[i].nodeName == "component") {
                 var componentId = this.reader.getString(children[i], "id");
@@ -1109,12 +1111,12 @@ class MySceneGraph {
                         case "transformation":
                             for (var k = 0; k < ggrandChildren.length; k++) {
                                 var nodeName2 = ggrandChildren[k].nodeName;
-                                if (nodeName == "transformationref") {
+                                if (nodeName2 == "transformationref") {
                                     //var transformationRef = [];
-                                    component.trefID = this.reader.getString(ggrandChildren[k], 'id');
+                                    component.transformations.trefID = this.reader.getString(ggrandChildren[k], 'id');
                                     //transformationRef.push(tref)
                                     //transformation.push(transformationRef);
-                                    component.tref = true;
+                                    component.transformations.tref = true;
                                 }
                                 else {
                                     switch (nodeName2) {
@@ -1161,7 +1163,7 @@ class MySceneGraph {
                             break;
 
                         case "children":
-                            for (var k = 0; k < ggrandChildren.length; k++) {
+                            for (let k = 0; k < ggrandChildren.length; k++) {
                                 var nodeName2 = ggrandChildren[k].nodeName;
                                 switch (nodeName2) {
                                     case "componentref":
@@ -1192,6 +1194,7 @@ class MySceneGraph {
             this.components[componentId] = component;
         }
         this.log("Parsed components");
+        console.dir(this.components);
         return null;
     }
 
@@ -1214,7 +1217,8 @@ class MySceneGraph {
 
     createCylinder(cylinder)
     {
-        //var cylinder = new MyCylinder(this.scene, cylinder.slices, cylinder.stacks); //TODO
+        var cylinder = new MyCylinder(this.scene, cylinder.slices, cylinder.stacks,cylinder.top,cylinder.height); //TODO
+        return cylinder;
     }
 
     createTorus(torus)
@@ -1438,9 +1442,115 @@ class MySceneGraph {
      */
     displayScene() {
         // entry point for graph rendering
-        for (var l = 0; l < this.components.length; l++) {
-            this.displayComp(this.components[l]);
+       var transformations = [];
+       var materials = [];
+       var textures = [];
+       //console.dir(this.components[this.root]);
+       this.visitNode(this.components[this.root],transformations,materials,textures);
+       
+    }
+
+    applyTransformationsPush(transformations)
+    {
+        for(let i = 0; i < transformations.length; i++)
+        {
+            this.applyTransformation(transformations[i]);
         }
+    }
+
+    applyTransformations(transformations)
+    {
+        for (var key in transformations) 
+        {
+            this.applyTransformation(transformations[key]);
+        }
+    }
+
+    applyTransformation(transformation)
+    {
+        switch(transformation.class)
+        {
+            case "translate":
+            this.scene.translate(transformation.x,transformation.y,transformation.z);
+            break;
+            case "scale":
+            this.scene.scale(transformation.x,transformation.y,transformation.z);
+            break;
+            case "rotate":
+            this.applyRotate(transformation);
+            break;
+            default: //TODO MENSAGEM DE ERRO
+            console.log("hhh");
+            break;
+        }
+    }
+    applyRotate(rotate)
+    {
+        var angle = Math.PI/180 * rotate.angle;
+        switch(rotate.axis)
+        {
+            case "x":
+            case "X":
+            this.scene.rotate(angle,1,0,0);
+            break;
+            case "y":
+            case "Y":
+            this.scene.rotate(angle,0,1,0);
+            break;
+            case "z":
+            case "Z":
+            this.scene.rotate(angle,0,0,1);
+            break;
+            default: //TODO MENSAGEM DE ERRO
+            console.log("hhh");
+            break;
+        }
+    }
+
+
+    visitNode(node,transformations,materials,textures)
+    {
+        
+        transformations.push(node.transformations);
+        materials.push(node.materials);
+        textures.push(node.texture);
+        this.scene.pushMatrix();
+        if(node.transformations.tref)
+        {
+            this.applyTransformations(this.transformations[node.transformations.trefID]);
+        }
+        else
+        {
+            this.applyTransformationsPush(node.transformations.transformations);
+        }
+        for(let i = 0; i < node.children.primitivesRef.length; i++)
+        {
+            this.visitLeaf(node.children.primitivesRef[i],transformations,materials,textures);
+        }
+        for(let i = 0; i < node.children.componentsRef.length; i++)
+        {
+            this.visitNode(this.components[node.children.componentsRef[i]],transformations,materials,textures);
+        }
+
+        this.scene.popMatrix();
+        transformations.pop();
+        materials.pop();
+        textures.pop();
+        return null;
+
+    
+    }
+
+    visitLeaf(leaf,transformations,materials,textures)
+    {
+        var prim = this.primitives[leaf];
+        this.scene.pushMatrix();
+        //var text = textures[textures.length-1];
+        //this.textures[text.id].bind();//TODO VER SE E ESTA A FUNCAO
+        //var mat = materials[materials.length-1];
+        //this.materials[mat[0]].apply();//TODO MUDAR O ZERO
+        prim.display();
+        this.scene.popMatrix();
     }
 }
 
