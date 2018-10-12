@@ -233,8 +233,6 @@ class MySceneGraph {
             orthos: [],
             perspectives: []
         }
-        var grandChildren = [];
-        var nodeNames = [];
         var numViews = 0;
         var error;
 
@@ -247,14 +245,14 @@ class MySceneGraph {
             this.views.default = def;
 
         for (var i = 0; i < children.length; i++) {
-        
+
             switch (children[i].nodeName) {
                 case "perspective":
-                    if((error = this.parseViewsPerspective(children, i)) != null)
+                    if ((error = this.parseViewsPerspective(children, i)) != null)
                         return error;
                     break;
                 case "ortho":
-                    if((error = this.parseViewsOrtho(children, i)) != null)
+                    if ((error = this.parseViewsOrtho(children, i)) != null)
                         return error;
                     break;
                 default:
@@ -270,12 +268,8 @@ class MySceneGraph {
         this.log("Parsed views");
         return null;
     }
-   
-    /**
-     * 
-     * @param {*} children 
-     * @param {*} index 
-     */
+
+
     parseViewsPerspective(children, index) {
         var grandChildren = [];
         var perspective = {
@@ -329,11 +323,11 @@ class MySceneGraph {
             return "perspective's to position undefined for ID = " + perspectiveId;
 
         //reads the from position
-        error = this.parseAndValidateXYZvalues(grandChildren,fromIndex,perspectiveId,"from","perspective",perspective.fromPosition);
+        error = this.parseAndValidateXYZvalues(grandChildren, fromIndex, perspectiveId, "from", "perspective", perspective.fromPosition);
         if (error != null)
             return error;
         //reads the to position
-        this.parseAndValidateXYZvalues(grandChildren,toIndex,perspectiveId,"to","perspective",perspective.toPosition);
+        this.parseAndValidateXYZvalues(grandChildren, toIndex, perspectiveId, "to", "perspective", perspective.toPosition);
         if (error != null)
             return error;
 
@@ -342,12 +336,7 @@ class MySceneGraph {
         return null;
     }
 
-    //FALTA VALIDAR OS PARAMETROS
-    /**
-     * 
-     * @param {*} children 
-     * @param {*} index 
-     */
+    //TODO FALTA VALIDAR OS PARAMETROS
     parseViewsOrtho(children, index) {
         var grandChildren = [];
         var ortho = {
@@ -420,21 +409,22 @@ class MySceneGraph {
             return "ortho's to position undefined for ID = " + orthoId;
 
         //reads the from position
-        error = this.parseAndValidateXYZvalues(grandChildren,fromIndex,orthoId,"from","ortho",ortho.fromPosition);
+        error = this.parseAndValidateXYZvalues(grandChildren, fromIndex, orthoId, "from", "ortho", ortho.fromPosition);
         if (error != null)
             return error;
         //reads the to position
-        this.parseAndValidateXYZvalues(grandChildren,toIndex,orthoId,"to","ortho",ortho.toPosition);
+        this.parseAndValidateXYZvalues(grandChildren, toIndex, orthoId, "to", "ortho", ortho.toPosition);
         if (error != null)
             return error;
 
         this.views.orthos[orthoId] = ortho;
 
-    
+
         return null;
     }
 
 
+    //TODO  MUDAR PARA USAR AS OUTRAS FUNCOES, VER CENA DOS VALORES DE DEFAULT
     /**
     * Parses the <ambient> block. 
     * @param {ambient block element} ambientNode
@@ -500,165 +490,27 @@ class MySceneGraph {
    * @param {lights block element} lightsNode
    */
     parseLights(lightsNode) {
-        //TODO DIVIDIR EM FUNCOES MAIS PEQUENAS
-
         var children = lightsNode.children;
         this.omnis = [];
         this.spots = [];
-        var grandChildren = [];
-        var nodeNames = [];
         var numLights = 0;
         var error;
 
         for (var i = 0; i < children.length; i++) {
-            if (children[i].nodeName == "omni") {
-
-                //get the id of current light
-                var omniId = this.reader.getString(children[i], 'id');
-                if (omniId == null)
-                    return "no ID defined for light";
-
-                // Checks for repeated IDs.
-                if (this.omnis[omniId] != null)
-                    return "ID must be unique for each light (conflict: ID = " + omniId + ")";
-
-                //get the enabled value of current omni
-                var enabled = this.reader.getFloat(children[i], 'enabled');
-                if (enabled == null)
-                    return "no enabled defined for omni";
-
-                grandChildren = children[i].children;
-
-                nodeNames = [];
-                for (var j = 0; j < grandChildren.length; j++) {
-                    nodeNames.push(grandChildren[j].nodeName);
-                }
-
-                var locationIndex = nodeNames.indexOf("location");
-                var ambientIndex = nodeNames.indexOf("ambient");
-                var diffuseIndex = nodeNames.indexOf("diffuse");
-                var specularIndex = nodeNames.indexOf("specular");
-
-                if (locationIndex == -1)
-                    return "omni's location undefined for ID = " + omniId;
-                if (ambientIndex == -1)
-                    return "omni's ambient undefined for ID = " + omniId;
-                if (diffuseIndex == -1)
-                    return "omni's diffuse undefined for ID = " + omniId;
-                if (specularIndex == -1)
-                    return "omni's specular undefined for ID = " + omniId;
-
-                var location = [];
-                var ambient = [];
-                var diffuse = [];
-                var specular = [];
-
-                //reads the location values 
-                error = this.parseAndValidateXYZWvalues(grandChildren,locationIndex,omniId,"location","omni",location);
-                if(error != null)
-                    return error;
-
-                //reads the ambient values
-                error = this.parseAndValidateRGBAvalues(grandChildren,ambientIndex,spotId, "ambient","omni",ambient);
-                if(error != null)
-                    return error;
-
-                //reads the diffuse values 
-                error = this.parseAndValidateRGBAvalues(grandChildren,diffuseIndex,omniId, "diffuse","omni",diffuse);
-                if(error != null)
-                     return error;
-
-                //reads the specular values
-                error = this.parseAndValidateRGBAvalues(grandChildren,specularIndex,omniId, "specular","omni",specular);
-                if(error != null)
-                    return error;
-
-                this.omnis[omniId] = [enabled, location, ambient, diffuse, specular];
-
-            }
-            else {
-                if (children[i].nodeName == "spot") {
-
-                    //get the id of current light
-                    var spotId = this.reader.getString(children[i], 'id');
-                    if (spotId == null)
-                        return "no ID defined for light";
-
-                    // Checks for repeated IDs.
-                    if (this.spots[spotId] != null)
-                        return "ID must be unique for each light (conflict: ID = " + spotId + ")";
-
-                    //get the enabled value of current spot
-                    var enabled = this.reader.getFloat(children[i], 'enabled');
-                    if (enabled == null)
-                        return "no enabled defined for spot";
-
-                    //get the angle value of current spot
-                    var angle = this.reader.getFloat(children[i], 'angle');
-                    if (angle == null)
-                        return "no angle defined for spot";
-
-                    //get the exponent value of current spot
-                    var exponent = this.reader.getFloat(children[i], 'exponent');
-                    if (exponent == null)
-                        return "no exponent defined for spot";
-
-                    grandChildren = children[i].children;
-                    nodeNames = [];
-                    for (var j = 0; j < grandChildren.length; j++) {
-                        nodeNames.push(grandChildren[j].nodeName);
-                    }
-
-                    var locationIndex = nodeNames.indexOf("location");
-                    var targetIndex = nodeNames.indexOf("target");
-                    var ambientIndex = nodeNames.indexOf("ambient");
-                    var diffuseIndex = nodeNames.indexOf("diffuse");
-                    var specularIndex = nodeNames.indexOf("specular");
-
-                    if (locationIndex == -1)
-                        return "spot's location undefined for ID = " + spotId;
-                    if (targetIndex == -1)
-                        return "spot's target undefined for ID = " + spotId;
-                    if (ambientIndex == -1)
-                        return "spot's ambient undefined for ID = " + spotId;
-                    if (diffuseIndex == -1)
-                        return "spot's diffuse undefined for ID = " + spotId;
-                    if (specularIndex == -1)
-                        return "spot's specular undefined for ID = " + spotId;
-
-                    var location = [];
-                    var target = [];
-                    var ambient = [];
-                    var diffuse = [];
-                    var specular = [];
-
-                    //reads the location values 
-                    error = this.parseAndValidateXYZWvalues(grandChildren,locationIndex,spotId,"location","spot",location);
-                    if(error != null)
+            switch (children[i].nodeName) {
+                case "omni":
+                    error = this.parseLightsOmni(children, i);
+                    if (error != null)
                         return error;
-                    //reads the target values
-                    error = this.parseAndValidateXYZvalues(grandChildren,targetIndex,this.spheres,"target","spot",target);
-                    if(error != null)
-                        return error;   
-                    //reads the ambient values
-                    error = this.parseAndValidateRGBAvalues(grandChildren,ambientIndex,spotId, "ambient","spot",ambient);
-                    if(error != null)
+                    break;
+                case "spot":
+                    error = this.parseLightsSpot(children, i);
+                    if (error != null)
                         return error;
-                    //reads the diffuse values
-                    error = this.parseAndValidateRGBAvalues(grandChildren,diffuseIndex,spotId, "diffuse","spot",diffuse);
-                    if(error != null)
-                        return error;
-                    //reads the specular values
-                    error = this.parseAndValidateRGBAvalues(grandChildren,specularIndex,spotId, "specular","spot",specular);
-                    if(error != null)
-                        return error;
-
-                    this.spots[spotId] = [enabled, angle, exponent, location, target, ambient, diffuse, specular];
-                }
-                else {
+                    break;
+                default:
                     this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
                     continue;
-                }
             }
             numLights++;
         }
@@ -670,51 +522,160 @@ class MySceneGraph {
         return null;
     }
 
-    //TODO decidir se da erro ou se assumo valores por defeito
-    parseAndValidateRGBAvalues(children,index,id, s1,s2,vector)
-    {
-        var { x, y, z, w } = this.parsePointRGBA(children, index);
-        if (!this.validateFloat(x))
-            return "unable to parse " + s1 + " r-value of the " + s2 + " for ID = " + id;
-        if (!this.validateFloat(y))
-            return "unable to parse " + s1 + " g-value of the " + s2 + " for ID = " + id;
-        if (!this.validateFloat(z))
-            return "unable to parse " + s1 + " b-value of the " + s2 + " for ID = " + id;
-        if (!this.validateFloat(w))
-            return "unable to parse " + s1 + " a-value of the " + s2 + " for ID = " + id;
-        vector.push(x, y, z, w);
+
+
+    parseLightsOmni(children, index) {
+        var grandChildren = [];
+        var error;
+        //get the id of current light
+        var omniId = this.reader.getString(children[index], 'id');
+        if (omniId == null)
+            return "no ID defined for light";
+
+        // Checks for repeated IDs.
+        if (this.omnis[omniId] != null)
+            return "ID must be unique for each light (conflict: ID = " + omniId + ")";
+
+        //get the enabled value of current omni
+        var enabled = this.reader.getFloat(children[index], 'enabled');
+        if (enabled == null)
+            return "no enabled defined for omni";
+
+        grandChildren = children[index].children;
+
+        var nodeNames = [];
+        for (var j = 0; j < grandChildren.length; j++) {
+            nodeNames.push(grandChildren[j].nodeName);
+        }
+
+        var locationIndex = nodeNames.indexOf("location");
+        var ambientIndex = nodeNames.indexOf("ambient");
+        var diffuseIndex = nodeNames.indexOf("diffuse");
+        var specularIndex = nodeNames.indexOf("specular");
+
+        if (locationIndex == -1)
+            return "omni's location undefined for ID = " + omniId;
+        if (ambientIndex == -1)
+            return "omni's ambient undefined for ID = " + omniId;
+        if (diffuseIndex == -1)
+            return "omni's diffuse undefined for ID = " + omniId;
+        if (specularIndex == -1)
+            return "omni's specular undefined for ID = " + omniId;
+
+        var location = [];
+        var ambient = [];
+        var diffuse = [];
+        var specular = [];
+
+        //reads the location values 
+        error = this.parseAndValidateXYZWvalues(grandChildren, locationIndex, omniId, "location", "omni", location);
+        if (error != null)
+            return error;
+
+        //reads the ambient values
+        error = this.parseAndValidateRGBAvalues(grandChildren, ambientIndex, omniId, "ambient", "omni", ambient);
+        if (error != null)
+            return error;
+
+        //reads the diffuse values 
+        error = this.parseAndValidateRGBAvalues(grandChildren, diffuseIndex, omniId, "diffuse", "omni", diffuse);
+        if (error != null)
+            return error;
+
+        //reads the specular values
+        error = this.parseAndValidateRGBAvalues(grandChildren, specularIndex, omniId, "specular", "omni", specular);
+        if (error != null)
+            return error;
+
+        this.omnis[omniId] = [enabled, location, ambient, diffuse, specular];
+
         return null;
     }
 
- 
-    parseAndValidateXYZvalues(children,index,id,s1,s2,vector)
-    {
-        var { x, y, z } = this.parsePointXYZ(children, 'x', 'y', 'z', index);
-        if (!this.validateFloat(x))
-            return "unable to parse " + s1 + " x-coordinate of " +  s2 + " position for ID = " + id;
-        if (!this.validateFloat(y))
-            return "unable to parse " + s1 + " y-coordinate of " +  s2 + " position for ID = " + id;
-        if (!this.validateFloat(z))
-            return "unable to parse " + s1 + " z-coordinate of " +  s2 + " position for ID = " + id;
-        vector.push(x, y, z);
+
+    parseLightsSpot(children, index) {
+
+        var grandChildren = [];
+        var error;
+        //get the id of current light
+        var spotId = this.reader.getString(children[index], 'id');
+        if (spotId == null)
+            return "no ID defined for light";
+
+        // Checks for repeated IDs.
+        if (this.spots[spotId] != null)
+            return "ID must be unique for each light (conflict: ID = " + spotId + ")";
+
+        //get the enabled value of current spot
+        var enabled = this.reader.getFloat(children[index], 'enabled');
+        if (enabled == null)
+            return "no enabled defined for spot";
+
+        //get the angle value of current spot
+        var angle = this.reader.getFloat(children[index], 'angle');
+        if (angle == null)
+            return "no angle defined for spot";
+
+        //get the exponent value of current spot
+        var exponent = this.reader.getFloat(children[index], 'exponent');
+        if (exponent == null)
+            return "no exponent defined for spot";
+
+        grandChildren = children[index].children;
+        var nodeNames = [];
+        for (var j = 0; j < grandChildren.length; j++) {
+            nodeNames.push(grandChildren[j].nodeName);
+        }
+
+        var locationIndex = nodeNames.indexOf("location");
+        var targetIndex = nodeNames.indexOf("target");
+        var ambientIndex = nodeNames.indexOf("ambient");
+        var diffuseIndex = nodeNames.indexOf("diffuse");
+        var specularIndex = nodeNames.indexOf("specular");
+
+        if (locationIndex == -1)
+            return "spot's location undefined for ID = " + spotId;
+        if (targetIndex == -1)
+            return "spot's target undefined for ID = " + spotId;
+        if (ambientIndex == -1)
+            return "spot's ambient undefined for ID = " + spotId;
+        if (diffuseIndex == -1)
+            return "spot's diffuse undefined for ID = " + spotId;
+        if (specularIndex == -1)
+            return "spot's specular undefined for ID = " + spotId;
+
+        var location = [];
+        var target = [];
+        var ambient = [];
+        var diffuse = [];
+        var specular = [];
+
+        //reads the location values 
+        error = this.parseAndValidateXYZWvalues(grandChildren, locationIndex, spotId, "location", "spot", location);
+        if (error != null)
+            return error;
+        //reads the target values
+        error = this.parseAndValidateXYZvalues(grandChildren, targetIndex, spotId, "target", "spot", target);
+        if (error != null)
+            return error;
+        //reads the ambient values
+        error = this.parseAndValidateRGBAvalues(grandChildren, ambientIndex, spotId, "ambient", "spot", ambient);
+        if (error != null)
+            return error;
+        //reads the diffuse values
+        error = this.parseAndValidateRGBAvalues(grandChildren, diffuseIndex, spotId, "diffuse", "spot", diffuse);
+        if (error != null)
+            return error;
+        //reads the specular values
+        error = this.parseAndValidateRGBAvalues(grandChildren, specularIndex, spotId, "specular", "spot", specular);
+        if (error != null)
+            return error;
+
+        this.spots[spotId] = [enabled, angle, exponent, location, target, ambient, diffuse, specular];
+
         return null;
     }
 
- 
-    parseAndValidateXYZWvalues(children,index,id,s1,s2,vector)
-    {
-        var { x, y, z, w } = this.parsePointXYZW(children, 'x', 'y', 'z', 'w', index);
-        if (!this.validateFloat(x))
-            return "unable to parse " + s1 + " x-coordinate of " +  s2 + " position for ID = " + id;
-        if (!this.validateFloat(y))
-            return "unable to parse " + s1 + " y-coordinate of " +  s2 + " position for ID = " + id;
-        if (!this.validateFloat(z))
-            return "unable to parse " + s1 + " z-coordinate of " +  s2 + " position for ID = " + id;
-        if (!this.validateFloat(w))
-            return "unable to parse " + s1 + " w-coordinate of " +  s2 + " position for ID = " + id;
-        vector.push(x, y, z, w);
-        return null;
-    }
 
 
     /**
@@ -730,7 +691,7 @@ class MySceneGraph {
         var error;
         for (var i = 0; i < children.length; i++) {
             if (children[i].nodeName == "texture") {
-                if ((error = this.parseTexturesTexture(children,i)) != null)
+                if ((error = this.parseTexturesTexture(children, i)) != null)
                     return error;
             }
             else {
@@ -751,8 +712,7 @@ class MySceneGraph {
      * @param {*} children 
      * @param {*} index 
      */
-    parseTexturesTexture(children,index)
-    {
+    parseTexturesTexture(children, index) {
         //get the id of current texture
         var textureId = this.reader.getString(children[index], 'id');
         if (textureId == null)
@@ -786,7 +746,7 @@ class MySceneGraph {
         var error;
         for (var i = 0; i < children.length; i++) {
             if (children[i].nodeName == "material") {
-                error = this.parseMaterialsMaterial(children,i);
+                error = this.parseMaterialsMaterial(children, i);
                 if (error != null)
                     return error;
             }
@@ -804,9 +764,7 @@ class MySceneGraph {
         return null;
     }
 
-    // TODO mudar para eliminar o codigo duplicado, chamar as funcoes criadas para esse efeito
-    parseMaterialsMaterial(children,index)
-    {
+    parseMaterialsMaterial(children, index) {
         var material = {
             shininess: null,
             emission: [],
@@ -815,6 +773,7 @@ class MySceneGraph {
             specular: []
         }
         var grandChildren = [];
+        var error;
         //get the id of current material
         var materialId = this.reader.getString(children[index], 'id');
         if (materialId == null)
@@ -850,53 +809,24 @@ class MySceneGraph {
             return "material's specular undefined for ID = " + materialId;
 
         //reads the emission values
-        var { x, y, z, w } = this.parsePointRGBA(grandChildren, emissionIndex);
-        if (!this.validateFloat(x))
-            return "unable to parse emission r-value of ambient for ID = " + materialId;
-        if (!this.validateFloat(y))
-            return "unable to parse emission g-value of ambient for ID = " + materialId;
-        if (!this.validateFloat(z))
-            return "unable to parse emission b-value of ambient for ID = " + materialId;
-        if (!this.validateFloat(w))
-            return "unable to parse emission a-value of ambient for ID = " + materialId;
-        material.emission.push(x, y, z, w);
+        error = this.parseAndValidateRGBAvalues(grandChildren, emissionIndex, materialId, "emission", "ambient", material.emission);
+        if (error != null)
+            return error;
 
         //reads the ambient values
-        var { x, y, z, w } = this.parsePointRGBA(grandChildren, ambientIndex);
-        if (!this.validateFloat(x))
-            return "unable to parse ambient r-value of ambient for ID = " + materialId;
-        if (!this.validateFloat(y))
-            return "unable to parse ambient g-value of ambient for ID = " + materialId;
-        if (!this.validateFloat(z))
-            return "unable to parse ambient b-value of ambient for ID = " + materialId;
-        if (!this.validateFloat(w))
-            return "unable to parse ambient a-value of ambient for ID = " + materialId;
-        material.ambient.push(x, y, z, w);
-
+        error = this.parseAndValidateRGBAvalues(grandChildren, ambientIndex, materialId, "ambient", "ambient", material.ambient);
+        if (error != null)
+            return error;
 
         //reads the diffuse values
-        var { x, y, z, w } = this.parsePointRGBA(grandChildren, diffuseIndex);
-        if (!this.validateFloat(x))
-            return "unable to parse diffuse r-value of ambient for ID = " + materialId;
-        if (!this.validateFloat(y))
-            return "unable to parse diffuse g-value of ambient for ID = " + materialId;
-        if (!this.validateFloat(z))
-            return "unable to parse diffuse b-value of ambient for ID = " + materialId;
-        if (!this.validateFloat(w))
-            return "unable to parse diffuse a-value of ambient for ID = " + materialId;
-        material.diffuse.push(x, y, z, w);
+        error = this.parseAndValidateRGBAvalues(grandChildren, diffuseIndex, materialId, "diffuse", "ambient", material.diffuse);
+        if (error != null)
+            return error;
 
         //reads the specular values
-        var { x, y, z, w } = this.parsePointRGBA(grandChildren, specularIndex);
-        if (!this.validateFloat(x))
-            return "unable to parse specular r-value of ambient for ID = " + materialId;
-        if (!this.validateFloat(y))
-            return "unable to parse specular g-value of ambient for ID = " + materialId;
-        if (!this.validateFloat(z))
-            return "unable to parse specular b-value of ambient for ID = " + materialId;
-        if (!this.validateFloat(w))
-            return "unable to parse specular a-value of ambient for ID = " + materialId;
-        material.specular.push(x, y, z, w);
+        error = this.parseAndValidateRGBAvalues(grandChildren, specularIndex, materialId, "specular", "ambient", material.specular);
+        if (error != null)
+            return error;
 
         this.materials[materialId] = this.createAppearance(material);
 
@@ -925,60 +855,12 @@ class MySceneGraph {
         var children = transformationsNode.children;
         this.transformations = [];
         var numTransformations = 0;
-        var grandChildren = [];
-        var nodeNames = [];
-        /* var translations = [];
-         var rotations = [];
-         var scales = [];*/
+        var error;
         for (var i = 0; i < children.length; i++) {
             if (children[i].nodeName == "transformation") {
-                var numT = 0;
-                //get the id of current transformation
-                var transformationId = this.reader.getString(children[i], 'id');
-                if (transformationId == null)
-                    return "no ID defined for transformation";
-
-                // Checks for repeated IDs.
-                if (this.transformations[transformationId] != null)
-                    return "ID must be unique for each transformation (conflict: ID = " + transformationId + ")";
-
-                grandChildren = children[i].children;
-                nodeNames = [];
-                for (var j = 0; j < grandChildren.length; j++) {
-                    nodeNames.push(grandChildren[j].nodeName);
-                }
-                var tmp_transformations = [];
-                for (var j = 0; j < grandChildren.length; j++) {
-                    var nodeName = grandChildren[j].nodeName;
-                    switch (nodeName) {
-                        case "translate":
-                            var translate = this.parseTransformationTranslate(grandChildren, j);
-                            // translations.push(translate);
-                            tmp_transformations.push(translate);
-                            numT++;
-                            break;
-                        case "rotate":
-                            var rotate = this.parseTransformationRotate(grandChildren, j);
-                            //rotations.push(rotate);
-                            tmp_transformations.push(rotate);
-                            numT++;
-                            break;
-                        case "scale":
-                            var scale = this.parseTransformationScale(grandChildren, j);
-                            // scales.push(scale);
-                            tmp_transformations.push(scale);
-
-                            numT++;
-                            break;
-                        default:
-                            this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
-                            break;
-                    }
-                }
-                if (numT == 0)
-                    return "at least one transformation must be defined";
-
-                this.transformations[transformationId] = tmp_transformations;
+                error = this.parseTransformationsTransformation(children,i);
+                if(error != null)
+                    return error;
             }
             else {
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
@@ -992,6 +874,95 @@ class MySceneGraph {
 
         this.log("Parsed transformations");
         return null;
+    }
+
+    parseTransformationsTransformation(children,index)
+    {
+        var grandChildren = [];
+        var numT = 0;
+        //get the id of current transformation
+        var transformationId = this.reader.getString(children[index], 'id');
+        if (transformationId == null)
+            return "no ID defined for transformation";
+
+        // Checks for repeated IDs.
+        if (this.transformations[transformationId] != null)
+            return "ID must be unique for each transformation (conflict: ID = " + transformationId + ")";
+
+        grandChildren = children[index].children;
+        var nodeNames = [];
+        for (var j = 0; j < grandChildren.length; j++) {
+            nodeNames.push(grandChildren[j].nodeName);
+        }
+        var tmp_transformations = [];
+        for (var j = 0; j < grandChildren.length; j++) {
+            var nodeName = grandChildren[j].nodeName;
+            switch (nodeName) {
+                case "translate":
+                    var translate = this.parseTransformationTranslate(grandChildren, j);
+                    tmp_transformations.push(translate);
+                    numT++;
+                    break;
+                case "rotate":
+                    var rotate = this.parseTransformationRotate(grandChildren, j);
+                    tmp_transformations.push(rotate);
+                    numT++;
+                    break;
+                case "scale":
+                    var scale = this.parseTransformationScale(grandChildren, j);
+                    tmp_transformations.push(scale);
+                    numT++;
+                    break;
+                default:
+                    this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
+                    break;
+            }
+        }
+        if (numT == 0)
+            return "at least one transformation must be defined";
+
+        this.transformations[transformationId] = tmp_transformations;
+        return null;
+    }
+
+    
+    parseTransformationScale(children, index) {
+        var scale = {
+            class: 'scale',
+            x: null,
+            y: null,
+            z: null
+        }
+        var { x, y, z } = this.parsePointXYZ(children, 'x', 'y', 'z', index);
+        scale.x = x;
+        scale.y = y;
+        scale.z = z;
+        return scale;
+    }
+
+    parseTransformationRotate(children, index) {
+        var rotate = {
+            class: 'rotate',
+            axis: null,
+            angle: null
+        }
+        rotate.axis = this.reader.getString(children[index], 'axis');
+        rotate.angle = this.reader.getFloat(children[index], 'angle');
+        return rotate;
+    }
+
+    parseTransformationTranslate(children, index) {
+        var translate = {
+            class: 'translate',
+            x: null,
+            y: null,
+            z: null
+        }
+        var { x, y, z } = this.parsePointXYZ(children, 'x', 'y', 'z', index);
+        translate.x = x;
+        translate.y = y;
+        translate.z = z;
+        return translate;
     }
 
 
@@ -1347,45 +1318,49 @@ class MySceneGraph {
 
     }
 
+      //TODO decidir se da erro ou se assumo valores por defeito
+      parseAndValidateRGBAvalues(children, index, id, s1, s2, vector) {
+        var { x, y, z, w } = this.parsePointRGBA(children, index);
+        if (!this.validateFloat(x))
+            return "unable to parse " + s1 + " r-value of the " + s2 + " for ID = " + id;
+        if (!this.validateFloat(y))
+            return "unable to parse " + s1 + " g-value of the " + s2 + " for ID = " + id;
+        if (!this.validateFloat(z))
+            return "unable to parse " + s1 + " b-value of the " + s2 + " for ID = " + id;
+        if (!this.validateFloat(w))
+            return "unable to parse " + s1 + " a-value of the " + s2 + " for ID = " + id;
+        vector.push(x, y, z, w);
+        return null;
+    }
 
-    parseTransformationScale(children, index) {
-        var scale = {
-            class: 'scale',
-            x: null,
-            y: null,
-            z: null
-        }
+
+    parseAndValidateXYZvalues(children, index, id, s1, s2, vector) {
         var { x, y, z } = this.parsePointXYZ(children, 'x', 'y', 'z', index);
-        scale.x = x;
-        scale.y = y;
-        scale.z = z;
-        return scale;
+        if (!this.validateFloat(x))
+            return "unable to parse " + s1 + " x-coordinate of " + s2 + " position for ID = " + id;
+        if (!this.validateFloat(y))
+            return "unable to parse " + s1 + " y-coordinate of " + s2 + " position for ID = " + id;
+        if (!this.validateFloat(z))
+            return "unable to parse " + s1 + " z-coordinate of " + s2 + " position for ID = " + id;
+        vector.push(x, y, z);
+        return null;
     }
 
-    parseTransformationRotate(children, index) {
-        var rotate = {
-            class: 'rotate',
-            axis: null,
-            angle: null
-        }
-        rotate.axis = this.reader.getString(children[index], 'axis');
-        rotate.angle = this.reader.getFloat(children[index], 'angle');
-        return rotate;
+
+    parseAndValidateXYZWvalues(children, index, id, s1, s2, vector) {
+        var { x, y, z, w } = this.parsePointXYZW(children, 'x', 'y', 'z', 'w', index);
+        if (!this.validateFloat(x))
+            return "unable to parse " + s1 + " x-coordinate of " + s2 + " position for ID = " + id;
+        if (!this.validateFloat(y))
+            return "unable to parse " + s1 + " y-coordinate of " + s2 + " position for ID = " + id;
+        if (!this.validateFloat(z))
+            return "unable to parse " + s1 + " z-coordinate of " + s2 + " position for ID = " + id;
+        if (!this.validateFloat(w))
+            return "unable to parse " + s1 + " w-coordinate of " + s2 + " position for ID = " + id;
+        vector.push(x, y, z, w);
+        return null;
     }
 
-    parseTransformationTranslate(children, index) {
-        var translate = {
-            class: 'translate',
-            x: null,
-            y: null,
-            z: null
-        }
-        var { x, y, z } = this.parsePointXYZ(children, 'x', 'y', 'z', index);
-        translate.x = x;
-        translate.y = y;
-        translate.z = z;
-        return translate;
-    }
 
     validateFloat(x) {
         if (!(x != null && !isNaN(x)))
