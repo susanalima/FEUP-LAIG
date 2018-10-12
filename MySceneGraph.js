@@ -755,8 +755,6 @@ class MySceneGraph {
         var children = materialsNode.children;
         this.materials = [];
         var numMaterials = 0;
-        var grandChildren = [];
-        var nodeNames = [];
         var error;
         for (var i = 0; i < children.length; i++) {
             if (children[i].nodeName == "material") {
@@ -1083,16 +1081,18 @@ class MySceneGraph {
         var numComponents = 0;
         var grandChildren = [];
         var nodeNames = [];
-        var translates = [];
-        var rotates = [];
-        var scales = [];
 
         for (var i = 0; i < children.length; i++) {
 
             if (children[i].nodeName == "component") {
-                component.id = this.reader.getString(children[i], "id");
-                if (component.id == null)
+                var componentId = this.reader.getString(children[i], "id");
+                if (componentId == null)
                     return "no Id defined for component";
+        
+                if (this.components[componentId] != null)
+                    return "Id must be unique for each component  (conflict: ID = " + componentId + ")";
+                
+                //ver se nao ha componentes com id iguais   
 
                 grandChildren = children[i].children;
                 nodeNames = [];
@@ -1118,29 +1118,18 @@ class MySceneGraph {
                                 else {
                                     switch (nodeName2) {
                                         case "translate":
-                                            var translate = [];
-                                            var x = this.reader.getFloat(ggrandChildren[k], 'x');
-                                            var y = this.reader.getFloat(ggrandChildren[k], 'y');
-                                            var z = this.reader.getFloat(ggrandChildren[k], 'z');
-                                            translate.push(x, y, z);
-                                            translates.push(translate);
+                                            var translate = this.parseTransformationTranslate(ggrandChildren, k);
+                                            component.transformations.transformations.push(translate);
                                             break;
 
                                         case "rotate":
-                                            var rotate = [];
-                                            var axis = this.reader.getString(ggrandChildren[k], 'axis');
-                                            var angle = this.reader.getFloat(ggrandChildren[k], 'angle');
-                                            rotate.push(axis, angle);
-                                            rotates.push(rotate);
+                                            var rotate = this.parseTransformationRotate(ggrandChildren, k);
+                                            component.transformations.transformations.push(rotate);
                                             break;
 
                                         case "scale":
-                                            var scale = [];
-                                            var x = this.reader.getFloat(ggrandChildren[k], 'x');
-                                            var y = this.reader.getFloat(ggrandChildren[k], 'y');
-                                            var z = this.reader.getFloat(ggrandChildren[k], 'z');
-                                            scale.push(x, y, z);
-                                            scales.push(scale);
+                                            var scale = this.parseTransformationScale(ggrandChildren, k);
+                                            component.transformations.transformations.push(scale);
                                             break;
                                         default:
                                             this.onXMLMinorError("unknown tag <" + ggrandChildren[k].nodeName + ">");
@@ -1148,8 +1137,7 @@ class MySceneGraph {
                                     }
                                 }
                             }
-                            if (!component.transformations.tref)
-                                component.transformations.transformations.push(translates, rotates, scales);
+                           
                             break;
 
                         case "materials":
@@ -1200,7 +1188,7 @@ class MySceneGraph {
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
 
             numComponents++;
-            this.components.push(component);
+            this.components[componentId] = component;
         }
         this.log("Parsed components");
         return null;
@@ -1427,7 +1415,18 @@ class MySceneGraph {
         console.log("   " + message);
     }
 
+<<<<<<< HEAD
    
+=======
+    applyTexture(comp, compAppearance) {
+        //var text = this.textures[comp[2][0]];
+        //compAppearance.loadTexture(text[0]);
+    }
+
+    applyTransformations(comp) {
+
+    }
+>>>>>>> cb4a2fab1c0841f9281fd9dfe43d9d229b3bf545
 
     displayComp(comp) {
 
