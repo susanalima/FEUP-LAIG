@@ -1212,9 +1212,9 @@ class MySceneGraph {
 
     }
 
-    createCylinder(sphere)
+    createCylinder(cylinder)
     {
-
+        //var cylinder = new MyCylinder(this.scene, cylinder.slices, cylinder.stacks); //TODO
     }
 
     createTorus(torus)
