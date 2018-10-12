@@ -1415,9 +1415,7 @@ class MySceneGraph {
         console.log("   " + message);
     }
 
-<<<<<<< HEAD
-   
-=======
+
     applyTexture(comp, compAppearance) {
         //var text = this.textures[comp[2][0]];
         //compAppearance.loadTexture(text[0]);
@@ -1426,7 +1424,6 @@ class MySceneGraph {
     applyTransformations(comp) {
 
     }
->>>>>>> cb4a2fab1c0841f9281fd9dfe43d9d229b3bf545
 
     displayComp(comp) {
 

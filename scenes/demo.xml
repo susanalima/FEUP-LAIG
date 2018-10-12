@@ -1,15 +1,11 @@
 <yas>
 
- <scene root="root" axis_length="5.0" />
-
- <views default="views" >
+      <scene root="root" axis_length="5.0" />
+  <views default="p1" >
 	<perspective id="p1" near="0.1" far="1000" angle="60">
 		 <from x="15.0" y="15.0" z="15.0" />
 		 <to x="0.0" y="0.0" z="0.0" />
 	</perspective>
-
-	<ortho id="o1" near="12.0" far="5.0"
-		 left="1.0" right="1.0" top="1.0" bottom="1.0" />
  </views>
 
  <ambient>
@@ -18,117 +14,420 @@
  </ambient>
 
  <lights>
-	 <omni id="om1" enabled="1" >
-		 <location x="1" y="5" z="-2" w="1.0" />
-		 <ambient r="0.1" g="0.2" b="0.3" a="0.4" />
-		 <diffuse r="0.3" g="0.2" b="0.1" a="0.3" />
-		 <specular r="0.3" g="0.2" b="0.2" a="0.4" />
- 	</omni>
 
-	<omni id="omni2" enabled="1" >                                                     	      
-        <location x="4" y="6" z="4" w="1.0" />       	   
+	<omni id="omni1" enabled="1" >                                                     	      
+        <location x="4" y="8" z="4" w="1.0" />       	   
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
         <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
         <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
     </omni>
 
-    <omni id="omni3" enabled="1" >                                                   	       
-        <location x="-3" y="6" z="0" w="1.0" />       		   
-        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />      
-        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
-        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
-    </omni>
-
- 	<spot id="sp1" enabled="1" angle="30" exponent="0.2">
-		 <location x="4.0" y="2.0" z="1.0" w="5.0" />
-		 <target x="2.0" y="1.0" z="4.0" />
-		 <ambient r="0.1" g="0.3" b="0.4" a="0.4" />
-		 <diffuse r="0.3" g="0.2" b="0.5" a="0.8" />
-		 <specular r="0.4" g="0.7" b="0.8" a="1.0" />
- 	</spot>
  </lights>
-
- <textures>
-	 <texture id="t1" file="/images/leaves.jpg" />
-	 <texture id="t2" file="/images/vidral.jpg" />
- </textures>
-
-<materials>
- 	<material id="mat1" shininess = "0.5" >
+    <textures>
+        <texture id="table" file="./scenes/images/table.png" />
+        <texture id="floor" file="./scenes/images/floor_wood.jpg" />
+        <texture id="wall" file="./scenes/images/wall.jpg" />
+    
+        <texture id="metal" file="./scenes/images/metal.jpg" />
+    </textures>
+  <materials>
+    <!--material do tampo-->
+ 	<material id="mat1" shininess = "8" >
 		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
-		 <ambient r="0.2" g="0.2" b="0.2" a="0.3" />
-		 <diffuse r="0.4" g="0.4" b="0.4" a="0.4" />
-		 <specular r="0.2" g="0.2" b="0.2" a="0.5" />
+		 <ambient r="0.39" g="0.2" b="0.1" a="1" />
+		 <diffuse r="0.39" g="0.2" b="0.1" a="1" />
+		 <specular r="0.1" g="0.1" b="0.1" a="1" />
 	 </material>
 
-	 <material id="mat2" shininess="100"> 
-	    <emission r="0.0" g="0.0" b="0.0" a="1" /> 
-		<ambient r="0.0" g="0.0" b="0.0" a="1" />    
-		<diffuse r="0.447" g="0.416" b="0.416" a="1" />                                  
-        <specular r="0.0" g="0.0" b="0.0" a="1" />                    
-    </material>
+      <!--material das pernas-->
+ 	<material id="mat2" shininess = "120" >
+		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
+		 <ambient r="0.6" g="0.6" b="0.6" a="1" />
+		 <diffuse r="0.6" g="0.6" b="0.6" a="1" />
+		 <specular r="1" g="1" b="1" a="1" />
+	 </material>
+
+
+      <!--material das paredes-->
+ 	<material id="mat3" shininess = "4" >
+		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
+		 <ambient r="0.9" g="0.8" b="0.6" a="1" />
+		 <diffuse r="0.9" g="0.8" b="0.6" a="1" />
+		 <specular r="0.1" g="0.1" b="0.1" a="1" />
+	 </material>
+
+      <!--material do chao-->
+ 	<material id="mat4" shininess = "20" >
+		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
+		 <ambient r="0.3" g="0.5" b="0.4" a="1" />
+		 <diffuse r="0.3" g="0.5" b="0.4" a="1" />
+		 <specular r="0.3" g="0.3" b="0.3" a="1" />
+	 </material>
 
  </materials>
-
- <transformations>
+  
+  <transformations>
 	<transformation id="tf1">
-		 <translate x="5.0" y="3.0" z="2.0" />
-		 <rotate axis="xx" angle= "60" />
-		 <scale x="1.5" y="1" z="2" />
+		 <rotate axis="x" angle= "-90" />
+         <translate x="0" y="-10" z="0" />
 	 </transformation>
+	 
+	 <transformation id="tf2">
+		<rotate axis="y" angle="90" />
+        <translate x="-10" y="0" z="0" />
+	 </transformation>
+
+    <transformation id="tf3">
+		<rotate axis="x" angle="-90" />
+        <translate x="2" y="-3" z="1.5" />
+	 </transformation>
+
+    <transformation id="tf4">
+        <translate x="4" y="0" z="0" />
+	 </transformation>
+
+    <transformation id="tf5">
+        <translate x="0" y="0" z="3" />
+    </transformation>
+
+    <transformation id="tf6">
+        <translate x="-4" y="0" z="0" />
+	 </transformation>
+
+     <transformation id="tf7">
+       <translate x="0" y="0" z="0" />
+
+	 </transformation>
+
+     <transformation id="tf8">
+        <rotate axis="x" angle="-90" />
+        <translate x="0" y="0" z="1" />
+	 </transformation>
+
+      <transformation id="tf9">
+        <rotate axis="x" angle="-90" />
+        <translate x="0" y="0" z="1" />
+	 </transformation>
+
+    <transformation id="tf10">
+        <rotate axis="y" angle="-90" />
+        <translate x="-1" y="0" z="0" />
+	 </transformation>
+
+    <transformation id="tf11">
+        <rotate axis="z" angle="-90" />
+        <translate x="-1" y="0" z="0" />
+	 </transformation>
+
+     <transformation id="tf12">
+        <rotate axis="z" angle="-90" />
+        <translate x="-1" y="0" z="0" />
+	 </transformation>
+
+      
+       <transformation id= "tf13">
+       <translate x="1.5" y="3" z="6.5" />
+        <scale x="5" y="0.3" z="4" />
+       </transformation>
+
  </transformations>
 
 
  <primitives>
- 	<primitive id="prim1">
- 		<rectangle x1="2" y1="5" x2="-2" y2="-5" />
+ 	<primitive id="rectangle">
+ 		<rectangle x1="0" y1="0" x2="11" y2="11" />
     </primitive >
 
-	<primitive id="prim2">
-		<triangle x1="3.0" y1="0.0" z1="0.0"
-			 x2="0.0" y2="0.0" z2="3.0"
-			 x3="0.0" y3="3.0" z3="0.0" />
+    <primitive id="quad">
+ 		<rectangle x1="0" y1="0" x2="1" y2="1" />
     </primitive >
 
-	<primitive id="prim3">
-		<cylinder base="0.8" top="1.2" height="5.0" slices="8" stacks="3" />
-    </primitive >
-
-	<primitive id="prim4">
-		<sphere radius="3.0" slices="12" stacks="8" />
-    </primitive >
-
-	<primitive id="prim5">
-		<torus inner="2.0" outer="4.0" slices="5" loops="3" />
+	<primitive id="cylinder">
+		<cylinder base="0.2" top="0.2" height="3" slices="10" stacks="10" />
     </primitive >
  </primitives >
 
 
  <components>
- 	<component id="comp1">
- 		<transformation>
- 			<transformationref id="trf2" />
- 			<translate x="0" y="0" z="5" />
-			<rotate axis="xx" angle="45" />
-			<scale x="1.5" y="1" z="0.5" />
-		</transformation>
 
+ 	<component id="root">
+		<transformation>
+ 			<translate x="0" y="0" z="0"/>
+		</transformation>
+		<materials>
+			 <material id="mat4" />
+		</materials>
+		<texture id="wall" length_s="2" length_t="1" />
+
+		<children>
+			<componentref id="comp1"/>
+			<componentref id="comp2"/>
+			<componentref id="comp3"/>
+			<componentref id="comp4"/>
+			<componentref id="comp5"/>
+			<componentref id="comp6"/>
+			<componentref id="comp7"/>
+			<componentref id="comp8"/>
+			<componentref id="comp9"/>
+			<componentref id="comp10"/>
+			<componentref id="comp11"/>
+			<componentref id="comp12"/>
+			<componentref id="comp13"/>
+
+		</children>
+
+ 	</component>
+ 	
+ 	 	<component id="comp1">
+ 		<transformation>
+ 			<translate x="0" y="0" z="-1"/>
+		</transformation>
+		<materials>
+			 <material id="mat4" />
+		</materials>
+		<texture id="wall" length_s="2" length_t="1" />
+		<children>
+			<primitiveref id="rectangle" />
+		</children>
+	 </component>
+
+
+     <component id="comp2">
+ 		<transformation>
+ 			<transformationref id="tf1" />
+		</transformation>
+		<materials>
+			 <material id="mat3" />
+		</materials>
+		<texture id="floor" length_s="2" length_t="1" />
+		<children>
+			<primitiveref id="rectangle" />
+		</children>
+	 </component>
+
+     <component id="comp3">
+ 		<transformation>
+ 			<transformationref id="tf2" />
+		</transformation>
+		<materials>
+			 <material id="mat4" />
+		</materials>
+		<texture id="wall" length_s="2" length_t="1" />
+		<children>
+			<primitiveref id="rectangle" />
+		</children>
+	 </component>
+
+    <component id="comp4">
+ 		<transformation>
+ 			<transformationref id="tf3" />
+		</transformation>
+		<materials>
+			 <material id="mat2" />
+		</materials>
+		<texture id="metal" length_s="2" length_t="1" />
+		<children>
+			<primitiveref id="cylinder" />
+		</children>
+	 </component>
+
+    <component id="comp5">
+ 		<transformation>
+ 			<transformationref id="tf4" />
+		</transformation>
+		<materials>
+			 <material id="mat2" />
+		</materials>
+		<texture id="metal" length_s="2" length_t="1" />
+		<children>
+			<componentref id="comp4" />
+		</children>
+	 </component>
+
+     <component id="comp6">
+ 		<transformation>
+ 			<transformationref id="tf5" />
+		</transformation>
+		<materials>
+			 <material id="mat2" />
+		</materials>
+		<texture id="metal" length_s="2" length_t="1" />
+		<children>
+			<componentref id="comp5" />
+		</children>
+	 </component>
+
+     <component id="comp7">
+ 		<transformation>
+ 			<transformationref id="tf6" />
+		</transformation>
+		<materials>
+			 <material id="mat2" />
+		</materials>
+		<texture id="metal" length_s="2" length_t="1" />
+		<children>
+			<componentref id="comp6" />
+		</children>
+	 </component>
+
+     <component id="comp8">
+ 		<transformation>
+ 			<transformationref id="tf7" />
+		</transformation>
 		<materials>
 			 <material id="mat1" />
 		</materials>
-
-
-		<texture id="t1" length_s="2" length_t="1" />
-		
+		<texture id="table" length_s="2" length_t="1" />
 		<children>
-			<primitiveref id="prim1" />
+			<primitiveref id="quad" />
 		</children>
-	 
 	 </component>
+
+     <component id="comp9">
+ 		<transformation>
+ 			<transformationref id="tf8" />
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="table" length_s="2" length_t="1" />
+		<children>
+			<componentref id="comp8" />
+		</children>
+	 </component>
+
+	  <component id="comp10">
+ 		<transformation>
+ 			<transformationref id="tf9" />
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="table" length_s="2" length_t="1" />
+		<children>
+			<componentref id="comp9" />
+		</children>
+	 </component>
+
+	   <component id="comp11">
+ 		<transformation>
+ 			<transformationref id="tf10" />
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="table" length_s="2" length_t="1" />
+		<children>
+			<componentref id="comp10" />
+		</children>
+	 </component>
+
+
+      <component id="comp12">
+ 		<transformation>
+ 			<transformationref id="tf11" />
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="table" length_s="2" length_t="1" />
+		<children>
+			<componentref id="comp11" />
+		</children>
+	 </component>
+
+	    <component id="comp13">
+ 		<transformation>
+ 			<transformationref id="tf12" />
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="table" length_s="2" length_t="1" />
+		<children>
+			<componentref id="comp12" />
+		</children>
+	 </component>
+
+
+	 <component id="comp14">
+ 		<transformation>
+ 			<transformationref id="tf13" />
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="table" length_s="2" length_t="1" />
+		<children>
+			<componentref id="comp8" />
+			<componentref id="comp9" />
+			<componentref id="comp10" />
+			<componentref id="comp11" />
+			<componentref id="comp12" />
+			<componentref id="comp13" />
+		</children>
+	 </component>
+
+	  <component id="comp15">
+ 		<transformation>
+ 			<scale x="1" y= "11" z="1" />
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="table" length_s="2" length_t="1" />
+		<children>
+			<componentref id="comp8" />
+			<componentref id="comp9" />
+			<componentref id="comp10" />
+			<componentref id="comp11" />
+			<componentref id="comp12" />
+			<componentref id="comp13" />
+		</children>
+	 </component>
+
+       <component id="comp16">
+	 	<transformation>
+ 			<translate x="10" y="0" z="0" />
+ 			<scale x="1" y= "11" z="1" />
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="table" length_s="2" length_t="1" />
+		<children>
+			<componentref id="comp8" />
+			<componentref id="comp9" />
+			<componentref id="comp10" />
+			<componentref id="comp11" />
+			<componentref id="comp12" />
+			<componentref id="comp13" />
+		</children>
+	 </component>
+ 
+        
+       <component id="comp17">
+	 	<transformation>
+ 			<translate x="0" y="0" z="10" />
+ 			<scale x="1" y= "11" z="1" />
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="table" length_s="2" length_t="1" />
+		<children>
+			<componentref id="comp8" />
+			<componentref id="comp9" />
+			<componentref id="comp10" />
+			<componentref id="comp11" />
+			<componentref id="comp12" />
+			<componentref id="comp13" />
+		</children>
+	 </component>
+        
+
+
+
  </components>
  
 </yas>
-
-
-
-

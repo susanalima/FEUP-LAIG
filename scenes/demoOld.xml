@@ -1,0 +1,137 @@
+<yas>
+
+ <scene root="root" axis_length="5.0" />
+
+ <views default="views" >
+	<perspective id="p1" near="0.1" far="1000" angle="60">
+		 <from x="15.0" y="15.0" z="15.0" />
+		 <to x="0.0" y="0.0" z="0.0" />
+	</perspective>
+
+	<ortho id="o1" near="12.0" far="5.0"
+		 left="1.0" right="1.0" top="1.0" bottom="1.0">
+		 <from x="15.0" y="15.0" z="15.0"/>
+		 <to x="0.0" y="0.0" z="0.0" />
+	</ortho>
+ </views>
+
+ <ambient>
+ 	<ambient r="0" g="0" b="0" a="1" />
+ 	<background r="0" g="0" b="0" a="1" />
+ </ambient>
+
+ <lights>
+	 <omni id="om1" enabled="1" >
+		 <location x="1" y="5" z="-2" w="1.0" />
+		 <ambient r="0.1" g="0.2" b="0.3" a="0.4" />
+		 <diffuse r="0.3" g="0.2" b="0.1" a="0.3" />
+		 <specular r="0.3" g="0.2" b="0.2" a="0.4" />
+ 	</omni>
+
+	<omni id="omni2" enabled="1" >                                                     	      
+        <location x="4" y="6" z="4" w="1.0" />       	   
+        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
+        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
+    </omni>
+
+    <omni id="omni3" enabled="1" >                                                   	       
+        <location x="-3" y="6" z="0" w="1.0" />       		   
+        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />      
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
+        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
+    </omni>
+
+ 	<spot id="sp1" enabled="1" angle="30" exponent="0.2">
+		 <location x="4.0" y="2.0" z="1.0" w="5.0" />
+		 <target x="2.0" y="1.0" z="4.0" />
+		 <ambient r="0.1" g="0.3" b="0.4" a="0.4" />
+		 <diffuse r="0.3" g="0.2" b="0.5" a="0.8" />
+		 <specular r="0.4" g="0.7" b="0.8" a="1.0" />
+ 	</spot>
+ </lights>
+
+ <textures>
+	 <texture id="t1" file="/images/leaves.jpg" />
+	 <texture id="t2" file="/images/vidral.jpg" />
+ </textures>
+
+<materials>
+ 	<material id="mat1" shininess = "0.5" >
+		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
+		 <ambient r="0.2" g="0.2" b="0.2" a="0.3" />
+		 <diffuse r="0.4" g="0.4" b="0.4" a="0.4" />
+		 <specular r="0.2" g="0.2" b="0.2" a="0.5" />
+	 </material>
+
+	 <material id="mat2" shininess="100"> 
+	    <emission r="0.0" g="0.0" b="0.0" a="1" /> 
+		<ambient r="0.0" g="0.0" b="0.0" a="1" />    
+		<diffuse r="0.447" g="0.416" b="0.416" a="1" />                                  
+        <specular r="0.0" g="0.0" b="0.0" a="1" />                    
+    </material>
+
+ </materials>
+
+ <transformations>
+	<transformation id="tf1">
+		 <translate x="5.0" y="3.0" z="2.0" />
+		 <rotate axis="xx" angle= "60" />
+		 <scale x="1.5" y="1" z="2" />
+	 </transformation>
+ </transformations>
+
+
+ <primitives>
+ 	<primitive id="prim1">
+ 		<rectangle x1="2" y1="5" x2="-2" y2="-5" />
+    </primitive >
+
+	<primitive id="prim2">
+		<triangle x1="3.0" y1="0.0" z1="0.0"
+			 x2="0.0" y2="0.0" z2="3.0"
+			 x3="0.0" y3="3.0" z3="0.0" />
+    </primitive >
+
+	<primitive id="prim3">
+		<cylinder base="0.8" top="1.2" height="5.0" slices="8" stacks="3" />
+    </primitive >
+
+	<primitive id="prim4">
+		<sphere radius="3.0" slices="12" stacks="8" />
+    </primitive >
+
+	<primitive id="prim5">
+		<torus inner="2.0" outer="4.0" slices="5" loops="3" />
+    </primitive >
+ </primitives >
+
+
+ <components>
+ 	<component id="comp1">
+ 		<transformation>
+ 			<transformationref id="trf2" />
+ 			<translate x="0" y="0" z="5" />
+			<rotate axis="xx" angle="45" />
+			<scale x="1.5" y="1" z="0.5" />
+		</transformation>
+
+		<materials>
+			 <material id="mat1" />
+		</materials>
+
+
+		<texture id="t1" length_s="2" length_t="1" />
+		
+		<children>
+			<primitiveref id="prim1" />
+		</children>
+	 
+	 </component>
+ </components>
+ 
+</yas>
+
+
+
+
