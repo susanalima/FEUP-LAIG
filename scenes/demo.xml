@@ -170,6 +170,10 @@
 	<primitive id="cylinder">
 		<cylinder base="0.2" top="0.2" height="3" slices="20" stacks="1" />
     </primitive >
+
+	<primitive id="sphere">
+		<sphere radius="3.0" slices="60" stacks="60" />
+    </primitive >
  </primitives >
 
 
@@ -202,7 +206,7 @@
 			<componentref id="comp15"/>
 			<componentref id="comp16"/>
 			<componentref id="comp17"/>
-
+			<componentref id="comp18"/>
 		</children>
 
  	</component>
@@ -451,6 +455,19 @@
 			<componentref id="comp11" />
 			<componentref id="comp12" />
 			<componentref id="comp13" />
+		</children>
+	 </component>
+
+	  <component id="comp18">
+	 	<transformation>
+ 			<translate x="5" y="5" z="10" />
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="table" length_s="2" length_t="1" />
+		<children>
+			<primitiveref id="sphere"/>
 		</children>
 	 </component>
         

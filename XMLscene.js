@@ -43,43 +43,6 @@ class XMLscene extends CGFscene {
         this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
     }
 
-
-    /**
-     * Initializes the scene lights with the values read from the XML file.
-     */
-    /*initLights() {
-        var i = 0;
-        // Lights index.
-
-        // Reads the lights from the scene graph.
-        for (var key in this.graph.omnis) {
-            if (i >= 8)
-                break;              // Only eight lights allowed by WebGL.
-
-            if (this.graph.omnis.hasOwnProperty(key)) {
-                var light = this.graph.omnis[key];
-
-                //lights are predefined in cgfscene
-                this.lights[i].setPosition(light[1][0], light[1][1], light[1][2], light[1][3]);
-                this.lights[i].setAmbient(light[2][0], light[2][1], light[2][2], light[2][3]);
-                this.lights[i].setDiffuse(light[3][0], light[3][1], light[3][2], light[3][3]);
-                this.lights[i].setSpecular(light[4][0], light[4][1], light[4][2], light[4][3]);
-
-                this.lights[i].setVisible(true);
-
-                if (light[0])
-                    this.lights[i].enable();
-                else
-                    this.lights[i].disable();
-
-                this.lights[i].update();
-
-                i++;
-            }
-        } 
-    }*/
-
-
     initLights() {
         var i = 0;
         // Lights index.

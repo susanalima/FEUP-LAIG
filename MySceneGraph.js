@@ -538,68 +538,6 @@ class MySceneGraph {
 
 
 
-   /* parseLightsOmni(children, index) {
-        var grandChildren = [];
-        var error;  
-        //get the id of current light
-        var omniId = this.reader.getString(children[index], 'id');
-        if (omniId == null)
-            return "no ID defined for light";
-
-        // Checks for repeated IDs.
-        if (this.omnis[omniId] != null)
-            return "ID must be unique for each light (conflict: ID = " + omniId + ")";
-
-        //get the enabled value of current omni
-        var enabled = this.reader.getFloat(children[index], 'enabled');
-        if (!this.validateFloat(enabled))
-            return "unable to parse enabled value for omni for ID" + omniId;
-
-        grandChildren = children[index].children;
-
-        var nodeNames = [];
-        for (var j = 0; j < grandChildren.length; j++) {
-            nodeNames.push(grandChildren[j].nodeName);
-        }
-
-        var locationIndex = nodeNames.indexOf("location");
-        var ambientIndex = nodeNames.indexOf("ambient");
-        var diffuseIndex = nodeNames.indexOf("diffuse");
-        var specularIndex = nodeNames.indexOf("specular");
-
-        if (locationIndex == -1)
-            return "omni's location undefined for ID = " + omniId;
-        if (ambientIndex == -1)
-            return "omni's ambient undefined for ID = " + omniId;
-        if (diffuseIndex == -1)
-            return "omni's diffuse undefined for ID = " + omniId;
-        if (specularIndex == -1)
-            return "omni's specular undefined for ID = " + omniId;
-
-        var location = [];
-        var ambient = [];
-        var diffuse = [];
-        var specular = [];
-
-        //reads the location values 
-        error = this.parseAndValidateXYZWvalues(grandChildren, locationIndex, omniId, "location", "omni", location);
-        if (error != null)
-            return error;
-        //reads the ambient values
-        this.parseAndValidateRGBAvalues(grandChildren, ambientIndex, omniId, "ambient", "omni", ambient);
-
-        //reads the diffuse values 
-        this.parseAndValidateRGBAvalues(grandChildren, diffuseIndex, omniId, "diffuse", "omni", diffuse);
-
-        //reads the specular values
-        this.parseAndValidateRGBAvalues(grandChildren, specularIndex, omniId, "specular", "omni", specular);
-
-        this.omnis[omniId] = [enabled, location, ambient, diffuse, specular];
-
-        return null;
-    }*/
-
-
     parseLightsOmni(children, index) {
         var grandChildren = [];
         var error;  
@@ -665,86 +603,6 @@ class MySceneGraph {
         return null;
     }
 
-
-
-    /*parseLightsSpot(children, index) {
-
-        var grandChildren = [];
-        var error;
-        //get the id of current light
-        var spotId = this.reader.getString(children[index], 'id');
-        if (spotId == null)
-            return "no ID defined for light";
-
-        // Checks for repeated IDs.
-        if (this.spots[spotId] != null)
-            return "ID must be unique for each light (conflict: ID = " + spotId + ")";
-
-        //get the enabled value of current spot
-        var enabled = this.reader.getFloat(children[index], 'enabled');
-        if (!this.validateFloat(enabled))
-            return "unable to parse enabled value for spot for ID" + spotId;
-
-        //get the angle value of current spot
-        var angle = this.reader.getFloat(children[index], 'angle');
-        if (!this.validateFloat(angle))
-            return "unable to parse angle value for spot for ID" + spotId;
-
-        //get the exponent value of current spot
-        var exponent = this.reader.getFloat(children[index], 'exponent');
-        if (!this.validateFloat(exponent))
-            return "unable to parse exponent value for spot for ID" + spotId;
-
-        grandChildren = children[index].children;
-        var nodeNames = [];
-        for (var j = 0; j < grandChildren.length; j++) {
-            nodeNames.push(grandChildren[j].nodeName);
-        }
-
-        var locationIndex = nodeNames.indexOf("location");
-        var targetIndex = nodeNames.indexOf("target");
-        var ambientIndex = nodeNames.indexOf("ambient");
-        var diffuseIndex = nodeNames.indexOf("diffuse");
-        var specularIndex = nodeNames.indexOf("specular");
-
-        if (locationIndex == -1)
-            return "spot's location undefined for ID = " + spotId;
-        if (targetIndex == -1)
-            return "spot's target undefined for ID = " + spotId;
-        if (ambientIndex == -1)
-            return "spot's ambient undefined for ID = " + spotId;
-        if (diffuseIndex == -1)
-            return "spot's diffuse undefined for ID = " + spotId;
-        if (specularIndex == -1)
-            return "spot's specular undefined for ID = " + spotId;
-
-        var location = [];
-        var target = [];
-        var ambient = [];
-        var diffuse = [];
-        var specular = [];
-
-        //reads the location values 
-        error = this.parseAndValidateXYZWvalues(grandChildren, locationIndex, spotId, "location", "spot", location);
-        if (error != null)
-            return error;
-        //reads the target values
-        error = this.parseAndValidateXYZvalues(grandChildren, targetIndex, spotId, "target", "spot", target);
-        if (error != null)
-            return error;
-        //reads the ambient values
-        this.parseAndValidateRGBAvalues(grandChildren, ambientIndex, spotId, "ambient", "spot", ambient);
-
-        //reads the diffuse values
-        this.parseAndValidateRGBAvalues(grandChildren, diffuseIndex, spotId, "diffuse", "spot", diffuse);
-
-        //reads the specular values
-        this.parseAndValidateRGBAvalues(grandChildren, specularIndex, spotId, "specular", "spot", specular);
-
-        this.spots[spotId] = [enabled, angle, exponent, location, target, ambient, diffuse, specular];
-
-        return null;
-    }*/
 
     parseLightsSpot(children, index) {
 
@@ -1363,7 +1221,7 @@ class MySceneGraph {
     }
 
     createSphere(sphere) {
-        return new MySphere(this.scene,sphere.radius,sphere.slices,sphere.stacks,null,null);
+        return new MySphere(this.scene,sphere.slices,sphere.stacks,sphere.radius);
     }
 
     createCylinder(cylinder) {
