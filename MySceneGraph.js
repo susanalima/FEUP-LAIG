@@ -231,8 +231,7 @@ class MySceneGraph {
         var children = viewsNode.children;
         this.views = {
             default: null,
-            orthos: [],
-            perspectives: []
+            views: []
         }
         var numViews = 0;
         var error;
@@ -287,7 +286,7 @@ class MySceneGraph {
             return "no ID defined for view";
 
         // Checks for repeated IDs.
-        if (this.views.perspectives[perspectiveId] != null)
+        if (this.views.views[perspectiveId] != null)
             return "ID must be unique for each view (conflict: ID = " + perspectiveId + ")";
 
         //get the near value of current perspective
@@ -333,7 +332,7 @@ class MySceneGraph {
             return error;
 
 
-        this.views.perspectives[perspectiveId] = this.createCameraPerspective(perspective);
+        this.views.views[perspectiveId] = this.createCameraPerspective(perspective);
 
         return null;
     }
@@ -359,7 +358,7 @@ class MySceneGraph {
             return "no ID defined for view";
 
         // Checks for repeated IDs.
-        if (this.views.orthos[orthoId] != null)
+        if (this.views.views[orthoId] != null)
             return "ID must be unique for each view (conflict: ID = " + orthoId + ")";
 
         //get the near value of current ortho
@@ -419,8 +418,7 @@ class MySceneGraph {
         if (error != null)
             return error;
 
-        this.views.orthos[orthoId] = this.createCameraOrtho(ortho);
-
+        this.views.views[orthoId] = this.createCameraOrtho(ortho);
 
         return null;
     }
@@ -434,9 +432,9 @@ class MySceneGraph {
     //NAO SEI SE FUNCIONA
     //CGFcameraOrtho( left, right, bottom, top, near, far, position, target, up )
     createCameraOrtho(ortho) {
-       var up = [0,1,0];
-       var camera = new CGFcameraOrtho(ortho.left, ortho.right, ortho.bottom, ortho.top, ortho.near,ortho.far,ortho.fromPosition,ortho.toPosition,up);
-       return camera;
+        var up = [0, 1, 0];
+        var camera = new CGFcameraOrtho(ortho.left, ortho.right, ortho.bottom, ortho.top, ortho.near, ortho.far, ortho.fromPosition, ortho.toPosition, up);
+        return camera;
     }
 
 
@@ -1053,9 +1051,6 @@ class MySceneGraph {
     }
 
     parseComponents(componentsNode) {
-
-        
-
         var children = componentsNode.children;
         this.components = [];
         var numComponents = 0;
@@ -1066,35 +1061,35 @@ class MySceneGraph {
 
             var component = {
 
-            materials: [],
+                materials: [],
 
-            texture: {
-                id: "0",
-                length_s: 0,
-                length_t: 0
-            },
+                texture: {
+                    id: "0",
+                    length_s: 0,
+                    length_t: 0
+                },
 
-            transformations: {
-                tref: false,
-                trefID: null,
-                transformations: []
+                transformations: {
+                    tref: false,
+                    trefID: null,
+                    transformations: []
 
-            },
+                },
 
-            children: {
-                componentsRef: [],
-                primitivesRef: []
+                children: {
+                    componentsRef: [],
+                    primitivesRef: []
+                }
             }
-        }
 
             if (children[i].nodeName == "component") {
                 var componentId = this.reader.getString(children[i], "id");
                 if (componentId == null)
                     return "no Id defined for component";
-        
+
                 if (this.components[componentId] != null)
                     return "Id must be unique for each component  (conflict: ID = " + componentId + ")";
-                
+
                 //ver se nao ha componentes com id iguais   
 
                 grandChildren = children[i].children;
@@ -1140,7 +1135,7 @@ class MySceneGraph {
                                     }
                                 }
                             }
-                           
+
                             break;
 
                         case "materials":
@@ -1199,30 +1194,25 @@ class MySceneGraph {
     }
 
 
-    createRectangle(rectangle)
-    {
-        var ret = new MyRectangle(this.scene,rectangle.x1,rectangle.y1,rectangle.x2,rectangle.y2);
+    createRectangle(rectangle) {
+        var ret = new MyRectangle(this.scene, rectangle.x1, rectangle.y1, rectangle.x2, rectangle.y2);
         return ret;
     }
 
-    createTriangle(triangle)
-    {
+    createTriangle(triangle) {
 
     }
 
-    createSphere(sphere)
-    {
+    createSphere(sphere) {
 
     }
 
-    createCylinder(cylinder)
-    {
-        var cylinder = new MyCylinder(this.scene, cylinder.slices, cylinder.stacks,cylinder.top,cylinder.height); //TODO
+    createCylinder(cylinder) {
+        var cylinder = new MyCylinder(this.scene, cylinder.slices, cylinder.stacks, cylinder.top, cylinder.height); //TODO
         return cylinder;
     }
 
-    createTorus(torus)
-    {
+    createTorus(torus) {
 
     }
 
@@ -1389,6 +1379,27 @@ class MySceneGraph {
             return true;
     }
 
+    validateAxis(axis) {
+        switch (axis) {
+            case "x":
+            case "X":
+            case "y":
+            case "Y":
+            case "z":
+            case "Z":
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    isFloatInBetween(float,lower,upper)
+    {
+        if (float >= lower && float <= upper)
+            return true;
+        return false;
+    }
+
     /***************************************/
 
     /***************************** */
@@ -1422,114 +1433,86 @@ class MySceneGraph {
     }
 
 
-    applyTexture(comp, compAppearance) {
-        //var text = this.textures[comp[2][0]];
-        //compAppearance.loadTexture(text[0]);
-    }
-
-    applyTransformations(comp) {
-
-    }
-
-    displayComp(comp) {
-
-       
-    }
-
-
     /**
      * Displays the scene, processing each node, starting in the root node.
      */
     displayScene() {
         // entry point for graph rendering
-       var transformations = [];
-       var materials = [];
-       var textures = [];
-       //console.dir(this.components[this.root]);
-       this.visitNode(this.components[this.root],transformations,materials,textures);
-       
+        var transformations = [];
+        var materials = [];
+        var textures = [];
+        //console.dir(this.components[this.root]);
+        this.visitNode(this.components[this.root], transformations, materials, textures);
+
     }
 
-    applyTransformationsPush(transformations)
-    {
-        for(let i = 0; i < transformations.length; i++)
-        {
+    applyTransformationsPush(transformations) {
+        for (let i = 0; i < transformations.length; i++) {
             this.applyTransformation(transformations[i]);
         }
     }
 
-    applyTransformations(transformations)
-    {
-        for (var key in transformations) 
-        {
+    applyTransformations(transformations) {
+        for (var key in transformations) {
             this.applyTransformation(transformations[key]);
         }
     }
 
-    applyTransformation(transformation)
-    {
-        switch(transformation.class)
-        {
+    applyTransformation(transformation) {
+        switch (transformation.class) {
             case "translate":
-            this.scene.translate(transformation.x,transformation.y,transformation.z);
-            break;
+                this.scene.translate(transformation.x, transformation.y, transformation.z);
+                break;
             case "scale":
-            this.scene.scale(transformation.x,transformation.y,transformation.z);
-            break;
+                this.scene.scale(transformation.x, transformation.y, transformation.z);
+                break;
             case "rotate":
-            this.applyRotate(transformation);
-            break;
+                this.applyRotate(transformation);
+                break;
             default: //TODO MENSAGEM DE ERRO
-            console.log("hhh");
-            break;
+                console.log("hhh");
+                break;
         }
     }
-    applyRotate(rotate)
-    {
-        var angle = Math.PI/180 * rotate.angle;
-        switch(rotate.axis)
-        {
+    applyRotate(rotate) {
+        var angle = Math.PI / 180 * rotate.angle;
+        switch (rotate.axis) {
             case "x":
             case "X":
-            this.scene.rotate(angle,1,0,0);
-            break;
+                this.scene.rotate(angle, 1, 0, 0);
+                break;
             case "y":
             case "Y":
-            this.scene.rotate(angle,0,1,0);
-            break;
+                this.scene.rotate(angle, 0, 1, 0);
+                break;
             case "z":
             case "Z":
-            this.scene.rotate(angle,0,0,1);
-            break;
+                this.scene.rotate(angle, 0, 0, 1);
+                break;
             default: //TODO MENSAGEM DE ERRO
-            console.log("hhh");
-            break;
+                console.log("hhh");
+                break;
         }
     }
 
 
-    visitNode(node,transformations,materials,textures)
-    {
-        
+    visitNode(node, transformations, materials, textures) {
+
         transformations.push(node.transformations);
         materials.push(node.materials);
         textures.push(node.texture);
         this.scene.pushMatrix();
-        if(node.transformations.tref)
-        {
+        if (node.transformations.tref) {
             this.applyTransformations(this.transformations[node.transformations.trefID]);
         }
-        else
-        {
+        else {
             this.applyTransformationsPush(node.transformations.transformations);
         }
-        for(let i = 0; i < node.children.primitivesRef.length; i++)
-        {
-            this.visitLeaf(node.children.primitivesRef[i],transformations,materials,textures);
+        for (let i = 0; i < node.children.primitivesRef.length; i++) {
+            this.visitLeaf(node.children.primitivesRef[i], transformations, materials, textures);
         }
-        for(let i = 0; i < node.children.componentsRef.length; i++)
-        {
-            this.visitNode(this.components[node.children.componentsRef[i]],transformations,materials,textures);
+        for (let i = 0; i < node.children.componentsRef.length; i++) {
+            this.visitNode(this.components[node.children.componentsRef[i]], transformations, materials, textures);
         }
 
         this.scene.popMatrix();
@@ -1537,16 +1520,13 @@ class MySceneGraph {
         materials.pop();
         textures.pop();
         return null;
-
-    
     }
 
-    visitLeaf(leaf,transformations,materials,textures)
-    {
+    visitLeaf(leaf, transformations, materials, textures) {
         var prim = this.primitives[leaf];
         this.scene.pushMatrix();
-        var text = textures[textures.length-1];
-        var mat = materials[materials.length-1];
+        var text = textures[textures.length - 1];
+        var mat = materials[materials.length - 1];
         var m = this.materials[mat[0]]
         m.apply();
         this.textures[text.id].bind();
@@ -1554,4 +1534,20 @@ class MySceneGraph {
         this.scene.popMatrix();
     }
 }
+
+
+
+/**
+ * TODO (nao por ordem)
+ * validar os valores lidos e usar valores default
+ * fatores de textura
+ * tratar das luzes spot
+ * mudar cilindro : acrescentar bases e diferentes bases
+ * fazer triangulo, torus e esfera
+ * hereditariedade de texturas
+ * mudar interface das luzes
+ * comentar e refactoring se houver tempo
+ * criar outra cena
+ * testar com as cenas do forum
+ */
 

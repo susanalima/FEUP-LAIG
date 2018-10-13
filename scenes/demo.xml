@@ -6,6 +6,14 @@
 		 <from x="15.0" y="15.0" z="15.0" />
 		 <to x="0.0" y="0.0" z="0.0" />
 	</perspective>
+	<perspective id="p2" near="0.1" far="1000" angle="30">
+		 <from x="15.0" y="10.0" z="100.0" />
+		 <to x="0.0" y="0.0" z="0.0" />
+	</perspective>
+	<perspective id="p3" near="0.1" far="1000" angle="60">
+		 <from x="15.0" y="100.0" z="15.0" />
+		 <to x="0.0" y="0.0" z="0.0" />
+	</perspective>
 	<ortho id="o1" near="0.1" far="1000" left="-15" right="15" top="15" bottom="-15" >
  		<from x="15.0" y="15.0" z="15.0" />
  		<to x="0.0" y="0.0" z="0.0" />

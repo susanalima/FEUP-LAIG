@@ -33,6 +33,7 @@ class XMLscene extends CGFscene {
         this.gl.depthFunc(this.gl.LEQUAL);
 
         this.axis = new CGFaxis(this);
+
     }
 
     /**
@@ -57,7 +58,7 @@ class XMLscene extends CGFscene {
 
             if (this.graph.omnis.hasOwnProperty(key)) {
                 var light = this.graph.omnis[key];
-      
+
                 //lights are predefined in cgfscene
                 this.lights[i].setPosition(light[1][0], light[1][1], light[1][2], light[1][3]);
                 this.lights[i].setAmbient(light[2][0], light[2][1], light[2][2], light[2][3]);
@@ -94,36 +95,29 @@ class XMLscene extends CGFscene {
         this.setGlobalAmbientLight(this.graph.ambientAmbient[0], this.graph.ambientAmbient[1], this.graph.ambientAmbient[2], this.graph.ambientAmbient[3]);
 
         this.initLights();
-        //this.initCameras();
-        this.loadParsedCameras();
+        this.initParsedCameras();
 
         // Adds lights group.
         this.interface.addLightsGroup(this.graph.omnis);
+
+        this.interface.addViewsGroup();
 
         this.sceneInited = true;
     }
 
 
+    initParsedCameras() {
+        this.v = [];
 
-    //TODO ORTHO CAMERA e valor near da camera e adicionar uma lista de camaras que se podem trocar na interface
-    loadParsedCameras()
-    {
-        var defaultCam = this.graph.views.default;
-        var defaultPerspective = this.graph.views.perspectives[defaultCam];
-        if (defaultPerspective != null)
-           this.camera = defaultPerspective;
-        else{
-            var defaultOrtho = this.graph.views.orthos[defaultCam];
-            // TODO ortho camera
-            if (defaultOrtho != null)
-            {
-                this.camera = defaultOrtho;
-            }
-            else
-            {
-                this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
-            }
+        for (var key in this.graph.views.views) {
+            this.v.push(key);
         }
+        var defaultCam = this.graph.views.default;
+        var defaultPerspective = this.graph.views.views[defaultCam];
+        if (defaultPerspective != null) {
+            this.camera = defaultPerspective;
+        }
+        this.currentview = defaultCam;
         this.interface.setActiveCamera(this.camera);
     }
 
@@ -166,6 +160,12 @@ class XMLscene extends CGFscene {
                     i++;
                 }
             }
+
+            if (this.camera != this.graph.views.views[this.currentview]) {
+                this.camera = this.graph.views.views[this.currentview];
+                this.interface.setActiveCamera(this.camera);
+            }
+
 
             // Displays the scene (MySceneGraph function).
             this.graph.displayScene();

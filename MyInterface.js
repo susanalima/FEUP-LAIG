@@ -44,4 +44,9 @@ class MyInterface extends CGFinterface {
             }
         }
     }
+
+    addViewsGroup(views)
+    {
+        this.gui.add(this.scene,'currentview',this.scene.v);
+    }
 }
