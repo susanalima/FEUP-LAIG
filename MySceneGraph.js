@@ -507,6 +507,7 @@ class MySceneGraph {
         this.spots = [];
         var numLights = 0;
         var error;
+        this.lights = [];
 
         for (var i = 0; i < children.length; i++) {
             switch (children[i].nodeName) {
@@ -531,14 +532,15 @@ class MySceneGraph {
             return "at least one light must be defined";
 
         this.log("Parsed lights");
+        console.dir(this.lights);
         return null;
     }
 
 
 
-    parseLightsOmni(children, index) {
+   /* parseLightsOmni(children, index) {
         var grandChildren = [];
-        var error;
+        var error;  
         //get the id of current light
         var omniId = this.reader.getString(children[index], 'id');
         if (omniId == null)
@@ -595,10 +597,77 @@ class MySceneGraph {
         this.omnis[omniId] = [enabled, location, ambient, diffuse, specular];
 
         return null;
+    }*/
+
+
+    parseLightsOmni(children, index) {
+        var grandChildren = [];
+        var error;  
+        var omni = {
+            class : 'omni',
+            enabled : null,
+            location : [],
+            ambient : [],
+            diffuse : [],
+            specular : [],
+        }
+        //get the id of current light
+        var omniId = this.reader.getString(children[index], 'id');
+        if (omniId == null)
+            return "no ID defined for light";
+
+        // Checks for repeated IDs.
+        if (this.lights[omniId] != null)
+            return "ID must be unique for each light (conflict: ID = " + omniId + ")";
+
+        //get the enabled value of current omni
+        omni.enabled = this.reader.getFloat(children[index], 'enabled');
+        if (!this.validateFloat(omni.enabled))
+            return "unable to parse enabled value for omni for ID" + omniId;
+
+        grandChildren = children[index].children;
+
+        var nodeNames = [];
+        for (var j = 0; j < grandChildren.length; j++) {
+            nodeNames.push(grandChildren[j].nodeName);
+        }
+
+        var locationIndex = nodeNames.indexOf("location");
+        var ambientIndex = nodeNames.indexOf("ambient");
+        var diffuseIndex = nodeNames.indexOf("diffuse");
+        var specularIndex = nodeNames.indexOf("specular");
+
+        if (locationIndex == -1)
+            return "omni's location undefined for ID = " + omniId;
+        if (ambientIndex == -1)
+            return "omni's ambient undefined for ID = " + omniId;
+        if (diffuseIndex == -1)
+            return "omni's diffuse undefined for ID = " + omniId;
+        if (specularIndex == -1)
+            return "omni's specular undefined for ID = " + omniId;
+
+
+        //reads the location values 
+        error = this.parseAndValidateXYZWvalues(grandChildren, locationIndex, omniId, "location", "omni", omni.location);
+        if (error != null)
+            return error;
+        //reads the ambient values
+        this.parseAndValidateRGBAvalues(grandChildren, ambientIndex, omniId, "ambient", "omni", omni.ambient);
+
+        //reads the diffuse values 
+        this.parseAndValidateRGBAvalues(grandChildren, diffuseIndex, omniId, "diffuse", "omni", omni.diffuse);
+
+        //reads the specular values
+        this.parseAndValidateRGBAvalues(grandChildren, specularIndex, omniId, "specular", "omni", omni.specular);
+
+        this.lights[omniId] = omni;
+
+        return null;
     }
 
 
-    parseLightsSpot(children, index) {
+
+    /*parseLightsSpot(children, index) {
 
         var grandChildren = [];
         var error;
@@ -673,6 +742,91 @@ class MySceneGraph {
         this.parseAndValidateRGBAvalues(grandChildren, specularIndex, spotId, "specular", "spot", specular);
 
         this.spots[spotId] = [enabled, angle, exponent, location, target, ambient, diffuse, specular];
+
+        return null;
+    }*/
+
+    parseLightsSpot(children, index) {
+
+        var grandChildren = [];
+        var error;
+        var spot = {
+            class : 'spot',
+            enabled : null,
+            angle : null,
+            exponent : null,
+            location : [],
+            target : [],
+            ambient : [],
+            diffuse : [],
+            specular : [],
+        }
+        //get the id of current light
+        var spotId = this.reader.getString(children[index], 'id');
+        if (spotId == null)
+            return "no ID defined for light";
+
+        // Checks for repeated IDs.
+        if (this.lights[spotId] != null)
+            return "ID must be unique for each light (conflict: ID = " + spotId + ")";
+
+        //get the enabled value of current spot
+        spot.enabled = this.reader.getFloat(children[index], 'enabled');
+        if (!this.validateFloat(spot.enabled))
+            return "unable to parse enabled value for spot for ID" + spotId;
+
+        //get the angle value of current spot
+        spot.angle = this.reader.getFloat(children[index], 'angle');
+        if (!this.validateFloat(spot.angle))
+            return "unable to parse angle value for spot for ID" + spotId;
+
+        //get the exponent value of current spot
+        spot.exponent = this.reader.getFloat(children[index], 'exponent');
+        if (!this.validateFloat(spot.exponent))
+            return "unable to parse exponent value for spot for ID" + spotId;
+
+        grandChildren = children[index].children;
+        var nodeNames = [];
+        for (var j = 0; j < grandChildren.length; j++) {
+            nodeNames.push(grandChildren[j].nodeName);
+        }
+
+        var locationIndex = nodeNames.indexOf("location");
+        var targetIndex = nodeNames.indexOf("target");
+        var ambientIndex = nodeNames.indexOf("ambient");
+        var diffuseIndex = nodeNames.indexOf("diffuse");
+        var specularIndex = nodeNames.indexOf("specular");
+
+        if (locationIndex == -1)
+            return "spot's location undefined for ID = " + spotId;
+        if (targetIndex == -1)
+            return "spot's target undefined for ID = " + spotId;
+        if (ambientIndex == -1)
+            return "spot's ambient undefined for ID = " + spotId;
+        if (diffuseIndex == -1)
+            return "spot's diffuse undefined for ID = " + spotId;
+        if (specularIndex == -1)
+            return "spot's specular undefined for ID = " + spotId;
+
+
+        //reads the location values 
+        error = this.parseAndValidateXYZWvalues(grandChildren, locationIndex, spotId, "location", "spot", spot.location);
+        if (error != null)
+            return error;
+        //reads the target values
+        error = this.parseAndValidateXYZvalues(grandChildren, targetIndex, spotId, "target", "spot", spot.target);
+        if (error != null)
+            return error;
+        //reads the ambient values
+        this.parseAndValidateRGBAvalues(grandChildren, ambientIndex, spotId, "ambient", "spot", spot.ambient);
+
+        //reads the diffuse values
+        this.parseAndValidateRGBAvalues(grandChildren, diffuseIndex, spotId, "diffuse", "spot", spot.diffuse);
+
+        //reads the specular values
+        this.parseAndValidateRGBAvalues(grandChildren, specularIndex, spotId, "specular", "spot", spot.specular);
+
+        this.lights[spotId] = spot;
 
         return null;
     }
@@ -1628,7 +1782,7 @@ class MySceneGraph {
  * TODO (nao por ordem)
  * fatores de textura
  * tratar do angulo da perspetiva
- * tratar das luzes spot
+ * tratar das luzes spot (so falta a direction que era aquilo que o gregu e o joao estavam a falar, mas nao sei fazer)
  * mudar cilindro : acrescentar bases e diferentes bases
  * fazer triangulo, torus e esfera
  * hereditariedade de texturas

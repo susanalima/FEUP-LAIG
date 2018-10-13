@@ -47,7 +47,7 @@ class XMLscene extends CGFscene {
     /**
      * Initializes the scene lights with the values read from the XML file.
      */
-    initLights() {
+    /*initLights() {
         var i = 0;
         // Lights index.
 
@@ -77,6 +77,46 @@ class XMLscene extends CGFscene {
                 i++;
             }
         } 
+    }*/
+
+
+    initLights() {
+        var i = 0;
+        // Lights index.
+
+    
+        // Reads the lights from the scene graph.
+        for (var key in this.graph.lights) {
+            if (i >= 8)
+                break;              // Only eight lights allowed by WebGL.
+
+
+            if (this.graph.lights.hasOwnProperty(key)) {
+                var light = this.graph.lights[key];
+                //lights are predefined in cgfscene
+                this.lights[i].setPosition(light.location[0], light.location[1], light.location[2], light.location[3]);
+                this.lights[i].setAmbient(light.ambient[0], light.ambient[1], light.ambient[2], light.ambient[3]);
+                this.lights[i].setDiffuse(light.diffuse[0], light.diffuse[1], light.diffuse[2], light.diffuse[3]);
+                this.lights[i].setSpecular(light.specular[0], light.specular[1], light.specular[2], light.specular[3]);
+                if (light.class == 'spot')
+                {
+                    this.lights[i].setSpotExponent(light.exponent);
+                    this.lights[i].setSpotCutOff(light.angle);
+                    //this.lights[i].setSpotDirection(); TODO FAZER SET DA DIRECTION
+                }
+                this.lights[i].setVisible(true);
+
+                if (light.enable)
+                    this.lights[i].enable();
+                else
+                    this.lights[i].disable();
+
+                this.lights[i].update();
+
+                i++;
+            }
+        } 
+  
     }
 
 
@@ -99,7 +139,7 @@ class XMLscene extends CGFscene {
         this.initParsedCameras();
 
         // Adds lights group.
-        this.interface.addLightsGroup(this.graph.omnis);
+        this.interface.addLightsGroup(this.graph.lights);
        
 
         this.interface.addViewsGroup();
