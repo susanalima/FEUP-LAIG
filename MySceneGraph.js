@@ -1,4 +1,3 @@
-
 // Order of the groups in the XML document.
 var SCENE_INDEX = 0;
 var VIEWS_INDEX = 1;
@@ -1200,25 +1199,26 @@ class MySceneGraph {
     }
 
     createTriangle(triangle) {
-
+        var tr = new MyTriangle(this.scene,triangle.x1,triangle.y1,triangle.z1,triangle.x2,triangle.y2,triangle.z2,triangle.x3,triangle.y3,triangle.z3);
+        return tr;
     }
 
     createSphere(sphere) {
-
+        var sp = new MySphere(this.scene,sphere.radius,sphere.slices,sphere.stacks,null,null);
+        return sp;
     }
 
     createCylinder(cylinder) {
-        var cylinder = new MyCylinder(this.scene, cylinder.slices, cylinder.stacks, cylinder.top, cylinder.height); //TODO
-        return cylinder;
+        var cl = new MyCylinder(this.scene, cylinder.slices, cylinder.stacks, cylinder.top, cylinder.height); //TODO
+        return cl;
     }
 
     createTorus(torus) {
-
+        var tr = new MyTorus(this.scene,torus.slices,torus.stacks,torus.inner,torus.outer);
+        return tr;
     }
 
 
-    /**usar na das components tambem */
-    /****mudar de sitio *************/
     parseTorus(children, index) {
         var g_torus = {
             inner: null,
@@ -1328,20 +1328,29 @@ class MySceneGraph {
 
     }
 
-    //TODO decidir se da erro ou se assumo valores por defeito
     parseAndValidateRGBAvalues(children, index, id, s1, s2, vector) {
+
         var { x, y, z, w } = this.parsePointRGBA(children, index);
-        if (!this.validateFloat(x))
-            return "unable to parse " + s1 + " r-value of the " + s2 + " for ID = " + id;
-        if (!this.validateFloat(y))
-            return "unable to parse " + s1 + " g-value of the " + s2 + " for ID = " + id;
-        if (!this.validateFloat(z))
-            return "unable to parse " + s1 + " b-value of the " + s2 + " for ID = " + id;
-        if (!this.validateFloat(w))
-            return "unable to parse " + s1 + " a-value of the " + s2 + " for ID = " + id;
+        if (!this.isFloatInBetween(x,0,1)){
+            x = 0.3;
+            this.onXMLMinorError("unable to parse " + s1 + " r-value of the " + s2 + " for ID = " + id + " default: r = " + x);
+        }
+        if (!this.isFloatInBetween(y,0,1)){
+            y = 0.3;
+            this.onXMLMinorError("unable to parse " + s1 + " g-value of the " + s2 + " for ID = " + id + " default: g = " + x);
+        }
+        if (!this.isFloatInBetween(z,0,1)){
+            z = 0.3;
+            this.onXMLMinorError("unable to parse " + s1 + " b-value of the " + s2 + " for ID = " + id + " default: b = " + x);
+        }   
+        if (!this.isFloatInBetween(w,0,1)){
+            w = 0.3;
+            this.onXMLMinorError("unable to parse " + s1 + " a-value of the " + s2 + " for ID = " + id + " default: a = " + x);
+        }
         vector.push(x, y, z, w);
         return null;
     }
+
 
 
     parseAndValidateXYZvalues(children, index, id, s1, s2, vector) {
@@ -1379,6 +1388,7 @@ class MySceneGraph {
             return true;
     }
 
+
     validateAxis(axis) {
         switch (axis) {
             case "x":
@@ -1393,11 +1403,14 @@ class MySceneGraph {
         }
     }
 
+    isInBetween(float,lower,upper)
+    {
+        return (float >= lower && float <= upper)
+    }
+
     isFloatInBetween(float,lower,upper)
     {
-        if (float >= lower && float <= upper)
-            return true;
-        return false;
+        return (this.validateFloat(float) && this.isInBetween(float,lower,upper));
     }
 
     /***************************************/
