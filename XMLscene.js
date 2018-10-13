@@ -64,8 +64,11 @@ class XMLscene extends CGFscene {
                 if (light.class == 'spot')
                 {
                     this.lights[i].setSpotExponent(light.exponent);
-                    this.lights[i].setSpotCutOff(light.angle);
-                    //this.lights[i].setSpotDirection(); TODO FAZER SET DA DIRECTION
+                    this.lights[i].setSpotCutOff(light.angle*Math.PI/180);
+                    let x = light.target[0] - light.location[0];
+                    let y = light.target[1] - light.location[1];
+                    let z = light.target[2] - light.location[2];
+                    this.lights[i].setSpotDirection(x,y,z);
                 }
                 this.lights[i].setVisible(true);
 

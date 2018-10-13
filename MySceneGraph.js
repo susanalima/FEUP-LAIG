@@ -8,6 +8,7 @@ var MATERIALS_INDEX = 5;
 var TRANSFORMATIONS_INDEX = 6;
 var PRIMITIVES_INDEX = 7;
 var COMPONENTS_INDEX = 8;
+var INHERIT = "inherit";
 
 /**
 * MySceneGraph class, representing the scene graph.
@@ -203,7 +204,6 @@ class MySceneGraph {
     * @param {scene block element} sceneNode
     */
     parseScene(sceneNode) {
-    
 
         this.root = this.reader.getString(sceneNode, 'root');
         if(this.root == null)
@@ -424,7 +424,7 @@ class MySceneGraph {
 
 
     createCameraPerspective(perspective) {
-        var camera = new CGFcamera(0.4, perspective.near, perspective.far, perspective.fromPosition, perspective.toPosition);
+        var camera = new CGFcamera(perspective.angle*Math.PI/180, perspective.near, perspective.far, perspective.fromPosition, perspective.toPosition);
         return camera;
     }
 
@@ -1595,12 +1595,12 @@ class MySceneGraph {
     }
 
 
-    visitNode(node, transformations, materials, textures) {
-
+    visitNode(node, transformations, materials, textures) {        
         transformations.push(node.transformations);
         materials.push(node.materials);
         textures.push(node.texture);
         this.scene.pushMatrix();
+
         if (node.transformations.tref) {
             this.applyTransformations(this.transformations[node.transformations.trefID]);
         }
@@ -1639,8 +1639,8 @@ class MySceneGraph {
 /**
  * TODO (nao por ordem)
  * fatores de textura
- * tratar do angulo da perspetiva
- * tratar das luzes spot (so falta a direction que era aquilo que o gregu e o joao estavam a falar, mas nao sei fazer)
+ * tratar do angulo da perspetiva (ACHO QUE JA ESTA, APENAS PASSEI PARA RADIANOS)
+ * tratar das luzes spot JA ESTA IMPLEMENTADO MAS NAO SEI SE FUNCIONA
  * mudar cilindro : acrescentar bases e diferentes bases
  * fazer triangulo, torus e esfera
  * hereditariedade de texturas
