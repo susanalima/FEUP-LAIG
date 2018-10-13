@@ -686,9 +686,7 @@ class MySceneGraph {
     parseTextures(texturesNode) {
         var children = texturesNode.children;
         this.textures = [];
-        var nodeNames = [];
         var numTextures = 0;
-        var grandChildren = [];
         var error;
         for (var i = 0; i < children.length; i++) {
             if (children[i].nodeName == "texture") {
@@ -870,6 +868,7 @@ class MySceneGraph {
     parseTransformationsTransformation(children, index) {
         var grandChildren = [];
         var numT = 0;
+        var error;
         //get the id of current transformation
         var transformationId = this.reader.getString(children[index], 'id');
         if (transformationId == null)
@@ -889,18 +888,21 @@ class MySceneGraph {
             var nodeName = grandChildren[j].nodeName;
             switch (nodeName) {
                 case "translate":
-                    var translate = this.parseTransformationTranslate(grandChildren, j);
-                    tmp_transformations.push(translate);
+                    error = this.parseTransformationTranslate(grandChildren,j,tmp_transformations);
+                    if(error != null)
+                        return error;
                     numT++;
                     break;
                 case "rotate":
-                    var rotate = this.parseTransformationRotate(grandChildren, j);
-                    tmp_transformations.push(rotate);
+                    error = this.parseTransformationRotate(grandChildren, j,tmp_transformations);
+                    if(error != null)
+                        return error;
                     numT++;
                     break;
                 case "scale":
-                    var scale = this.parseTransformationScale(grandChildren, j);
-                    tmp_transformations.push(scale);
+                    error = this.parseTransformationScale(grandChildren, j,tmp_transformations);
+                    if(error != null)
+                        return error;
                     numT++;
                     break;
                 default:
@@ -916,7 +918,7 @@ class MySceneGraph {
     }
 
 
-    parseTransformationScale(children, index) {
+    parseTransformationScale(children, index, vector) {
         var scale = {
             class: 'scale',
             x: null,
@@ -927,21 +929,35 @@ class MySceneGraph {
         scale.x = x;
         scale.y = y;
         scale.z = z;
-        return scale;
+        if(!this.validateFloat(scale.x))
+            return "unable to parse x of scale";
+        if(!this.validateFloat(scale.y))
+            return "unable to parse y of scale";
+         if(!this.validateFloat(scale.z))
+            return "unable to parse z of scale";
+
+        vector.push(scale);
+        return null;
     }
 
-    parseTransformationRotate(children, index) {
+    parseTransformationRotate(children, index, vector) {
         var rotate = {
             class: 'rotate',
             axis: null,
             angle: null
         }
         rotate.axis = this.reader.getString(children[index], 'axis');
+        if(!this.validateAxis(rotate.axis))
+            return "unable to parse axis of rotate";
+
         rotate.angle = this.reader.getFloat(children[index], 'angle');
-        return rotate;
+        if(!this.validateFloat(rotate.angle))
+            return "unable to parse angle of rotate";
+        vector.push(rotate);
+        return null;
     }
 
-    parseTransformationTranslate(children, index) {
+    parseTransformationTranslate(children, index, vector) {
         var translate = {
             class: 'translate',
             x: null,
@@ -952,7 +968,14 @@ class MySceneGraph {
         translate.x = x;
         translate.y = y;
         translate.z = z;
-        return translate;
+        if (!this.validateFloat(translate.x))
+            return "unable to parse x of translate";
+        if (!this.validateFloat(translate.y))
+            return "unable to parse y of translate";
+        if (!this.validateFloat(translate.z))
+            return "unable to parse z of translate";
+        vector.push(translate);
+        return null;
     }
 
 
@@ -1040,7 +1063,7 @@ class MySceneGraph {
         var numComponents = 0;
         var grandChildren = [];
         var nodeNames = [];
-
+        var error;
         for (var i = 0; i < children.length; i++) {
 
             var component = {
@@ -1074,8 +1097,6 @@ class MySceneGraph {
                 if (this.components[componentId] != null)
                     return "Id must be unique for each component  (conflict: ID = " + componentId + ")";
 
-                //ver se nao ha componentes com id iguais   
-
                 grandChildren = children[i].children;
                 nodeNames = [];
 
@@ -1100,18 +1121,21 @@ class MySceneGraph {
                                 else {
                                     switch (nodeName2) {
                                         case "translate":
-                                            var translate = this.parseTransformationTranslate(ggrandChildren, k);
-                                            component.transformations.transformations.push(translate);
+                                            error = this.parseTransformationTranslate(ggrandChildren, k,component.transformations.transformations);
+                                            if(error != null)
+                                                return error;
                                             break;
 
                                         case "rotate":
-                                            var rotate = this.parseTransformationRotate(ggrandChildren, k);
-                                            component.transformations.transformations.push(rotate);
+                                            error = this.parseTransformationRotate(ggrandChildren, k,component.transformations.transformations);
+                                            if(error != null)
+                                                return error;
                                             break;
 
                                         case "scale":
-                                            var scale = this.parseTransformationScale(ggrandChildren, k);
-                                            component.transformations.transformations.push(scale);
+                                            error = this.parseTransformationScale(ggrandChildren, k,component.transformations.transformations);
+                                            if(error != null)
+                                                return error;
                                             break;
                                         default:
                                             this.onXMLMinorError("unknown tag <" + ggrandChildren[k].nodeName + ">");
@@ -1604,7 +1628,6 @@ class MySceneGraph {
 
 /**
  * TODO (nao por ordem)
- * validar os valores lidos e usar valores default
  * fatores de textura
  * tratar das luzes spot
  * mudar cilindro : acrescentar bases e diferentes bases
