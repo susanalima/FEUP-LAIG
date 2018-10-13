@@ -76,7 +76,7 @@ class XMLscene extends CGFscene {
 
                 i++;
             }
-        }
+        } 
     }
 
 
@@ -95,10 +95,12 @@ class XMLscene extends CGFscene {
         this.setGlobalAmbientLight(this.graph.ambientAmbient[0], this.graph.ambientAmbient[1], this.graph.ambientAmbient[2], this.graph.ambientAmbient[3]);
 
         this.initLights();
+
         this.initParsedCameras();
 
         // Adds lights group.
         this.interface.addLightsGroup(this.graph.omnis);
+       
 
         this.interface.addViewsGroup();
 

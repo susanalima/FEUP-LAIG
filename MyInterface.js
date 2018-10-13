@@ -39,13 +39,16 @@ class MyInterface extends CGFinterface {
 
         for (var key in lights) {
             if (lights.hasOwnProperty(key)) {
-                this.scene.lightValues[key] = lights[key][0];
+                if (lights[key][0] == 0)
+                    this.scene.lightValues[key] = false;
+                if (lights[key][0] == 1)
+                    this.scene.lightValues[key] = true;
                 group.add(this.scene.lightValues, key);
             }
         }
     }
 
-    addViewsGroup(views)
+    addViewsGroup()
     {
         this.gui.add(this.scene,'currentview',this.scene.v);
     }

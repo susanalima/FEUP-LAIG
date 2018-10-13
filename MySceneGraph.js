@@ -979,8 +979,6 @@ class MySceneGraph {
     }
 
 
-
-    //nao existe get int
     /**
      * Parses the <primitives> node.
      * @param {primitives block element} primitivesNode
@@ -1629,11 +1627,11 @@ class MySceneGraph {
 /**
  * TODO (nao por ordem)
  * fatores de textura
+ * tratar do angulo da perspetiva
  * tratar das luzes spot
  * mudar cilindro : acrescentar bases e diferentes bases
  * fazer triangulo, torus e esfera
  * hereditariedade de texturas
- * mudar interface das luzes
  * comentar e refactoring se houver tempo
  * criar outra cena
  * testar com as cenas do forum
