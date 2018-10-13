@@ -203,16 +203,15 @@ class MySceneGraph {
     * @param {scene block element} sceneNode
     */
     parseScene(sceneNode) {
-        var nodeNames = [];
+    
 
         this.root = this.reader.getString(sceneNode, 'root');
+        if(this.root == null)
+        return "unable to parse root value";
+
         this.axisLength = this.reader.getFloat(sceneNode, 'axis_length');
 
-        if (this.root == null) {
-            this.root = "scene_root";
-            this.onXMLMinorError("unable to parse value for scene root; assuming 'root = scene_root'");
-        }
-        else if (!(this.axisLength != null && !isNaN(this.axisLength))) {
+        if (!this.validateFloat(this.axisLength)) {
             this.axisLength = 10.0;
             this.onXMLMinorError("unable to parse value for axisLength; assuming 'far = 10.0'");
         }
@@ -235,13 +234,11 @@ class MySceneGraph {
         var numViews = 0;
         var error;
 
-        //nao sei pode ser este o valor de default  
-        var def = this.reader.getString(viewsNode, 'default');
-        if (def == null) {
-            this.onXMLMinorError("unable to parse value for views default; assuming 'default = default'");
+        //MUDAR PARA IR BUSCAR O PRIMEIRO TALVEZ
+       this.views.default = this.reader.getString(viewsNode, 'default');
+        if (this.views.default == null) {
+            return "unable to parse value for views default";
         }
-        else
-            this.views.default = def;
 
         for (var i = 0; i < children.length; i++) {
 
@@ -290,22 +287,22 @@ class MySceneGraph {
 
         //get the near value of current perspective
         perspective.near = this.reader.getFloat(children[index], 'near');
-        if (perspective.near == null)
-            return "no near defined for perspective";
+        if (!this.validateFloat(perspective.near))
+            return "unable to parse near value for perspective for ID" + perspectiveId;
 
         //get the far value of current perspective
         perspective.far = this.reader.getFloat(children[index], 'far');
-        if (perspective.far == null)
-            return "no far defined for perspective";
+        if (!this.validateFloat(perspective.far))
+            return "unable to parse far value for perspective for ID" + perspectiveId;
 
         //get the angle value of current perspective
         perspective.angle = this.reader.getFloat(children[index], 'angle');
-        if (perspective.angle == null)
-            return "no angle defined for perspective";
+        if (!this.validateFloat(perspective.angle))
+            return "unable to parse angle value for perspective for ID" + perspectiveId;
 
         grandChildren = children[index].children;
         if (grandChildren.length != 2)
-            return "incorrect number of children of perspective";
+            return "incorrect number of children for perspective";
 
         var nodeNames = [];
         for (var j = 0; j < grandChildren.length; j++) {
@@ -330,6 +327,7 @@ class MySceneGraph {
         if (error != null)
             return error;
 
+        //TODO CRIAR UMA DEFAULT
 
         this.views.views[perspectiveId] = this.createCameraPerspective(perspective);
 
@@ -362,33 +360,33 @@ class MySceneGraph {
 
         //get the near value of current ortho
         ortho.near = this.reader.getFloat(children[index], 'near');
-        if (ortho.near == null)
-            return "no near defined for ortho";
+        if (!this.validateFloat(ortho.near))
+            return "unable to parse near value for ortho for ID" + orthoId;
 
         //get the far value of current ortho
         ortho.far = this.reader.getFloat(children[index], 'far');
-        if (ortho.far == null)
-            return "no far defined for ortho";
+        if (!this.validateFloat(ortho.far))
+            return "unable to parse far value for ortho for ID" + orthoId;
 
         //get the left value of current ortho
         ortho.left = this.reader.getFloat(children[index], 'left');
-        if (ortho.left == null)
-            return "no left defined for ortho";
+        if (!this.validateFloat(ortho.left))
+            return "unable to parse left value for ortho for ID" + orthoId;
 
         //get the right value of current ortho
         ortho.right = this.reader.getFloat(children[index], 'right');
-        if (ortho.right == null)
-            return "no right defined for ortho";
+        if (!this.validateFloat(ortho.right))
+            return "unable to parse right value for ortho for ID" + orthoId;
 
         //get the top value of current ortho
         ortho.top = this.reader.getFloat(children[index], 'top');
-        if (ortho.top == null)
-            return "no top defined for ortho";
+        if (!this.validateFloat(ortho.top))
+            return "unable to parse top value for ortho for ID" + orthoId;
 
         //get the bottom value of current ortho
         ortho.bottom = this.reader.getFloat(children[index], 'bottom');
-        if (ortho.bottom == null)
-            return "no bottom defined for ortho";
+        if (!this.validateFloat(ortho.bottom))
+            return "unable to parse bottom value for ortho for ID" + orthoId;
 
         grandChildren = children[index].children;
         if (grandChildren.length != 2)
@@ -417,6 +415,8 @@ class MySceneGraph {
         if (error != null)
             return error;
 
+        //TODO CRIAR UMA DEFAULT
+
         this.views.views[orthoId] = this.createCameraOrtho(ortho);
 
         return null;
@@ -429,7 +429,6 @@ class MySceneGraph {
     }
 
     //NAO SEI SE FUNCIONA
-    //CGFcameraOrtho( left, right, bottom, top, near, far, position, target, up )
     createCameraOrtho(ortho) {
         var up = [0, 1, 0];
         var camera = new CGFcameraOrtho(ortho.left, ortho.right, ortho.bottom, ortho.top, ortho.near, ortho.far, ortho.fromPosition, ortho.toPosition, up);
@@ -437,8 +436,6 @@ class MySceneGraph {
     }
 
 
-
-    //TODO  MUDAR PARA USAR AS OUTRAS FUNCOES, VER CENA DOS VALORES DE DEFAULT
     /**
     * Parses the <ambient> block. 
     * @param {ambient block element} ambientNode
@@ -448,6 +445,7 @@ class MySceneGraph {
         this.backgroundAmbient = [];
         var children = ambientNode.children;
         var nodeNames = [];
+ 
         for (var i = 0; i < children.length; i++)
             nodeNames.push(children[i].nodeName);
 
@@ -472,7 +470,7 @@ class MySceneGraph {
             w = 1;
             this.onXMLMinorError("unable to parse a-value for ambient ambient; assuming 'a = 1'");
         }
-        this.ambientAmbient.push(x, y, z, w);
+        this.ambientAmbient.push(x,y,z,w);
 
         //get and validate the backgound values
         var { x, y, z, w } = this.parsePointRGBA(children, backgroundIndex);
@@ -552,8 +550,8 @@ class MySceneGraph {
 
         //get the enabled value of current omni
         var enabled = this.reader.getFloat(children[index], 'enabled');
-        if (enabled == null)
-            return "no enabled defined for omni";
+        if (!this.validateFloat(enabled))
+            return "unable to parse enabled value for omni for ID" + omniId;
 
         grandChildren = children[index].children;
 
@@ -585,21 +583,14 @@ class MySceneGraph {
         error = this.parseAndValidateXYZWvalues(grandChildren, locationIndex, omniId, "location", "omni", location);
         if (error != null)
             return error;
-
         //reads the ambient values
-        error = this.parseAndValidateRGBAvalues(grandChildren, ambientIndex, omniId, "ambient", "omni", ambient);
-        if (error != null)
-            return error;
+        this.parseAndValidateRGBAvalues(grandChildren, ambientIndex, omniId, "ambient", "omni", ambient);
 
         //reads the diffuse values 
-        error = this.parseAndValidateRGBAvalues(grandChildren, diffuseIndex, omniId, "diffuse", "omni", diffuse);
-        if (error != null)
-            return error;
+        this.parseAndValidateRGBAvalues(grandChildren, diffuseIndex, omniId, "diffuse", "omni", diffuse);
 
         //reads the specular values
-        error = this.parseAndValidateRGBAvalues(grandChildren, specularIndex, omniId, "specular", "omni", specular);
-        if (error != null)
-            return error;
+        this.parseAndValidateRGBAvalues(grandChildren, specularIndex, omniId, "specular", "omni", specular);
 
         this.omnis[omniId] = [enabled, location, ambient, diffuse, specular];
 
@@ -622,18 +613,18 @@ class MySceneGraph {
 
         //get the enabled value of current spot
         var enabled = this.reader.getFloat(children[index], 'enabled');
-        if (enabled == null)
-            return "no enabled defined for spot";
+        if (!this.validateFloat(enabled))
+            return "unable to parse enabled value for spot for ID" + spotId;
 
         //get the angle value of current spot
         var angle = this.reader.getFloat(children[index], 'angle');
-        if (angle == null)
-            return "no angle defined for spot";
+        if (!this.validateFloat(angle))
+            return "unable to parse angle value for spot for ID" + spotId;
 
         //get the exponent value of current spot
         var exponent = this.reader.getFloat(children[index], 'exponent');
-        if (exponent == null)
-            return "no exponent defined for spot";
+        if (!this.validateFloat(exponent))
+            return "unable to parse exponent value for spot for ID" + spotId;
 
         grandChildren = children[index].children;
         var nodeNames = [];
@@ -673,17 +664,13 @@ class MySceneGraph {
         if (error != null)
             return error;
         //reads the ambient values
-        error = this.parseAndValidateRGBAvalues(grandChildren, ambientIndex, spotId, "ambient", "spot", ambient);
-        if (error != null)
-            return error;
+        this.parseAndValidateRGBAvalues(grandChildren, ambientIndex, spotId, "ambient", "spot", ambient);
+
         //reads the diffuse values
-        error = this.parseAndValidateRGBAvalues(grandChildren, diffuseIndex, spotId, "diffuse", "spot", diffuse);
-        if (error != null)
-            return error;
+        this.parseAndValidateRGBAvalues(grandChildren, diffuseIndex, spotId, "diffuse", "spot", diffuse);
+
         //reads the specular values
-        error = this.parseAndValidateRGBAvalues(grandChildren, specularIndex, spotId, "specular", "spot", specular);
-        if (error != null)
-            return error;
+        this.parseAndValidateRGBAvalues(grandChildren, specularIndex, spotId, "specular", "spot", specular);
 
         this.spots[spotId] = [enabled, angle, exponent, location, target, ambient, diffuse, specular];
 
@@ -797,8 +784,8 @@ class MySceneGraph {
 
         //get the shininess value of current material
         material.shininess = this.reader.getFloat(children[index], 'shininess');
-        if (material.shininess == null)
-            return "no shininess defined for material";
+        if (!this.validateFloat(material.shininess))
+            return "unable to parse shininess value for spot for ID" + materialId;
 
         grandChildren = children[index].children;
         var nodeNames = [];
@@ -821,24 +808,16 @@ class MySceneGraph {
             return "material's specular undefined for ID = " + materialId;
 
         //reads the emission values
-        error = this.parseAndValidateRGBAvalues(grandChildren, emissionIndex, materialId, "emission", "ambient", material.emission);
-        if (error != null)
-            return error;
+        this.parseAndValidateRGBAvalues(grandChildren, emissionIndex, materialId, "emission", "ambient", material.emission);
 
         //reads the ambient values
-        error = this.parseAndValidateRGBAvalues(grandChildren, ambientIndex, materialId, "ambient", "ambient", material.ambient);
-        if (error != null)
-            return error;
+        this.parseAndValidateRGBAvalues(grandChildren, ambientIndex, materialId, "ambient", "ambient", material.ambient);
 
         //reads the diffuse values
-        error = this.parseAndValidateRGBAvalues(grandChildren, diffuseIndex, materialId, "diffuse", "ambient", material.diffuse);
-        if (error != null)
-            return error;
+        this.parseAndValidateRGBAvalues(grandChildren, diffuseIndex, materialId, "diffuse", "ambient", material.diffuse);
 
         //reads the specular values
-        error = this.parseAndValidateRGBAvalues(grandChildren, specularIndex, materialId, "specular", "ambient", material.specular);
-        if (error != null)
-            return error;
+        this.parseAndValidateRGBAvalues(grandChildren, specularIndex, materialId, "specular", "ambient", material.specular);
 
         this.materials[materialId] = this.createAppearance(material);
 
@@ -990,6 +969,7 @@ class MySceneGraph {
         var numPrimitives = 0;
         var grandChildren = [];
         var nodeNames = [];
+        var error;
         for (var i = 0; i < children.length; i++) {
             if (children[i].nodeName == "primitive") {
                 var primitiveId = this.reader.getString(children[i], 'id');
@@ -1007,28 +987,33 @@ class MySceneGraph {
                 var nodeName = grandChildren[0].nodeName;
                 switch (nodeName) {
                     case "triangle":
-                        var triangle = this.parseTriangle(grandChildren, 0);
-                        this.primitives[primitiveId] = triangle;
+                        error = this.parseTriangle(grandChildren, 0, primitiveId);
+                        if (error != null)
+                            return error;
                         break;
 
                     case "rectangle":
-                        var rectangle = this.parseRetangle(grandChildren, 0);
-                        this.primitives[primitiveId] = this.createRectangle(rectangle);
+                        error = this.parseRectangle(grandChildren, 0, primitiveId);
+                        if (error != null)
+                            return error;
                         break;
 
                     case "cylinder":
-                        var cylinder = this.parseCylinder(grandChildren, 0);
-                        this.primitives[primitiveId] = this.createCylinder(cylinder);
+                        error = this.parseCylinder(grandChildren, 0, primitiveId);
+                        if (error != null)
+                            return error;
                         break;
 
                     case "sphere":
-                        var sphere = this.parseSphere(grandChildren, 0);
-                        this.primitives[primitiveId] = sphere;
+                        error  = this.parseSphere(grandChildren, 0, primitiveId);
+                        if (error != null)
+                            return error;
                         break;
 
                     case "torus":
-                        var g_torus = this.parseTorus(grandChildren, 0);
-                        this.primitives[primitiveId] = g_torus;
+                        error = this.parseTorus(grandChildren, 0, primitiveId);
+                        if (error != null)
+                            return error;
                         break;
 
                     default:
@@ -1194,58 +1179,76 @@ class MySceneGraph {
 
 
     createRectangle(rectangle) {
-        var ret = new MyRectangle(this.scene, rectangle.x1, rectangle.y1, rectangle.x2, rectangle.y2);
-        return ret;
+        return new MyRectangle(this.scene, rectangle.x1, rectangle.y1, rectangle.x2, rectangle.y2);
     }
 
     createTriangle(triangle) {
-        var tr = new MyTriangle(this.scene,triangle.x1,triangle.y1,triangle.z1,triangle.x2,triangle.y2,triangle.z2,triangle.x3,triangle.y3,triangle.z3);
-        return tr;
+        return new MyTriangle(this.scene,triangle.x1,triangle.y1,triangle.z1,triangle.x2,triangle.y2,triangle.z2,triangle.x3,triangle.y3,triangle.z3);
     }
 
     createSphere(sphere) {
-        var sp = new MySphere(this.scene,sphere.radius,sphere.slices,sphere.stacks,null,null);
-        return sp;
+        return new MySphere(this.scene,sphere.radius,sphere.slices,sphere.stacks,null,null);
     }
 
     createCylinder(cylinder) {
-        var cl = new MyCylinder(this.scene, cylinder.slices, cylinder.stacks, cylinder.top, cylinder.height); //TODO
-        return cl;
+        return new MyCylinder(this.scene, cylinder.slices, cylinder.stacks, cylinder.top, cylinder.height); //TODO
     }
 
     createTorus(torus) {
-        var tr = new MyTorus(this.scene,torus.slices,torus.stacks,torus.inner,torus.outer);
-        return tr;
+        return new MyTorus(this.scene,torus.slices,torus.stacks,torus.inner,torus.outer);
     }
 
 
     parseTorus(children, index) {
-        var g_torus = {
+        var torus = {
             inner: null,
             outer: null,
             slices: null,
             loops: null
         }
-        g_torus.inner = this.reader.getFloat(children[index], 'inner');
-        g_torus.outer = this.reader.getFloat(children[index], 'outer');
-        g_torus.slices = this.reader.getFloat(children[index], 'slices');
-        g_torus.loops = this.reader.getFloat(children[index], 'loops');
-        return g_torus;
+        torus.inner = this.reader.getFloat(children[index], 'inner');
+        if(!this.validateFloat(torus.inner))
+            return "unable to parse inner of torus for ID = " + id;
+
+        torus.outer = this.reader.getFloat(children[index], 'outer');
+        if(!this.validateFloat(torus.outer))
+            return "unable to parse outer of torus for ID = " + id;
+
+        torus.slices = this.reader.getFloat(children[index], 'slices');
+        if(!this.validateFloat(torus.slices))
+            return "unable to parse slices of torus for ID = " + id;
+
+        torus.loops = this.reader.getFloat(children[index], 'loops');
+        if(!this.validateFloat(torus.loops))
+            return "unable to parse loops of torus for ID = " + id;
+
+        this.primitives[id] = this.createTorus(torus);
+        return null;
     }
 
-    parseSphere(children, index) {
+    parseSphere(children, index, id) {
         var sphere = {
             radius: null,
             stacks: null,
             slices: null
         }
         sphere.radius = this.reader.getFloat(children[index], 'radius');
+        if(!this.validateFloat(sphere.radius))
+            return "unable to parse radius of sphere for ID = " + id;
+
         sphere.stacks = this.reader.getFloat(children[index], 'stacks');
+        if(!this.validateFloat(sphere.stacks))
+            return "unable to parse stacks of sphere for ID = " + id;
+
         sphere.slices = this.reader.getFloat(children[index], 'slices');
-        return sphere;
+        if(!this.validateFloat(sphere.slices))
+            return "unable to parse slices of sphere for ID = " + id;
+
+        this.primitives[id] = this.createSphere(sphere);
+        return null;
     }
 
-    parseCylinder(children, index) {
+    parseCylinder(children, index, id) {
         var cylinder = {
             base: null,
             top: null,
@@ -1254,32 +1257,59 @@ class MySceneGraph {
             slices: null
         }
         cylinder.base = this.reader.getFloat(children[index], 'base');
+        if(!this.validateFloat(cylinder.base))
+            return "unable to parse base of cylinder for ID = " + id;
+
         cylinder.top = this.reader.getFloat(children[index], 'top');
+        if(!this.validateFloat(cylinder.top))
+            return "unable to parse top of cylinder for ID = " + id;
+
         cylinder.height = this.reader.getFloat(children[index], 'height');
+        if(!this.validateFloat(cylinder.height))
+            return "unable to parse height of cylinder for ID = " + id;
+
         cylinder.stacks = this.reader.getFloat(children[index], 'stacks');
+        if(!this.validateFloat(cylinder.stacks))
+            return "unable to parse stacks of cylinder for ID = " + id;
+
         cylinder.slices = this.reader.getFloat(children[index], 'slices');
-        return cylinder;
+        if(!this.validateFloat(cylinder.slices))
+            return "unable to parse slices of cylinder for ID = " + id;
+
+        this.primitives[id] = this.createCylinder(cylinder);
+        return null;
     }
 
-    parseRetangle(children, index) {
+
+    parseRectangle(children, index, id) {
         var rectangle = {
             x1: null,
             y1: null,
             x2: null,
             y2: null
         }
-        var x = this.reader.getFloat(children[index], 'x1');
-        var y = this.reader.getFloat(children[index], 'y1');
-        rectangle.x1 = x;
-        rectangle.y1 = y;
-        x = this.reader.getFloat(children[index], 'x2');
-        y = this.reader.getFloat(children[index], 'y2');
-        rectangle.x2 = x;
-        rectangle.y2 = y;
-        return rectangle;
+        rectangle.x1 = this.reader.getFloat(children[index], 'x1');
+        if(!this.validateFloat(rectangle.x1))
+            return "unable to parse x1 of rectangle for ID = " + id;
+
+        rectangle.y1 = this.reader.getFloat(children[index], 'y1');
+        if(!this.validateFloat(rectangle.y1))
+            return "unable to parse y1 of rectangle for ID = " + id;
+
+        rectangle.x2 = this.reader.getFloat(children[index], 'x2');
+        if(!this.validateFloat(rectangle.x2))
+            return "unable to parse x2 of rectangle for ID = " + id;
+
+        rectangle.y2 = this.reader.getFloat(children[index], 'y2');
+        if(!this.validateFloat(rectangle.y2))
+            return "unable to parse y2 of rectangle for ID = " + id;
+   
+        this.primitives[id] =  this.createRectangle(rectangle);
+        return null;
+ 
     }
 
-    parseTriangle(children, index) {
+    parseTriangle(children, index,id) {
         var triangle = {
             x1: null,
             y1: null,
@@ -1295,18 +1325,40 @@ class MySceneGraph {
         triangle.x1 = x;
         triangle.y1 = y;
         triangle.z1 = z;
+        if(!this.validateFloat(triangle.x1))
+            return "unable to parse x1 of triangle for ID = " + id;
+        if(!this.validateFloat(triangle.y1))
+            return "unable to parse y1 of triangle for ID = " + id;
+        if(!this.validateFloat(triangle.z1))
+            return "unable to parse z1 of triangle for ID = " + id;
+
         var { x, y, z } = this.parsePointXYZ(children, 'x2', 'y2', 'z2', index);
         triangle.x2 = x;
         triangle.y2 = y;
         triangle.z2 = z;
+        if(!this.validateFloat(triangle.x2))
+            return "unable to parse x2 of triangle for ID = " + id;
+        if(!this.validateFloat(triangle.y2))
+            return "unable to parse y2 of triangle for ID = " + id;
+        if(!this.validateFloat(triangle.z2))
+            return "unable to parse z2 of triangle for ID = " + id;
+
         var { x, y, z } = this.parsePointXYZ(children, 'x3', 'y3', 'z3', index);
         triangle.x3 = x;
         triangle.y3 = y;
         triangle.z3 = z;
-        return triangle;
+        if(!this.validateFloat(triangle.x3))
+            return "unable to parse x3 of triangle for ID = " + id;
+        if(!this.validateFloat(triangle.y3))
+            return "unable to parse y3 of triangle for ID = " + id;
+        if(!this.validateFloat(triangle.z3))
+            return "unable to parse z3 of triangle for ID = " + id;
+
+        this.primitives[id] = this.createTriangle(triangle);
+        return null;
     }
 
-
+  
     parsePointXYZ(vector, x1, y1, z1, index) {
         var x = this.reader.getFloat(vector[index], x1);
         var y = this.reader.getFloat(vector[index], y1);
@@ -1337,15 +1389,15 @@ class MySceneGraph {
         }
         if (!this.isFloatInBetween(y,0,1)){
             y = 0.3;
-            this.onXMLMinorError("unable to parse " + s1 + " g-value of the " + s2 + " for ID = " + id + " default: g = " + x);
+            this.onXMLMinorError("unable to parse " + s1 + " g-value of the " + s2 + " for ID = " + id + " default: g = " + y);
         }
         if (!this.isFloatInBetween(z,0,1)){
             z = 0.3;
-            this.onXMLMinorError("unable to parse " + s1 + " b-value of the " + s2 + " for ID = " + id + " default: b = " + x);
+            this.onXMLMinorError("unable to parse " + s1 + " b-value of the " + s2 + " for ID = " + id + " default: b = " + z);
         }   
         if (!this.isFloatInBetween(w,0,1)){
             w = 0.3;
-            this.onXMLMinorError("unable to parse " + s1 + " a-value of the " + s2 + " for ID = " + id + " default: a = " + x);
+            this.onXMLMinorError("unable to parse " + s1 + " a-value of the " + s2 + " for ID = " + id + " default: a = " + w);
         }
         vector.push(x, y, z, w);
         return null;
