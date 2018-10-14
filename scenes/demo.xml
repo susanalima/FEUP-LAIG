@@ -193,7 +193,7 @@
 		<materials>
 			 <material id="mat4" />
 		</materials>
-		<texture id="wall" length_s="2" length_t="1" />
+		<texture id="metal" length_s="2" length_t="1" />
 
 		<children>
 			<componentref id="comp1"/>
@@ -223,7 +223,7 @@
  			<translate x="0" y="0" z="-1"/>
 		</transformation>
 		<materials>
-			 <material id="mat4" />
+			 <material id="inherit" />
 		</materials>
 		<texture id="wall" length_s="2" length_t="1" />
 		<children>
@@ -265,7 +265,7 @@
 		<materials>
 			 <material id="mat2" />
 		</materials>
-		<texture id="metal" length_s="2" length_t="1" />
+		<texture id="inherit" length_s="2" length_t="1" />
 		<children>
 			<primitiveref id="cylinder" />
 		</children>
@@ -472,7 +472,7 @@
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="metal" length_s="2" length_t="1" />
+		<texture id="inherit" length_s="2" length_t="1" />
 		<children>
 			<primitiveref id="sphere"/>
 		</children>

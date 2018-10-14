@@ -1596,11 +1596,19 @@ class MySceneGraph {
 
 
     visitNode(node, transformations, materials, textures) {        
+       
+        //if it is an inherit texture the id will be the last texture id in the stack (i think)
+        if (node.texture.id == INHERIT)
+            node.texture.id = textures[textures.length - 1].id;
+
+         //tem de ser mudado depois quando fizermos a cena teclado
+         if (node.materials[0] == INHERIT)
+            node.materials[0] = materials[textures.length - 1][0];
+
         transformations.push(node.transformations);
         materials.push(node.materials);
         textures.push(node.texture);
         this.scene.pushMatrix();
-
         if (node.transformations.tref) {
             this.applyTransformations(this.transformations[node.transformations.trefID]);
         }
@@ -1608,7 +1616,7 @@ class MySceneGraph {
             this.applyTransformationsPush(node.transformations.transformations);
         }
         for (let i = 0; i < node.children.primitivesRef.length; i++) {
-            this.visitLeaf(node.children.primitivesRef[i], transformations, materials, textures);
+            this.visitLeaf(node.children.primitivesRef[i], materials, textures);
         }
         for (let i = 0; i < node.children.componentsRef.length; i++) {
             this.visitNode(this.components[node.children.componentsRef[i]], transformations, materials, textures);
@@ -1621,7 +1629,7 @@ class MySceneGraph {
         return null;
     }
 
-    visitLeaf(leaf, transformations, materials, textures) {
+    visitLeaf(leaf, materials, textures) {
         var prim = this.primitives[leaf];
         this.scene.pushMatrix();
         var text = textures[textures.length - 1];
@@ -1643,7 +1651,8 @@ class MySceneGraph {
  * tratar das luzes spot JA ESTA IMPLEMENTADO MAS NAO SEI SE FUNCIONA
  * mudar cilindro : acrescentar bases e diferentes bases
  * fazer triangulo, torus e esfera
- * hereditariedade de texturas
+ * hereditariedade de texturas (ACHO QUE JA ESTA)
+ * tratar do teclado e dos materias (e mudar hereditariedade)
  * comentar e refactoring se houver tempo
  * criar outra cena
  * testar com as cenas do forum
