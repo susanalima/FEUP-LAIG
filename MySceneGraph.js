@@ -82,120 +82,69 @@ class MySceneGraph {
         }
 
         var error;
-
+        var index;
         // Processes each node, verifying errors.
 
         // <scene>
-        var index;
-        if ((index = nodeNames.indexOf("scene")) == -1)
-            return "tag <scene> missing";
-        else {
-            if (index != SCENE_INDEX)
-                this.onXMLMinorError("tag <scene> out of order");
-
-            //Parse scene block
-            if ((error = this.parseScene(nodes[index])) != null)
-                return error;
-        }
+        error = this.parseIndex(SCENE_INDEX, this.parseScene, nodeNames, nodes, "scene");
+        if (error != null)
+            return error;
 
         // <views>
-        if ((index = nodeNames.indexOf("views")) == -1)
-            return "tag <views> missing";
-        else {
-            if (index != VIEWS_INDEX)
-                this.onXMLMinorError("tag <views> out of order");
-
-            //Parse views block 
-            if ((error = this.parseViews(nodes[index])) != null)
-                return error;
-        }
-
+        error = this.parseIndex(VIEWS_INDEX, this.parseViews, nodeNames, nodes, "views");
+        if (error != null)
+            return error;
 
         // <ambient>
-        if ((index = nodeNames.indexOf("ambient")) == -1)
-            return "tag <views> missing";
-        else {
-            if (index != AMBIENT_INDEX)
-                this.onXMLMinorError("tag <ambient> out of order");
-
-            //Parse ambient block
-            if ((error = this.parseAmbient(nodes[index])) != null)
-                return error;
-        }
+        error = this.parseIndex(AMBIENT_INDEX, this.parseAmbient, nodeNames, nodes, "ambient");
+        if (error != null)
+            return error;
 
         // <lights>
-        if ((index = nodeNames.indexOf("lights")) == -1)
-            return "tag <lights> missing";
-        else {
-            if (index != LIGHTS_INDEX)
-                this.onXMLMinorError("tag <lights> out of order");
-
-            //Parse lights block
-            if ((error = this.parseLights(nodes[index])) != null)
-                return error;
-        }
-
+        error = this.parseIndex(LIGHTS_INDEX, this.parseLights, nodeNames, nodes, "lights");
+        if (error != null)
+            return error;
 
         // <textures>
-        if ((index = nodeNames.indexOf("textures")) == -1)
-            return "tag <textures> missing";
-        else {
-            if (index != TEXTURES_INDEX)
-                this.onXMLMinorError("tag <textures> out of order");
-
-            //Parse textures block
-            if ((error = this.parseTextures(nodes[index])) != null)
-                return error;
-        }
+        error = this.parseIndex(TEXTURES_INDEX, this.parseTextures, nodeNames, nodes, "textures");
+        if (error != null)
+            return error;
 
         // <materials>
-        if ((index = nodeNames.indexOf("materials")) == -1)
-            return "tag <materials> missing";
-        else {
-            if (index != MATERIALS_INDEX)
-                this.onXMLMinorError("tag <materials> out of order");
-
-            //Parse materials block
-            if ((error = this.parseMaterials(nodes[index])) != null)
-                return error;
-        }
+        error = this.parseIndex(MATERIALS_INDEX, this.parseMaterials, nodeNames, nodes, "materials");
+        if (error != null)
+            return error;
 
         // <transformations>
-        if ((index = nodeNames.indexOf("transformations")) == -1)
-            return "tag <transformations> missing";
-        else {
-            if (index != TRANSFORMATIONS_INDEX)
-                this.onXMLMinorError("tag <transformations> out of order");
-
-            //Parse transformations block
-            if ((error = this.parseTransformations(nodes[index])) != null)
-                return error;
-        }
+        error = this.parseIndex(TRANSFORMATIONS_INDEX, this.parseTransformations, nodeNames, nodes, "transformations");
+        if (error != null)
+            return error;
 
         // <primitives>
-        if ((index = nodeNames.indexOf("primitives")) == -1)
-            return "tag <primitives> missing";
-        else {
-            if (index != PRIMITIVES_INDEX)
-                this.onXMLMinorError("tag <primitives> out of order");
-
-            //Parse primitives block
-            if ((error = this.parsePrimitives(nodes[index])) != null)
-                return error;
-        }
+        error = this.parseIndex(PRIMITIVES_INDEX, this.parsePrimitives, nodeNames, nodes, "primitives");
+        if (error != null)
+            return error;
 
         // <components>
-        if ((index = nodeNames.indexOf("components")) == -1)
-            return "tag <components> missing";
-        else {
-            if (index != COMPONENTS_INDEX)
-                this.onXMLMinorError("tag <components> out of order");
+        error = this.parseIndex(COMPONENTS_INDEX, this.parseComponents, nodeNames, nodes, "components");
+        if (error != null)
+            return error;
+    }
 
-            //Parse components block
-            if ((error = this.parseComponents(nodes[index])) != null)
+    parseIndex(parseIndex, parseFunction, nodeNames, nodes, tag) {
+
+        var index;
+        var error;
+        if ((index = nodeNames.indexOf(tag)) == -1)
+            return "tag <" + tag + "> missing";
+        else {
+            if (index != parseIndex)
+                this.onXMLMinorError("tag <" + tag + "> out of order");
+
+            if ((error = parseFunction.apply(this, [nodes[index]])) != null)
                 return error;
         }
-
+        return null;
     }
 
 
@@ -204,10 +153,11 @@ class MySceneGraph {
     * @param {scene block element} sceneNode
     */
     parseScene(sceneNode) {
-
+        console.log("scenenode");
+        console.log(sceneNode);
         this.root = this.reader.getString(sceneNode, 'root');
-        if(this.root == null)
-        return "unable to parse root value";
+        if (this.root == null)
+            return "unable to parse root value";
 
         this.axisLength = this.reader.getFloat(sceneNode, 'axis_length');
 
@@ -235,7 +185,7 @@ class MySceneGraph {
         var error;
 
         //MUDAR PARA IR BUSCAR O PRIMEIRO TALVEZ
-       this.views.default = this.reader.getString(viewsNode, 'default');
+        this.views.default = this.reader.getString(viewsNode, 'default');
         if (this.views.default == null) {
             return "unable to parse value for views default";
         }
@@ -424,7 +374,7 @@ class MySceneGraph {
 
 
     createCameraPerspective(perspective) {
-        var camera = new CGFcamera(perspective.angle*Math.PI/180, perspective.near, perspective.far, perspective.fromPosition, perspective.toPosition);
+        var camera = new CGFcamera(perspective.angle * Math.PI / 180, perspective.near, perspective.far, perspective.fromPosition, perspective.toPosition);
         return camera;
     }
 
@@ -445,7 +395,7 @@ class MySceneGraph {
         this.backgroundAmbient = [];
         var children = ambientNode.children;
         var nodeNames = [];
- 
+
         for (var i = 0; i < children.length; i++)
             nodeNames.push(children[i].nodeName);
 
@@ -470,7 +420,7 @@ class MySceneGraph {
             w = 1;
             this.onXMLMinorError("unable to parse a-value for ambient ambient; assuming 'a = 1'");
         }
-        this.ambientAmbient.push(x,y,z,w);
+        this.ambientAmbient.push(x, y, z, w);
 
         //get and validate the backgound values
         var { x, y, z, w } = this.parsePointRGBA(children, backgroundIndex);
@@ -540,14 +490,14 @@ class MySceneGraph {
 
     parseLightsOmni(children, index) {
         var grandChildren = [];
-        var error;  
+        var error;
         var omni = {
-            class : 'omni',
-            enabled : null,
-            location : [],
-            ambient : [],
-            diffuse : [],
-            specular : [],
+            class: 'omni',
+            enabled: null,
+            location: [],
+            ambient: [],
+            diffuse: [],
+            specular: [],
         }
         //get the id of current light
         var omniId = this.reader.getString(children[index], 'id');
@@ -609,15 +559,15 @@ class MySceneGraph {
         var grandChildren = [];
         var error;
         var spot = {
-            class : 'spot',
-            enabled : null,
-            angle : null,
-            exponent : null,
-            location : [],
-            target : [],
-            ambient : [],
-            diffuse : [],
-            specular : [],
+            class: 'spot',
+            enabled: null,
+            angle: null,
+            exponent: null,
+            location: [],
+            target: [],
+            ambient: [],
+            diffuse: [],
+            specular: [],
         }
         //get the id of current light
         var spotId = this.reader.getString(children[index], 'id');
@@ -900,27 +850,25 @@ class MySceneGraph {
             var nodeName = grandChildren[j].nodeName;
             switch (nodeName) {
                 case "translate":
-                    error = this.parseTransformationTranslate(grandChildren,j,tmp_transformations);
-                    if(error != null)
+                    error = this.parseTransformationTranslate(grandChildren, j, tmp_transformations);
+                    if (error != null)
                         return error;
-                    numT++;
                     break;
                 case "rotate":
-                    error = this.parseTransformationRotate(grandChildren, j,tmp_transformations);
-                    if(error != null)
+                    error = this.parseTransformationRotate(grandChildren, j, tmp_transformations);
+                    if (error != null)
                         return error;
-                    numT++;
                     break;
                 case "scale":
-                    error = this.parseTransformationScale(grandChildren, j,tmp_transformations);
-                    if(error != null)
+                    error = this.parseTransformationScale(grandChildren, j, tmp_transformations);
+                    if (error != null)
                         return error;
-                    numT++;
                     break;
                 default:
-                    this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
-                    break;
+                    this.onXMLMinorError("unknown tag <" + grandChildren[j].nodeName + ">");
+                    continue;
             }
+            numT++;
         }
         if (numT == 0)
             return "at least one transformation must be defined";
@@ -941,11 +889,11 @@ class MySceneGraph {
         scale.x = x;
         scale.y = y;
         scale.z = z;
-        if(!this.validateFloat(scale.x))
+        if (!this.validateFloat(scale.x))
             return "unable to parse x of scale";
-        if(!this.validateFloat(scale.y))
+        if (!this.validateFloat(scale.y))
             return "unable to parse y of scale";
-         if(!this.validateFloat(scale.z))
+        if (!this.validateFloat(scale.z))
             return "unable to parse z of scale";
 
         vector.push(scale);
@@ -959,11 +907,11 @@ class MySceneGraph {
             angle: null
         }
         rotate.axis = this.reader.getString(children[index], 'axis');
-        if(!this.validateAxis(rotate.axis))
+        if (!this.validateAxis(rotate.axis))
             return "unable to parse axis of rotate";
 
         rotate.angle = this.reader.getFloat(children[index], 'angle');
-        if(!this.validateFloat(rotate.angle))
+        if (!this.validateFloat(rotate.angle))
             return "unable to parse angle of rotate";
         vector.push(rotate);
         return null;
@@ -996,63 +944,16 @@ class MySceneGraph {
      * @param {primitives block element} primitivesNode
      */
     parsePrimitives(primitivesNode) {
-        //Important new arrays should be added according to new primitives
+
         var children = primitivesNode.children;
         this.primitives = [];
         var numPrimitives = 0;
-        var grandChildren = [];
-        var nodeNames = [];
         var error;
         for (var i = 0; i < children.length; i++) {
             if (children[i].nodeName == "primitive") {
-                var primitiveId = this.reader.getString(children[i], 'id');
-                if (primitiveId == null)
-                    return "no Id defined for primitive";
-                if (this.primitives[primitiveId] != null)
-                    return "Id must be unique for each primitive  (conflict: ID = " + primitiveId + ")";
-
-                grandChildren = children[i].children;
-                nodeNames = [];
-
-                for (var j = 0; j < grandChildren.length; j++) {
-                    nodeNames.push(grandChildren[j].nodeName);
-                }
-                var nodeName = grandChildren[0].nodeName;
-                switch (nodeName) {
-                    case "triangle":
-                        error = this.parseTriangle(grandChildren, 0, primitiveId);
-                        if (error != null)
-                            return error;
-                        break;
-
-                    case "rectangle":
-                        error = this.parseRectangle(grandChildren, 0, primitiveId);
-                        if (error != null)
-                            return error;
-                        break;
-
-                    case "cylinder":
-                        error = this.parseCylinder(grandChildren, 0, primitiveId);
-                        if (error != null)
-                            return error;
-                        break;
-
-                    case "sphere":
-                        error  = this.parseSphere(grandChildren, 0, primitiveId);
-                        if (error != null)
-                            return error;
-                        break;
-
-                    case "torus":
-                        error = this.parseTorus(grandChildren, 0, primitiveId);
-                        if (error != null)
-                            return error;
-                        break;
-
-                    default:
-                        this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
-                        break;
-                }
+                error = this.parsePrimitivesPrimitive(children, i);
+                if (error != null)
+                    return error;
             }
             else {
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
@@ -1064,6 +965,56 @@ class MySceneGraph {
             return "at least one primitive must be defined";
 
         this.log("Parsed primitives");
+        return null;
+    }
+
+
+    parsePrimitivesPrimitive(children, index) {
+        var grandChildren = [];
+        var error;
+        var primitiveId = this.reader.getString(children[index], 'id');
+        if (primitiveId == null)
+            return "no Id defined for primitive";
+        if (this.primitives[primitiveId] != null)
+            return "Id must be unique for each primitive  (conflict: ID = " + primitiveId + ")";
+
+        grandChildren = children[index].children;
+        var nodeNames = [];
+
+        for (var j = 0; j < grandChildren.length; j++) {
+            nodeNames.push(grandChildren[j].nodeName);
+        }
+        var nodeName = grandChildren[0].nodeName;
+        switch (nodeName) {
+            case "triangle":
+                error = this.parseTriangle(grandChildren, 0, primitiveId);
+                if (error != null)
+                    return error;
+                break;
+            case "rectangle":
+                error = this.parseRectangle(grandChildren, 0, primitiveId);
+                if (error != null)
+                    return error;
+                break;
+            case "cylinder":
+                error = this.parseCylinder(grandChildren, 0, primitiveId);
+                if (error != null)
+                    return error;
+                break;
+            case "sphere":
+                error = this.parseSphere(grandChildren, 0, primitiveId);
+                if (error != null)
+                    return error;
+                break;
+            case "torus":
+                error = this.parseTorus(grandChildren, 0, primitiveId);
+                if (error != null)
+                    return error;
+                break;
+            default:
+                this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
+                break;
+        }
         return null;
     }
 
@@ -1131,20 +1082,20 @@ class MySceneGraph {
                                 else {
                                     switch (nodeName2) {
                                         case "translate":
-                                            error = this.parseTransformationTranslate(ggrandChildren, k,component.transformations.transformations);
-                                            if(error != null)
+                                            error = this.parseTransformationTranslate(ggrandChildren, k, component.transformations.transformations);
+                                            if (error != null)
                                                 return error;
                                             break;
 
                                         case "rotate":
-                                            error = this.parseTransformationRotate(ggrandChildren, k,component.transformations.transformations);
-                                            if(error != null)
+                                            error = this.parseTransformationRotate(ggrandChildren, k, component.transformations.transformations);
+                                            if (error != null)
                                                 return error;
                                             break;
 
                                         case "scale":
-                                            error = this.parseTransformationScale(ggrandChildren, k,component.transformations.transformations);
-                                            if(error != null)
+                                            error = this.parseTransformationScale(ggrandChildren, k, component.transformations.transformations);
+                                            if (error != null)
                                                 return error;
                                             break;
                                         default:
@@ -1217,11 +1168,11 @@ class MySceneGraph {
     }
 
     createTriangle(triangle) {
-        return new MyTriangle(this.scene,triangle.x1,triangle.y1,triangle.z1,triangle.x2,triangle.y2,triangle.z2,triangle.x3,triangle.y3,triangle.z3);
+        return new MyTriangle(this.scene, triangle.x1, triangle.y1, triangle.z1, triangle.x2, triangle.y2, triangle.z2, triangle.x3, triangle.y3, triangle.z3);
     }
 
     createSphere(sphere) {
-        return new MySphere(this.scene,sphere.slices,sphere.stacks,sphere.radius);
+        return new MySphere(this.scene, sphere.slices, sphere.stacks, sphere.radius);
     }
 
     createCylinder(cylinder) {
@@ -1229,7 +1180,7 @@ class MySceneGraph {
     }
 
     createTorus(torus) {
-        return new MyTorus(this.scene,torus.slices,torus.stacks,torus.inner,torus.outer);
+        return new MyTorus(this.scene, torus.slices, torus.stacks, torus.inner, torus.outer);
     }
 
 
@@ -1241,19 +1192,19 @@ class MySceneGraph {
             loops: null
         }
         torus.inner = this.reader.getFloat(children[index], 'inner');
-        if(!this.validateFloat(torus.inner))
+        if (!this.validateFloat(torus.inner))
             return "unable to parse inner of torus for ID = " + id;
 
         torus.outer = this.reader.getFloat(children[index], 'outer');
-        if(!this.validateFloat(torus.outer))
+        if (!this.validateFloat(torus.outer))
             return "unable to parse outer of torus for ID = " + id;
 
         torus.slices = this.reader.getFloat(children[index], 'slices');
-        if(!this.validateFloat(torus.slices))
+        if (!this.validateFloat(torus.slices))
             return "unable to parse slices of torus for ID = " + id;
 
         torus.loops = this.reader.getFloat(children[index], 'loops');
-        if(!this.validateFloat(torus.loops))
+        if (!this.validateFloat(torus.loops))
             return "unable to parse loops of torus for ID = " + id;
 
         this.primitives[id] = this.createTorus(torus);
@@ -1267,15 +1218,15 @@ class MySceneGraph {
             slices: null
         }
         sphere.radius = this.reader.getFloat(children[index], 'radius');
-        if(!this.validateFloat(sphere.radius))
+        if (!this.validateFloat(sphere.radius))
             return "unable to parse radius of sphere for ID = " + id;
 
         sphere.stacks = this.reader.getFloat(children[index], 'stacks');
-        if(!this.validateFloat(sphere.stacks))
+        if (!this.validateFloat(sphere.stacks))
             return "unable to parse stacks of sphere for ID = " + id;
 
         sphere.slices = this.reader.getFloat(children[index], 'slices');
-        if(!this.validateFloat(sphere.slices))
+        if (!this.validateFloat(sphere.slices))
             return "unable to parse slices of sphere for ID = " + id;
 
         this.primitives[id] = this.createSphere(sphere);
@@ -1291,23 +1242,23 @@ class MySceneGraph {
             slices: null
         }
         cylinder.base = this.reader.getFloat(children[index], 'base');
-        if(!this.validateFloat(cylinder.base))
+        if (!this.validateFloat(cylinder.base))
             return "unable to parse base of cylinder for ID = " + id;
 
         cylinder.top = this.reader.getFloat(children[index], 'top');
-        if(!this.validateFloat(cylinder.top))
+        if (!this.validateFloat(cylinder.top))
             return "unable to parse top of cylinder for ID = " + id;
 
         cylinder.height = this.reader.getFloat(children[index], 'height');
-        if(!this.validateFloat(cylinder.height))
+        if (!this.validateFloat(cylinder.height))
             return "unable to parse height of cylinder for ID = " + id;
 
         cylinder.stacks = this.reader.getFloat(children[index], 'stacks');
-        if(!this.validateFloat(cylinder.stacks))
+        if (!this.validateFloat(cylinder.stacks))
             return "unable to parse stacks of cylinder for ID = " + id;
 
         cylinder.slices = this.reader.getFloat(children[index], 'slices');
-        if(!this.validateFloat(cylinder.slices))
+        if (!this.validateFloat(cylinder.slices))
             return "unable to parse slices of cylinder for ID = " + id;
 
         this.primitives[id] = this.createCylinder(cylinder);
@@ -1323,27 +1274,27 @@ class MySceneGraph {
             y2: null
         }
         rectangle.x1 = this.reader.getFloat(children[index], 'x1');
-        if(!this.validateFloat(rectangle.x1))
+        if (!this.validateFloat(rectangle.x1))
             return "unable to parse x1 of rectangle for ID = " + id;
 
         rectangle.y1 = this.reader.getFloat(children[index], 'y1');
-        if(!this.validateFloat(rectangle.y1))
+        if (!this.validateFloat(rectangle.y1))
             return "unable to parse y1 of rectangle for ID = " + id;
 
         rectangle.x2 = this.reader.getFloat(children[index], 'x2');
-        if(!this.validateFloat(rectangle.x2))
+        if (!this.validateFloat(rectangle.x2))
             return "unable to parse x2 of rectangle for ID = " + id;
 
         rectangle.y2 = this.reader.getFloat(children[index], 'y2');
-        if(!this.validateFloat(rectangle.y2))
+        if (!this.validateFloat(rectangle.y2))
             return "unable to parse y2 of rectangle for ID = " + id;
-   
-        this.primitives[id] =  this.createRectangle(rectangle);
+
+        this.primitives[id] = this.createRectangle(rectangle);
         return null;
- 
+
     }
 
-    parseTriangle(children, index,id) {
+    parseTriangle(children, index, id) {
         var triangle = {
             x1: null,
             y1: null,
@@ -1359,40 +1310,40 @@ class MySceneGraph {
         triangle.x1 = x;
         triangle.y1 = y;
         triangle.z1 = z;
-        if(!this.validateFloat(triangle.x1))
+        if (!this.validateFloat(triangle.x1))
             return "unable to parse x1 of triangle for ID = " + id;
-        if(!this.validateFloat(triangle.y1))
+        if (!this.validateFloat(triangle.y1))
             return "unable to parse y1 of triangle for ID = " + id;
-        if(!this.validateFloat(triangle.z1))
+        if (!this.validateFloat(triangle.z1))
             return "unable to parse z1 of triangle for ID = " + id;
 
         var { x, y, z } = this.parsePointXYZ(children, 'x2', 'y2', 'z2', index);
         triangle.x2 = x;
         triangle.y2 = y;
         triangle.z2 = z;
-        if(!this.validateFloat(triangle.x2))
+        if (!this.validateFloat(triangle.x2))
             return "unable to parse x2 of triangle for ID = " + id;
-        if(!this.validateFloat(triangle.y2))
+        if (!this.validateFloat(triangle.y2))
             return "unable to parse y2 of triangle for ID = " + id;
-        if(!this.validateFloat(triangle.z2))
+        if (!this.validateFloat(triangle.z2))
             return "unable to parse z2 of triangle for ID = " + id;
 
         var { x, y, z } = this.parsePointXYZ(children, 'x3', 'y3', 'z3', index);
         triangle.x3 = x;
         triangle.y3 = y;
         triangle.z3 = z;
-        if(!this.validateFloat(triangle.x3))
+        if (!this.validateFloat(triangle.x3))
             return "unable to parse x3 of triangle for ID = " + id;
-        if(!this.validateFloat(triangle.y3))
+        if (!this.validateFloat(triangle.y3))
             return "unable to parse y3 of triangle for ID = " + id;
-        if(!this.validateFloat(triangle.z3))
+        if (!this.validateFloat(triangle.z3))
             return "unable to parse z3 of triangle for ID = " + id;
 
         this.primitives[id] = this.createTriangle(triangle);
         return null;
     }
 
-  
+
     parsePointXYZ(vector, x1, y1, z1, index) {
         var x = this.reader.getFloat(vector[index], x1);
         var y = this.reader.getFloat(vector[index], y1);
@@ -1417,19 +1368,19 @@ class MySceneGraph {
     parseAndValidateRGBAvalues(children, index, id, s1, s2, vector) {
 
         var { x, y, z, w } = this.parsePointRGBA(children, index);
-        if (!this.isFloatInBetween(x,0,1)){
+        if (!this.isFloatInBetween(x, 0, 1)) {
             x = 0.3;
             this.onXMLMinorError("unable to parse " + s1 + " r-value of the " + s2 + " for ID = " + id + " default: r = " + x);
         }
-        if (!this.isFloatInBetween(y,0,1)){
+        if (!this.isFloatInBetween(y, 0, 1)) {
             y = 0.3;
             this.onXMLMinorError("unable to parse " + s1 + " g-value of the " + s2 + " for ID = " + id + " default: g = " + y);
         }
-        if (!this.isFloatInBetween(z,0,1)){
+        if (!this.isFloatInBetween(z, 0, 1)) {
             z = 0.3;
             this.onXMLMinorError("unable to parse " + s1 + " b-value of the " + s2 + " for ID = " + id + " default: b = " + z);
-        }   
-        if (!this.isFloatInBetween(w,0,1)){
+        }
+        if (!this.isFloatInBetween(w, 0, 1)) {
             w = 0.3;
             this.onXMLMinorError("unable to parse " + s1 + " a-value of the " + s2 + " for ID = " + id + " default: a = " + w);
         }
@@ -1489,14 +1440,12 @@ class MySceneGraph {
         }
     }
 
-    isInBetween(float,lower,upper)
-    {
+    isInBetween(float, lower, upper) {
         return (float >= lower && float <= upper)
     }
 
-    isFloatInBetween(float,lower,upper)
-    {
-        return (this.validateFloat(float) && this.isInBetween(float,lower,upper));
+    isFloatInBetween(float, lower, upper) {
+        return (this.validateFloat(float) && this.isInBetween(float, lower, upper));
     }
 
     /***************************************/
@@ -1540,7 +1489,6 @@ class MySceneGraph {
         var transformations = [];
         var materials = [];
         var textures = [];
-        //console.dir(this.components[this.root]);
         this.visitNode(this.components[this.root], transformations, materials, textures);
 
     }
@@ -1595,14 +1543,14 @@ class MySceneGraph {
     }
 
 
-    visitNode(node, transformations, materials, textures) {        
-       
+    visitNode(node, transformations, materials, textures) {
+
         //if it is an inherit texture the id will be the last texture id in the stack (i think)
         if (node.texture.id == INHERIT)
             node.texture.id = textures[textures.length - 1].id;
 
-         //tem de ser mudado depois quando fizermos a cena teclado
-         if (node.materials[0] == INHERIT)
+        //tem de ser mudado depois quando fizermos a cena teclado
+        if (node.materials[0] == INHERIT)
             node.materials[0] = materials[textures.length - 1][0];
 
         transformations.push(node.transformations);
