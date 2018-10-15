@@ -1621,11 +1621,12 @@ class MySceneGraph {
  * TODO (nao por ordem)
  * fatores de textura
  * tratar do angulo da perspetiva (ACHO QUE JA ESTA, APENAS PASSEI PARA RADIANOS)
- * tratar das luzes spot JA ESTA IMPLEMENTADO MAS NAO SEI SE FUNCIONA
+ * tratar das luzes spot (JA ESTA IMPLEMENTADO MAS NAO SEI SE FUNCIONA)
  * fazer  torus
- * verificar a cena do inherit e do none (ACHO QUE ESTAO BEM MAS NAO TENO 100% CERTEZA)
+ * verificar a cena do inherit e do none (ACHO QUE ESTAO BEM MAS NAO TENHO 100% CERTEZA)
  * Ver se e preciso rodar a esfera (NAO SEI)
- * texturas do triangulo e do cilindro
+ * texturas do cilindro
+ * verificar texturas do triangulo (ACHO QUE ESTAO BEM)
  * hereditariedade de texturas (ACHO QUE JA ESTA)
  * tratar do teclado e dos materias (e mudar hereditariedade)
  * comentar e refactoring se houver tempo
