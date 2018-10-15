@@ -158,7 +158,7 @@ class MySceneGraph {
         console.log("scenenode");
         console.log(sceneNode);
         this.root = this.reader.getString(sceneNode, 'root');
-        if (this.root == null)
+        if (!this.validateString(this.root))
             return "unable to parse root value";
 
         this.axisLength = this.reader.getFloat(sceneNode, 'axis_length');
@@ -188,7 +188,7 @@ class MySceneGraph {
 
         //MUDAR PARA IR BUSCAR O PRIMEIRO TALVEZ
         this.views.default = this.reader.getString(viewsNode, 'default');
-        if (this.views.default == null) {
+        if (!this.validateString(this.views.default)) {
             return "unable to parse value for views default";
         }
 
@@ -230,7 +230,7 @@ class MySceneGraph {
         var error;
         //get the id of current perspective
         var perspectiveId = this.reader.getString(children[index], 'id');
-        if (perspectiveId == null)
+        if (!this.validateString(perspectiveId))
             return "no ID defined for view";
 
         // Checks for repeated IDs.
@@ -303,7 +303,7 @@ class MySceneGraph {
         var error;
         //get the id of current ortho
         var orthoId = this.reader.getString(children[index], 'id');
-        if (orthoId == null)
+        if (!this.validateString(orthoId))
             return "no ID defined for view";
 
         // Checks for repeated IDs.
@@ -503,7 +503,7 @@ class MySceneGraph {
         }
         //get the id of current light
         var omniId = this.reader.getString(children[index], 'id');
-        if (omniId == null)
+        if (!this.validateString(omniId))
             return "no ID defined for light";
 
         // Checks for repeated IDs.
@@ -573,7 +573,7 @@ class MySceneGraph {
         }
         //get the id of current light
         var spotId = this.reader.getString(children[index], 'id');
-        if (spotId == null)
+        if (!this.validateString(spotId))
             return "no ID defined for light";
 
         // Checks for repeated IDs.
@@ -678,7 +678,7 @@ class MySceneGraph {
     parseTexturesTexture(children, index) {
         //get the id of current texture
         var textureId = this.reader.getString(children[index], 'id');
-        if (textureId == null)
+        if (!this.validateString(textureId))
             return "no ID defined for texture";
 
         // Checks for repeated IDs.
@@ -687,7 +687,7 @@ class MySceneGraph {
 
         //get the enabled value of current omni
         var file = this.reader.getString(children[index], 'file');
-        if (file == null)
+        if (!this.validateString(file))
             return "no file defined for texture";
 
         var texture = new CGFtexture(this.scene, file);
@@ -737,7 +737,7 @@ class MySceneGraph {
         var error;
         //get the id of current material
         var materialId = this.reader.getString(children[index], 'id');
-        if (materialId == null)
+        if (!this.validateString(materialId))
             return "no ID defined for material";
 
         // Checks for repeated IDs.
@@ -835,7 +835,7 @@ class MySceneGraph {
         var error;
         //get the id of current transformation
         var transformationId = this.reader.getString(children[index], 'id');
-        if (transformationId == null)
+        if (!this.validateString(transformationId ))
             return "no ID defined for transformation";
 
         // Checks for repeated IDs.
@@ -975,7 +975,7 @@ class MySceneGraph {
         var grandChildren = [];
         var error;
         var primitiveId = this.reader.getString(children[index], 'id');
-        if (primitiveId == null)
+        if(!this.validateString(primitiveId ))
             return "no Id defined for primitive";
         if (this.primitives[primitiveId] != null)
             return "Id must be unique for each primitive  (conflict: ID = " + primitiveId + ")";
@@ -1067,7 +1067,7 @@ class MySceneGraph {
         }
         var grandChildren = [];
         var componentId = this.reader.getString(children[index], "id");
-        if (componentId == null)
+        if (!this.validateString(componentId))
             return "no Id defined for component";
 
         if (this.components[componentId] != null)
@@ -1085,7 +1085,7 @@ class MySceneGraph {
             var ggrandChildren = grandChildren[j].children; //g(rand)grandchildren
             switch (nodeName) {
                 case "transformation":
-                    error = this.parseComponentTransformations(ggrandChildren, component);
+                    error = this.parseComponentTransformations(ggrandChildren, component,componentId);
                     if (error != null)
                         return error;
                     break;
@@ -1113,13 +1113,15 @@ class MySceneGraph {
         return null;
     }
 
-    parseComponentTransformations(children,component)
+    parseComponentTransformations(children,component,componentId)
     {
         var error;
         for (let k = 0; k < children.length; k++) {
             let nodeName2 = children[k].nodeName;
             if (nodeName2 == "transformationref") {
                 component.transformations.trefID = this.reader.getString(children[k], 'id');
+                if(!this.validateString(component.transformations.trefID))
+                    return "no id defined fot transformation for component ID: " + componentId;
                 component.transformations.tref = true;
             }
             else {
@@ -1155,7 +1157,7 @@ class MySceneGraph {
             let nodeName2 = children[k].nodeName;
             if (nodeName2 == "material") {
                 let id = this.reader.getString(children[k], 'id');
-                if (id == null)
+                if (!this.validateString(id))
                     return "no id defined for material for component ID: " + componentId;
                 component.materials.push(id);
             }
@@ -1170,7 +1172,7 @@ class MySceneGraph {
     parseComponentTexture(children,index,component,componentId)
     {
         component.texture.id = this.reader.getString(children[index], 'id');
-        if (component.texture.id == null)
+        if ((!this.validateString( component.texture.id)))
             return "no id defined for texture for component ID: " + componentId;
         component.texture.length_s = this.reader.getFloat(children[index], 'length_s');
         if (!this.validateFloat(component.texture.length_s))
@@ -1188,13 +1190,13 @@ class MySceneGraph {
             switch (nodeName2) {
                 case "componentref":
                     let idC = this.reader.getString(children[k], 'id');
-                    if (idC == null)
+                    if ((!this.validateString(idC)))
                         return "no id defined for componentref for component ID: " + componentId;
                     component.children.componentsRef.push(idC);
                     break;
                 case "primitiveref":
                     let idP = this.reader.getString(children[k], 'id');
-                    if (idP == null)
+                    if ((!this.validateString(idP)))
                         return "no id defined for primitiveref for component ID: " + componentId;
                     component.children.primitivesRef.push(idP);
                     break;
@@ -1461,11 +1463,16 @@ class MySceneGraph {
     }
 
 
-    validateFloat(x) {
-        if (!(x != null && !isNaN(x)))
+    validateFloat(float) {
+        if (!(float != null && !isNaN(float)))
             return false;
         else
             return true;
+    }
+
+    validateString(string)
+    {
+        return (typeof string === 'string' && string != null);
     }
 
 
@@ -1490,11 +1497,6 @@ class MySceneGraph {
     isFloatInBetween(float, lower, upper) {
         return (this.validateFloat(float) && this.isInBetween(float, lower, upper));
     }
-
-    /***************************************/
-
-    /***************************** */
-
 
 
     /*
