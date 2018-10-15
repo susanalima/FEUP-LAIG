@@ -1176,7 +1176,7 @@ class MySceneGraph {
     }
 
     createCylinder(cylinder) {
-        return new MyCylinder(this.scene, cylinder.slices, cylinder.stacks, cylinder.top, cylinder.height); //TODO
+        return new MyCylinder(this.scene, cylinder.slices, cylinder.stacks, cylinder.base,cylinder.top, cylinder.height); //TODO
     }
 
     createTorus(torus) {
@@ -1597,7 +1597,7 @@ class MySceneGraph {
  * fatores de textura
  * tratar do angulo da perspetiva (ACHO QUE JA ESTA, APENAS PASSEI PARA RADIANOS)
  * tratar das luzes spot JA ESTA IMPLEMENTADO MAS NAO SEI SE FUNCIONA
- * mudar cilindro : acrescentar bases e diferentes bases
+ * mudar cilindro : acrescentar bases
  * fazer  torus
  * Ver se e preciso rodar a esfera (NAO SEI)
  * texturas do trianglo

@@ -6,14 +6,15 @@
 
 class MyCylinder extends CGFobject
 {
-	constructor(scene, slices, stacks, rad,length)
+	constructor(scene, slices, stacks, base,top,height)
 	{
 		super(scene);
 
 		this.slices = slices;
 		this.stacks = stacks;
-		this.rad = rad;
-		this.length = length;
+		this.height = height;
+		this.base = base;
+		this.top = top;
 
 		this.initBuffers();
 	};
@@ -42,6 +43,9 @@ class MyCylinder extends CGFobject
 
 		var count = 0;
 		var v = 0;
+
+		var delta = (this.base - this.top)/this.stacks;
+		
 		while(count < this.slices)
 		{
 			v = 0;
@@ -50,9 +54,13 @@ class MyCylinder extends CGFobject
 			
 			for(var i = 0; i <= this.stacks; i++)
 			{
-				this.vertices.push(this.rad*x);
+				/*this.vertices.push(this.rad*x);
 				this.vertices.push(this.rad*y);
-				this.vertices.push(this.length*v);
+				this.vertices.push(this.length*v);*/
+
+				this.vertices.push(x * (this.base - (delta * i)));
+				this.vertices.push(y * (this.base - (delta * i)));
+				this.vertices.push(this.height*v);
 				
 				v += 1/this.stacks;
 			}
