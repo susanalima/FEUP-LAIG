@@ -221,9 +221,9 @@ class MySceneGraph {
     parseViewsPerspective(children, index) {
         var grandChildren = [];
         var perspective = {
-            near: 0.1,
-            far: 1000,
-            angle: 60,
+            near: null,
+            far: null,
+            angle: null,
             fromPosition: [],
             toPosition: []
         }
@@ -290,8 +290,8 @@ class MySceneGraph {
     parseViewsOrtho(children, index) {
         var grandChildren = [];
         var ortho = {
-            near: 0.1,
-            far: 1000,
+            near: null,
+            far: null,
             left: null,
             right: null,
             top: null,
@@ -1090,17 +1090,17 @@ class MySceneGraph {
                         return error;
                     break;
                 case "materials":
-                    error = this.parseComponentMaterials(ggrandChildren, component);
+                    error = this.parseComponentMaterials(ggrandChildren, component,componentId);
                     if (error != null)
                         return error;
                     break;
                 case "texture":
-                    error = this.parseComponentTexture(grandChildren, j, component);
+                    error = this.parseComponentTexture(grandChildren, j, component,componentId);
                     if (error != null)
                         return error;
                     break;
                 case "children":
-                    error = this.parseComponentChildren(ggrandChildren, component);
+                    error = this.parseComponentChildren(ggrandChildren, component,componentId);
                     if (error != null)
                         return error;
                     break;
@@ -1129,7 +1129,6 @@ class MySceneGraph {
                         if (error != null)
                             return error;
                         break;
-
                     case "rotate":
                         error = this.parseTransformationRotate(children, k, component.transformations.transformations);
                         if (error != null)
@@ -1150,12 +1149,14 @@ class MySceneGraph {
         return null;
     }
 
-    parseComponentMaterials(children,component)
+    parseComponentMaterials(children,component,componentId)
     {
         for (let k = 0; k < children.length; k++) {
             let nodeName2 = children[k].nodeName;
             if (nodeName2 == "material") {
                 let id = this.reader.getString(children[k], 'id');
+                if (id == null)
+                    return "no id defined for material for component ID: " + componentId;
                 component.materials.push(id);
             }
             else
@@ -1165,17 +1166,36 @@ class MySceneGraph {
         return null;
     }
 
-    parseComponentChildren(children,component)
+    
+    parseComponentTexture(children,index,component,componentId)
+    {
+        component.texture.id = this.reader.getString(children[index], 'id');
+        if (component.texture.id == null)
+            return "no id defined for texture for component ID: " + componentId;
+        component.texture.length_s = this.reader.getFloat(children[index], 'length_s');
+        if (!this.validateFloat(component.texture.length_s))
+            return "Unable to parse texture's lenght_s value for component ID: " + componentId;
+        component.texture.length_t = this.reader.getFloat(children[index], 'length_t');
+        if (!this.validateFloat(component.texture.length_t))
+            return "Unable to parse texture's lenght_t value for component ID: " + componentId;
+        return null;
+    }
+
+    parseComponentChildren(children,component,componentId)
     {
         for (let k = 0; k < children.length; k++) {
             let nodeName2 = children[k].nodeName;
             switch (nodeName2) {
                 case "componentref":
                     let idC = this.reader.getString(children[k], 'id');
+                    if (idC == null)
+                        return "no id defined for componentref for component ID: " + componentId;
                     component.children.componentsRef.push(idC);
                     break;
                 case "primitiveref":
                     let idP = this.reader.getString(children[k], 'id');
+                    if (idP == null)
+                        return "no id defined for primitiveref for component ID: " + componentId;
                     component.children.primitivesRef.push(idP);
                     break;
                 default:
@@ -1183,15 +1203,6 @@ class MySceneGraph {
                     break;
             }
         }
-        return null;
-    }
-
-    //TODO FALTA VALIDAR
-    parseComponentTexture(children,index,component)
-    {
-        component.texture.id = this.reader.getString(children[index], 'id');
-        component.texture.length_s = this.reader.getFloat(children[index], 'length_s');
-        component.texture.length_t = this.reader.getFloat(children[index], 'length_t');
         return null;
     }
 
