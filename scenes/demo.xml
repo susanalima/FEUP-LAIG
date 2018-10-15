@@ -203,7 +203,7 @@
 		<materials>
 			 <material id="mat4" />
 		</materials>
-		<texture id="metal" length_s="2" length_t="1" />
+		<texture id="wall" length_s="2" length_t="1" />
 
 		<children>
 			<componentref id="comp1"/>

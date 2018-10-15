@@ -9,6 +9,8 @@ var TRANSFORMATIONS_INDEX = 6;
 var PRIMITIVES_INDEX = 7;
 var COMPONENTS_INDEX = 8;
 var INHERIT = "inherit";
+var NONE = "none";
+var DEFAULT_MATERIAL = 0;
 
 /**
 * MySceneGraph class, representing the scene graph.
@@ -1343,7 +1345,6 @@ class MySceneGraph {
         return null;
     }
 
-
     parsePointXYZ(vector, x1, y1, z1, index) {
         var x = this.reader.getFloat(vector[index], x1);
         var y = this.reader.getFloat(vector[index], y1);
@@ -1542,20 +1543,39 @@ class MySceneGraph {
         }
     }
 
+    pushTexture(texture, textures)
+    {
+        switch(texture.id) {
+            case INHERIT:
+            texture.id = textures[textures.length - 1].id;
+            this.pushTexture(texture,textures);
+            //textures.push(texture);
+            break;
+            case NONE:
+            return true;
+            default:
+            textures.push(texture);
+            break;
+        }
+        return false;
+    }
+
 
     visitNode(node, transformations, materials, textures) {
 
-        //if it is an inherit texture the id will be the last texture id in the stack (i think)
         if (node.texture.id == INHERIT)
-            node.texture.id = textures[textures.length - 1].id;
-
+            textures.push(textures[textures.length - 1]);
+        else
+        textures.push(node.texture);
+        
         //tem de ser mudado depois quando fizermos a cena teclado
         if (node.materials[0] == INHERIT)
-            node.materials[0] = materials[textures.length - 1][0];
-
+            node.materials[0] = materials[materials.length - 1][0];
+    
         transformations.push(node.transformations);
         materials.push(node.materials);
-        textures.push(node.texture);
+        //textures.push(node.texture);
+        //var none_texture = this.pushTexture(node.texture,textures);
         this.scene.pushMatrix();
         if (node.transformations.tref) {
             this.applyTransformations(this.transformations[node.transformations.trefID]);
@@ -1599,7 +1619,7 @@ class MySceneGraph {
  * tratar das luzes spot JA ESTA IMPLEMENTADO MAS NAO SEI SE FUNCIONA
  * fazer  torus
  * Ver se e preciso rodar a esfera (NAO SEI)
- * texturas do trianglo
+ * texturas do triangulo e do cilindro
  * hereditariedade de texturas (ACHO QUE JA ESTA)
  * tratar do teclado e dos materias (e mudar hereditariedade)
  * comentar e refactoring se houver tempo
