@@ -203,7 +203,7 @@
 		<materials>
 			 <material id="mat4" />
 		</materials>
-		<texture id="wall" length_s="2" length_t="1" />
+		<texture id="metal" length_s="2" length_t="1" />
 
 		<children>
 			<componentref id="comp1"/>
@@ -249,7 +249,7 @@
 		<materials>
 			 <material id="mat3" />
 		</materials>
-		<texture id="floor" length_s="2" length_t="1" />
+		<texture id="none" length_s="2" length_t="1" />
 		<children>
 			<primitiveref id="rectangle" />
 		</children>
@@ -288,7 +288,7 @@
 		<materials>
 			 <material id="mat2" />
 		</materials>
-		<texture id="metal" length_s="2" length_t="1" />
+		<texture id="none" length_s="2" length_t="1" />
 		<children>
 			<componentref id="comp4" />
 		</children>
@@ -482,7 +482,7 @@
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="inherit" length_s="2" length_t="1" />
+		<texture id="none" length_s="2" length_t="1" />
 		<children>
 			<primitiveref id="sphere"/>
 		</children>

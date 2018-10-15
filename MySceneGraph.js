@@ -1490,7 +1490,7 @@ class MySceneGraph {
         var transformations = [];
         var materials = [];
         var textures = [];
-        this.visitNode(this.components[this.root], transformations, materials, textures);
+        this.visitNode(this.components[this.root], transformations, materials, textures,false);
 
     }
 
@@ -1543,13 +1543,14 @@ class MySceneGraph {
         }
     }
 
-    pushTexture(texture, textures)
+    pushTexture(texture, textures,none_texture)
     {
         switch(texture.id) {
             case INHERIT:
-            texture.id = textures[textures.length - 1].id;
-            this.pushTexture(texture,textures);
-            //textures.push(texture);
+            if (!none_texture)
+                textures.push(textures[textures.length - 1]);
+            else
+                return true;
             break;
             case NONE:
             return true;
@@ -1561,12 +1562,14 @@ class MySceneGraph {
     }
 
 
-    visitNode(node, transformations, materials, textures) {
+    visitNode(node, transformations, materials, textures,none_texture) {
 
-        if (node.texture.id == INHERIT)
+        /*if (node.texture.id == INHERIT)
             textures.push(textures[textures.length - 1]);
         else
-        textures.push(node.texture);
+        textures.push(node.texture);*/
+
+        none_texture = this.pushTexture(node.texture,textures,none_texture);
         
         //tem de ser mudado depois quando fizermos a cena teclado
         if (node.materials[0] == INHERIT)
@@ -1584,26 +1587,28 @@ class MySceneGraph {
             this.applyTransformationsPush(node.transformations.transformations);
         }
         for (let i = 0; i < node.children.primitivesRef.length; i++) {
-            this.visitLeaf(node.children.primitivesRef[i], materials, textures);
+            this.visitLeaf(node.children.primitivesRef[i], materials, textures, none_texture);
         }
         for (let i = 0; i < node.children.componentsRef.length; i++) {
-            this.visitNode(this.components[node.children.componentsRef[i]], transformations, materials, textures);
+            this.visitNode(this.components[node.children.componentsRef[i]], transformations, materials, textures, none_texture);
         }
 
         this.scene.popMatrix();
         transformations.pop();
         materials.pop();
-        textures.pop();
+        if (!none_texture)
+            textures.pop();
         return null;
     }
 
-    visitLeaf(leaf, materials, textures) {
+    visitLeaf(leaf, materials, textures, none_texture = null) {
         var prim = this.primitives[leaf];
         this.scene.pushMatrix();
         var text = textures[textures.length - 1];
         var mat = materials[materials.length - 1];
         var m = this.materials[mat[0]]
         m.apply();
+        if (!none_texture)
         this.textures[text.id].bind();
         prim.display();
         this.scene.popMatrix();
@@ -1618,6 +1623,7 @@ class MySceneGraph {
  * tratar do angulo da perspetiva (ACHO QUE JA ESTA, APENAS PASSEI PARA RADIANOS)
  * tratar das luzes spot JA ESTA IMPLEMENTADO MAS NAO SEI SE FUNCIONA
  * fazer  torus
+ * verificar a cena do inherit e do none (ACHO QUE ESTAO BEM MAS NAO TENO 100% CERTEZA)
  * Ver se e preciso rodar a esfera (NAO SEI)
  * texturas do triangulo e do cilindro
  * hereditariedade de texturas (ACHO QUE JA ESTA)
