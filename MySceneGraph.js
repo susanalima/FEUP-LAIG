@@ -1597,7 +1597,6 @@ class MySceneGraph {
  * fatores de textura
  * tratar do angulo da perspetiva (ACHO QUE JA ESTA, APENAS PASSEI PARA RADIANOS)
  * tratar das luzes spot JA ESTA IMPLEMENTADO MAS NAO SEI SE FUNCIONA
- * mudar cilindro : acrescentar bases
  * fazer  torus
  * Ver se e preciso rodar a esfera (NAO SEI)
  * texturas do trianglo

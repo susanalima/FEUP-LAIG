@@ -1,18 +1,21 @@
 /**
- * MySphere 
+ * MyCylinder (regular) to be changed 
  * @param gl {WebGLRenderingContext}
  * @constructor
  */
 
-class MySphere extends CGFobject
+class MyCylinderBody extends CGFobject
 {
-	constructor(scene, slices, stacks, radius)
+	constructor(scene, slices, stacks, base,top,height)
 	{
 		super(scene);
 
 		this.slices = slices;
 		this.stacks = stacks;
-		this.radius = radius;
+		this.height = height;
+		this.base = base;
+		this.top = top;
+
 		this.initBuffers();
 	};
 
@@ -32,10 +35,7 @@ class MySphere extends CGFobject
 		];
 
 
-		var angle = Math.PI*4/(this.slices);
-		var delta = Math.PI*4/(this.stacks);
-		var alpha = 0;
-		var radius = 0;
+		var angle = Math.PI*2/(this.slices);
 		var newangle = 0;
 		var x = 0;
 		var y = 0;
@@ -43,41 +43,32 @@ class MySphere extends CGFobject
 
 		var count = 0;
 		var v = 0;
+
+		var delta = (this.base - this.top)/this.stacks;
+		
 		while(count < this.slices)
 		{
 			v = 0;
-			newangle = 0;
+			x = Math.cos(newangle);
+			y = Math.sin(newangle);
 			
 			for(var i = 0; i <= this.stacks; i++)
 			{
+				this.vertices.push(x * (this.base - (delta * i)));
+				this.vertices.push(y * (this.base - (delta * i)));
+				this.vertices.push(this.height*v);
 				
-				radius = Math.cos(newangle);
-
-				x = this.radius*radius*Math.cos(alpha);
-				y = this.radius*radius*Math.sin(alpha);
-				z = this.radius*Math.sin(newangle);
-				this.vertices.push(x);
-				this.vertices.push(y);
-				this.vertices.push(z);
-
-				newangle = newangle + delta/2;
+				v += 1/this.stacks;
 			}
 	
-			newangle = 0;
-
 			for(var i = 0; i <= this.stacks; i++)
 			{
-				radius = Math.cos(newangle);
-				x = radius*Math.cos(alpha);
-				y = radius*Math.sin(alpha);
 				this.normals.push(x);
 				this.normals.push(y);
 				this.normals.push(0);
-				newangle = newangle + delta/2;
-
 			}
 
-			alpha = alpha + angle;
+			newangle = newangle + angle;
 			count++;
 		}
 
@@ -92,9 +83,6 @@ class MySphere extends CGFobject
 					this.indices.push(j+1);
 					this.indices.push(i+j);
 					this.indices.push(j);
-
-
-
 					this.indices.push(1+j);
 					this.indices.push(i+j+1);
 					this.indices.push(j+i);
@@ -112,36 +100,53 @@ class MySphere extends CGFobject
 					this.indices.push(i+j+this.stacks+1+1);
 					this.indices.push(i+j+1);
 					this.indices.push(i+j);
-
-					
-
 				}
 			}
 
 		}
+
 	
-		newangle = 0;
-		alpha = 0;
-		var newangleTemp = 0;
-
-		for(var j = 0; j < this.slices; j++)
-		{
-			for(var i = 0; i <= this.stacks;i++)
-			{
-				x =  0.5 -0.5*Math.cos(alpha) * Math.cos(newangle);
-				y = 0.5-  0.5*Math.sin(alpha) * Math.cos(newangle);
-
-				this.texCoords.push(x);
-				this.texCoords.push(y);
-
-				newangle = newangle + delta/2.0;
-			}
-			newangleTemp += angle;
-			alpha += angle;
-			newangle = 0;	
-		}
 		
+			
+			for (var i = 0; i < this.slices; i++) 
+			{
+			
+				this.texCoords.push(0);
+				this.texCoords.push(0);
+				
+				this.texCoords.push(0);
+				this.texCoords.push(i * 1/this.slices);
+				
+				this.texCoords.push(i* 1/this.slices);
+				this.texCoords.push(0);
+
+				this.texCoords.push(i* 1/this.slices);
+				this.texCoords.push(i* 1/this.slices);
+			
+			}
+			/*
+			var s = 0;
+			var t = 0;
+		
+			for (var i = 0; i <= this.stacks; i++) {
+			  for (var j = 0; j < this.slices; j++) {
+				this.texCoords.push(s, t);
+				s += 1 / this.slices;
+			  }
+			  s = 0;
+			  t += 1 / this.stacks;
+			}*/
+			
+		
+		
+		console.log(this.indices);
 		this.primitiveType=this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
 	};
+
+		rotate()
+		{
+			this.scene.rotate(-Math.PI/2,1,0,0);
+		};
+
 };
