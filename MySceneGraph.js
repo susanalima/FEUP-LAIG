@@ -1598,7 +1598,9 @@ class MySceneGraph {
  * tratar do angulo da perspetiva (ACHO QUE JA ESTA, APENAS PASSEI PARA RADIANOS)
  * tratar das luzes spot JA ESTA IMPLEMENTADO MAS NAO SEI SE FUNCIONA
  * mudar cilindro : acrescentar bases e diferentes bases
- * fazer triangulo, torus e esfera
+ * fazer  torus
+ * Ver se e preciso rodar a esfera (NAO SEI)
+ * texturas do trianglo
  * hereditariedade de texturas (ACHO QUE JA ESTA)
  * tratar do teclado e dos materias (e mudar hereditariedade)
  * comentar e refactoring se houver tempo
