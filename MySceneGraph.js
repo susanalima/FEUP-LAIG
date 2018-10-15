@@ -1024,143 +1024,174 @@ class MySceneGraph {
         var children = componentsNode.children;
         this.components = [];
         var numComponents = 0;
-        var grandChildren = [];
-        var nodeNames = [];
         var error;
         for (var i = 0; i < children.length; i++) {
-
-            var component = {
-
-                materials: [],
-
-                texture: {
-                    id: "0",
-                    length_s: 0,
-                    length_t: 0
-                },
-
-                transformations: {
-                    tref: false,
-                    trefID: null,
-                    transformations: []
-
-                },
-
-                children: {
-                    componentsRef: [],
-                    primitivesRef: []
-                }
-            }
-
             if (children[i].nodeName == "component") {
-                var componentId = this.reader.getString(children[i], "id");
-                if (componentId == null)
-                    return "no Id defined for component";
-
-                if (this.components[componentId] != null)
-                    return "Id must be unique for each component  (conflict: ID = " + componentId + ")";
-
-                grandChildren = children[i].children;
-                nodeNames = [];
-
-                for (var j = 0; j < grandChildren.length; j++) {
-                    nodeNames.push(grandChildren[j].nodeName);
-                }
-                for (var j = 0; j < grandChildren.length; j++) {
-
-                    var nodeName = grandChildren[j].nodeName;
-                    var ggrandChildren = grandChildren[j].children; //g(rand)grandchildren
-                    switch (nodeName) {
-                        case "transformation":
-                            for (var k = 0; k < ggrandChildren.length; k++) {
-                                var nodeName2 = ggrandChildren[k].nodeName;
-                                if (nodeName2 == "transformationref") {
-                                    //var transformationRef = [];
-                                    component.transformations.trefID = this.reader.getString(ggrandChildren[k], 'id');
-                                    //transformationRef.push(tref)
-                                    //transformation.push(transformationRef);
-                                    component.transformations.tref = true;
-                                }
-                                else {
-                                    switch (nodeName2) {
-                                        case "translate":
-                                            error = this.parseTransformationTranslate(ggrandChildren, k, component.transformations.transformations);
-                                            if (error != null)
-                                                return error;
-                                            break;
-
-                                        case "rotate":
-                                            error = this.parseTransformationRotate(ggrandChildren, k, component.transformations.transformations);
-                                            if (error != null)
-                                                return error;
-                                            break;
-
-                                        case "scale":
-                                            error = this.parseTransformationScale(ggrandChildren, k, component.transformations.transformations);
-                                            if (error != null)
-                                                return error;
-                                            break;
-                                        default:
-                                            this.onXMLMinorError("unknown tag <" + ggrandChildren[k].nodeName + ">");
-                                            break;
-                                    }
-                                }
-                            }
-
-                            break;
-
-                        case "materials":
-                            for (var k = 0; k < ggrandChildren.length; k++) {
-                                var nodeName2 = ggrandChildren[k].nodeName;
-                                if (nodeName2 == "material") {
-                                    var id = this.reader.getString(ggrandChildren[k], 'id');
-                                    component.materials.push(id);
-                                }
-                                else
-                                    this.onXMLMinorError("unknown tag <" + ggrandChildren[k].nodeName + ">");
-
-                            }
-                            break;
-
-                        case "texture":
-                            component.texture.id = this.reader.getString(grandChildren[j], 'id');
-                            component.texture.length_s = this.reader.getFloat(grandChildren[j], 'length_s');
-                            component.texture.length_t = this.reader.getFloat(grandChildren[j], 'length_t');
-                            break;
-
-                        case "children":
-                            for (let k = 0; k < ggrandChildren.length; k++) {
-                                var nodeName2 = ggrandChildren[k].nodeName;
-                                switch (nodeName2) {
-                                    case "componentref":
-                                        var idC = this.reader.getString(ggrandChildren[k], 'id');
-                                        component.children.componentsRef.push(idC);
-                                        break;
-                                    case "primitiveref":
-                                        var idP = this.reader.getString(ggrandChildren[k], 'id');
-                                        component.children.primitivesRef.push(idP);
-                                        break;
-                                    default:
-                                        this.onXMLMinorError("unknown tag <" + ggrandChildren[k].nodeName + ">");
-                                        break;
-                                }
-                            }
-                            break;
-
-                        default:
-                            this.onXMLMinorError("unknown tag <" + grandChildren[j].nodeName + ">");
-                            break;
-                    }
-                }
+                error = this.parseComponentsComponent(children,i);
+                if (error != null)
+                    return error;
+                numComponents++;
             }
             else
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
-
-            numComponents++;
-            this.components[componentId] = component;
         }
+        if (numComponents == 0)
+            return "at least one component must be defined";
         this.log("Parsed components");
-        console.dir(this.components);
+        return null;
+    }
+
+    parseComponentsComponent(children,index) {
+        var error;
+        var component = {
+
+            materials: [],
+
+            texture: {
+                id: "0",
+                length_s: 0,
+                length_t: 0
+            },
+
+            transformations: {
+                tref: false,
+                trefID: null,
+                transformations: []
+
+            },
+
+            children: {
+                componentsRef: [],
+                primitivesRef: []
+            }
+        }
+        var grandChildren = [];
+        var componentId = this.reader.getString(children[index], "id");
+        if (componentId == null)
+            return "no Id defined for component";
+
+        if (this.components[componentId] != null)
+            return "Id must be unique for each component  (conflict: ID = " + componentId + ")";
+
+        grandChildren = children[index].children;
+        var nodeNames = [];
+
+        for (var j = 0; j < grandChildren.length; j++) {
+            nodeNames.push(grandChildren[j].nodeName);
+        }
+        for (var j = 0; j < grandChildren.length; j++) {
+
+            var nodeName = grandChildren[j].nodeName;
+            var ggrandChildren = grandChildren[j].children; //g(rand)grandchildren
+            switch (nodeName) {
+                case "transformation":
+                    error = this.parseComponentTransformations(ggrandChildren, component);
+                    if (error != null)
+                        return error;
+                    break;
+                case "materials":
+                    error = this.parseComponentMaterials(ggrandChildren, component);
+                    if (error != null)
+                        return error;
+                    break;
+                case "texture":
+                    error = this.parseComponentTexture(grandChildren, j, component);
+                    if (error != null)
+                        return error;
+                    break;
+                case "children":
+                    error = this.parseComponentChildren(ggrandChildren, component);
+                    if (error != null)
+                        return error;
+                    break;
+                default:
+                    this.onXMLMinorError("unknown tag <" + grandChildren[j].nodeName + ">");
+                    break;
+            }
+        }
+        this.components[componentId] = component;
+        return null;
+    }
+
+    parseComponentTransformations(children,component)
+    {
+        var error;
+        for (let k = 0; k < children.length; k++) {
+            let nodeName2 = children[k].nodeName;
+            if (nodeName2 == "transformationref") {
+                component.transformations.trefID = this.reader.getString(children[k], 'id');
+                component.transformations.tref = true;
+            }
+            else {
+                switch (nodeName2) {
+                    case "translate":
+                        error = this.parseTransformationTranslate(children, k, component.transformations.transformations);
+                        if (error != null)
+                            return error;
+                        break;
+
+                    case "rotate":
+                        error = this.parseTransformationRotate(children, k, component.transformations.transformations);
+                        if (error != null)
+                            return error;
+                        break;
+
+                    case "scale":
+                        error = this.parseTransformationScale(children, k, component.transformations.transformations);
+                        if (error != null)
+                            return error;
+                        break;
+                    default:
+                        this.onXMLMinorError("unknown tag <" + children[k].nodeName + ">");
+                        break;
+                }
+            }
+        }
+        return null;
+    }
+
+    parseComponentMaterials(children,component)
+    {
+        for (let k = 0; k < children.length; k++) {
+            let nodeName2 = children[k].nodeName;
+            if (nodeName2 == "material") {
+                let id = this.reader.getString(children[k], 'id');
+                component.materials.push(id);
+            }
+            else
+                this.onXMLMinorError("unknown tag <" + children[k].nodeName + ">");
+
+        }
+        return null;
+    }
+
+    parseComponentChildren(children,component)
+    {
+        for (let k = 0; k < children.length; k++) {
+            let nodeName2 = children[k].nodeName;
+            switch (nodeName2) {
+                case "componentref":
+                    let idC = this.reader.getString(children[k], 'id');
+                    component.children.componentsRef.push(idC);
+                    break;
+                case "primitiveref":
+                    let idP = this.reader.getString(children[k], 'id');
+                    component.children.primitivesRef.push(idP);
+                    break;
+                default:
+                    this.onXMLMinorError("unknown tag <" + children[k].nodeName + ">");
+                    break;
+            }
+        }
+        return null;
+    }
+
+    //TODO FALTA VALIDAR
+    parseComponentTexture(children,index,component)
+    {
+        component.texture.id = this.reader.getString(children[index], 'id');
+        component.texture.length_s = this.reader.getFloat(children[index], 'length_s');
+        component.texture.length_t = this.reader.getFloat(children[index], 'length_t');
         return null;
     }
 
