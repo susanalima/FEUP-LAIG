@@ -129,6 +129,18 @@ class XMLscene extends CGFscene {
         this.interface.setActiveCamera(this.camera);
     }
 
+    checkKeys()
+	{
+		var text="Keys pressed: ";
+		var keysPressed=false;
+		if (this.gui.isKeyPressed("KeyM") || this.gui.isKeyPressed("Keym") )
+		{
+            console.log("KEY PRESSED");
+            keysPressed=true;
+            this.graph.updateComponentsCurrentMaterialIndex();
+        }
+    }
+
 
     /**
      * Displays the scene.
@@ -182,6 +194,8 @@ class XMLscene extends CGFscene {
             // Draw axis
             this.axis.display();
         }
+
+        this.checkKeys();
 
         this.popMatrix();
         // ---- END Background, camera and axis setup

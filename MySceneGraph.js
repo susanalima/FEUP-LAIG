@@ -1046,6 +1046,7 @@ class MySceneGraph {
         var component = {
 
             materials: [],
+            currentMaterialIndex : 0,
 
             texture: {
                 id: "0",
@@ -1605,6 +1606,19 @@ class MySceneGraph {
         return false;
     }
 
+    pushMaterials(materials, materials_to_push, currentMaterialIndex)
+    {
+        switch(materials_to_push[currentMaterialIndex])
+        {
+            case INHERIT:
+            materials.push(materials[materials.length -1]);
+            break;
+            default:
+            materials.push(materials_to_push);
+            break;
+        }
+    }
+
 
     visitNode(node, transformations, materials, textures,none_texture) {
 
@@ -1616,11 +1630,13 @@ class MySceneGraph {
         none_texture = this.pushTexture(node.texture,textures,none_texture);
         
         //tem de ser mudado depois quando fizermos a cena teclado
-        if (node.materials[0] == INHERIT)
-            node.materials[0] = materials[materials.length - 1][0];
+        //if (node.materials[0] == INHERIT)
+          //  node.materials[0] = materials[materials.length - 1][0];
+        
+        this.pushMaterials(materials,node.materials,node.currentMaterialIndex);
     
         transformations.push(node.transformations);
-        materials.push(node.materials);
+        //materials.push(node.materials);
         //textures.push(node.texture);
         //var none_texture = this.pushTexture(node.texture,textures);
         this.scene.pushMatrix();
@@ -1631,7 +1647,7 @@ class MySceneGraph {
             this.applyTransformationsPush(node.transformations.transformations);
         }
         for (let i = 0; i < node.children.primitivesRef.length; i++) {
-            this.visitLeaf(node.children.primitivesRef[i], materials, textures, none_texture);
+            this.visitLeaf(node.children.primitivesRef[i], materials, textures,node.currentMaterialIndex ,none_texture);
         }
         for (let i = 0; i < node.children.componentsRef.length; i++) {
             this.visitNode(this.components[node.children.componentsRef[i]], transformations, materials, textures, none_texture);
@@ -1645,17 +1661,29 @@ class MySceneGraph {
         return null;
     }
 
-    visitLeaf(leaf, materials, textures, none_texture = null) {
+    visitLeaf(leaf, materials, textures, currentMaterialIndex,none_texture = null) {
         var prim = this.primitives[leaf];
         this.scene.pushMatrix();
         var text = textures[textures.length - 1];
         var mat = materials[materials.length - 1];
-        var m = this.materials[mat[0]]
+        var m = this.materials[mat[currentMaterialIndex]];
         m.apply();
         if (!none_texture)
-        this.textures[text.id].bind();
+            this.textures[text.id].bind();
         prim.display();
         this.scene.popMatrix();
+    }
+
+    updateComponentsCurrentMaterialIndex()
+    {
+        for (var key in this.components)
+        {
+            let comp = this.components[key];
+            if(comp.currentMaterialIndex == (comp.materials.length -1))
+                comp.currentMaterialIndex = 0;
+            else
+                comp.currentMaterialIndex++;
+        }
     }
 }
 
