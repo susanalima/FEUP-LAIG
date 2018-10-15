@@ -99,6 +99,7 @@
  </materials>
   
   <transformations>
+
 	<transformation id="tf1">
 		 <rotate axis="x" angle= "-90" />
          <translate x="0" y="-10" z="0" />
@@ -179,7 +180,7 @@
     </primitive >
 
 	<primitive id="sphere">
-		<sphere radius="3.0" slices="60" stacks="60" />
+		<sphere radius="0.5" slices="60" stacks="60" />
     </primitive >
  </primitives >
 

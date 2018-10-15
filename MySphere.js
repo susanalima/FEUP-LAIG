@@ -53,9 +53,9 @@ class MySphere extends CGFobject
 				
 				radius = Math.cos(newangle);
 
-				x = radius*Math.cos(alpha);
-				y = radius*Math.sin(alpha);
-				z = Math.sin(newangle);
+				x = this.radius*radius*Math.cos(alpha);
+				y = this.radius*radius*Math.sin(alpha);
+				z = this.radius*Math.sin(newangle);
 				this.vertices.push(x);
 				this.vertices.push(y);
 				this.vertices.push(z);
