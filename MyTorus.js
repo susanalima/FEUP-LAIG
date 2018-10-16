@@ -1,26 +1,22 @@
 /**
- * MyCylinder (regular) to be changed 
+ * MyTorus 
  * @param gl {WebGLRenderingContext}
  * @constructor
  */
 
-class MyTorus extends CGFobject
-{
-	constructor(scene, slices, stacks, rad,length)
-	{
+class MyTorus extends CGFobject {
+	constructor(scene, inner, outer, slices, loops) {
 		super(scene);
 
+		this.inner = inner;
+		this.outer = outer;
 		this.slices = slices;
-		this.stacks = stacks;
-		this.rad = rad;
-		this.length = length;
-
+		this.loops = loops;
 		this.initBuffers();
 	};
 
 
-	initBuffers()
-	{
+	initBuffers() {
 		this.vertices = [
 		];
 
@@ -33,13 +29,44 @@ class MyTorus extends CGFobject
 		this.texCoords = [
 		];
 
+		let curve = 2 * Math.PI;
+		for (let loop = 0; loop <= this.loops; loop++) {
+			let angle1 = curve * loop / this.loops;
+			for (let slice = 0; slice <= this.slices; slice++) {
+				let angle2 = slice / this.slices * curve;
 
-	
-		
+				let vertex_x = (this.inner * Math.cos(angle1) + this.outer) * Math.cos(angle2);
+				let vertex_y = (this.inner * Math.cos(angle1) + this.outer) * Math.sin(angle2);
+				let vertex_z = this.inner * Math.sin(angle1);
+
+				//vertices
+				this.vertices.push(vertex_x, vertex_y, vertex_z);
+
+				let center_x = Math.cos(angle2) * this.outer;
+				let center_y = Math.sin(angle2) * this.outer;
+				//normals
+				this.normals.push(vertex_x - center_x, vertex_y - center_y, vertex_z);
+
+				//textCoords
+				this.texCoords.push(slice / this.slices, loop / this.loops);
+
+				//indices
+				if (loop > 0 && slice > 0) {
+					let i1 = (1 + this.slices) * loop + slice - 1;
+					let i2 = (1 + this.slices) * (loop - 1) + slice - 1;
+					let i3 = (1 + this.slices) * (loop - 1) + slice;
+					let i4 = (1 + this.slices) * loop + slice;
+
+					this.indices.push(i1, i2, i4, i2, i3, i4);
+				}
+			}
+		}
+
+
 		console.log(this.indices);
-		this.primitiveType=this.scene.gl.TRIANGLES;
+		this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
 	};
 
-	
+
 };

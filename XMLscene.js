@@ -13,6 +13,8 @@ class XMLscene extends CGFscene {
 
         this.interface = myinterface;
         this.lightValues = {};
+        
+        this.keysPressed = false;
     }
 
     /**
@@ -33,7 +35,6 @@ class XMLscene extends CGFscene {
         this.gl.depthFunc(this.gl.LEQUAL);
 
         this.axis = new CGFaxis(this);
-
     }
 
     /**
@@ -131,14 +132,17 @@ class XMLscene extends CGFscene {
 
     checkKeys()
 	{
-		var text="Keys pressed: ";
-		var keysPressed=false;
-		if (this.gui.isKeyPressed("KeyM") || this.gui.isKeyPressed("Keym") )
+        var text="Keys pressed: ";
+  
+		//var keysPressed=false;
+        if ((this.gui.isKeyPressed("KeyM") || this.gui.isKeyPressed("Keym") ) && this.keysPressed == false)
 		{
-            console.log("KEY PRESSED");
-            keysPressed=true;
+            this.keysPressed=true;
             this.graph.updateComponentsCurrentMaterialIndex();
+
         }
+        else
+            this.keysPressed = false;
     }
 
 

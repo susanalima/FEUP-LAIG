@@ -176,7 +176,7 @@
     </primitive >
 
 	<primitive id="cylinder">
-		<cylinder base="0.4" top="0.2" height="3" slices="20" stacks="1" />
+		<cylinder base="0.4" top="0.2" height="3" slices="20" stacks="100" />
     </primitive >
 
 	<primitive id="sphere">
@@ -189,7 +189,9 @@
 				  x3="1" y3="2" z3="1" />
     </primitive >
 
-	
+	<primitive id="torus">
+		<torus inner="0.4" outer="1" slices="20" loops="20" />
+	</primitive >
 
  </primitives >
 
@@ -201,7 +203,9 @@
  			<translate x="0" y="0" z="0"/>
 		</transformation>
 		<materials>
-			 <material id="mat4" />
+			 <material id="mat2" />
+			 <material id="mat1" />
+			 <material id="mat2" />
 		</materials>
 		<texture id="metal" length_s="2" length_t="1" />
 
@@ -247,8 +251,9 @@
  			<transformationref id="tf1" />
 		</transformation>
 		<materials>
-			 <material id="mat3" />
 			 <material id="mat4" />
+			 <material id="mat2" />
+		     <material id="mat1" />
 		</materials>
 		<texture id="none" length_s="2" length_t="1" />
 		<children>
@@ -275,6 +280,8 @@
 		</transformation>
 		<materials>
 			 <material id="mat2" />
+			 <material id="inherit" />
+			 <material id="mat4" />
 		</materials>
 		<texture id="inherit" length_s="2" length_t="1" />
 		<children>
@@ -481,11 +488,11 @@
  			<translate x="5" y="5" z="10" />
 		</transformation>
 		<materials>
-			 <material id="mat1" />
+			 <material id="inherit" />
 		</materials>
-		<texture id="none" length_s="2" length_t="1" />
+		<texture id="metal" length_s="2" length_t="1" />
 		<children>
-			<primitiveref id="sphere"/>
+			<primitiveref id="torus"/>
 		</children>
 	 </component>
 

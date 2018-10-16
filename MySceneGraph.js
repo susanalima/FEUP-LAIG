@@ -1227,11 +1227,11 @@ class MySceneGraph {
     }
 
     createTorus(torus) {
-        return new MyTorus(this.scene, torus.slices, torus.stacks, torus.inner, torus.outer);
+        return new MyTorus(this.scene, torus.inner,torus.outer, torus.slices, torus.loops);
     }
 
 
-    parseTorus(children, index) {
+    parseTorus(children, index,id) {
         var torus = {
             inner: null,
             outer: null,
@@ -1606,39 +1606,44 @@ class MySceneGraph {
         return false;
     }
 
-    pushMaterials(materials, materials_to_push, currentMaterialIndex)
+    pushMaterials(materials,node,parent_currentMaterialIndex)
     {
-        switch(materials_to_push[currentMaterialIndex])
+        var is_inherit = false;
+        switch(node.materials[node.currentMaterialIndex])
         {
             case INHERIT:
-            materials.push(materials[materials.length -1]);
+            //se o length do array de materiais do filho for 1 fica com todos os materiais do pai
+            //se for maior que 1 fica no sitio do inherit com o material do currentMaterialIndex do pai
+            //IMPLEMENTAR (NAO FUNCIONA)
+            if(node.materials.length <= 1)
+            { 
+                materials.push(materials[materials.length -1]);
+                is_inherit = true;
+            }
+            else{
+            let mat = materials[materials.length-1][parent_currentMaterialIndex];
+            let copy = node.materials;
+            copy[node.currentMaterialIndex] = mat;
+            materials.push(copy);
+            }
             break;
             default:
-            materials.push(materials_to_push);
+            materials.push(node.materials);
             break;
         }
+        return is_inherit;
     }
 
 
-    visitNode(node, transformations, materials, textures,none_texture) {
+    visitNode(node, transformations, materials, textures,none_texture, parent_currentMaterialIndex=null) {
 
-        /*if (node.texture.id == INHERIT)
-            textures.push(textures[textures.length - 1]);
-        else
-        textures.push(node.texture);*/
 
         none_texture = this.pushTexture(node.texture,textures,none_texture);
-        
-        //tem de ser mudado depois quando fizermos a cena teclado
-        //if (node.materials[0] == INHERIT)
-          //  node.materials[0] = materials[materials.length - 1][0];
-        
-        this.pushMaterials(materials,node.materials,node.currentMaterialIndex);
+   
+        let is_inherit = this.pushMaterials(materials,node,parent_currentMaterialIndex);
     
         transformations.push(node.transformations);
-        //materials.push(node.materials);
-        //textures.push(node.texture);
-        //var none_texture = this.pushTexture(node.texture,textures);
+ 
         this.scene.pushMatrix();
         if (node.transformations.tref) {
             this.applyTransformations(this.transformations[node.transformations.trefID]);
@@ -1647,10 +1652,14 @@ class MySceneGraph {
             this.applyTransformationsPush(node.transformations.transformations);
         }
         for (let i = 0; i < node.children.primitivesRef.length; i++) {
-            this.visitLeaf(node.children.primitivesRef[i], materials, textures,node.currentMaterialIndex ,none_texture);
+            if (is_inherit)
+                var index = parent_currentMaterialIndex;
+            else
+                index = node.currentMaterialIndex;
+            this.visitLeaf(node.children.primitivesRef[i], materials, textures,index ,none_texture);
         }
         for (let i = 0; i < node.children.componentsRef.length; i++) {
-            this.visitNode(this.components[node.children.componentsRef[i]], transformations, materials, textures, none_texture);
+            this.visitNode(this.components[node.children.componentsRef[i]], transformations, materials, textures, none_texture,node.currentMaterialIndex);
         }
 
         this.scene.popMatrix();
@@ -1662,11 +1671,11 @@ class MySceneGraph {
     }
 
     visitLeaf(leaf, materials, textures, currentMaterialIndex,none_texture = null) {
-        var prim = this.primitives[leaf];
+        let prim = this.primitives[leaf];
         this.scene.pushMatrix();
-        var text = textures[textures.length - 1];
-        var mat = materials[materials.length - 1];
-        var m = this.materials[mat[currentMaterialIndex]];
+        let text = textures[textures.length - 1];
+        let mat = materials[materials.length - 1];
+        let m = this.materials[mat[currentMaterialIndex]];
         m.apply();
         if (!none_texture)
             this.textures[text.id].bind();
@@ -1676,7 +1685,7 @@ class MySceneGraph {
 
     updateComponentsCurrentMaterialIndex()
     {
-        for (var key in this.components)
+        for (let key in this.components)
         {
             let comp = this.components[key];
             if(comp.currentMaterialIndex == (comp.materials.length -1))
@@ -1694,13 +1703,13 @@ class MySceneGraph {
  * fatores de textura
  * tratar do angulo da perspetiva (ACHO QUE JA ESTA, APENAS PASSEI PARA RADIANOS)
  * tratar das luzes spot (JA ESTA IMPLEMENTADO MAS NAO SEI SE FUNCIONA)
- * fazer  torus
  * verificar a cena do inherit e do none (ACHO QUE ESTAO BEM MAS NAO TENHO 100% CERTEZA)
  * Ver se e preciso rodar a esfera (NAO SEI)
  * texturas do cilindro
  * verificar texturas do triangulo (ACHO QUE ESTAO BEM)
  * hereditariedade de texturas (ACHO QUE JA ESTA)
- * tratar do teclado e dos materias (e mudar hereditariedade)
+ * tratar do teclado e dos materias (JA ESTA MAIS OU MENOS FEITO)
+ * hereditariedade dos materiais (ACHO QUE JA ESTA)
  * comentar e refactoring se houver tempo
  * criar outra cena
  * testar com as cenas do forum

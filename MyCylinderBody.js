@@ -108,34 +108,34 @@ class MyCylinderBody extends CGFobject
 	
 		
 			
-			for (var i = 0; i < this.slices; i++) 
+			/*for (var i = 0; i < this.slices; i++) 
 			{
-			
-				this.texCoords.push(0);
-				this.texCoords.push(0);
-				
-				this.texCoords.push(0);
-				this.texCoords.push(i * 1/this.slices);
-				
-				this.texCoords.push(i* 1/this.slices);
-				this.texCoords.push(0);
+					this.texCoords.push(0);
+					this.texCoords.push(0);
+					
+					this.texCoords.push(0);
+					this.texCoords.push(i * 1/this.slices);
+					
+					this.texCoords.push(i* 1/this.slices);
+					this.texCoords.push(0);
 
-				this.texCoords.push(i* 1/this.slices);
-				this.texCoords.push(i* 1/this.slices);
+					this.texCoords.push(i* 1/this.slices);
+					this.texCoords.push(i* 1/this.slices);
+				
+			}*/
+		
 			
-			}
-			/*
 			var s = 0;
 			var t = 0;
 		
-			for (var i = 0; i <= this.stacks; i++) {
-			  for (var j = 0; j < this.slices; j++) {
-				this.texCoords.push(s, t);
-				s += 1 / this.slices;
+			for (var i = 0; i < this.slices; i++) {
+			  for (var j = 0; j <= this.stacks; j++) {
+				this.texCoords.push( t,s);
+				s += 1 / this.stacks;
 			  }
 			  s = 0;
-			  t += 1 / this.stacks;
-			}*/
+			  t += 1 / this.slices;
+			}
 			
 		
 		
