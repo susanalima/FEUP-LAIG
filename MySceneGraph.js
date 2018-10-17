@@ -796,6 +796,7 @@ class MySceneGraph {
         appearance.setAmbient(material.ambient[0], material.ambient[1], material.ambient[2], material.ambient[3]);
         appearance.setDiffuse(material.diffuse[0], material.diffuse[1], material.diffuse[2], material.diffuse[3]);
         appearance.setSpecular(material.specular[0], material.specular[1], material.specular[2], material.specular[3]);
+        appearance.setTextureWrap('NONE', 'REPEAT');
         return appearance;
     }
 
@@ -835,7 +836,7 @@ class MySceneGraph {
         var error;
         //get the id of current transformation
         var transformationId = this.reader.getString(children[index], 'id');
-        if (!this.validateString(transformationId ))
+        if (!this.validateString(transformationId))
             return "no ID defined for transformation";
 
         // Checks for repeated IDs.
@@ -975,7 +976,7 @@ class MySceneGraph {
         var grandChildren = [];
         var error;
         var primitiveId = this.reader.getString(children[index], 'id');
-        if(!this.validateString(primitiveId ))
+        if (!this.validateString(primitiveId))
             return "no Id defined for primitive";
         if (this.primitives[primitiveId] != null)
             return "Id must be unique for each primitive  (conflict: ID = " + primitiveId + ")";
@@ -1027,7 +1028,7 @@ class MySceneGraph {
         var error;
         for (var i = 0; i < children.length; i++) {
             if (children[i].nodeName == "component") {
-                error = this.parseComponentsComponent(children,i);
+                error = this.parseComponentsComponent(children, i);
                 if (error != null)
                     return error;
                 numComponents++;
@@ -1041,12 +1042,12 @@ class MySceneGraph {
         return null;
     }
 
-    parseComponentsComponent(children,index) {
+    parseComponentsComponent(children, index) {
         var error;
         var component = {
 
             materials: [],
-            currentMaterialIndex : 0,
+            currentMaterialIndex: 0,
 
             texture: {
                 id: "0",
@@ -1086,22 +1087,22 @@ class MySceneGraph {
             var ggrandChildren = grandChildren[j].children; //g(rand)grandchildren
             switch (nodeName) {
                 case "transformation":
-                    error = this.parseComponentTransformations(ggrandChildren, component,componentId);
+                    error = this.parseComponentTransformations(ggrandChildren, component, componentId);
                     if (error != null)
                         return error;
                     break;
                 case "materials":
-                    error = this.parseComponentMaterials(ggrandChildren, component,componentId);
+                    error = this.parseComponentMaterials(ggrandChildren, component, componentId);
                     if (error != null)
                         return error;
                     break;
                 case "texture":
-                    error = this.parseComponentTexture(grandChildren, j, component,componentId);
+                    error = this.parseComponentTexture(grandChildren, j, component, componentId);
                     if (error != null)
                         return error;
                     break;
                 case "children":
-                    error = this.parseComponentChildren(ggrandChildren, component,componentId);
+                    error = this.parseComponentChildren(ggrandChildren, component, componentId);
                     if (error != null)
                         return error;
                     break;
@@ -1114,14 +1115,13 @@ class MySceneGraph {
         return null;
     }
 
-    parseComponentTransformations(children,component,componentId)
-    {
+    parseComponentTransformations(children, component, componentId) {
         var error;
         for (let k = 0; k < children.length; k++) {
             let nodeName2 = children[k].nodeName;
             if (nodeName2 == "transformationref") {
                 component.transformations.trefID = this.reader.getString(children[k], 'id');
-                if(!this.validateString(component.transformations.trefID))
+                if (!this.validateString(component.transformations.trefID))
                     return "no id defined fot transformation for component ID: " + componentId;
                 component.transformations.tref = true;
             }
@@ -1152,8 +1152,7 @@ class MySceneGraph {
         return null;
     }
 
-    parseComponentMaterials(children,component,componentId)
-    {
+    parseComponentMaterials(children, component, componentId) {
         for (let k = 0; k < children.length; k++) {
             let nodeName2 = children[k].nodeName;
             if (nodeName2 == "material") {
@@ -1169,11 +1168,10 @@ class MySceneGraph {
         return null;
     }
 
-    
-    parseComponentTexture(children,index,component,componentId)
-    {
+
+    parseComponentTexture(children, index, component, componentId) {
         component.texture.id = this.reader.getString(children[index], 'id');
-        if ((!this.validateString( component.texture.id)))
+        if ((!this.validateString(component.texture.id)))
             return "no id defined for texture for component ID: " + componentId;
         component.texture.length_s = this.reader.getFloat(children[index], 'length_s');
         if (!this.validateFloat(component.texture.length_s))
@@ -1184,8 +1182,7 @@ class MySceneGraph {
         return null;
     }
 
-    parseComponentChildren(children,component,componentId)
-    {
+    parseComponentChildren(children, component, componentId) {
         for (let k = 0; k < children.length; k++) {
             let nodeName2 = children[k].nodeName;
             switch (nodeName2) {
@@ -1223,15 +1220,15 @@ class MySceneGraph {
     }
 
     createCylinder(cylinder) {
-        return new MyCylinder(this.scene, cylinder.slices, cylinder.stacks, cylinder.base,cylinder.top, cylinder.height); //TODO
+        return new MyCylinder(this.scene, cylinder.slices, cylinder.stacks, cylinder.base, cylinder.top, cylinder.height); //TODO
     }
 
     createTorus(torus) {
-        return new MyTorus(this.scene, torus.inner,torus.outer, torus.slices, torus.loops);
+        return new MyTorus(this.scene, torus.inner, torus.outer, torus.slices, torus.loops);
     }
 
 
-    parseTorus(children, index,id) {
+    parseTorus(children, index, id) {
         var torus = {
             inner: null,
             outer: null,
@@ -1471,8 +1468,7 @@ class MySceneGraph {
             return true;
     }
 
-    validateString(string)
-    {
+    validateString(string) {
         return (typeof string === 'string' && string != null);
     }
 
@@ -1535,7 +1531,7 @@ class MySceneGraph {
         var transformations = [];
         var materials = [];
         var textures = [];
-        this.visitNode(this.components[this.root], transformations, materials, textures,false);
+        this.visitNode(this.components[this.root], transformations, materials, textures, false);
 
     }
 
@@ -1588,62 +1584,71 @@ class MySceneGraph {
         }
     }
 
-    pushTexture(texture, textures,none_texture)
+    checkLengthInherit(texture,textures)
     {
-        switch(texture.id) {
+        var tmp_t = textures[textures.length - 1];
+        if(texture.length_s != 0)
+            tmp_t.length_s = texture.length_s;
+        if(texture.length_t != 0)
+            tmp_t.length_t = texture.length_t;
+        if(texture.length_t == 0 && texture.length_s == 0)
+            textures.push(textures[textures.length - 1]);
+        else
+            textures.push(tmp_t);
+    }
+
+    pushTexture(texture, textures, none_texture) {
+        switch (texture.id) {
             case INHERIT:
-            if (!none_texture)
-                textures.push(textures[textures.length - 1]);
-            else
-                return true;
-            break;
+                if (!none_texture)
+                   this.checkLengthInherit(texture, textures);
+                else
+                    return true;
+                break;
             case NONE:
-            return true;
+                return true;
             default:
-            textures.push(texture);
-            break;
+                textures.push(texture);
+                break;
         }
         return false;
     }
 
-    pushMaterials(materials,node,parent_currentMaterialIndex)
-    {
+    pushMaterials(materials, node, parent_currentMaterialIndex) {
         var is_inherit = false;
-        switch(node.materials[node.currentMaterialIndex])
-        {
+        switch (node.materials[node.currentMaterialIndex]) {
             case INHERIT:
-            //se o length do array de materiais do filho for 1 fica com todos os materiais do pai
-            //se for maior que 1 fica no sitio do inherit com o material do currentMaterialIndex do pai
-            //IMPLEMENTAR (NAO FUNCIONA)
-            if(node.materials.length <= 1)
-            { 
-                materials.push(materials[materials.length -1]);
-                is_inherit = true;
-            }
-            else{
-            let mat = materials[materials.length-1][parent_currentMaterialIndex];
-            let copy = node.materials;
-            copy[node.currentMaterialIndex] = mat;
-            materials.push(copy);
-            }
-            break;
+                //se o length do array de materiais do filho for 1 fica com todos os materiais do pai
+                //se for maior que 1 fica no sitio do inherit com o material do currentMaterialIndex do pai
+                //IMPLEMENTAR (NAO FUNCIONA)
+                if (node.materials.length <= 1) {
+                    materials.push(materials[materials.length - 1]);
+                    is_inherit = true;
+                }
+                else {
+                    let mat = materials[materials.length - 1][parent_currentMaterialIndex];
+                    let copy = node.materials;
+                    copy[node.currentMaterialIndex] = mat;
+                    materials.push(copy);
+                }
+                break;
             default:
-            materials.push(node.materials);
-            break;
+                materials.push(node.materials);
+                break;
         }
         return is_inherit;
     }
 
 
-    visitNode(node, transformations, materials, textures,none_texture, parent_currentMaterialIndex=null) {
+    visitNode(node, transformations, materials, textures, none_texture, parent_currentMaterialIndex = null) {
 
 
-        none_texture = this.pushTexture(node.texture,textures,none_texture);
-   
-        let is_inherit = this.pushMaterials(materials,node,parent_currentMaterialIndex);
-    
+        none_texture = this.pushTexture(node.texture, textures, none_texture);
+
+        let is_inherit = this.pushMaterials(materials, node, parent_currentMaterialIndex);
+
         transformations.push(node.transformations);
- 
+
         this.scene.pushMatrix();
         if (node.transformations.tref) {
             this.applyTransformations(this.transformations[node.transformations.trefID]);
@@ -1656,10 +1661,10 @@ class MySceneGraph {
                 var index = parent_currentMaterialIndex;
             else
                 index = node.currentMaterialIndex;
-            this.visitLeaf(node.children.primitivesRef[i], materials, textures,index ,none_texture);
+            this.visitLeaf(node.children.primitivesRef[i], materials, textures, index, none_texture);
         }
         for (let i = 0; i < node.children.componentsRef.length; i++) {
-            this.visitNode(this.components[node.children.componentsRef[i]], transformations, materials, textures, none_texture,node.currentMaterialIndex);
+            this.visitNode(this.components[node.children.componentsRef[i]], transformations, materials, textures, none_texture, node.currentMaterialIndex);
         }
 
         this.scene.popMatrix();
@@ -1670,7 +1675,7 @@ class MySceneGraph {
         return null;
     }
 
-    visitLeaf(leaf, materials, textures, currentMaterialIndex,none_texture = null) {
+    visitLeaf(leaf, materials, textures, currentMaterialIndex, none_texture = null) {
         let prim = this.primitives[leaf];
         this.scene.pushMatrix();
         let text = textures[textures.length - 1];
@@ -1683,12 +1688,10 @@ class MySceneGraph {
         this.scene.popMatrix();
     }
 
-    updateComponentsCurrentMaterialIndex()
-    {
-        for (let key in this.components)
-        {
+    updateComponentsCurrentMaterialIndex() {
+        for (let key in this.components) {
             let comp = this.components[key];
-            if(comp.currentMaterialIndex == (comp.materials.length -1))
+            if (comp.currentMaterialIndex == (comp.materials.length - 1))
                 comp.currentMaterialIndex = 0;
             else
                 comp.currentMaterialIndex++;
