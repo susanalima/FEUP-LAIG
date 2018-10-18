@@ -1217,11 +1217,21 @@ class MySceneGraph {
         if (!this.isTexture(component.texture.id))
             return "invalid id defined for texture " + component.texture.id + " for component ID: " + componentId;
         component.texture.length_s = this.reader.getFloat(children[index], 'length_s');
+        
+        if(this.reader.getFloat(children[index], 'length_s') == null)
+            component.texture.length_s = 0;
+        else
+            component.texture.length_s = this.reader.getFloat(children[index], 'length_s');
         if (!this.validateFloat(component.texture.length_s))
             return "Unable to parse texture's lenght_s value for component ID: " + componentId;
-        component.texture.length_t = this.reader.getFloat(children[index], 'length_t');
+        
+        if(this.reader.getFloat(children[index], 'length_t') == null)
+            component.texture.length_t = 0;
+        else
+            component.texture.length_t = this.reader.getFloat(children[index], 'length_t');
         if (!this.validateFloat(component.texture.length_t))
             return "Unable to parse texture's lenght_t value for component ID: " + componentId;
+        
         return null;
     }
 
