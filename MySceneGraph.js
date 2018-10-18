@@ -1216,7 +1216,6 @@ class MySceneGraph {
             return "no id defined for texture for component ID: " + componentId;
         if (!this.isTexture(component.texture.id))
             return "invalid id defined for texture " + component.texture.id + " for component ID: " + componentId;
-        component.texture.length_s = this.reader.getFloat(children[index], 'length_s');
         
         if(this.reader.getFloat(children[index], 'length_s') == null)
             component.texture.length_s = 0;
