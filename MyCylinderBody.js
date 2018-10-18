@@ -15,7 +15,7 @@ class MyCylinderBody extends CGFobject
 		this.height = height;
 		this.base = base;
 		this.top = top;
-
+		this.repeat = false;
 		this.initBuffers();
 	};
 
@@ -104,48 +104,12 @@ class MyCylinderBody extends CGFobject
 			}
 
 		}
-
-	
-			/*
-			for(var j = 0 ; j < this.stacks; j++){
-				for (var i = 0; i < this.slices; i++) 
-				{
-						this.texCoords.push(0);
-						this.texCoords.push(i/this.slices);
-						
-						this.texCoords.push(i/this.slices);
-						this.texCoords.push(i/this.slices);
-						
-						this.texCoords.push(i/this.slices);
-						this.texCoords.push(0);
-
-						this.texCoords.push(i/this.slices);
-						this.texCoords.push(0);
-
-						this.texCoords.push(0);
-						this.texCoords.push(0);
-
-						this.texCoords.push(0);
-						this.texCoords.push(i/this.slices);
-						
-				}
-			}
 			
-			var s = 0;
-			var t = 0;
-		
-			for (var i = 0; i < this.slices; i++) {
-			  for (var j = 0; j <= this.stacks; j++) {
-				this.texCoords.push( t,s);
-				s = 1;
-			  }
-			  s = 0;
-			  t += 1 / this.slices;
-			}*/
-			
-			for(var i = 0; i < this.slices; i++)
-			{
+			for(var i = 0; i < this.slices; i++){
 				for(var j = 0; j <= this.stacks; j++)
+				if(this.repeat)	
+					this.texCoords.push(i/this.slices, j);
+				else
 					this.texCoords.push(i/this.slices, j/this.stacks);
 			}
 			

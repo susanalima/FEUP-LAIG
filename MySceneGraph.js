@@ -796,7 +796,7 @@ class MySceneGraph {
         appearance.setAmbient(material.ambient[0], material.ambient[1], material.ambient[2], material.ambient[3]);
         appearance.setDiffuse(material.diffuse[0], material.diffuse[1], material.diffuse[2], material.diffuse[3]);
         appearance.setSpecular(material.specular[0], material.specular[1], material.specular[2], material.specular[3]);
-        appearance.setTextureWrap('NONE', 'REPEAT');
+        appearance.setTextureWrap('REPEAT', 'REPEAT');
         return appearance;
     }
 
