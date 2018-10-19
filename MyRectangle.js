@@ -40,8 +40,8 @@ class MyRectangle extends CGFobject {
 
 		this.texCoords = [
 			0, 0,
-			0, 1,
 			1, 0,
+			0, 1,
 			1, 1,
 		];
 
@@ -54,10 +54,11 @@ class MyRectangle extends CGFobject {
 	updateTexCoordLength(length_s, length_t)
 	{
 		this.texCoords = [
-			0,0,
-			0, Math.abs(this.y1-this.y2)/length_t,
 			Math.abs(this.x1-this.x2)/length_s, 0,
+			0,0,
 			Math.abs(this.x1-this.x2)/length_s, Math.abs(this.y1-this.y2)/length_t,
+			0, Math.abs(this.y1-this.y2)/length_t,
+			
 		]
 
 		this.primitiveType = this.scene.gl.TRIANGLES;

@@ -1816,10 +1816,12 @@ class MySceneGraph {
         let text = textures[textures.length - 1];
         let mat = materials[materials.length - 1];
         let m = this.materials[mat[currentMaterialIndex]];
-        prim.updateTexCoordLength(text.length_s,text.length_t);
         m.apply();
-        if (!none_texture)
+        if (!none_texture){
+                    prim.updateTexCoordLength(text.length_s,text.length_t);
             this.textures[text.id].bind();
+
+        }
         
         prim.display();
         this.scene.popMatrix();
