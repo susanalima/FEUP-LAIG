@@ -29,7 +29,7 @@ class MyTriangle extends CGFobject
 			this.x1,this.y1,this.z1,
 			this.x2,this.y2,this.z2,
 			this.x3,this.y3,this.z3,
-			];
+		];
 
 		this.indices = [
 			0,1,2,
@@ -61,5 +61,11 @@ class MyTriangle extends CGFobject
 			
 		this.primitiveType=this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
+	};
+
+	//TODO
+	updateTexCoordLength(length_s, length_t)
+	{
+		return true;
 	};
 };

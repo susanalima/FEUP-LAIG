@@ -1219,14 +1219,14 @@ class MySceneGraph {
         if (!this.isTexture(component.texture.id))
             return "invalid id defined for texture " + component.texture.id + " for component ID: " + componentId;
             
-        component.texture.length_s = this.reader.getFloat(children[index], 'length_s',false);
+        component.texture.length_s = this.reader.getFloat(children[index], 'length_s', false);
         if (!this.validateFloat(component.texture.length_s)){
             if(component.texture.id == "none" || component.texture.id == "inherit")
                 component.texture.length_s = 0;
             else
                 return "Unable to parse texture's lenght_s value for component ID: " + componentId;
         }
-        component.texture.length_t = this.reader.getFloat(children[index], 'length_t',false);
+        component.texture.length_t = this.reader.getFloat(children[index], 'length_t', false);
         if (!this.validateFloat(component.texture.length_t)){
             if(component.texture.id == "none" || component.texture.id == "inherit")
                 component.texture.length_t = 0;
@@ -1605,6 +1605,10 @@ class MySceneGraph {
             for (let i = 0; i < component.children.componentsRef.length; i++)
             {
                 let child = component.children.componentsRef[i];
+                for(let j = 0; j < component.children.primitivesRef; j++){
+                    let primChild = component.children.primitiveRef[j];
+                }
+
                 if(!this.isComponent(child))
                     return "invalid id defined for component children " + child + " for component ID: " + key;
             }
@@ -1809,8 +1813,12 @@ class MySceneGraph {
         let mat = materials[materials.length - 1];
         let m = this.materials[mat[currentMaterialIndex]];
         m.apply();
-        if (!none_texture)
+        if (!none_texture){
+                    prim.updateTexCoordLength(text.length_s,text.length_t);
             this.textures[text.id].bind();
+
+        }
+        
         prim.display();
         this.scene.popMatrix();
     }
