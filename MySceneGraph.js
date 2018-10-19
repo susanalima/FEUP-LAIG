@@ -212,6 +212,9 @@ class MySceneGraph {
         if (numViews == 0)
             return "at least one view must be defined";
 
+        error = this.validateViewsDefaultValue();
+        if (error != null)
+            return error;
         this.log("Parsed views");
         return null;
     }
@@ -1050,6 +1053,9 @@ class MySceneGraph {
         if (numComponents == 0)
             return "at least one component must be defined";
 
+        error = this.validateRootComponent();
+        if (error != null)
+            return error;
         error = this.validateComponentsChildren();
         if (error != null)
             return error;
@@ -1218,6 +1224,8 @@ class MySceneGraph {
             return "invalid id defined for texture " + component.texture.id + " for component ID: " + componentId;
             
         component.texture.length_s = this.reader.getFloat(children[index], 'length_s', false);
+        component.texture.length_s = this.reader.getFloat(children[index], 'length_s',false);
+>>>>>>> d946994ebc90c977fa162c27a9ba2038eede4803
         if (!this.validateFloat(component.texture.length_s)){
             if(component.texture.id == "none" || component.texture.id == "inherit")
                 component.texture.length_s = 0;
@@ -1225,6 +1233,7 @@ class MySceneGraph {
                 return "Unable to parse texture's lenght_s value for component ID: " + componentId;
         }
         component.texture.length_t = this.reader.getFloat(children[index], 'length_t', false);
+        component.texture.length_t = this.reader.getFloat(children[index], 'length_t',false);
         if (!this.validateFloat(component.texture.length_t)){
             if(component.texture.id == "none" || component.texture.id == "inherit")
                 component.texture.length_t = 0;
@@ -1579,6 +1588,20 @@ class MySceneGraph {
     isPrimitive(id)
     {
         return (this.primitives[id] != null);
+    }
+
+    validateViewsDefaultValue()
+    {
+        if(this.views.views[this.views.default] == null)
+            return "invalid default value for views :  " + this.views.default;  
+        return null;
+    }
+
+    validateRootComponent()
+    {
+        if (this.components[this.root] == null)
+            return "invalid root component ID " + this.root;
+        return null;
     }
 
     validateComponentsChildren()
