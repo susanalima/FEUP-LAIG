@@ -1224,8 +1224,6 @@ class MySceneGraph {
             return "invalid id defined for texture " + component.texture.id + " for component ID: " + componentId;
             
         component.texture.length_s = this.reader.getFloat(children[index], 'length_s', false);
-        component.texture.length_s = this.reader.getFloat(children[index], 'length_s',false);
->>>>>>> d946994ebc90c977fa162c27a9ba2038eede4803
         if (!this.validateFloat(component.texture.length_s)){
             if(component.texture.id == "none" || component.texture.id == "inherit")
                 component.texture.length_s = 0;
@@ -1233,7 +1231,6 @@ class MySceneGraph {
                 return "Unable to parse texture's lenght_s value for component ID: " + componentId;
         }
         component.texture.length_t = this.reader.getFloat(children[index], 'length_t', false);
-        component.texture.length_t = this.reader.getFloat(children[index], 'length_t',false);
         if (!this.validateFloat(component.texture.length_t)){
             if(component.texture.id == "none" || component.texture.id == "inherit")
                 component.texture.length_t = 0;
