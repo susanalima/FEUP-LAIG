@@ -60,10 +60,13 @@
         <texture id="floor" file="./scenes/images/floor_wood.jpg" />
         <texture id="wall" file="./scenes/images/wall.jpg" />
         <texture id="metal" file="./scenes/images/metal.png" />
-		<texture id="lego_face" file="./scenes/images/lego_face2.png" />
+		<texture id="lego_face" file="./scenes/images/lego_face4.png" />
 		<texture id="yellow" file="./scenes/images/yellow.png" />
 		<texture id="blue" file="./scenes/images/blue.png" />
 		<texture id="red" file="./scenes/images/red.png" />
+		<texture id="tree_top" file="./scenes/images/tree_top.png" />
+		<texture id="zebra" file="./scenes/images/zebra.jpg" />
+		<texture id="vase" file="./scenes/images/vase.jpg" />	
     </textures>
   <materials>
     <!--material do tampo-->
@@ -242,6 +245,10 @@
 		<torus inner="0.08" outer="0.16" slices="20" loops="20" />
 	</primitive >
 
+	<primitive id="lego_hand">
+		<sphere radius="0.15" slices="60" stacks="60" />
+    </primitive >
+
  </primitives >
 
 
@@ -277,11 +284,8 @@
 			<componentref id="puff2"/>
 			<componentref id="triangle_board1"/>
 			<componentref id="triangle_board2"/>
-			<componentref id="lego_leg"/>
-			<componentref id="lego_body"/>
-			<componentref id="lego_neck"/>
-			<componentref id="lego_head"/>
-			<componentref id="lego_hair"/>
+			<componentref id="lego_dude"/>
+			
 		</children>
 
  	</component>
@@ -669,7 +673,7 @@
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="metal" length_s="2" length_t="1"/>
+		<texture id="tree_top" length_s="2" length_t="1"/>
 		<children>
 			<componentref id="tree_top1" />
 			<componentref id="tree_top2" />
@@ -687,7 +691,7 @@
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="metal" length_s="2" length_t="1"/>
+		<texture id="table" length_s="2" length_t="1"/>
 		<children>
 			<primitiveref id="tree_bottom"/>
 		</children>
@@ -701,7 +705,7 @@
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="metal" length_s="2" length_t="1"/>
+		<texture id="vase" length_s="2" length_t="1"/>
 		<children>
 			<primitiveref id="tree_vase"/>
 		</children>
@@ -715,7 +719,7 @@
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="metal" length_s="2" length_t="1"/>
+		<texture id="zebra" length_s="2" length_t="1"/>
 		<children>
 			<primitiveref id="puff"/>
 		</children>
@@ -728,7 +732,7 @@
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="metal" length_s="2" length_t="1"/>
+		<texture id="zebra" length_s="2" length_t="1"/>
 		<children>
 			<componentref id="puff1"/>
 		</children>
@@ -799,7 +803,7 @@
 
 	 <component id="lego_body">
 	 	<transformation>
-		 <scale x='0.6' y='1.2' z='1.05'/>
+		 <scale x='0.6' y='1.23' z='1.05'/>
 		 <translate x='0' y='1.2' z='0.5'/>
 		</transformation>
 		<materials>
@@ -813,7 +817,7 @@
 
 	  <component id="lego_neck">
 	 	<transformation>
-		<translate x='0.3' y='2.6' z='0'/>
+		<translate x='0.3' y='2.65' z='0'/>
 		 <rotate axis='x' angle='-90'/>
 		</transformation>
 		<materials>
@@ -827,7 +831,7 @@
 
 	 <component id="lego_head">
 	 	<transformation>
-		<translate x='0.3' y='3.4' z='0'/>
+		<translate x='0.3' y='3.45' z='0'/>
 		 <rotate axis='x' angle='90'/>
 		</transformation>
 		<materials>
@@ -839,9 +843,9 @@
 		</children>
 	 </component>
 
-	 	 <component id="lego_hair">
+		<component id="lego_hair">
 	 	<transformation>
-		<translate x='0.3' y='3.5' z='0'/>
+		<translate x='0.3' y='3.55' z='0'/>
 		 <rotate axis='x' angle='-90'/>
 		  <scale x='1' y='1' z='1.55'/>
 		</transformation>
@@ -851,6 +855,82 @@
 		<texture id="yellow" length_s="2" length_t="1"/>
 		<children>
 			<primitiveref id="lego_hair"/>;
+		</children>
+	 </component>
+
+	 <component id="lego_arm1">
+	 	<transformation>
+		<scale x='0.3' y='0.8' z='0.3'/>
+		<translate x='0.5' y='2.3' z='-1.6'/>
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="red" length_s="2" length_t="1"/>
+		<children>
+			<componentref id="cube"/>;
+		</children>
+	 </component>
+
+	  <component id="lego_arm2">
+	 	<transformation>
+		
+		<translate x='0' y='0' z='1.3'/>
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="red" length_s="2" length_t="1"/>
+		<children>
+			<componentref id="lego_arm1"/>;
+		</children>
+	 </component>
+
+	 <component id="lego_hand1">
+	 	<transformation>
+			<translate x='0.3' y='1.7' z='-0.65'/>
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="yellow" length_s="2" length_t="1"/>
+		<children>
+			<primitiveref id="lego_hand"/>;
+		</children>
+	 </component>
+
+	  <component id="lego_hand2">
+	 	<transformation>
+			<translate x='0' y='0' z='1.3'/>
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="yellow" length_s="2" length_t="1"/>
+		<children>
+			<componentref id="lego_hand1"/>;
+		</children>
+	 </component>
+
+	 <component id="lego_dude">
+	 <transformation>
+		<translate x='8' y='0' z='0'/>
+		<rotate axis='y' angle='90'/>
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="none" />
+		<children>
+			<componentref id="lego_leg"/>
+			<componentref id="lego_body"/>
+			<componentref id="lego_neck"/>
+			<componentref id="lego_head"/>
+			<componentref id="lego_hair"/>
+			<componentref id="lego_arm1"/>
+			<componentref id="lego_arm2"/>
+			<componentref id="lego_hand1"/>
+			<componentref id="lego_hand2"/>
 		</children>
 	 </component>
 
