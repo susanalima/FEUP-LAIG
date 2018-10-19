@@ -60,6 +60,10 @@
         <texture id="floor" file="./scenes/images/floor_wood.jpg" />
         <texture id="wall" file="./scenes/images/wall.jpg" />
         <texture id="metal" file="./scenes/images/metal.png" />
+		<texture id="lego_face" file="./scenes/images/lego_face2.png" />
+		<texture id="yellow" file="./scenes/images/yellow.png" />
+		<texture id="blue" file="./scenes/images/blue.png" />
+		<texture id="red" file="./scenes/images/red.png" />
     </textures>
   <materials>
     <!--material do tampo-->
@@ -227,7 +231,7 @@
 
 
 	<primitive id="lego_head">
-		<cylinder base="0.45" top="0.45" height="0.65" slices="20" stacks="5" />
+		<cylinder base="0.45" top="0.45" height="0.65" slices="20" stacks="1" />
     </primitive >
 
 	<primitive id="lego_neck">
@@ -235,7 +239,7 @@
     </primitive >
 
 	<primitive id="lego_hair">
-		<torus inner="0.1" outer="0.1" slices="20" loops="20" />
+		<torus inner="0.08" outer="0.16" slices="20" loops="20" />
 	</primitive >
 
  </primitives >
@@ -786,7 +790,7 @@
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="floor" length_s="2" length_t="1"/>
+		<texture id="blue" length_s="2" length_t="1"/>
 		<children>
 			<componentref id="lego_leg1"/>;
 			<componentref id="lego_leg2"/>;
@@ -801,7 +805,7 @@
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="floor" length_s="2" length_t="1"/>
+		<texture id="red" length_s="2" length_t="1"/>
 		<children>
 			<componentref id="cube"/>;
 		</children>
@@ -815,7 +819,7 @@
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="floor" length_s="2" length_t="1"/>
+		<texture id="yellow" length_s="2" length_t="1"/>
 		<children>
 			<primitiveref id="lego_neck"/>;
 		</children>
@@ -823,13 +827,13 @@
 
 	 <component id="lego_head">
 	 	<transformation>
-		<translate x='0.3' y='2.8' z='0'/>
-		 <rotate axis='x' angle='-90'/>
+		<translate x='0.3' y='3.4' z='0'/>
+		 <rotate axis='x' angle='90'/>
 		</transformation>
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="floor" length_s="2" length_t="1"/>
+		<texture id="lego_face" length_s="2" length_t="1"/>
 		<children>
 			<primitiveref id="lego_head"/>;
 		</children>
@@ -837,13 +841,14 @@
 
 	 	 <component id="lego_hair">
 	 	<transformation>
-		<translate x='0.3' y='3' z='0'/>
+		<translate x='0.3' y='3.5' z='0'/>
 		 <rotate axis='x' angle='-90'/>
+		  <scale x='1' y='1' z='1.55'/>
 		</transformation>
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="floor" length_s="2" length_t="1"/>
+		<texture id="yellow" length_s="2" length_t="1"/>
 		<children>
 			<primitiveref id="lego_hair"/>;
 		</children>
