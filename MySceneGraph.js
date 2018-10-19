@@ -212,6 +212,9 @@ class MySceneGraph {
         if (numViews == 0)
             return "at least one view must be defined";
 
+        error = this.validateViewsDefaultValue();
+        if (error != null)
+            return error;
         this.log("Parsed views");
         return null;
     }
@@ -1050,6 +1053,9 @@ class MySceneGraph {
         if (numComponents == 0)
             return "at least one component must be defined";
 
+        error = this.validateRootComponent();
+        if (error != null)
+            return error;
         error = this.validateComponentsChildren();
         if (error != null)
             return error;
@@ -1579,6 +1585,20 @@ class MySceneGraph {
     isPrimitive(id)
     {
         return (this.primitives[id] != null);
+    }
+
+    validateViewsDefaultValue()
+    {
+        if(this.views.views[this.views.default] == null)
+            return "invalid default value for views :  " + this.views.default;  
+        return null;
+    }
+
+    validateRootComponent()
+    {
+        if (this.components[this.root] == null)
+            return "invalid root component ID " + this.root;
+        return null;
     }
 
     validateComponentsChildren()
