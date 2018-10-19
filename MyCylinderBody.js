@@ -125,4 +125,9 @@ class MyCylinderBody extends CGFobject
 			this.scene.rotate(-Math.PI/2,1,0,0);
 		};
 
+		updateTexCoordLength(length_s, length_t)
+		{
+			return true;
+		};
+
 };

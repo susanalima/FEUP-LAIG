@@ -109,4 +109,9 @@ class MyCylinderBase extends CGFobject{
 		this.initGLBuffers();
 	};
 
+	updateTexCoordLength(length_s, length_t)
+	{
+		return true;
+	};
+
 };

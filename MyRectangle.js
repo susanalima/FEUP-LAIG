@@ -6,7 +6,7 @@
 
 class MyRectangle extends CGFobject {
 
-	constructor(scene, x1, y1, x2, y2, length_s, length_t) {
+	constructor(scene, x1, y1, x2, y2) {
 		super(scene);
 		this.x1 = x1;
 		this.x2 = x2;
@@ -40,12 +40,25 @@ class MyRectangle extends CGFobject {
 
 		this.texCoords = [
 			0, 0,
-			0, Math.abs(this.y1-this.y2)/this.length_t,
-			Math.abs(this.x1 - this.x2)/this.length_s, 0,
-			Math.abs(this.x1 - this.x2)/this.length_s, Math.abs(this.y1-this.y2)/this.length_t,
+			0, 1,
+			1, 0,
+			1, 1,
 		];
 
 
+
+		this.primitiveType = this.scene.gl.TRIANGLES;
+		this.initGLBuffers();
+	};
+
+	updateTexCoordLength(length_s, length_t)
+	{
+		this.texCoords = [
+			0,0,
+			0, Math.abs(this.y1-this.y2)/length_t,
+			Math.abs(this.x1-this.x2)/length_s, 0,
+			Math.abs(this.x1-this.x2)/length_s, Math.abs(this.y1-this.y2)/length_t,
+		]
 
 		this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
