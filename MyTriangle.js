@@ -85,5 +85,10 @@ class MyTriangle extends CGFobject
 			0,v,
 			c/length_s,v
 		];
+
+		this.primitiveType = this.scene.gl.TRIANGLES;
+		this.initGLBuffers();
+
+		
 	};
 };
