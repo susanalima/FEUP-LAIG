@@ -1840,16 +1840,3 @@ class MySceneGraph {
 
 
 
-/**
- * TODO (nao por ordem)
- * fatores de textura
- * Ver se e preciso rodar a esfera (NAO SEI)
- * texturas do cilindro
- * verificar texturas do triangulo (ACHO QUE ESTAO BEM)
- * hereditariedade de texturas (ACHO QUE JA ESTA)
-
- * comentar e refactoring se houver tempo
- * criar outra cena
- * testar com as cenas do forum
- */
-
