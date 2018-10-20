@@ -74,8 +74,8 @@ class MyTriangle extends CGFobject
 		let c =  Math.sqrt(Math.pow((this.x3 - this.x2),2) + Math.pow((this.y3 - this.y2),2) + Math.pow((this.z3 - this.z2),2));
 		let cos_beta = (Math.pow(a,2) - Math.pow(b,2) + Math.pow(c,2))/(2*a*c);
 		let sin_beta = Math.sqrt(1 - Math.pow(cos_beta,2));
-		let p1 = c - a*cos_beta/length_s;
-		let p2 = length_t - a*sin_beta/length_t;
+		let p1 = (c - a*cos_beta)/length_s;
+		let p2 = (length_t - a*sin_beta)/length_t;
 
 		this.texCoords = [
 			p1,p2,
