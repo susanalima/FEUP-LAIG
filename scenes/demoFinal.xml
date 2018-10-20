@@ -65,11 +65,11 @@
 		<texture id="yellow" file="./scenes/images/yellow.png" />
 		<texture id="blue" file="./scenes/images/blue.png" />
 		<texture id="red" file="./scenes/images/red.png" />
-		<texture id="tree_top" file="./scenes/images/tree_top.png" />
+		<texture id="tree_top" file="./scenes/images/leaves2.jpg" />
 		<texture id="zebra" file="./scenes/images/zebra.jpg" />
 		<texture id="vase" file="./scenes/images/vase.jpg" />	
 		<texture id="superman" file="./scenes/images/superman.jpg" />	
-		<texture id="ironMan" file="./scenes/images/ironMan.jpg" />	
+		<texture id="ironMan" file="./scenes/images/iron_man2.jpg" />	
 		<texture id="pink" file="./scenes/images/pink.jpg" />	
 		<texture id="white" file="./scenes/images/white.png" />	
     </textures>
@@ -781,7 +781,7 @@
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="ironMan" length_s="5" length_t="5"/>
+		<texture id="ironMan" length_s="1" length_t="1"/>
 		<children>
 			<primitiveref id="ironMan_board"/>
 		</children>
