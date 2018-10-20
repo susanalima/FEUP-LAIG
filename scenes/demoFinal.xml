@@ -62,14 +62,14 @@
         <texture id="metal" file="./scenes/images/metal.png" />
 		<texture id="dude_lego_face" file="./scenes/images/lego_face4.png" />
 		<texture id="lady_lego_face" file="./scenes/images/lady_face2.png" />
-		<texture id="yellow" file="./scenes/images/yellow.png" />
+		<texture id="yellow" file="./scenes/images/yellow2.jpg" />
 		<texture id="blue" file="./scenes/images/blue.png" />
 		<texture id="red" file="./scenes/images/red.png" />
-		<texture id="tree_top" file="./scenes/images/tree_top.png" />
+		<texture id="tree_top" file="./scenes/images/leaves2.jpg" />
 		<texture id="zebra" file="./scenes/images/zebra.jpg" />
 		<texture id="vase" file="./scenes/images/vase.jpg" />	
 		<texture id="superman" file="./scenes/images/superman.jpg" />	
-		<texture id="ironMan" file="./scenes/images/ironMan.jpg" />	
+		<texture id="ironMan" file="./scenes/images/iron_man2.jpg" />	
 		<texture id="pink" file="./scenes/images/pink.jpg" />	
 		<texture id="white" file="./scenes/images/white.png" />	
     </textures>
