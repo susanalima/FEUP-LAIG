@@ -284,8 +284,6 @@ class MySceneGraph {
         if (error != null)
             return error;
 
-        //TODO CRIAR UMA DEFAULT
-
         this.views.views[perspectiveId] = this.createCameraPerspective(perspective);
 
         return null;
@@ -380,8 +378,6 @@ class MySceneGraph {
         this.parseAndValidateXYZvalues(grandChildren, toIndex, orthoId, "to", "ortho", ortho.toPosition);
         if (error != null)
             return error;
-
-        //TODO CRIAR UMA DEFAULT
 
         this.views.views[orthoId] = this.createCameraOrtho(ortho);
 
