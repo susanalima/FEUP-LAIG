@@ -335,7 +335,7 @@
  			<transformationref id="rightWall_transformation" />
 		</transformation>
 		<materials>
-			 <material id="mat4" />
+			 <material id="inherit" />
 		</materials>
 		<texture id="wall" length_s="18" length_t="11" />
 		<children>
@@ -350,7 +350,7 @@
 			<translate x='0' y='-11' z='0'/>
 		</transformation> 
 		<materials>
-			 <material id="mat4" />
+			 <material id="inherit" />
 		</materials>
 		<texture id="wall" length_s="18" length_t="11" />
 		<children>
@@ -364,7 +364,7 @@
 			<translate x='0' y='-11' z='-2'/>
 		</transformation> 
 		<materials>
-			 <material id="mat4" />
+			 <material id="inherit" />
 		</materials>
 		<texture id="wall" length_s="18" length_t="11" />
 		<children>
@@ -378,7 +378,7 @@
 		</transformation>
 		<materials>
 			 <material id="mat2" />
-			 <material id="inherit" />
+			
 			 <material id="mat4" />
 		</materials>
 		<texture id="inherit" />
@@ -392,9 +392,11 @@
  			<transformationref id="tf4" />
 		</transformation>
 		<materials>
-			 <material id="mat2" />
+			 	 <material id="mat2" />
+			 
+			 <material id="mat4" />
 		</materials>
-		<texture id="none" length_s="2" length_t="1" />
+		<texture id="inherit" />
 		<children>
 			<componentref id="table_leg1" />
 		</children>
@@ -405,9 +407,11 @@
  			<transformationref id="tf5" />
 		</transformation>
 		<materials>
-			 <material id="mat2" />
+				 <material id="mat2" />
+			
+			 <material id="mat4" />
 		</materials>
-		<texture id="metal" length_s="2" length_t="1" />
+        <texture id="inherit" />		
 		<children>
 			<componentref id="table_leg2" />
 		</children>
@@ -418,9 +422,11 @@
  			<transformationref id="tf6" />
 		</transformation>
 		<materials>
-			 <material id="mat2" />
+			 	 <material id="mat2" />
+			
+			 <material id="mat4" />
 		</materials>
-		<texture id="metal" length_s="2" length_t="1" />
+	<texture id="inherit" />
 		<children>
 			<componentref id="table_leg3" />
 		</children>

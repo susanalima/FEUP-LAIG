@@ -1065,7 +1065,7 @@ class MySceneGraph {
 
             materials: [],
             currentMaterialIndex: 0,
-
+            maxMaterialIndex:0,
             texture: {
                 id: "0",
                 length_s: 0,
@@ -1206,6 +1206,7 @@ class MySceneGraph {
                 this.onXMLMinorError("unknown tag <" + children[k].nodeName + ">");
 
         }
+        component.maxMaterialIndex = component.materials.length-1;
         return null;
     }
 
@@ -1753,9 +1754,6 @@ class MySceneGraph {
         var is_inherit = false;
         switch (node.materials[node.currentMaterialIndex]) {
             case INHERIT:
-                //se o length do array de materiais do filho for 1 fica com todos os materiais do pai
-                //se for maior que 1 fica no sitio do inherit com o material do currentMaterialIndex do pai
-                //IMPLEMENTAR (NAO FUNCIONA)
                 if (node.materials.length <= 1) {
                     materials.push(materials[materials.length - 1]);
                     is_inherit = true;
@@ -1775,7 +1773,7 @@ class MySceneGraph {
     }
 
 
-    visitNode(node, transformations, materials, textures, none_texture, parent_currentMaterialIndex = null) {
+    visitNode(node, transformations, materials, textures, none_texture,parent_currentMaterialIndex = null) {
 
 
         none_texture = this.pushTexture(node.texture, textures, none_texture);
@@ -1792,8 +1790,9 @@ class MySceneGraph {
             this.applyTransformationsPush(node.transformations.transformations);
         }
         for (let i = 0; i < node.children.primitivesRef.length; i++) {
-            if (is_inherit)
+            if (is_inherit){
                 var index = parent_currentMaterialIndex;
+            }
             else
                 index = node.currentMaterialIndex;
             this.visitLeaf(node.children.primitivesRef[i], materials, textures, index, none_texture);
@@ -1818,8 +1817,8 @@ class MySceneGraph {
         let m = this.materials[mat[currentMaterialIndex]];
         m.apply();
         if (!none_texture){
-            if(prim.constructor.name == "MyRectangle" || prim.constructor.name == "MyTriangle")
-                prim.updateTexCoordLength(text.length_s,text.length_t);
+  //          if(prim.constructor.name == "MyRectangle" || prim.constructor.name == "MyTriangle")
+   //             prim.updateTexCoordLength(text.length_s,text.length_t);
             this.textures[text.id].bind();
 
         }
@@ -1831,10 +1830,13 @@ class MySceneGraph {
     updateComponentsCurrentMaterialIndex() {
         for (let key in this.components) {
             let comp = this.components[key];
-            if (comp.currentMaterialIndex == (comp.materials.length - 1))
+            if (comp.currentMaterialIndex >= comp.maxMaterialIndex)
                 comp.currentMaterialIndex = 0;
             else
                 comp.currentMaterialIndex++;
+      /*          console.log(key);
+                console.log("current ", comp.currentMaterialIndex);
+                console.log("max ", comp.maxMaterialIndex);*/
         }
     }
 }
