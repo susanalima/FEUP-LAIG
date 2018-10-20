@@ -239,7 +239,7 @@
 		<materials>
 			 <material id="inherit" />
 		</materials>
-		<texture id="wall" length_s="2" length_t="1" />
+		<texture id="wall" length_s="11" length_t="11" />
 		<children>
 			<primitiveref id="rectangle" />
 		</children>
@@ -268,7 +268,7 @@
 		<materials>
 			 <material id="mat4" />
 		</materials>
-		<texture id="wall" length_s="2" length_t="1" />
+		<texture id="wall" length_s="11" length_t="11" />
 		<children>
 			<primitiveref id="rectangle" />
 		</children>

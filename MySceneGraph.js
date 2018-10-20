@@ -1818,7 +1818,8 @@ class MySceneGraph {
         let m = this.materials[mat[currentMaterialIndex]];
         m.apply();
         if (!none_texture){
-                    prim.updateTexCoordLength(text.length_s,text.length_t);
+            if(prim.class == MyRectangle || prim.class == MyTriangle)
+                prim.updateTexCoordLength(text.length_s,text.length_t);
             this.textures[text.id].bind();
 
         }
