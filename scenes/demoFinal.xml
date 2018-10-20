@@ -755,7 +755,7 @@
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="superman" length_s="2" length_t="2"/>
+		<texture id="superman" length_s="5" length_t="5"/>
 		<children>
 			<primitiveref id="triangle_board1"/>
 		</children>
@@ -781,7 +781,7 @@
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="ironMan" length_s="9" length_t="6"/>
+		<texture id="ironMan" length_s="4.5" length_t="6"/>
 		<children>
 			<primitiveref id="ironMan_board"/>
 		</children>
