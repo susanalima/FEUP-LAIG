@@ -46,7 +46,7 @@ class MyCylinderBody extends CGFobject
 
 		var delta = (this.base - this.top)/this.stacks;
 		
-		while(count < this.slices)
+		while(count <= this.slices)
 		{
 			v = 0;
 			x = Math.cos(newangle);
@@ -72,10 +72,10 @@ class MyCylinderBody extends CGFobject
 			count++;
 		}
 
-		for (var i = 0; i < this.slices*(this.stacks+1); i+=(this.stacks+1))
+		for (var i = 0; i <= this.slices*(this.stacks+1); i+=(this.stacks+1))
 		{
 
-			if(i == (this.slices-1)*(this.stacks+1))
+			if(i == (this.slices)*(this.stacks+1))
 			{
 				for(var j = 0; j < this.stacks; j++)
 				{
@@ -107,7 +107,7 @@ class MyCylinderBody extends CGFobject
 			
 		for(let i = 0; i <= this.slices; i++){
 			for(let j = 0; j <= this.stacks; j++){		
-				this.texCoords.push(i/this.slices, j/this.stacks);
+				this.texCoords.push(i/(this.slices), j/this.stacks);
 			}
 		}
 			
