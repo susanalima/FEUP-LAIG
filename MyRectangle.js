@@ -59,7 +59,8 @@ class MyRectangle extends CGFobject {
 			Math.abs(this.x1-this.x2)/length_s, Math.abs(this.y1-this.y2)/length_t,
 			0, Math.abs(this.y1-this.y2)/length_t,
 			
-		]
+		];
+		
 
 		this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
