@@ -1,20 +1,20 @@
 <yas>
 	<scene root="root" axis_length="5.0" />
 
-<views default="p1">  
-	<perspective id="p1" near="0.1" far="1000" angle="60">
-		 <from x="15.0" y="15.0" z="15.0" />
+<views default="room">  
+	<perspective id="room" near="0.1" far="1000" angle="40">
+		 <from x="30.0" y="30.0" z="30.0" />
 		 <to x="0.0" y="0.0" z="0.0" />
 	</perspective>
-	<perspective id="p2" near="0.1" far="1000" angle="30">
-		 <from x="15.0" y="10.0" z="100.0" />
-		 <to x="0.0" y="0.0" z="0.0" />
+	<perspective id="ironMan" near="0.1" far="1000" angle="10">
+		 <from x="100.0" y="20.0" z="10.0" />
+		 <to x="10.0" y="5.0" z="1.0" />
 	</perspective>
-	<perspective id="p3" near="0.1" far="1000" angle="30">
-		 <from x="15.0" y="100.0" z="10.0" />
-		 <to x="0.0" y="0.0" z="0.0" />
+	<perspective id="BatmanVsSupeMan" near="0.1" far="1000" angle="10">
+		  <from x="10.0" y="20.0" z="100.0" />
+		 <to x="10.0" y="5.0" z="1.0" />
 	</perspective>
-	<ortho id="o1" near="0.1" far="1000" left="-15" right="15" top="15" bottom="-15" >
+	<ortho id="ortho_room" near="0.1" far="1000" left="-15" right="30" top="15" bottom="-15" >
  		<from x="15.0" y="15.0" z="15.0" />
  		<to x="0.0" y="0.0" z="0.0" />
  	</ortho>
@@ -70,6 +70,7 @@
 		<texture id="vase" file="./scenes/images/vase.jpg" />	
 		<texture id="superman" file="./scenes/images/superman2.jpg" />	
 		<texture id="ironMan" file="./scenes/images/iron_man2.jpg" />	
+		<texture id="batman" file="./scenes/images/batman.jpg" />	
 		<texture id="pink" file="./scenes/images/pink.jpg" />	
 		<texture id="white" file="./scenes/images/white.png" />	
     </textures>
@@ -755,7 +756,7 @@
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="superman" length_s="5" length_t="5"/>
+		<texture id="superman" length_s="4" length_t="2"/>
 		<children>
 			<primitiveref id="triangle_board1"/>
 		</children>
@@ -767,7 +768,7 @@
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="superman" length_s="5" length_t="5"/>
+		<texture id="batman" length_s="4.5" length_t="2"/>
 		<children>
 			<primitiveref id="triangle_board2"/>
 		</children>
