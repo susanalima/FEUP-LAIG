@@ -1,5 +1,18 @@
+
+/**
+ * Class MyCilinder represents a cylinder is composed by three objects (2 MyCylinderBase and 1 MyCylinderBody)
+ */
 class MyCylinder extends CGFobject {
 
+	/**
+	 * 
+	 * @param {*} scene 
+	 * @param {*} slices 
+	 * @param {*} stacks 
+	 * @param {*} base 
+	 * @param {*} top 
+	 * @param {*} height 
+	 */
 	constructor(scene, slices, stacks, base, top, height) {
 		super(scene);
 
