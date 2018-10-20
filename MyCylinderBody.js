@@ -52,7 +52,7 @@ class MyCylinderBody extends CGFobject
 			x = Math.cos(newangle);
 			y = Math.sin(newangle);
 			
-			for(var i = 0; i <= this.stacks; i++)
+			for(let i = 0; i <= this.stacks; i++)
 			{
 				this.vertices.push(x * (this.base - (delta * i)));
 				this.vertices.push(y * (this.base - (delta * i)));
@@ -61,7 +61,7 @@ class MyCylinderBody extends CGFobject
 				v += 1/this.stacks;
 			}
 	
-			for(var i = 0; i <= this.stacks; i++)
+			for(let i = 0; i <= this.stacks; i++)
 			{
 				this.normals.push(x);
 				this.normals.push(y);
@@ -105,13 +105,11 @@ class MyCylinderBody extends CGFobject
 
 		}
 			
-			for(var i = 0; i < this.slices; i++){
-				for(var j = 0; j <= this.stacks; j++)
-				if(this.repeat)	
-					this.texCoords.push(i/this.slices, j);
-				else
-					this.texCoords.push(i/this.slices, j/this.stacks);
+		for(let i = 0; i <= this.slices; i++){
+			for(let j = 0; j <= this.stacks; j++){		
+				this.texCoords.push(i/this.slices, j/this.stacks);
 			}
+		}
 			
 		
 		 
