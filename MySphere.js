@@ -4,8 +4,18 @@
  * @constructor
  */
 
+ /**
+  * MySphere class is used to represent spheres
+  */
 class MySphere extends CGFobject
 {
+	/**
+	 * Class constructor for MySphere
+	 * @param {*} scene Scene where the object will be displayed
+	 * @param {*} slices Number of slices of the sphere
+	 * @param {*} stacks Number of stacks of the sphere
+	 * @param {*} radius The radius of the sphere
+	 */
 	constructor(scene, slices, stacks, radius)
 	{
 		super(scene);
@@ -16,7 +26,9 @@ class MySphere extends CGFobject
 		this.initBuffers();
 	};
 
-
+	/**
+	 * Function used to define the vertices, indices, normals and texture coordinates for the object
+	 */
 	initBuffers()
 	{
 		this.vertices = [
@@ -145,12 +157,9 @@ class MySphere extends CGFobject
 		this.initGLBuffers();
 	};
 
-	
-	updateTexCoordLength(length_s, length_t)
-	{
-		return true;
-	};
-
+	/**
+	 * Function used to display the sphere in member scene
+	 */
 	display()
 	{
 		this.scene.pushMatrix();
