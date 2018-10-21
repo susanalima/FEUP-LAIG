@@ -62,7 +62,7 @@
         <texture id="metal" file="./scenes/images/metal.png" />
 		<texture id="dude_lego_face" file="./scenes/images/lego_face4.png" />
 		<texture id="lady_lego_face" file="./scenes/images/lady_face2.png" />
-		<texture id="yellow" file="./scenes/images/yellow2.jpg" />
+		<texture id="yellow" file="./scenes/images/yellow2.png" />
 		<texture id="blue" file="./scenes/images/blue.png" />
 		<texture id="red" file="./scenes/images/red.png" />
 		<texture id="tree_top" file="./scenes/images/leaves2.jpg" />
