@@ -1364,28 +1364,59 @@ class MySceneGraph {
         return null;
     }
 
-
+    /**
+     * Creates a new rectangle
+     * @param {Object} rectangle Struct which contains the information needed to create the new rectangle
+     * @returns {Object} New rectangle
+     */
     createRectangle(rectangle) {
         return new MyRectangle(this.scene, rectangle.x1, rectangle.y1, rectangle.x2, rectangle.y2);
     }
 
+    /**
+     * Creates a new triangle
+     * @param {Object} triangle Struct which contains the information needed to create the new triangle
+     * @returns {Object} New triangle
+     */
     createTriangle(triangle) {
         return new MyTriangle(this.scene, triangle.x1, triangle.y1, triangle.z1, triangle.x2, triangle.y2, triangle.z2, triangle.x3, triangle.y3, triangle.z3);
     }
 
+    /**
+     * Creates a new sphere
+     * @param {Object} sphere Struct which contains the information needed to create the new sphere
+     * @returns {Object} New sphere
+     */
     createSphere(sphere) {
         return new MySphere(this.scene, sphere.slices, sphere.stacks, sphere.radius);
     }
 
+    /**
+     * Creates a new cylinder
+     * @param {Object} sphere Struct which contains the information needed to create the new cylinder
+     * @returns {Object} New cylinder
+     */
     createCylinder(cylinder) {
         return new MyCylinder(this.scene, cylinder.slices, cylinder.stacks, cylinder.base, cylinder.top, cylinder.height); //TODO
     }
 
+    /**
+     * Creates a new torus
+     * @param {Object} torus Struct which contains the information needed to create the new torus
+     * @returns {Object} New torus
+     */
     createTorus(torus) {
         return new MyTorus(this.scene, torus.inner, torus.outer, torus.slices, torus.loops);
     }
 
-
+ 
+    /**
+     * Parses grandchild of the <primitives> node of type torus
+     * @param {Object} children GrandChildren of the <primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null or string containig an appropriate error message
+     */
     parseTorus(children, index, id) {
         var torus = {
             inner: null,
@@ -1413,6 +1444,13 @@ class MySceneGraph {
         return null;
     }
 
+    /**
+     * Parses grandchild of the <primitives> node of type sphere
+     * @param {Object} children GrandChildren of the <primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null or string containig an appropriate error message
+     */
     parseSphere(children, index, id) {
         var sphere = {
             radius: null,
@@ -1435,6 +1473,13 @@ class MySceneGraph {
         return null;
     }
 
+    /**
+     * Parses grandchild of the <primitives> node of type cylinder
+     * @param {Object} children GrandChildren of the <primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null or string containig an appropriate error message
+     */
     parseCylinder(children, index, id) {
         var cylinder = {
             base: null,
@@ -1467,7 +1512,13 @@ class MySceneGraph {
         return null;
     }
 
-
+    /**
+     * Parses grandchild of the <primitives> node of type rectangle
+     * @param {Object} children GrandChildren of the <primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null or string containig an appropriate error message
+     */
     parseRectangle(children, index, id) {
         var rectangle = {
             x1: null,
@@ -1496,6 +1547,13 @@ class MySceneGraph {
 
     }
 
+    /**
+     * Parses grandchild of the <primitives> node of type triangle
+     * @param {Object} children GrandChildren of the <primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null or string containig an appropriate error message
+     */
     parseTriangle(children, index, id) {
         var triangle = {
             x1: null,
@@ -1545,6 +1603,15 @@ class MySceneGraph {
         return null;
     }
 
+    /**
+     * Parses the x,y and z values of a given array
+     * @param {Object} vector Array containing the values to be parsed
+     * @param {Object} x1 x value
+     * @param {Object} y1 y value
+     * @param {Object} z1 z value
+     * @param {Object} index The vector's index
+     * @returns {Object} Array containing the parsed values
+     */
     parsePointXYZ(vector, x1, y1, z1, index) {
         var x = this.reader.getFloat(vector[index], x1);
         var y = this.reader.getFloat(vector[index], y1);
@@ -1552,6 +1619,17 @@ class MySceneGraph {
         return { x, y, z };
     }
 
+    
+    /**
+     * Parses the x,y,z and w values of a given array
+     * @param {Object} vector Array containing the values to be parsed
+     * @param {Object} x1 x value
+     * @param {Object} y1 y value
+     * @param {Object} z1 z value
+     * @param {Object} w1 w value
+     * @param {Object} index The vector's index
+     * @returns {Object} Array containing the parsed values
+     */
     parsePointXYZW(vector, x1, y1, z1, w1, index) {
         var x = this.reader.getFloat(vector[index], x1);
         var y = this.reader.getFloat(vector[index], y1);
@@ -1560,12 +1638,28 @@ class MySceneGraph {
         return { x, y, z, w };
     }
 
+    /**
+     * Parses the r,g,b and a values of a given array
+     * @param {Object} vector Array containing the values to be parsed
+     * @param {Object} index The vector's index
+     * @returns {Object} Array containing the parsed values
+     */
     parsePointRGBA(vector, index) {
         var { x, y, z, w } = this.parsePointXYZW(vector, 'r', 'g', 'b', 'a', index);
         return { x, y, z, w };
 
     }
 
+    /**
+     * Parses and validates the r,g,b and a values of a given array
+     * @param {Object} children Array containing the values to be parsed
+     * @param {Object} index The children's index
+     * @param {Object} id Id of the structured from where the values parsed will be apart of
+     * @param {Object} s1 informative string
+     * @param {Object} s2 informative string
+     * @param {Object} vector Array containing the parsed and validated values
+     * @returns {Object} null or string containig an appropriate error message
+     */
     parseAndValidateRGBAvalues(children, index, id, s1, s2, vector) {
 
         var { x, y, z, w } = this.parsePointRGBA(children, index);
@@ -1590,7 +1684,16 @@ class MySceneGraph {
     }
 
 
-
+    /**
+     * Parses and validates the x,y and z values of a given array
+     * @param {Object} children Array containing the values to be parsed
+     * @param {Object} index The children's index
+     * @param {Object} id Id of the structured from where the values parsed will be apart of
+     * @param {Object} s1 informative string
+     * @param {Object} s2 informative string
+     * @param {Object} vector Array containing the parsed and validated values
+     * @returns {Object} null or string containig an appropriate error message
+     */
     parseAndValidateXYZvalues(children, index, id, s1, s2, vector) {
         var { x, y, z } = this.parsePointXYZ(children, 'x', 'y', 'z', index);
         if (!this.validateFloat(x))
@@ -1603,7 +1706,16 @@ class MySceneGraph {
         return null;
     }
 
-
+   /**
+     * Parses and validates the x,y,z and w values of a given array
+     * @param {Object} children Array containing the values to be parsed
+     * @param {Object} index The children's index
+     * @param {Object} id Id of the structured from where the values parsed will be apart of
+     * @param {Object} s1 informative string
+     * @param {Object} s2 informative string
+     * @param {Object} vector Array containing the parsed and validated values
+     * @returns {Object} null or string containig an appropriate error message
+     */
     parseAndValidateXYZWvalues(children, index, id, s1, s2, vector) {
         var { x, y, z, w } = this.parsePointXYZW(children, 'x', 'y', 'z', 'w', index);
         if (!this.validateFloat(x))
@@ -1618,7 +1730,11 @@ class MySceneGraph {
         return null;
     }
 
-
+    /**
+     * Checks if a given value is a number
+     * @param {Object} float Value to check
+     * @returns {Object} standard true or false
+     */
     validateFloat(float) {
         if (!(float != null && !isNaN(float)))
             return false;
@@ -1626,11 +1742,20 @@ class MySceneGraph {
             return true;
     }
 
+    /**
+     * Checks if a given value is a string
+     * @param {Object} string Value to check
+     * @returns {Object} standard true or false
+     */
     validateString(string) {
         return (typeof string === 'string' && string != null);
     }
 
-
+    /**
+     * Validates a given value representative of an axis
+     * @param {Object} axis Value to check
+     * @returns {Object} standard true or false
+     */
     validateAxis(axis) {
         switch (axis) {
             case "x":
@@ -1645,6 +1770,11 @@ class MySceneGraph {
         }
     }
 
+    /**
+     * Validates if the passed id corresponds to an existing material in the materials array or to an INHERIT material
+     * @param {Object} id The id from the material to be validated
+     * @returns {Object} standard true or false
+     */
     isMaterial(id)
     {
         switch(id){
@@ -1655,6 +1785,11 @@ class MySceneGraph {
         }
     }
 
+    /**
+     * Validates if the passed id corresponds to an existing texture in the textures array or to an INHERIT or NONE texture
+     * @param {Object} id The id from the texture to be validated
+     * @returns {Object} standard true or false
+     */
     isTexture(id)
     {
         switch(id){
@@ -1667,22 +1802,40 @@ class MySceneGraph {
     }
 
     
-
+     /**
+     * Validates if the passed id corresponds to an existing component in the components array  
+     * @param {Object} id The id from the component to be validated
+     * @returns {Object} standard true or false
+     */
     isComponent(id)
     {
         return (this.components[id] != null);
     }
 
+     /**
+     * Validates if the passed id corresponds to an existing transformation in the transformations array  
+     * @param {Object} id The id from the transformation to be validated
+     * @returns {Object} standard true or false
+     */
     isTransformation(id)
     {
         return(this.transformations[id]!=null);
     }
 
+    /**
+     * Validates if the passed id corresponds to an existing primitive in the primitives array  
+     * @param {Object} id The id from the primitive to be validated
+     * @returns {Object} standard true or false
+     */
     isPrimitive(id)
     {
         return (this.primitives[id] != null);
     }
 
+    /**
+     * Validates if the default value for the views is an existing view
+     * @returns {Object} null or string containig an appropriate error message
+     */
     validateViewsDefaultValue()
     {
         if(this.views.views[this.views.default] == null)
@@ -1690,6 +1843,10 @@ class MySceneGraph {
         return null;
     }
 
+    /**
+     * Validates if the root value is an existing component
+     * @returns {Object} null or string containig an appropriate error message
+     */
     validateRootComponent()
     {
         if (this.components[this.root] == null)
@@ -1697,6 +1854,10 @@ class MySceneGraph {
         return null;
     }
 
+    /**
+     * Validates the components componentRef children
+     * @returns {Object} null or string containig an appropriate error message
+     */
     validateComponentsChildren()
     {
         for(let key in this.components)
@@ -1705,10 +1866,6 @@ class MySceneGraph {
             for (let i = 0; i < component.children.componentsRef.length; i++)
             {
                 let child = component.children.componentsRef[i];
-                for(let j = 0; j < component.children.primitivesRef; j++){
-                    let primChild = component.children.primitiveRef[j];
-                }
-
                 if(!this.isComponent(child))
                     return "invalid id defined for component children " + child + " for component ID: " + key;
             }
@@ -1717,19 +1874,32 @@ class MySceneGraph {
     }
 
 
-
+    /**
+     * Checks if a value is in between two other values
+     * @param {Object} float Value to check
+     * @param {Object} lower Lower value
+     * @param {Object} upper Upper value
+     * @return standard true or false
+     */
     isInBetween(float, lower, upper) {
         return (float >= lower && float <= upper)
     }
 
+    /**
+     * Checks if a value is a number and if it is in between two other values
+     * @param {Object} float Value to check
+     * @param {Object} lower Lower value
+     * @param {Object} upper Upper value
+     * @returns standard true or false
+     */
     isFloatInBetween(float, lower, upper) {
         return (this.validateFloat(float) && this.isInBetween(float, lower, upper));
     }
 
 
-    /*
-    * Callback to be executed on any read error, showing an error on the console.
-    * @param {string} message
+    /**
+    * Callback to be executed on any read error, showing an error on the console
+    * @param {string} message 
     */
     onXMLError(message) {
         console.error("XML Loading Error: " + message);
@@ -1753,10 +1923,6 @@ class MySceneGraph {
         console.log("   " + message);
     }
 
-    applyTextureFactors()
-    {
-        
-    }
 
     /**
      * Displays the scene, processing each node, starting in the root node.
@@ -1770,18 +1936,30 @@ class MySceneGraph {
 
     }
 
+    /**
+     * Applies an array of transformations to the scene
+     * @param {Object} transformations Array containing the transformations to be applied
+     */
     applyTransformationsPush(transformations) {
         for (let i = 0; i < transformations.length; i++) {
             this.applyTransformation(transformations[i]);
         }
     }
 
+    /**
+     * Applies an array of transformations to the scene
+     * @param {Object} transformations Array containing the transformations to be applied
+     */
     applyTransformations(transformations) {
         for (var key in transformations) {
             this.applyTransformation(transformations[key]);
         }
     }
 
+    /**
+     * Applies the transformation given to the scene
+     * @param {Object} transformation Transformation to be applied
+     */
     applyTransformation(transformation) {
         switch (transformation.class) {
             case "translate":
@@ -1798,6 +1976,10 @@ class MySceneGraph {
                 break;
         }
     }
+    /**
+     * Applies a rotation to the scene with the given information
+     * @param {Object} rotate Structer containing the necessary information to apply a rotation to the scene
+     */
     applyRotate(rotate) {
         var angle = Math.PI / 180 * rotate.angle;
         switch (rotate.axis) {
@@ -1819,6 +2001,11 @@ class MySceneGraph {
         }
     }
 
+    /**
+     * 
+     * @param {*} texture 
+     * @param {*} textures 
+     */
     checkLengthInherit(texture,textures)
     {
         var tmp_t = textures[textures.length - 1];
@@ -1832,6 +2019,12 @@ class MySceneGraph {
             textures.push(tmp_t);
     }
 
+    /**
+     * 
+     * @param {*} texture 
+     * @param {*} textures 
+     * @param {*} none_texture 
+     */
     pushTexture(texture, textures, none_texture) {
         switch (texture.id) {
             case INHERIT:
@@ -1849,6 +2042,12 @@ class MySceneGraph {
         return false;
     }
 
+    /**
+     * 
+     * @param {*} materials 
+     * @param {*} node 
+     * @param {*} parent_currentMaterialIndex 
+     */
     pushMaterials(materials, node, parent_currentMaterialIndex) {
         var is_inherit = false;
         switch (node.materials[node.currentMaterialIndex]) {
@@ -1871,7 +2070,15 @@ class MySceneGraph {
         return is_inherit;
     }
 
-
+    /**
+     * 
+     * @param {*} node 
+     * @param {*} transformations 
+     * @param {*} materials 
+     * @param {*} textures 
+     * @param {*} none_texture 
+     * @param {*} parent_currentMaterialIndex 
+     */
     visitNode(node, transformations, materials, textures, none_texture,parent_currentMaterialIndex = null) {
 
 
@@ -1908,6 +2115,14 @@ class MySceneGraph {
         return null;
     }
 
+    /**
+     * 
+     * @param {*} leaf 
+     * @param {*} materials 
+     * @param {*} textures 
+     * @param {*} currentMaterialIndex 
+     * @param {*} none_texture 
+     */
     visitLeaf(leaf, materials, textures, currentMaterialIndex, none_texture = null) {
         let prim = this.primitives[leaf];
         this.scene.pushMatrix();
@@ -1926,6 +2141,9 @@ class MySceneGraph {
         this.scene.popMatrix();
     }
 
+    /**
+     * Updates all the components currentMaterialIndex
+     */
     updateComponentsCurrentMaterialIndex() {
         for (let key in this.components) {
             let comp = this.components[key];
