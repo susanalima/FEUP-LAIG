@@ -10,11 +10,11 @@ class MyTorus extends CGFobject {
 
 	/**
 	 * Class constructor for MyTorus
-	 * @param {*scene} scene Scene where the object will be displayed
-	 * @param {*inner} inner Inner radius, is the tube radius
-	 * @param {*outer} outer Outer radius, radius of the circular axis of the torus
-	 * @param {*slices} slices Number of slices of the torus
-	 * @param {*loops} loops Number of loops of the torus
+	 * @param {Object} scene Scene where the object will be displayed
+	 * @param {Object} inner Inner radius, is the tube radius
+	 * @param {Object} outer Outer radius, radius of the circular axis of the torus
+	 * @param {Object} slices Number of slices of the torus
+	 * @param {Object} loops Number of loops of the torus
 	 */
 	constructor(scene, inner, outer, slices, loops) {
 		super(scene);
