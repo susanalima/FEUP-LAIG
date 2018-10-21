@@ -26,7 +26,7 @@ class MyCylinderBase extends CGFobject{
 	};
 
 	/**
-	 * Function used to define the vertices, indices, normals and texture coordinates for the object.
+	 * Function used to define the vertices, indices, normals and texture coordinates for the object
 	 */
 	initBuffers()
 	{
