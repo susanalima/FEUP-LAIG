@@ -5,13 +5,13 @@
 class MyCylinder extends CGFobject {
 
 	/**
-	 * 
-	 * @param {*} scene 
-	 * @param {*} slices 
-	 * @param {*} stacks 
-	 * @param {*} base 
-	 * @param {*} top 
-	 * @param {*} height 
+	 * Constructs an object of clas MyCylinder
+	 * @param {*} scene Scene in which the cylinder is represented
+	 * @param {*} slices Number of slices the cylinder will have
+	 * @param {*} stacks Number of stacks the cylinder will have
+	 * @param {*} base The radius of the base circle
+	 * @param {*} top The radius of the top circle
+	 * @param {*} height The distance between the top and base circles
 	 */
 	constructor(scene, slices, stacks, base, top, height) {
 		super(scene);
@@ -24,6 +24,9 @@ class MyCylinder extends CGFobject {
 		this.initBuffers();
 	};
 
+	/**
+	 * Displays the cylinder in member scene
+	 */
 	display()
 	{
 		this.body.display();
@@ -36,12 +39,4 @@ class MyCylinder extends CGFobject {
 		this.base.display();
 		this.scene.popMatrix();
 	}
-
-	updateTexCoordLength(length_s, length_t)
-	{
-		return true;
-	};
-
-
-	
 };
