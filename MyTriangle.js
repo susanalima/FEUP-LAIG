@@ -4,8 +4,24 @@
  * @constructor
  */
 
+/**
+ * Class MyTriangle is used to represent triangles 
+ */
 class MyTriangle extends CGFobject
 {
+	/**
+	 * 
+	 * @param {scene} scene Scene where the object will be displayed
+	 * @param {*x1} x1 x coordinate for vertice 1
+	 * @param {*y1} y1 y coordinate for vertice 1
+	 * @param {*z1} z1 z coordinate for vertice 1
+	 * @param {*x2} x2 x coordinate for vertice 2
+	 * @param {*y2} y2 y coordinate for vertice 2
+	 * @param {*z2} z2 z coordinate for vertice 2
+	 * @param {*x3} x3 x coordinate for vertice 3
+	 * @param {*y3} y3 y coordinate for vertice 3
+	 * @param {*z3} z3 z coordinate for vertice 3
+	 */
 	constructor(scene,x1,y1,z1,x2,y2,z2,x3,y3,z3) 
 	{
 		super(scene);
@@ -30,6 +46,9 @@ class MyTriangle extends CGFobject
 		this.initBuffers();
 	};
 
+	/**
+	 * Function used to define the vertices, indices, normals and texture coordinates for the object
+	 */
 	initBuffers()
 	{
 		this.vertices = [
@@ -61,7 +80,11 @@ class MyTriangle extends CGFobject
 	};
 
 
-
+	/**
+	 * Function used to update the texture coordinates of the object in relation to the texture factors being applied
+	 * @param {*length_s} length_s Horizontal length of the texture
+	 * @param {*length_t} length_t Vertical length of the texture
+	 */
 	updateTexCoordLength(length_s, length_t)
 	{
 		
