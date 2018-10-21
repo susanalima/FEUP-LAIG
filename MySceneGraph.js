@@ -48,9 +48,7 @@ class MySceneGraph {
         this.reader.open('scenes/' + filename, this);
     }
 
-    /**
-     * Suzy
-     */
+    
     onXMLReady() {
         this.log("XML Loading finished.");
         var rootElement = this.reader.xmlDoc.documentElement;
@@ -138,12 +136,12 @@ class MySceneGraph {
     }
 
     /**Suzy
-     * Parses the index for the tag
+     * Parses the block specifie by the given information
      * @param {Object} parseIndex Expected index of the tag
-     * @param {Object} parseFunction 
+     * @param {Object} parseFunction Function called to parse the block
      * @param {Object} nodeNames Name of the node where the tag is being searched
-     * @param {Object} nodes 
-     * @param {Object} tag 
+     * @param {Object} nodes Nodes of the scene graph
+     * @param {Object} tag Block name
      * @returns {Object} Null or string containing appropriate error message
      */
     parseIndex(parseIndex, parseFunction, nodeNames, nodes, tag) {
@@ -1311,7 +1309,13 @@ class MySceneGraph {
     }
 
 
-
+    /**
+     * Parses the materials of a component
+     * @param {Object} children Children of the <component> node
+     * @param {Object} component Component being parsed
+     * @param {Object} componentId Id of the component being parsed
+     * @returns {Object} Null or string containing appropriate error message
+     */
     parseComponentMaterials(children, component, componentId) {
         for (let k = 0; k < children.length; k++) {
             let nodeName2 = children[k].nodeName;
@@ -1331,9 +1335,15 @@ class MySceneGraph {
         return null;
     }
 
-   
 
-
+    /**
+     * Parses the texture of a component
+     * @param {Object} children Children of the <component> node
+     * @param {Object} index Index of the child being parsed
+     * @param {Object} component Component being parsed
+     * @param {Object} componentId Id of the component being parsed
+     * @returns {Object} Null or string containing appropriate error message
+     */
     parseComponentTexture(children, index, component, componentId) {
         component.texture.id = this.reader.getString(children[index], 'id');
         if ((!this.validateString(component.texture.id)))
@@ -1359,7 +1369,13 @@ class MySceneGraph {
     }
 
   
-
+    /**
+     * Parses the children of a component(primitives and other components) 
+     * @param {Object} children Children of the component being parsed
+     * @param {Object} component Component being parsed
+     * @param {Object} componentId Id of the component being parsed
+     * @returns {Object} Null or string containing appropriate error message
+     */
     parseComponentChildren(children, component, componentId) {
         for (let k = 0; k < children.length; k++) {
             let nodeName2 = children[k].nodeName;
@@ -1856,7 +1872,7 @@ class MySceneGraph {
 
     /**
      * Validates if the default value for the views is an existing view
-     * @returns {Object} null or string containig an appropriate error message
+     * @returns {Object} null or string containing an appropriate error message
      */
     validateViewsDefaultValue()
     {
@@ -1867,7 +1883,7 @@ class MySceneGraph {
 
     /**
      * Validates if the root value is an existing component
-     * @returns {Object} null or string containig an appropriate error message
+     * @returns {Object} null or string containing an appropriate error message
      */
     validateRootComponent()
     {
@@ -1878,7 +1894,7 @@ class MySceneGraph {
 
     /**
      * Validates the components componentRef children
-     * @returns {Object} null or string containig an appropriate error message
+     * @returns {Object} null or string containing an appropriate error message
      */
     validateComponentsChildren()
     {
@@ -2024,9 +2040,9 @@ class MySceneGraph {
     }
 
     /**
-     * 
-     * @param {*} texture 
-     * @param {*} textures 
+     * Checks if a component should inherit the texture factors from its father-node
+     * @param {Object} texture Texture of the component
+     * @param {Object} textures All the textures parsed
      */
     checkLengthInherit(texture,textures)
     {
@@ -2042,10 +2058,11 @@ class MySceneGraph {
     }
 
     /**
-     * 
-     * @param {*} texture 
-     * @param {*} textures 
-     * @param {*} none_texture 
+     * Adds a texture to the texture array and updates its texture factors
+     * @param {*} texture Texture being added
+     * @param {*} textures All parsed textures
+     * @param {*} none_texture Flag to indicate if the component has texture 'none'(no texture)
+     * @returns true or false for successful or unsuccessful texture push
      */
     pushTexture(texture, textures, none_texture) {
         switch (texture.id) {
@@ -2065,10 +2082,11 @@ class MySceneGraph {
     }
 
     /**
-     * 
-     * @param {*} materials 
-     * @param {*} node 
-     * @param {*} parent_currentMaterialIndex 
+     * Pushes materials and corrects their attributes on inheritance
+     * @param {Object} materials All parsed materials
+     * @param {Object} node Node which contains the material
+     * @param {Object} parent_currentMaterialIndex Index of the current material being used by the parent node
+     * @returns true if the material was inherited false otherwise
      */
     pushMaterials(materials, node, parent_currentMaterialIndex) {
         var is_inherit = false;
@@ -2093,13 +2111,13 @@ class MySceneGraph {
     }
 
     /**
-     * 
-     * @param {*} node 
-     * @param {*} transformations 
-     * @param {*} materials 
-     * @param {*} textures 
-     * @param {*} none_texture 
-     * @param {*} parent_currentMaterialIndex 
+     * Visits the next node in the scene graph
+     * @param {Object} node Node being visited
+     * @param {Object} transformations Array with transformations from the node ancestors
+     * @param {Object} materials Array with materials from the node ancestors
+     * @param {Object} textures Array with textures from the node ancestors
+     * @param {Object} none_texture Flag to indicate if a node doesn't have a texture
+     * @param {Object} parent_currentMaterialIndex Index of the current material being used by the parent node
      */
     visitNode(node, transformations, materials, textures, none_texture,parent_currentMaterialIndex = null) {
 
@@ -2138,12 +2156,12 @@ class MySceneGraph {
     }
 
     /**
-     * 
-     * @param {*} leaf 
-     * @param {*} materials 
-     * @param {*} textures 
-     * @param {*} currentMaterialIndex 
-     * @param {*} none_texture 
+     * Visits a leaf node of the scene graph, represents a primitive
+     * @param {Object} leaf Node being visited
+     * @param {Object} materials Array with materials from the node ancestors
+     * @param {Object} textures Array with textures from the node ancestors
+     * @param {Object} currentMaterialIndex Index of the material being used by the content of the node
+     * @param {Object} none_texture Flag to indicate if a node doesn't have a texture
      */
     visitLeaf(leaf, materials, textures, currentMaterialIndex, none_texture = null) {
         let prim = this.primitives[leaf];
