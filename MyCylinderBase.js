@@ -1,5 +1,15 @@
+
+/**
+ * Class MyCylinderBase is used to represent the base of a cylinder
+ */
 class MyCylinderBase extends CGFobject{
 
+	/**
+	 * Constructor for class MyCylinderBase
+	 * @param {*} scene Scene in which the object will be represent
+	 * @param {*} slices The number of slices the base will have
+	 * @param {*} rad  The radius of the base
+	 */
 	constructor(scene, slices, rad) 
 	{
 		super(scene);
@@ -15,6 +25,9 @@ class MyCylinderBase extends CGFobject{
 		this.initBuffers();
 	};
 
+	/**
+	 * Function used to define th vertices, indices, normals and texture coordinates for the object.
+	 */
 	initBuffers()
 	{
 		this.vertices = [
@@ -107,11 +120,6 @@ class MyCylinderBase extends CGFobject{
 		this.primitiveType=this.scene.gl.TRIANGLES;
 		console.log(this.indices);
 		this.initGLBuffers();
-	};
-
-	updateTexCoordLength(length_s, length_t)
-	{
-		return true;
 	};
 
 };
