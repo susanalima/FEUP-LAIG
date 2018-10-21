@@ -68,7 +68,7 @@ class MySceneGraph {
 
     /**
     * Parses the XML file, processing each block.
-    * @param {XML root element} rootElement
+    * @param {*} rootElement XML root element
     */
     parseXMLFile(rootElement) {
         if (rootElement.nodeName != "yas")
@@ -133,6 +133,14 @@ class MySceneGraph {
             return error;
     }
 
+    /**
+     * Parses the index for the tag
+     * @param {*} parseIndex Expected index of the tag
+     * @param {*} parseFunction 
+     * @param {*} nodeNames Name of the node where th tag is being searched
+     * @param {*} nodes 
+     * @param {*} tag 
+     */
     parseIndex(parseIndex, parseFunction, nodeNames, nodes, tag) {
 
         var index;
@@ -152,7 +160,7 @@ class MySceneGraph {
 
     /**
     * Parses the <scene> block. 
-    * @param {scene block element} sceneNode
+    * @param {*} sceneNode scene block element
     */
     parseScene(sceneNode) {
         console.log("scenenode");
@@ -174,8 +182,8 @@ class MySceneGraph {
 
 
     /**
-    * Parses the <views> block. 
-    * @param {views block element} viewsNode
+    * Parses the <views> block 
+    * @param {*} viewsNode views block element
     */
     parseViews(viewsNode) {
         var children = viewsNode.children;
@@ -219,7 +227,11 @@ class MySceneGraph {
         return null;
     }
 
-
+    /**
+     * Parses one child of the <views> block of type perspective
+     * @param {*} children Children of the <views> block
+     * @param {*} index Index of the child being parsed
+     */
     parseViewsPerspective(children, index) {
         var grandChildren = [];
         var perspective = {
@@ -289,7 +301,11 @@ class MySceneGraph {
         return null;
     }
 
-    //TODO FALTA VALIDAR OS PARAMETROS
+    /**
+     * Parses one child of the <views> block of type ortho
+     * @param {*} children Children of the <views> block
+     * @param {*} index Index of the child being parsed
+     */
     parseViewsOrtho(children, index) {
         var grandChildren = [];
         var ortho = {
@@ -384,13 +400,19 @@ class MySceneGraph {
         return null;
     }
 
-
+    /**
+     * Creates a new camera of type perspective
+     * @param {*} perspective Struct which contain the information needed to generate the new perspective
+     */
     createCameraPerspective(perspective) {
         var camera = new CGFcamera(perspective.angle * Math.PI / 180, perspective.near, perspective.far, perspective.fromPosition, perspective.toPosition);
         return camera;
     }
 
-    //NAO SEI SE FUNCIONA
+    /**
+     * Creates a new camera of type ortho
+     * @param {*} ortho Struct which contain the information needed to generate the new ortho
+     */
     createCameraOrtho(ortho) {
         var up = [0, 1, 0];
         var camera = new CGFcameraOrtho(ortho.left, ortho.right, ortho.bottom, ortho.top, ortho.near, ortho.far, ortho.fromPosition, ortho.toPosition, up);
@@ -400,7 +422,7 @@ class MySceneGraph {
 
     /**
     * Parses the <ambient> block. 
-    * @param {ambient block element} ambientNode
+    * @param {*} ambientNode ambient block element
     */
     parseAmbient(ambientNode) {
         this.ambientAmbient = [];
@@ -461,7 +483,7 @@ class MySceneGraph {
 
     /**
     * Parses the <lights> node.
-    * @param {lights block element} lightsNode
+    * @param {*} lightsNode lights block element
     */
     parseLights(lightsNode) {
         var children = lightsNode.children;
@@ -499,7 +521,11 @@ class MySceneGraph {
     }
 
 
-
+    /**
+     * Parses child of the <lights> node of type omni
+     * @param {Object} children Children of the <lights> node
+     * @param {Object} index Index of the child being parsed
+     */
     parseLightsOmni(children, index) {
         var grandChildren = [];
         var error;
@@ -565,7 +591,11 @@ class MySceneGraph {
         return null;
     }
 
-
+     /**
+     * Parses child of the <lights> node of type spot
+     * @param {Object} children Children of the <lights> node
+     * @param {Object} index Index of the child being parsed
+     */
     parseLightsSpot(children, index) {
 
         var grandChildren = [];
@@ -655,7 +685,7 @@ class MySceneGraph {
 
     /**
      * Parses the <textures> node.
-     * @param {textures block element} texturesNode
+     * @param {Object} texturesNode textures block element
      */
     parseTextures(texturesNode) {
         var children = texturesNode.children;
