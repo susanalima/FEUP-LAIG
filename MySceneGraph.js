@@ -1200,7 +1200,7 @@ class MySceneGraph {
         for (var j = 0; j < grandChildren.length; j++) {
 
             var nodeName = grandChildren[j].nodeName;
-            var ggrandChildren = grandChildren[j].children; //g(rand)grandchildren
+            var ggrandChildren = grandChildren[j].children; 
             switch (nodeName) {
                 case "transformation":
                     error = this.parseComponentTransformations(ggrandChildren, component, componentId);
@@ -1230,7 +1230,14 @@ class MySceneGraph {
         this.components[componentId] = component;
         return null;
     }
-
+    
+    /**
+     * Parses the transformations of a component
+     * @param {Object} children Children of the <component> node
+     * @param {Object} component Component being parsed
+     * @param {Object} componentId The id of the component being parsed
+     * @returns {Object} Null or string containing appropriate error message
+     */
     parseComponentTransformations(children, component, componentId) {
         var error;
         for (let k = 0; k < children.length; k++) {
@@ -1249,7 +1256,14 @@ class MySceneGraph {
         return null;
     }
 
-
+    /**
+     * Parses the transformations of a component in the case they are reference to a previously defined transformation
+     * @param {Object} children Children of the <component> node
+     * @param {Object} index Index of the child being parsed
+     * @param {Object} component Component being parsed
+     * @param {Object} componentId The id of the component being parsed
+     * @returns {Object} Null or string containing appropriate error message
+     */
     parseComponentTransformationsTransformationRef(children,index,component,componentId)
     {
         let id = this.reader.getString(children[index], 'id');
@@ -1262,6 +1276,14 @@ class MySceneGraph {
         return null;
     }
 
+    /**
+     * Parses the transformations of a component based on their type
+     * @param {Object} nodeName Type of transformation
+     * @param {Object} children Children of the <component> node 
+     * @param {Object} index Index of the child being parsed
+     * @param {Object} component Component being parsed
+     * @returns {Object} Null or string containing appropriate error message
+     */
     parseComponentTransformationsTransformation(nodeName,children,index,component)
     {
         var error;
