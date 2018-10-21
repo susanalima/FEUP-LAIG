@@ -17,6 +17,7 @@ var DEFAULT_MATERIAL = 0;
 */
 class MySceneGraph {
     /**
+     * Class constructor for MySceneGraph
      * @constructor
      */
     constructor(filename, scene) {
@@ -47,7 +48,9 @@ class MySceneGraph {
         this.reader.open('scenes/' + filename, this);
     }
 
-
+    /**
+     * Suzy
+     */
     onXMLReady() {
         this.log("XML Loading finished.");
         var rootElement = this.reader.xmlDoc.documentElement;
@@ -68,7 +71,8 @@ class MySceneGraph {
 
     /**
     * Parses the XML file, processing each block.
-    * @param {*} rootElement XML root element
+    * @param {Object} rootElement XML root element
+    * @returns {Object} Null or string containing appropriate error message
     */
     parseXMLFile(rootElement) {
         if (rootElement.nodeName != "yas")
@@ -133,13 +137,14 @@ class MySceneGraph {
             return error;
     }
 
-    /**
+    /**Suzy
      * Parses the index for the tag
-     * @param {*} parseIndex Expected index of the tag
-     * @param {*} parseFunction 
-     * @param {*} nodeNames Name of the node where th tag is being searched
-     * @param {*} nodes 
-     * @param {*} tag 
+     * @param {Object} parseIndex Expected index of the tag
+     * @param {Object} parseFunction 
+     * @param {Object} nodeNames Name of the node where the tag is being searched
+     * @param {Object} nodes 
+     * @param {Object} tag 
+     * @returns {Object} Null or string containing appropriate error message
      */
     parseIndex(parseIndex, parseFunction, nodeNames, nodes, tag) {
 
@@ -160,7 +165,8 @@ class MySceneGraph {
 
     /**
     * Parses the <scene> block. 
-    * @param {*} sceneNode scene block element
+    * @param {Object} sceneNode scene block element
+    * @returns {Object} Null or string containing appropriate error message
     */
     parseScene(sceneNode) {
         console.log("scenenode");
@@ -183,7 +189,8 @@ class MySceneGraph {
 
     /**
     * Parses the <views> block 
-    * @param {*} viewsNode views block element
+    * @param {Object} viewsNode views block element
+    * @returns {Object} Null or string containing appropriate error message
     */
     parseViews(viewsNode) {
         var children = viewsNode.children;
@@ -229,8 +236,9 @@ class MySceneGraph {
 
     /**
      * Parses one child of the <views> block of type perspective
-     * @param {*} children Children of the <views> block
-     * @param {*} index Index of the child being parsed
+     * @param {Object} children Children of the <views> block
+     * @param {Object} index Index of the child being parsed
+     * @returns {Object} Null or string containing appropriate error message
      */
     parseViewsPerspective(children, index) {
         var grandChildren = [];
@@ -303,8 +311,9 @@ class MySceneGraph {
 
     /**
      * Parses one child of the <views> block of type ortho
-     * @param {*} children Children of the <views> block
-     * @param {*} index Index of the child being parsed
+     * @param {Object} children Children of the <views> block
+     * @param {Object} index Index of the child being parsed
+     * @returns {Object} Null or string containing appropriate error message
      */
     parseViewsOrtho(children, index) {
         var grandChildren = [];
@@ -402,7 +411,8 @@ class MySceneGraph {
 
     /**
      * Creates a new camera of type perspective
-     * @param {*} perspective Struct which contain the information needed to generate the new perspective
+     * @param {Object} perspective Struct which contain the information needed to generate the new perspective
+     * @returns A camera with the attributes of the given argument
      */
     createCameraPerspective(perspective) {
         var camera = new CGFcamera(perspective.angle * Math.PI / 180, perspective.near, perspective.far, perspective.fromPosition, perspective.toPosition);
@@ -411,7 +421,8 @@ class MySceneGraph {
 
     /**
      * Creates a new camera of type ortho
-     * @param {*} ortho Struct which contain the information needed to generate the new ortho
+     * @param {Object} ortho Struct which contain the information needed to generate the new ortho
+     * @returns A camera with the attributes of the given argument
      */
     createCameraOrtho(ortho) {
         var up = [0, 1, 0];
@@ -422,7 +433,8 @@ class MySceneGraph {
 
     /**
     * Parses the <ambient> block. 
-    * @param {*} ambientNode ambient block element
+    * @param {Object} ambientNode ambient block element
+    * @returns {Object} Null or string containing appropriate error message
     */
     parseAmbient(ambientNode) {
         this.ambientAmbient = [];
@@ -483,7 +495,8 @@ class MySceneGraph {
 
     /**
     * Parses the <lights> node.
-    * @param {*} lightsNode lights block element
+    * @param {Object} lightsNode lights block element
+    * @returns {Object} Null or string containing appropriate error message
     */
     parseLights(lightsNode) {
         var children = lightsNode.children;
@@ -525,6 +538,7 @@ class MySceneGraph {
      * Parses child of the <lights> node of type omni
      * @param {Object} children Children of the <lights> node
      * @param {Object} index Index of the child being parsed
+     * @returns {Object} Null or string containing appropriate error message
      */
     parseLightsOmni(children, index) {
         var grandChildren = [];
@@ -595,6 +609,7 @@ class MySceneGraph {
      * Parses child of the <lights> node of type spot
      * @param {Object} children Children of the <lights> node
      * @param {Object} index Index of the child being parsed
+     * @returns {Object} Null or string containing appropriate error message
      */
     parseLightsSpot(children, index) {
 
@@ -686,6 +701,7 @@ class MySceneGraph {
     /**
      * Parses the <textures> node.
      * @param {Object} texturesNode textures block element
+     * @returns {Object} Null or string containing appropriate error message
      */
     parseTextures(texturesNode) {
         var children = texturesNode.children;
@@ -711,9 +727,10 @@ class MySceneGraph {
     }
 
     /**
-     * 
-     * @param {*} children 
-     * @param {*} index 
+     * Sub function for parseTextures aids the parsing of textures by creating a CGFtexture with the characteristics of the parsed texture.
+     * @param {Object} children Elements of the texture block
+     * @param {Object} index Index of the element being parsed
+     * @returns {Object} Null or string containing appropriate error message
      */
     parseTexturesTexture(children, index) {
         //get the id of current texture
@@ -738,7 +755,8 @@ class MySceneGraph {
 
     /**
      * Parses the <materials> node.
-     * @param {materials block element} materialsNode
+     * @param {Object} materialsNode materials block element
+     * @returns {Object} Null or string containing appropriate error message
      */
     parseMaterials(materialsNode) {
         var children = materialsNode.children;
@@ -765,6 +783,12 @@ class MySceneGraph {
         return null;
     }
 
+    /**
+     * Sub function for parseMaterials aids the parsing of materials by creating a struct to store the contents of the parsed child of <materials>
+     * @param {Object} children Children of the <materials> block
+     * @param {Object} index Index of the child being parsed
+     * @returns {Object} Null or string containing appropriate error message
+     */
     parseMaterialsMaterial(children, index) {
         var material = {
             shininess: null,
@@ -828,7 +852,8 @@ class MySceneGraph {
 
     /**
      * Creates a new appearance with the information in the struct material received
-     * @param {*} material struct containig the necessary information to create a new appearance
+     * @param {Object} material Struct containing the necessary information to create a new appearance
+     * @returns {Object} An appearance with the characteristics of the argument given
      */
     createAppearance(material) {
         var appearance = new CGFappearance(this.scene);
@@ -843,7 +868,8 @@ class MySceneGraph {
 
     /**
      * Parses the <transformations> node.
-     * @param {transformations block element} transformationsNode
+     * @param {Object} transformationsNode Transformations block element
+     * @returns {Object} Null or string containing appropriate error message
      */
     parseTransformations(transformationsNode) {
         var children = transformationsNode.children;
@@ -870,6 +896,12 @@ class MySceneGraph {
         return null;
     }
 
+    /**
+     * Sub function for parseTransformations aids in parsing the textures by differentiating the given transformations by their type
+     * @param {Object} children Children of the <transformations> block 
+     * @param {Object} index Index of the child being parsed
+     * @returns {Object} Null or string containing appropriate error message
+     */
     parseTransformationsTransformation(children, index) {
         var grandChildren = [];
         var numT = 0;
@@ -920,7 +952,13 @@ class MySceneGraph {
         return null;
     }
 
-
+    /**
+     * Parses transformations of type scale
+     * @param {Object} children Children of the <transformation> block 
+     * @param {Object} index Index of the child being parsed
+     * @param {Object} vector Place where the stucts representing the transformations of type scale will be stored
+     * @returns {Object} Null or string containing appropriate error message
+     */
     parseTransformationScale(children, index, vector) {
         var scale = {
             class: 'scale',
@@ -943,6 +981,13 @@ class MySceneGraph {
         return null;
     }
 
+     /**
+     * Parses transformations of type rotate
+     * @param {Object} children Children of the <transformation> block 
+     * @param {Object} index Index of the child being parsed
+     * @param {Object} vector Place where the stucts representing the transformations of type rotate will be stored
+     * @returns {Object} Null or string containing appropriate error message
+     */
     parseTransformationRotate(children, index, vector) {
         var rotate = {
             class: 'rotate',
@@ -960,6 +1005,13 @@ class MySceneGraph {
         return null;
     }
 
+     /**
+     * Parses transformations of type translate
+     * @param {Object} children Children of the <transformation> block 
+     * @param {Object} index Index of the child being parsed
+     * @param {Object} vector Place where the stucts representing the transformations of type translate will be stored
+     * @returns {Object} Null or string containing appropriate error message
+     */
     parseTransformationTranslate(children, index, vector) {
         var translate = {
             class: 'translate',
@@ -984,7 +1036,8 @@ class MySceneGraph {
 
     /**
      * Parses the <primitives> node.
-     * @param {primitives block element} primitivesNode
+     * @param {Object} primitivesNode Primitives block element
+     * @returns {Object} Null or string containing appropriate error message
      */
     parsePrimitives(primitivesNode) {
 
@@ -1011,7 +1064,12 @@ class MySceneGraph {
         return null;
     }
 
-
+    /**
+     * Sub function for parsePrimitives aids in parsing the primitives by differentiating the given primitives by their type
+     * @param {Object} children Children of the <primitives> node
+     * @param {Object} index  Index of the child being parsed
+     * @returns {Object} Null or string containing appropriate error message
+     */
     parsePrimitivesPrimitive(children, index) {
         var grandChildren = [];
         var error;
@@ -1061,6 +1119,11 @@ class MySceneGraph {
         return null;
     }
 
+    /**
+     * Parses the <components> node
+     * @param {Object} componentsNode Components block element
+     * @returns {Object} Null or string containing appropriate error message
+     */
     parseComponents(componentsNode) {
         var children = componentsNode.children;
         this.components = [];
@@ -1089,6 +1152,12 @@ class MySceneGraph {
         return null;
     }
 
+    /**
+     * Sub function for parseComponents aids in parsing the components by parsing the different elements of a component
+     * @param {Object} children Children of the <components> block
+     * @param {Object} index Index of the child being parsed
+     * @returns {Object} Null or string containing appropriate error message
+     */
     parseComponentsComponent(children, index) {
         var error;
         var component = {
