@@ -7,11 +7,11 @@ class MyCylinder extends CGFobject {
 	/**
 	 * Constructs an object of clas MyCylinder
 	 * @param {*} scene Scene in which the cylinder is represented
-	 * @param {*} slices Number of slices the cylinder will have
+	 * @param {*} slices Number of slices the cylinder will have, in other words, the number of sides of the polygon.
 	 * @param {*} stacks Number of stacks the cylinder will have
-	 * @param {*} base The radius of the base circle
-	 * @param {*} top The radius of the top circle
-	 * @param {*} height The distance between the top and base circles
+	 * @param {*} base The radius of the base
+	 * @param {*} top The radius of the top
+	 * @param {*} height The distance between the top and base
 	 */
 	constructor(scene, slices, stacks, base, top, height) {
 		super(scene);

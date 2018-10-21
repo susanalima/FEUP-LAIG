@@ -1,14 +1,14 @@
 
 /**
- * Class MyCylinderBase is used to represent the base of a cylinder
+ * Class MyCylinderBase is used to represent the base or top of a cylinder
  */
 class MyCylinderBase extends CGFobject{
 
 	/**
 	 * Constructor for class MyCylinderBase
 	 * @param {*} scene Scene in which the object will be represent
-	 * @param {*} slices The number of slices the base will have
-	 * @param {*} rad  The radius of the base
+	 * @param {*} slices The number of slices the object will have, in other words, the number of sides of the polygon
+	 * @param {*} rad  The radius of the object
 	 */
 	constructor(scene, slices, rad) 
 	{
@@ -26,7 +26,7 @@ class MyCylinderBase extends CGFobject{
 	};
 
 	/**
-	 * Function used to define th vertices, indices, normals and texture coordinates for the object.
+	 * Function used to define the vertices, indices, normals and texture coordinates for the object.
 	 */
 	initBuffers()
 	{
