@@ -64,6 +64,10 @@ class MyInterface extends CGFinterface {
 		this.activeKeys={};
 	}
 
+    /**
+     * Processes the event of pressing a keyboard key
+     * @param {*} event the event received
+     */
 	processKeyDown(event) {
 		this.activeKeys[event.code]=true;
 	};
@@ -72,12 +76,19 @@ class MyInterface extends CGFinterface {
 		//this.activeKeys[event.code]=false;
     };
     
+     /**
+     * Processes the event of releasing a pressed keyboard key
+     * @param {*} event the event received
+     */
     releaseKeyUp(keyCode)
     {
         this.activeKeys[keyCode]=false;
     };
     
-
+    /**
+     * Function that checks if the key given as argument is being held down
+     * @param {*} keyCode Key code of the key beig checked
+     */
 	isKeyPressed(keyCode) {
         return this.activeKeys[keyCode] || false;  
     };
