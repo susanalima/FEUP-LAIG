@@ -3,8 +3,19 @@
  * @param gl {WebGLRenderingContext}
  * @constructor
  */
-
+/**
+  * MyTorus class is used to represent torus
+  */
 class MyTorus extends CGFobject {
+
+	/**
+	 * Class constructor for MyTorus
+	 * @param {Object} scene Scene where the object will be displayed
+	 * @param {Object} inner Inner radius, is the tube radius
+	 * @param {Object} outer Outer radius, radius of the circular axis of the torus
+	 * @param {Object} slices Number of slices of the torus
+	 * @param {Object} loops Number of loops of the torus
+	 */
 	constructor(scene, inner, outer, slices, loops) {
 		super(scene);
 
@@ -15,7 +26,9 @@ class MyTorus extends CGFobject {
 		this.initBuffers();
 	};
 
-
+	/**
+	 * Function used to define the vertices, indices, normals and texture coordinates for the object
+	 */
 	initBuffers() {
 		this.vertices = [
 		];
@@ -68,10 +81,4 @@ class MyTorus extends CGFobject {
 		this.initGLBuffers();
 	};
 	
-	updateTexCoordLength(length_s, length_t)
-	{
-		return true;
-	};
-
-
 };
