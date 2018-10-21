@@ -18,7 +18,14 @@ class MyTriangle extends CGFobject
 		this.z1 = z1;
 		this.z2 = z2;
 		this.z3 = z3;
-		
+
+		let a = Math.sqrt(Math.pow((this.x1 - this.x3),2) + Math.pow((this.y1 - this.y3),2) + Math.pow((this.z1 - this.z3),2));
+		let b =  Math.sqrt(Math.pow((this.x2 - this.x1),2) + Math.pow((this.y2 - this.y1),2) + Math.pow((this.z2 - this.z1),2));
+		this.c =  Math.sqrt(Math.pow((this.x3 - this.x2),2) + Math.pow((this.y3 - this.y2),2) + Math.pow((this.z3 - this.z2),2));
+		let cos_beta = (Math.pow(a,2) - Math.pow(b,2) + Math.pow(this.c,2))/(2*a*this.c);
+		let sin_beta = Math.sqrt(1 - Math.pow(cos_beta,2));
+		this.p1 = this.c - a*cos_beta;
+		this.p2 = 1 - a*sin_beta;
 		
 		this.initBuffers();
 	};
@@ -41,21 +48,11 @@ class MyTriangle extends CGFobject
 			0,0,1,
 		];
 
-		let v = 1;
-		
-
-		let a = Math.sqrt(Math.pow((this.x1 - this.x3),2) + Math.pow((this.y1 - this.y3),2) + Math.pow((this.z1 - this.z3),2));
-		let b =  Math.sqrt(Math.pow((this.x2 - this.x1),2) + Math.pow((this.y2 - this.y1),2) + Math.pow((this.z2 - this.z1),2));
-		let c =  Math.sqrt(Math.pow((this.x3 - this.x2),2) + Math.pow((this.y3 - this.y2),2) + Math.pow((this.z3 - this.z2),2));
-		let cos_beta = (Math.pow(a,2) - Math.pow(b,2) + Math.pow(c,2))/(2*a*c);
-		let sin_beta = Math.sqrt(1 - Math.pow(cos_beta,2));
-		let p1 = c - a*cos_beta;
-		let p2 = v - a*sin_beta;
-
+	
 		this.texCoords = [
-			p1,p2,
-			0,v,
-			c,v
+			this.p1,this.p2,
+			0,1,
+			this.c,1
 		];
 
 			
@@ -64,26 +61,22 @@ class MyTriangle extends CGFobject
 	};
 
 
-	//TODO
+
 	updateTexCoordLength(length_s, length_t)
 	{
-		let v = 1;
 		
-		let a = Math.sqrt(Math.pow((this.x1 - this.x3),2) + Math.pow((this.y1 - this.y3),2) + Math.pow((this.z1 - this.z3),2));
-		let b =  Math.sqrt(Math.pow((this.x2 - this.x1),2) + Math.pow((this.y2 - this.y1),2) + Math.pow((this.z2 - this.z1),2));
-		let c =  Math.sqrt(Math.pow((this.x3 - this.x2),2) + Math.pow((this.y3 - this.y2),2) + Math.pow((this.z3 - this.z2),2));
-		let cos_beta = (Math.pow(a,2) - Math.pow(b,2) + Math.pow(c,2))/(2*a*c);
-		let sin_beta = Math.sqrt(1 - Math.pow(cos_beta,2));
-		let p1 = (c - a*cos_beta)/length_s;
-		let p2 = (length_t - a*sin_beta)/length_t;
-
 		this.texCoords = [
-			p1,p2,
-			0,v,
-			c/length_s,v,
-			p1,p2,
-			0,v,
-			c/length_s,v
+			this.p1/length_s,(length_t -(1-this.p2))/length_t,
+			0,1,
+			this.c/length_s,1,
+			this.p1/length_s,(length_t -(1-this.p2))/length_t,
+			0,1,
+			this.c/length_s,1
 		];
+
+		this.primitiveType = this.scene.gl.TRIANGLES;
+		this.initGLBuffers();
+
+		
 	};
 };

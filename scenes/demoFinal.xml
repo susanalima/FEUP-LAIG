@@ -1,20 +1,20 @@
 <yas>
 	<scene root="root" axis_length="5.0" />
 
-<views default="p1">  
-	<perspective id="p1" near="0.1" far="1000" angle="60">
-		 <from x="15.0" y="15.0" z="15.0" />
+<views default="room">  
+	<perspective id="room" near="0.1" far="1000" angle="40">
+		 <from x="30.0" y="30.0" z="30.0" />
 		 <to x="0.0" y="0.0" z="0.0" />
 	</perspective>
-	<perspective id="p2" near="0.1" far="1000" angle="30">
-		 <from x="15.0" y="10.0" z="100.0" />
-		 <to x="0.0" y="0.0" z="0.0" />
+	<perspective id="ironMan" near="0.1" far="1000" angle="10">
+		 <from x="100.0" y="20.0" z="10.0" />
+		 <to x="10.0" y="5.0" z="1.0" />
 	</perspective>
-	<perspective id="p3" near="0.1" far="1000" angle="30">
-		 <from x="15.0" y="100.0" z="10.0" />
-		 <to x="0.0" y="0.0" z="0.0" />
+	<perspective id="BatmanVsSuperMan" near="0.1" far="1000" angle="10">
+		  <from x="10.0" y="20.0" z="100.0" />
+		 <to x="10.0" y="5.0" z="1.0" />
 	</perspective>
-	<ortho id="o1" near="0.1" far="1000" left="-15" right="15" top="15" bottom="-15" >
+	<ortho id="ortho_room" near="0.1" far="1000" left="-15" right="30" top="15" bottom="-15" >
  		<from x="15.0" y="15.0" z="15.0" />
  		<to x="0.0" y="0.0" z="0.0" />
  	</ortho>
@@ -27,27 +27,27 @@
 
  <lights>
 
-	<omni id="omni1" enabled="1" >                                                     	      
+	<omni id="table_light" enabled="1" >                                                     	      
         <location x="4" y="8" z="4" w="1.0" />       	   
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
         <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
         <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
     </omni>
-    <omni id="omni2" enabled="1" >                                                     	      
-        <location x="7" y="8" z="4" w="1.0" />       	   
+    <omni id="random_light" enabled="1" >                                                     	      
+        <location x="13" y="8" z="-4" w="1.0" />       	   
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
         <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
         <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
     </omni>
-    <spot id="sp1" enabled="1" angle="60" exponent="1">
-		 <location x="6.0" y="6.0" z="6.0" w="6.0" />
+    <spot id="puff_light" enabled="1" angle="60" exponent="1">
+		 <location x="13" y="8" z="4" w="6.0" />
 		 <target x="7.0" y="7.0" z="7.0" />
 		 <ambient r="0.1" g="0.3" b="0.4" a="0.4" />
 		 <diffuse r="0.3" g="0.2" b="0.5" a="0.8" />
 		 <specular r="0.4" g="0.7" b="0.8" a="1.0" />
  	</spot>
-	<spot id="sp2" enabled="0" angle="30" exponent="1">
-		<location x="5" y="5" z="5" w="0" />
+	<spot id="tree_light" enabled="0" angle="30" exponent="1">
+		<location x="4" y="8" z="-4" w="0" />
 		<target x="0" y="0" z="0" />
 		<ambient r="0" g="0" b="0" a="1" />
 		<diffuse r="0.7" g="0.7" b="0.7" a="1" />
@@ -70,6 +70,7 @@
 		<texture id="vase" file="./scenes/images/vase.jpg" />	
 		<texture id="superman" file="./scenes/images/superman2.jpg" />	
 		<texture id="ironMan" file="./scenes/images/iron_man2.jpg" />	
+		<texture id="batman" file="./scenes/images/batman.jpg" />	
 		<texture id="pink" file="./scenes/images/pink.jpg" />	
 		<texture id="white" file="./scenes/images/white.png" />	
     </textures>
@@ -270,7 +271,7 @@
 		<materials>
 			 <material id="mat2" />
 			 <material id="mat1" />
-			 <material id="mat2" />
+			 <material id="mat4" />
 		</materials>
 		<texture id="metal" length_s="2" length_t="1" />
 
@@ -334,7 +335,7 @@
  			<transformationref id="rightWall_transformation" />
 		</transformation>
 		<materials>
-			 <material id="mat4" />
+			 <material id="inherit" />
 		</materials>
 		<texture id="wall" length_s="18" length_t="11" />
 		<children>
@@ -349,7 +350,7 @@
 			<translate x='0' y='-11' z='0'/>
 		</transformation> 
 		<materials>
-			 <material id="mat4" />
+			 <material id="inherit" />
 		</materials>
 		<texture id="wall" length_s="18" length_t="11" />
 		<children>
@@ -363,7 +364,7 @@
 			<translate x='0' y='-11' z='-2'/>
 		</transformation> 
 		<materials>
-			 <material id="mat4" />
+			 <material id="inherit" />
 		</materials>
 		<texture id="wall" length_s="18" length_t="11" />
 		<children>
@@ -377,7 +378,7 @@
 		</transformation>
 		<materials>
 			 <material id="mat2" />
-			 <material id="inherit" />
+			
 			 <material id="mat4" />
 		</materials>
 		<texture id="inherit" />
@@ -391,9 +392,11 @@
  			<transformationref id="tf4" />
 		</transformation>
 		<materials>
-			 <material id="mat2" />
+			 	 <material id="mat2" />
+			 
+			 <material id="mat4" />
 		</materials>
-		<texture id="none" length_s="2" length_t="1" />
+		<texture id="inherit" />
 		<children>
 			<componentref id="table_leg1" />
 		</children>
@@ -404,9 +407,11 @@
  			<transformationref id="tf5" />
 		</transformation>
 		<materials>
-			 <material id="mat2" />
+				 <material id="mat2" />
+			
+			 <material id="mat4" />
 		</materials>
-		<texture id="metal" length_s="2" length_t="1" />
+        <texture id="inherit" />		
 		<children>
 			<componentref id="table_leg2" />
 		</children>
@@ -417,9 +422,11 @@
  			<transformationref id="tf6" />
 		</transformation>
 		<materials>
-			 <material id="mat2" />
+			 	 <material id="mat2" />
+			
+			 <material id="mat4" />
 		</materials>
-		<texture id="metal" length_s="2" length_t="1" />
+	<texture id="inherit" />
 		<children>
 			<componentref id="table_leg3" />
 		</children>
@@ -755,7 +762,7 @@
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="superman" length_s="10" length_t="20"/>
+		<texture id="superman" length_s="4" length_t="2"/>
 		<children>
 			<primitiveref id="triangle_board1"/>
 		</children>
@@ -767,7 +774,7 @@
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="superman" length_s="5" length_t="5"/>
+		<texture id="batman" length_s="4.5" length_t="2"/>
 		<children>
 			<primitiveref id="triangle_board2"/>
 		</children>
