@@ -1,0 +1,4 @@
+class CircularAnimation extends Animation{
+
+
+}

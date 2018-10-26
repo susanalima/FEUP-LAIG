@@ -1,0 +1,4 @@
+class LinearAnimation extends Animation{
+
+
+}

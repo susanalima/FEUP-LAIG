@@ -6,9 +6,9 @@ class MyCylinderBase extends CGFobject{
 
 	/**
 	 * Constructor for class MyCylinderBase
-	 * @param {*} scene Scene in which the object will be represent
-	 * @param {*} slices The number of slices the object will have, in other words, the number of sides of the polygon
-	 * @param {*} rad  The radius of the object
+	 * @param {Object} scene Scene in which the object will be represent
+	 * @param {Object} slices The number of slices the object will have, in other words, the number of sides of the polygon
+	 * @param {Object} rad  The radius of the object
 	 */
 	constructor(scene, slices, rad) 
 	{

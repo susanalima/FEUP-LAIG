@@ -11,11 +11,11 @@ class MyRectangle extends CGFobject {
 
 	/**
 	 * Class constructor for MyRectangle, vertices 1 and 2 are not adjacent
-	 * @param {*} scene Scene where the object will be displayed
-	 * @param {*} x1 x coordinate for vertice 1
-	 * @param {*} y1 y coordinate for vertice 1
-	 * @param {*} x2 x coordinate for vertice 2
-	 * @param {*} y2 y coordinate for vertice 2
+	 * @param {Object} scene Scene where the object will be displayed
+	 * @param {Object} x1 x coordinate for vertice 1
+	 * @param {Object} y1 y coordinate for vertice 1
+	 * @param {Object} x2 x coordinate for vertice 2
+	 * @param {Object} y2 y coordinate for vertice 2
 	 */
 	constructor(scene, x1, y1, x2, y2) {
 		super(scene);
@@ -70,8 +70,8 @@ class MyRectangle extends CGFobject {
 
 	/**
 	 * Function used to update the texture coordinates of the object in relation to the texture factors being applied
-	 * @param {*} length_s Horizontal length of the texture
-	 * @param {*} length_t Vertical length of the texture
+	 * @param {Object} length_s Horizontal length of the texture
+	 * @param {Object} length_t Vertical length of the texture
 	 */
 	updateTexCoordLength(length_s, length_t)
 	{
