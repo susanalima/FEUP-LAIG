@@ -176,6 +176,11 @@
 
  </transformations>
 
+ <animations>
+	<!--pode ser vazia-->
+	<linear/>
+	<circular /> 
+ </animations>
 
  <primitives>
  	<primitive id="wall">
