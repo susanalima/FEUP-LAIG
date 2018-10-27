@@ -1067,9 +1067,10 @@ class MySceneGraph {
     }
 
     /**
-     * 
-     * @param {Object} children 
-     * @param {Object} index 
+     * Parses animations of type Linear
+     * @param {Object} children Children of the <animations> block 
+     * @param {Object} index Index of the child being parsed
+     * @returns {Object} Null or string containing appropriate error message
      */
     parseAnimationLinear(children, index) {
         var linearAnimation = {
@@ -1123,21 +1124,23 @@ class MySceneGraph {
     }
 
     /**
-     * 
-     * @param {Object} children 
-     * @param {Object} index 
-     * @param {Object} controlpoints 
-     * @param {Object} animationId 
+     * Parses a controlpoint for a linear animation
+     * @param {Object} children Children of the <animation> node
+     * @param {Object} index Index of the child being parsed
+     * @param {Object} controlpoints Array to store the controlpoint information
+     * @param {Object} animationId The id of the animations being parsed
+     * @returns {Object} Null or string containing appropriate error message
      */
     parseAnimationLinearControlPoint(children,index,controlpoints,animationId)
     {
        return this.parseAndValidateXYZvalues(children,index,animationId,"linear animation","controlpoint",controlpoints);
     }
 
-    /**
-     * 
-     * @param {Object} children 
-     * @param {Object} index 
+   /**
+     * Parses animations of type Circular
+     * @param {Object} children Children of the <animations> block 
+     * @param {Object} index Index of the child being parsed
+     * @returns {Object} Null or string containing appropriate error message
      */
     parseAnimationCircular(children, index) {
         var circularAnimation = {
@@ -1303,6 +1306,7 @@ class MySceneGraph {
         return null;
     }
 
+    //TODO: mudar para ter ordem obrigatoria e elementos obrigatorios ou nao
     /**
      * Sub function for parseComponents aids in parsing the components by parsing the different elements of a component
      * @param {Object} children Children of the <components> block
@@ -1312,28 +1316,26 @@ class MySceneGraph {
     parseComponentsComponent(children, index) {
         var error;
         var component = {
-
             materials: [],
             currentMaterialIndex: 0,
-
             texture: {
                 id: "0",
                 length_s: 0,
                 length_t: 0
             },
-
             transformations: {
                 tref: false,
                 trefID: null,
                 transformations: []
 
             },
-
+            animationref: null,
             children: {
                 componentsRef: [],
                 primitivesRef: []
             }
         }
+
         var grandChildren = [];
         var componentId = this.reader.getString(children[index], "id");
         if (!this.validateString(componentId))
@@ -1355,6 +1357,11 @@ class MySceneGraph {
             switch (nodeName) {
                 case "transformation":
                     error = this.parseComponentTransformations(ggrandChildren, component, componentId);
+                    if (error != null)
+                        return error;
+                    break;
+                case "animations":
+                    error = this.parseComponentAnimations(ggrandChildren, component, componentId);
                     if (error != null)
                         return error;
                     break;
@@ -1457,6 +1464,47 @@ class MySceneGraph {
                 break;
         }
         return null;
+    }
+
+      /**
+     * Parses the animations of a component
+     * @param {Object} children Children of the <component> node
+     * @param {Object} component Component being parsed
+     * @param {Object} componentId Id of the component being parsed
+     * @returns {Object} Null or string containing appropriate error message
+     */
+    parseComponentAnimations(children,component,componentId)
+    {
+        var error;
+        if(children[0].nodeName == "animationref")
+        {
+            error = this.parseComponentAnimationsAnimationRef(children,0,component,componentId);
+            if(error != null)
+                return error;
+        }
+        else
+            this.onXMLError("unknown tag <" + children[k].nodeName + ">");
+
+        return null;
+    }
+
+    //TODO: naos sei se so pode ter uma ou pode ter mais
+    /**
+     * Parses the animation reference of a component 
+     * @param {Object} children Children of the <component> node
+     * @param {Object} index Index of the child being parsed
+     * @param {Object} component Component being parsed
+     * @param {Object} componentId The id of the component being parsed
+     * @returns {Object} Null or string containing appropriate error message
+     */
+    parseComponentAnimationsAnimationRef(children,index,component,componentId){
+        let id = this.reader.getString(children[index], 'id');
+        if (!this.validateString(id))
+            return "no id defined for animationref for component ID: " + componentId;
+        if (!this.isAnimation(id))
+            return "invalid id defined for animationref " + id + " for component ID: " + componentId;
+        component.animationref = id;
+            return null;
     }
 
 
@@ -1992,7 +2040,7 @@ class MySceneGraph {
     /**
     * Validates if the passed id corresponds to an existing component in the components array  
     * @param {Object} id The id from the component to be validated
-    * @returns {Object} standard true or false
+    * @returns {Object} Standard true or false
     */
     isComponent(id) {
         return (this.components[id] != null);
@@ -2001,16 +2049,27 @@ class MySceneGraph {
     /**
     * Validates if the passed id corresponds to an existing transformation in the transformations array  
     * @param {Object} id The id from the transformation to be validated
-    * @returns {Object} standard true or false
+    * @returns {Object} Standard true or false
     */
     isTransformation(id) {
         return (this.transformations[id] != null);
     }
 
+    
+    /**
+    * Validates if the passed id corresponds to an existing animation in the animations array  
+    * @param {Object} id The id from the animation to be validated
+    * @returns {Object} Standard true or false
+    */
+   isAnimation(id) {
+    return (this.animations[id] != null);
+    }
+
+
     /**
      * Validates if the passed id corresponds to an existing primitive in the primitives array  
      * @param {Object} id The id from the primitive to be validated
-     * @returns {Object} standard true or false
+     * @returns {Object} Standard true or false
      */
     isPrimitive(id) {
         return (this.primitives[id] != null);
@@ -2018,7 +2077,7 @@ class MySceneGraph {
 
     /**
      * Validates if the default value for the views is an existing view
-     * @returns {Object} null or string containing an appropriate error message
+     * @returns {Object} Null or string containing an appropriate error message
      */
     validateViewsDefaultValue() {
         if (this.views.views[this.views.default] == null)
@@ -2028,7 +2087,7 @@ class MySceneGraph {
 
     /**
      * Validates if the root value is an existing component
-     * @returns {Object} null or string containing an appropriate error message
+     * @returns {Object} Null or string containing an appropriate error message
      */
     validateRootComponent() {
         if (this.components[this.root] == null)
@@ -2038,7 +2097,7 @@ class MySceneGraph {
 
     /**
      * Validates the components componentRef children
-     * @returns {Object} null or string containing an appropriate error message
+     * @returns {Object} Null or string containing an appropriate error message
      */
     validateComponentsChildren() {
         for (let key in this.components) {
@@ -2058,7 +2117,7 @@ class MySceneGraph {
      * @param {Object} float Value to check
      * @param {Object} lower Lower value
      * @param {Object} upper Upper value
-     * @return standard true or false
+     * @return Standard true or false
      */
     isInBetween(float, lower, upper) {
         return (float >= lower && float <= upper)
@@ -2069,7 +2128,7 @@ class MySceneGraph {
      * @param {Object} float Value to check
      * @param {Object} lower Lower value
      * @param {Object} upper Upper value
-     * @returns standard true or false
+     * @returns Standard true or false
      */
     isFloatInBetween(float, lower, upper) {
         return (this.validateFloat(float) && this.isInBetween(float, lower, upper));
@@ -2199,10 +2258,10 @@ class MySceneGraph {
 
     /**
      * Adds a texture to the texture array and updates its texture factors
-     * @param {*} texture Texture being added
-     * @param {*} textures All parsed textures
-     * @param {*} none_texture Flag to indicate if the component has texture 'none'(no texture)
-     * @returns true or false for successful or unsuccessful texture push
+     * @param {Object} texture Texture being added
+     * @param {Object} textures All parsed textures
+     * @param {Object} none_texture Flag to indicate if the component has texture 'none'(no texture)
+     * @returns {Object} True or false for successful or unsuccessful texture push
      */
     pushTexture(texture, textures, none_texture) {
         switch (texture.id) {
