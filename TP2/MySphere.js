@@ -11,10 +11,10 @@ class MySphere extends CGFobject
 {
 	/**
 	 * Class constructor for MySphere
-	 * @param {*} scene Scene where the object will be displayed
-	 * @param {*} slices Number of slices of the sphere
-	 * @param {*} stacks Number of stacks of the sphere
-	 * @param {*} radius The radius of the sphere
+	 * @param {Object} scene Scene where the object will be displayed
+	 * @param {Object} slices Number of slices of the sphere
+	 * @param {Object} stacks Number of stacks of the sphere
+	 * @param {Object} radius The radius of the sphere
 	 */
 	constructor(scene, slices, stacks, radius)
 	{
@@ -140,9 +140,13 @@ class MySphere extends CGFobject
 		{
 			for(var i = 0; i <= this.stacks;i++)
 			{
-				x =  0.5 -0.5*Math.cos(alpha) * Math.cos(newangle);
-				y = 0.5-  0.5*Math.sin(alpha) * Math.cos(newangle);
-
+				
+				if(newangle < Math.PI)
+					x = 0.5 - 0.5*Math.cos(newangle);
+				else
+					x =0.5 + 0.5 - 0.5*Math.cos(newangle);
+				y = 0.5 - 0.5*Math.sin(alpha) * Math.cos(newangle);
+				
 				this.texCoords.push(x);
 				this.texCoords.push(y);
 
