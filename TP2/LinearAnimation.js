@@ -15,8 +15,8 @@ class LinearAnimation extends Animation{
 
     getDistanceSegment(index){
         
-        deltaX = controlPoints[index+1][0] - controlPoints[index][0];
-        deltaY = controlPoints[index+1][1] - controlPoints[index][1];
+        deltaX = this.controlPoints[index+1][0] - this.controlPoints[index][0];
+        deltaY = this.controlPoints[index+1][1] - this.controlPoints[index][1];
 
         return Math.sqrt(Math.pow(deltaX,2) + Math.pow(deltaY, 2));
     }
@@ -25,20 +25,28 @@ class LinearAnimation extends Animation{
         
         var totalDistance = 0;
 
-        for(var i = 0; i < controlPoints.length- 1; i++)
+        for(var i = 0; i < this.controlPoints.length- 1; i++)
             totalDistance += this.getDistanceSegment(i);
 
         return totalDistance;
     }
 
-    getAngle(index)
-    {
-
+    getVector(index){
+        if(index >= this.controlPoints - 1){
+            console.log("ERROR: index of control point out of range!\n");
+            return;
+        }
+        vector[2] = [this.controlPoints[index+1][0] - this.controlPoints[index][0], this.controlPoints[index+1][1] - this.controlPoints[index][1]];
+        return vector;
     }
 
-
+    getCos(index)
+    {
+        return this.controlPoints[index][0]/sqrt(Math.pow(this.controlPoints[index][0],2) + Math.pow(this.controlPoints[index][1],2));
+    }
     update(currTime)
     {
+        var deltaT;
         if(this.lastTime == null)
             deltaT = currTime;
         else
