@@ -1063,6 +1063,7 @@ class MySceneGraph {
             }
         }
 
+        this.log("Parsed animations");
         return null;
     }
 
@@ -1329,7 +1330,7 @@ class MySceneGraph {
                 transformations: []
 
             },
-            animationref: null,
+            animations :[],
             children: {
                 componentsRef: [],
                 primitivesRef: []
@@ -1475,36 +1476,20 @@ class MySceneGraph {
      */
     parseComponentAnimations(children,component,componentId)
     {
-        var error;
-        if(children[0].nodeName == "animationref")
-        {
-            error = this.parseComponentAnimationsAnimationRef(children,0,component,componentId);
-            if(error != null)
-                return error;
+        for (let k = 0; k < children.length; k++) {
+            let nodeName = children[k].nodeName;
+            if (nodeName == "animationref") {
+                let id = this.reader.getString(children[k], 'id');
+                if (!this.validateString(id))
+                    return "no id defined for animationref for component ID: " + componentId;
+                if (!this.isAnimation(id))
+                    return "invalid id defined for animationref " + id + " for component ID: " + componentId;
+                component.animations.push(id);
+            }
+            else
+                this.onXMLMinorError("unknown tag <" + children[k].nodeName + ">");
         }
-        else
-            this.onXMLError("unknown tag <" + children[k].nodeName + ">");
-
         return null;
-    }
-
-    //TODO: naos sei se so pode ter uma ou pode ter mais
-    /**
-     * Parses the animation reference of a component 
-     * @param {Object} children Children of the <component> node
-     * @param {Object} index Index of the child being parsed
-     * @param {Object} component Component being parsed
-     * @param {Object} componentId The id of the component being parsed
-     * @returns {Object} Null or string containing appropriate error message
-     */
-    parseComponentAnimationsAnimationRef(children,index,component,componentId){
-        let id = this.reader.getString(children[index], 'id');
-        if (!this.validateString(id))
-            return "no id defined for animationref for component ID: " + componentId;
-        if (!this.isAnimation(id))
-            return "invalid id defined for animationref " + id + " for component ID: " + componentId;
-        component.animationref = id;
-            return null;
     }
 
 
