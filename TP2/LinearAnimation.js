@@ -44,6 +44,7 @@ class LinearAnimation extends Animation{
     {
         return this.controlPoints[index][0]/sqrt(Math.pow(this.controlPoints[index][0],2) + Math.pow(this.controlPoints[index][1],2));
     }
+    
     update(currTime)
     {
         var deltaT;
