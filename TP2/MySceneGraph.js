@@ -1063,6 +1063,7 @@ class MySceneGraph {
             }
         }
 
+        this.log("Parsed animations");
         return null;
     }
 
@@ -1119,8 +1120,17 @@ class MySceneGraph {
         if (numControlPoints < 2)
             return "at least two controlpoints must be defined";
 
-        this.animations[animationId] = linearAnimation;
+        this.animations[animationId] =  this.createLinearAnimation(linearAnimation);
         return null;
+    }
+
+     /**
+     * Creates a new linear animation
+     * @param {Object} linearAnimation Struct which contains the information needed to create the new linear animation
+     * @returns {Object} New linear animation
+     */
+    createLinearAnimation(linearAnimation) {
+      return new LinearAnimation(linearAnimation.controlpoints, linearAnimation.span);
     }
 
     /**
@@ -1136,6 +1146,7 @@ class MySceneGraph {
        return this.parseAndValidateXYZvalues(children,index,animationId,"linear animation","controlpoint",controlpoints);
     }
 
+    //TODO: CENTER THING
    /**
      * Parses animations of type Circular
      * @param {Object} children Children of the <animations> block 
@@ -1181,10 +1192,20 @@ class MySceneGraph {
         if (!this.validateFloat(circularAnimation.rotang))
             return "unable to parse rotang value for circular animation for ID " + animationId;
         
-        this.animations[animationId] = circularAnimation;
+        this.animations[animationId] = this.createCircularAnimation(circularAnimation);
         
         return null;
     }
+
+    //TODO:
+    /**
+     * Creates a new circular animation
+     * @param {Object} linearAnimation Struct which contains the information needed to create the new circular animation
+     * @returns {Object} New circular animation
+     */
+    createCircularAnimation(circularAnimation) {
+        return circularAnimation
+      }
 
 
 
@@ -1329,7 +1350,7 @@ class MySceneGraph {
                 transformations: []
 
             },
-            animationref: null,
+            animations :[],
             children: {
                 componentsRef: [],
                 primitivesRef: []
@@ -1475,36 +1496,20 @@ class MySceneGraph {
      */
     parseComponentAnimations(children,component,componentId)
     {
-        var error;
-        if(children[0].nodeName == "animationref")
-        {
-            error = this.parseComponentAnimationsAnimationRef(children,0,component,componentId);
-            if(error != null)
-                return error;
+        for (let k = 0; k < children.length; k++) {
+            let nodeName = children[k].nodeName;
+            if (nodeName == "animationref") {
+                let id = this.reader.getString(children[k], 'id');
+                if (!this.validateString(id))
+                    return "no id defined for animationref for component ID: " + componentId;
+                if (!this.isAnimation(id))
+                    return "invalid id defined for animationref " + id + " for component ID: " + componentId;
+                component.animations.push(id);
+            }
+            else
+                this.onXMLMinorError("unknown tag <" + children[k].nodeName + ">");
         }
-        else
-            this.onXMLError("unknown tag <" + children[k].nodeName + ">");
-
         return null;
-    }
-
-    //TODO: naos sei se so pode ter uma ou pode ter mais
-    /**
-     * Parses the animation reference of a component 
-     * @param {Object} children Children of the <component> node
-     * @param {Object} index Index of the child being parsed
-     * @param {Object} component Component being parsed
-     * @param {Object} componentId The id of the component being parsed
-     * @returns {Object} Null or string containing appropriate error message
-     */
-    parseComponentAnimationsAnimationRef(children,index,component,componentId){
-        let id = this.reader.getString(children[index], 'id');
-        if (!this.validateString(id))
-            return "no id defined for animationref for component ID: " + componentId;
-        if (!this.isAnimation(id))
-            return "invalid id defined for animationref " + id + " for component ID: " + componentId;
-        component.animationref = id;
-            return null;
     }
 
 
@@ -2319,7 +2324,8 @@ class MySceneGraph {
      * @param {Object} parent_currentMaterialIndex Index of the current material being used by the parent node
      */
     visitNode(node, transformations, materials, textures, none_texture, parent_currentMaterialIndex = null) {
-
+        var currTime = this.scene.currTime;
+	    var remainingTime = currTime;
 
         none_texture = this.pushTexture(node.texture, textures, none_texture);
 
@@ -2334,6 +2340,14 @@ class MySceneGraph {
         else {
             this.applyTransformationsPush(node.transformations.transformations);
         }
+
+        if(node.animations.length != 0)
+        {
+          this.animations[node.animations[0]].update(remainingTime);
+          this.scene.translate(this.animations[node.animations[0]].x,0,0);
+         // console.log(this.animations[node.animations[0]].x);
+        } 
+
 
         if (is_inherit)
             index = parent_currentMaterialIndex;
@@ -2373,9 +2387,7 @@ class MySceneGraph {
             if (prim.constructor.name == "MyRectangle" || prim.constructor.name == "MyTriangle")
                 prim.updateTexCoordLength(text.length_s, text.length_t);
             this.textures[text.id].bind();
-
         }
-
         prim.display();
         this.scene.popMatrix();
     }

@@ -13,6 +13,7 @@ class XMLscene extends CGFscene {
 
         this.interface = myinterface;
         this.lightValues = {};
+        this.currTime = 0;
         
     }
 
@@ -34,6 +35,9 @@ class XMLscene extends CGFscene {
         this.gl.depthFunc(this.gl.LEQUAL);
 
         this.axis = new CGFaxis(this);
+
+        
+		this.setUpdatePeriod(20);
     }
 
     /**
@@ -137,6 +141,11 @@ class XMLscene extends CGFscene {
             this.interface.releaseKeyUp("KeyM");
         }
 
+    }
+
+    update(currTime)
+    {
+        this.currTime = currTime;
     }
 
 
