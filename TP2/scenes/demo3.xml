@@ -169,11 +169,11 @@
 	<!--pode ser vazia-->
 	<linear id="l1" span="1000">
 		<controlpoint x="1.0" y="1.0" z="1.0"/>
-		<controlpoint x="2.0" y="1.0" z="1.0"/>
+		<controlpoint x="5.0" y="1.0" z="1.0"/>
 	</linear>
 
-	<circular id="c1" span="1000" center="1.0" radius="1.0" 
-		startang="10" rotang="80"/>
+	<!--<circular id="c1" span="1000" center="1.0" radius="1.0" 
+		startang="10" rotang="80"/>-->
  </animations>
 
  <primitives>
@@ -497,6 +497,9 @@
 	 	<transformation>
  			<translate x="5" y="5" z="10" />
 		</transformation>
+		<animations>
+			<animationref id = "l1"/>
+		</animations>
 		<materials>
 			 <material id="inherit" />
 		</materials>
