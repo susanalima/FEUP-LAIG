@@ -135,24 +135,25 @@ class LinearAnimation extends Animation {
     animate_mine_i_hate_this_and_i_hate_u(deltaT){
         if(this.index >= this.maxPoint)
             return;
-    
         var deltaDistance = this.distance*deltaT/this.time;
-        this.segment += deltaDistance;
-        let deltaDistX = deltaDistance*Math.sin(this.angle);
-        let deltaDistZ = deltaDistance*Math.cos(this.angle);
-
-        if (this.segment >= this.getDistanceSegment(this.index))
+        var distSegment = this.getDistanceSegment(this.index);
+        if (this.segment >= distSegment)
         {
-            deltaDistance -= (this.segment - this.getDistanceSegment(this.index));
+            deltaDistance -= (this.segment - distSegment);
             if(this.index < this.maxPoint -1)
                 this.angle += this.calcAngle(this.vectors[this.index], this.vectors[this.index +1]);
             this.index++;
             this.segment = 0;
         } 
-        else {
+       
+        this.segment += deltaDistance;
+        let deltaDistX = deltaDistance*Math.sin(this.angle);
+        let deltaDistZ = deltaDistance*Math.cos(this.angle);
         this.x += deltaDistX;
         this.z += deltaDistZ;
-        }
-        console.log('angle: ' + this.angle);
+        
+        console.log('segment: ' + this.segment);
+        console.log('distSegment: ' + distSegment);
+
     }
 }
