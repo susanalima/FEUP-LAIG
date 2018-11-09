@@ -13,7 +13,10 @@ class LinearAnimation extends Animation {
         this.z = 0;
         this.index = 0;
         this.distance;
-        this.angle = Math.acos(this.getCos());
+    
+        var vector1 = this.getVector(0);
+        this.angle = this.calcAngle(vector1,[0,1]);
+        
         this.distanceComponents = [0,0];
         this.prevDistances = 0;
         this.end = false;
@@ -62,6 +65,20 @@ class LinearAnimation extends Animation {
         return this.controlPoints[this.index][0] / Math.sqrt(Math.pow(this.controlPoints[this.index][0], 2) + Math.pow(this.controlPoints[this.index][2], 2));
     }
 
+    calcAngle(vector1, vector2)
+    {
+      let v1_x = vector1[0];
+      let v1_z = vector1[1];
+      let v2_x = vector2[0];
+      let v2_z = vector2[1];
+
+      let n_v1 = Math.sqrt(v1_x*v1_x + v1_z*v1_z);
+      let n_v2 = Math.sqrt(v2_x*v2_x + v2_z*v2_z);
+
+      let cos = (v1_x*v2_x + v1_z*v2_z)/(n_v1*n_v2);
+      return Math.acos(cos);
+    }
+
     update(currTime) {
         var deltaT;
         if (this.lastTime == null)
@@ -87,17 +104,18 @@ class LinearAnimation extends Animation {
             if (this.segment >= this.getDistanceSegment(this.index)) {
                 deltaDist -= (this.segment - this.getDistanceSegment(this.index));
                 this.segment = 0;
+                //this.angle = this.calcAngle(this.controlPoints[this.index],this.controlPoints[this.index+1]);
+                //console.log(this.index);
                 this.index++;
                 this.point++;
-                this.angle = Math.acos(this.getCos());
             }
         this.prevDistances += deltaDist;
         
         this.x += deltaDistX;
         this.z += deltaDistZ;
         console.log('angle: ' + this.angle);
-        console.log('X:' + this.x);
-        console.log('Z:' + this.z);
+        //console.log('X:' + this.x);
+        //console.log('Z:' + this.z);
         } 
     }
 }
