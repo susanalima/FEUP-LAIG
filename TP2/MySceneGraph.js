@@ -2358,7 +2358,9 @@ class MySceneGraph {
         if(node.animations.length != 0)
         {
           this.animations[node.animations[0]].update(remainingTime);
+
           this.scene.translate(this.animations[node.animations[0]].x,0,this.animations[node.animations[0]].z);
+          this.scene.rotate(this.animations[node.animations[0]].angle, 0,1,0);
          // console.log(this.animations[node.animations[0]].x);
         } 
 

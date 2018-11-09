@@ -13,7 +13,7 @@ class LinearAnimation extends Animation {
         this.z = 0;
         this.index = 0;
         this.distance;
-        this.angle = 0;
+        this.angle = Math.acos(this.getCos());
         this.distanceComponents = [0,0];
         this.prevDistances = 0;
         this.end = false;
@@ -74,7 +74,6 @@ class LinearAnimation extends Animation {
     }
 
     animate(deltaT) {
-        console.log(deltaT);
         let deltaDist;
         if (this.point >= this.maxPoint) {
             deltaDist = 0;
@@ -85,16 +84,20 @@ class LinearAnimation extends Animation {
             var deltaDistZ = this.distanceComponents[1] * deltaT / this.time;
             deltaDist = this.distance * deltaT / this.time;
             this.segment += deltaDist;
-            if (this.segment > this.getDistanceSegment(this.index)) {
+            if (this.segment >= this.getDistanceSegment(this.index)) {
                 deltaDist -= (this.segment - this.getDistanceSegment(this.index));
                 this.segment = 0;
                 this.index++;
                 this.point++;
+                this.angle = Math.acos(this.getCos());
             }
-            this.prevDistances += deltaDist;
+        this.prevDistances += deltaDist;
         
         this.x += deltaDistX;
         this.z += deltaDistZ;
+        console.log('angle: ' + this.angle);
+        console.log('X:' + this.x);
+        console.log('Z:' + this.z);
         } 
     }
 }
