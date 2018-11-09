@@ -145,15 +145,15 @@ class LinearAnimation extends Animation {
             this.index++;
             this.segment = 0;
         } 
-       
+        else {
         this.segment += deltaDistance;
         let deltaDistX = deltaDistance*Math.sin(this.angle);
         let deltaDistZ = deltaDistance*Math.cos(this.angle);
         this.x += deltaDistX;
         this.z += deltaDistZ;
-        
+        }
         console.log('segment: ' + this.segment);
-        console.log('distSegment: ' + distSegment);
+        console.log('segment: ' + distSegment);
 
     }
 }

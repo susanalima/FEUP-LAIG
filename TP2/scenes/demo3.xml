@@ -172,11 +172,13 @@
 		<controlpoint x="10.0" y="10.0" z="10.0"/>
 		<controlpoint x="0.0" y="0.0" z="0.0"/>
 		<controlpoint x="5.0" y="10.0" z="5.0"/>
+		<controlpoint x="10.0" y="10.0" z="5.0"/>
+		<controlpoint x="0.0" y="10.0" z="5.0"/>
 	</linear>
 
 	<linear id="l2" span="1000">
-		<controlpoint x="10.0" y="1.0" z="1.0"/>
-		<controlpoint x="1.0" y="1.0" z="5.0"/>
+		<controlpoint x="0.0" y="0.0" z="0.0"/>
+		<controlpoint x="10.0" y="10.0" z="10.0"/>
 	</linear>
 
 	<!--<circular id="c1" span="1000" center="1.0" radius="1.0" 
