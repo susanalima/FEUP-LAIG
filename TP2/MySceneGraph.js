@@ -1143,7 +1143,10 @@ class MySceneGraph {
      */
     parseAnimationLinearControlPoint(children,index,controlpoints,animationId)
     {
-       return this.parseAndValidateXYZvalues(children,index,animationId,"linear animation","controlpoint",controlpoints);
+        var controlpoint = [];
+        var error = this.parseAndValidateXYZvalues(children,index,animationId,"linear animation","controlpoint",controlpoint);
+        controlpoints.push(controlpoint);
+        return error;
     }
 
     //TODO: CENTER THING
@@ -1350,6 +1353,7 @@ class MySceneGraph {
                 transformations: []
 
             },
+            currentAnimationIndex: null, //animations are optional therefore the index can be nulls
             animations :[],
             children: {
                 componentsRef: [],
@@ -1509,6 +1513,7 @@ class MySceneGraph {
             else
                 this.onXMLMinorError("unknown tag <" + children[k].nodeName + ">");
         }
+        this.inicializeComponentCurrentAnimationIndex(component);
         return null;
     }
 
@@ -2114,6 +2119,15 @@ class MySceneGraph {
             }
         }
         return null;
+    }
+
+    /**
+     * Initializes a component CurrentAnimationIndex to zero if the component has any animations, if not itd value stays null
+     * @param {Object} component Component cointainig the CurrentAnimationIndex to initialize
+     */
+    inicializeComponentCurrentAnimationIndex(component) {
+        if(component.animations.length > 0)
+            component.currentAnimationIndex = 0;
     }
 
 
