@@ -65,7 +65,7 @@ class LinearAnimation extends Animation {
             deltaDist = 0;
         }
         else {
-            deltaDist = this.totalDistance * deltaT / this.time;
+            deltaDist = this.distance * deltaT / this.time;
             this.segment += deltaDist;
             if (this.segment > this.getDistanceSegment()) {
                 deltaDist -= (this.segment - this.getDistanceSegment());
