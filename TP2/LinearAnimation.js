@@ -12,15 +12,18 @@ class LinearAnimation extends Animation {
         this.y = 0;
         this.z = 0;
         this.index = 0;
-        this.distance;
+        this.distance = this.getDistanceTotal();
     
-        var vector1 = this.getVector(0);
-        this.angle = this.calcAngle(vector1,[0,1]);
-        
         this.distanceComponents = [0,0];
         this.prevDistances = 0;
         this.end = false;
         this.getDistanceComponents();
+
+        this.vectors = [];
+        this.getVectors();
+
+        console.dir(this.vectors);
+        this.angle = this.calcAngle(this.vectors[0],[0,1]);
     }
 
     getDistanceSegment(index) {
@@ -49,6 +52,15 @@ class LinearAnimation extends Animation {
             this.distanceComponents[0] += Math.abs(vec2[0] - vec1[0]);
             this.distanceComponents[1] += Math.abs(vec2[1] - vec1[1]);
             vec1 = vec2;
+        }
+    }
+
+    getVectors()
+    {
+        for(let i = 0; i < this.controlPoints.length - 1; i++)
+        {
+            let v = this.getVector(i);
+            this.vectors.push(v);    
         }
     }
 
@@ -85,7 +97,7 @@ class LinearAnimation extends Animation {
             deltaT = 0;
         else
             deltaT = currTime - this.lastTime;
-        this.animate(deltaT);
+        this.animate_mine_i_hate_this_and_i_hate_u(deltaT);
         this.lastTime = currTime;
 
     }
@@ -104,7 +116,8 @@ class LinearAnimation extends Animation {
             if (this.segment >= this.getDistanceSegment(this.index)) {
                 deltaDist -= (this.segment - this.getDistanceSegment(this.index));
                 this.segment = 0;
-                //this.angle = this.calcAngle(this.controlPoints[this.index],this.controlPoints[this.index+1]);
+                if(this.index < this.maxPoint -1)
+                   this.angle = this.calcAngle(this.vectors[this.index], this.vectors[this.index +1]);
                 //console.log(this.index);
                 this.index++;
                 this.point++;
@@ -117,5 +130,29 @@ class LinearAnimation extends Animation {
         //console.log('X:' + this.x);
         //console.log('Z:' + this.z);
         } 
+    }
+
+    animate_mine_i_hate_this_and_i_hate_u(deltaT){
+        if(this.index >= this.maxPoint)
+            return;
+    
+        var deltaDistance = this.distance*deltaT/this.time;
+        this.segment += deltaDistance;
+        let deltaDistX = deltaDistance*Math.sin(this.angle);
+        let deltaDistZ = deltaDistance*Math.cos(this.angle);
+
+        if (this.segment >= this.getDistanceSegment(this.index))
+        {
+            deltaDistance -= (this.segment - this.getDistanceSegment(this.index));
+            if(this.index < this.maxPoint -1)
+                this.angle += this.calcAngle(this.vectors[this.index], this.vectors[this.index +1]);
+            this.index++;
+            this.segment = 0;
+        } 
+        else {
+        this.x += deltaDistX;
+        this.z += deltaDistZ;
+        }
+        console.log('angle: ' + this.angle);
     }
 }
