@@ -2358,7 +2358,7 @@ class MySceneGraph {
         if(node.animations.length != 0)
         {
           this.animations[node.animations[0]].update(remainingTime);
-          //this.scene.translate(this.animations[node.animations[0]].x,0,0);
+          this.scene.translate(this.animations[node.animations[0]].x,0,this.animations[node.animations[0]].z);
          // console.log(this.animations[node.animations[0]].x);
         } 
 

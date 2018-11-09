@@ -12,40 +12,54 @@ class LinearAnimation extends Animation {
         this.y = 0;
         this.z = 0;
         this.index = 0;
-        this.distance = this.getDistanceTotal();
+        this.distance;
+        this.angle = 0;
+        this.distanceComponents = [0,0];
         this.prevDistances = 0;
         this.end = false;
+        this.getDistanceComponents();
     }
 
-    getDistanceSegment(i) {
+    getDistanceSegment(index) {
 
-        let deltaX = this.controlPoints[i + 1][0] - this.controlPoints[i][0];
-        let deltaY = this.controlPoints[i + 1][1] - this.controlPoints[i][1];
+        let deltaX = this.controlPoints[index + 1][0] - this.controlPoints[index][0];
+        let deltaZ = this.controlPoints[index + 1][2] - this.controlPoints[index][2];
 
-        return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+        return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaZ, 2));
     }
 
     getDistanceTotal() {
 
         var totalDistance = 0;
 
-        for (let i = 0; i < this.controlPoints.length - 1; i++)
+        for (var i = 0; i < this.controlPoints.length - 1; i++)
             totalDistance += this.getDistanceSegment(i);
 
         return totalDistance;
     }
 
-    getVector() {
-        if (this.index >= this.controlPoints - 1) {
+    getDistanceComponents(){
+        let vec2, vec1 = [0,0];
+        for(let ind= 0; ind < this.controlPoints.length - 1; ind++)
+        {
+            vec2 = this.getVector(ind);
+            this.distanceComponents[0] += Math.abs(vec2[0] - vec1[0]);
+            this.distanceComponents[1] += Math.abs(vec2[1] - vec1[1]);
+            vec1 = vec2;
+        }
+    }
+
+    getVector(index) {
+        if (index >= this.controlPoints - 1) {
             console.log("ERROR: this.index of control point out of range!\n");
             return;
         }
-        vector[2] = [this.controlPoints[this.index + 1][0] - this.controlPoints[this.index][0], this.controlPoints[this.index + 1][1] - this.controlPoints[this.index][1]];
+        let vector = [this.controlPoints[index + 1][0] - this.controlPoints[index][0], this.controlPoints[index + 1][2] - this.controlPoints[index][2]];
         return vector;
     }
 
     getCos() {
-        return this.controlPoints[this.index][0] / Math.sqrt(Math.pow(this.controlPoints[this.index][0], 2) + Math.pow(this.controlPoints[this.index][1], 2));
+        return this.controlPoints[this.index][0] / Math.sqrt(Math.pow(this.controlPoints[this.index][0], 2) + Math.pow(this.controlPoints[this.index][2], 2));
     }
 
     update(currTime) {
@@ -54,29 +68,33 @@ class LinearAnimation extends Animation {
             deltaT = 0;
         else
             deltaT = currTime - this.lastTime;
-       // this.animate(deltaT);
+        this.animate(deltaT);
         this.lastTime = currTime;
 
     }
 
     animate(deltaT) {
+        console.log(deltaT);
         let deltaDist;
-        if (this.point > this.maxPoint) {
+        if (this.point >= this.maxPoint) {
             deltaDist = 0;
         }
         else {
+            this.distance = this.getDistanceTotal();
+            var deltaDistX = this.distanceComponents[0] * deltaT / this.time;
+            var deltaDistZ = this.distanceComponents[1] * deltaT / this.time;
             deltaDist = this.distance * deltaT / this.time;
             this.segment += deltaDist;
-            if (this.segment > this.getDistanceSegment()) {
-                deltaDist -= (this.segment - this.getDistanceSegment());
+            if (this.segment > this.getDistanceSegment(this.index)) {
+                deltaDist -= (this.segment - this.getDistanceSegment(this.index));
                 this.segment = 0;
                 this.index++;
                 this.point++;
             }
             this.prevDistances += deltaDist;
-        }
-        this.x += deltaDist * this.getCos();
-        this.z += deltaDist * Math.sqrt(1 - Math.pow(this.getCos(), 2));
-        console.log(deltaDist);
+        
+        this.x += deltaDistX;
+        this.z += deltaDistZ;
+        } 
     }
 }
