@@ -54,7 +54,7 @@ class LinearAnimation extends Animation {
             deltaT = 0;
         else
             deltaT = currTime - this.lastTime;
-        this.animate(deltaT);
+       // this.animate(deltaT);
         this.lastTime = currTime;
 
     }
