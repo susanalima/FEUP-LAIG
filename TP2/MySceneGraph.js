@@ -963,23 +963,14 @@ class MySceneGraph {
      * @returns {Object} Null or string containing appropriate error message
      */
     parseTransformationScale(children, index, vector) {
-        var scale = {
-            class: 'scale',
-            x: null,
-            y: null,
-            z: null
-        }
         var { x, y, z } = this.parsePointXYZ(children, 'x', 'y', 'z', index);
-        scale.x = x;
-        scale.y = y;
-        scale.z = z;
+        var scale = this.createScale(x,y,z);
         if (!this.validateFloat(scale.x))
             return "unable to parse x of scale";
         if (!this.validateFloat(scale.y))
             return "unable to parse y of scale";
         if (!this.validateFloat(scale.z))
             return "unable to parse z of scale";
-
         vector.push(scale);
         return null;
     }
@@ -991,19 +982,14 @@ class MySceneGraph {
     * @param {Object} vector Place where the stucts representing the transformations of type rotate will be stored
     * @returns {Object} Null or string containing appropriate error message
     */
-    parseTransformationRotate(children, index, vector) {
-        var rotate = {
-            class: 'rotate',
-            axis: null,
-            angle: null
-        }
-        rotate.axis = this.reader.getString(children[index], 'axis');
-        if (!this.validateAxis(rotate.axis))
+    parseTransformationRotate(children, index, vector) {  
+        var axis = this.reader.getString(children[index], 'axis');
+        if (!this.validateAxis(axis))
             return "unable to parse axis of rotate";
-
-        rotate.angle = this.reader.getFloat(children[index], 'angle');
-        if (!this.validateFloat(rotate.angle))
+        var angle = this.reader.getFloat(children[index], 'angle');
+        if (!this.validateFloat(angle))
             return "unable to parse angle of rotate";
+        var rotate = this.createRotate(axis,angle,false);
         vector.push(rotate);
         return null;
     }
@@ -1016,16 +1002,8 @@ class MySceneGraph {
     * @returns {Object} Null or string containing appropriate error message
     */
     parseTransformationTranslate(children, index, vector) {
-        var translate = {
-            class: 'translate',
-            x: null,
-            y: null,
-            z: null
-        }
         var { x, y, z } = this.parsePointXYZ(children, 'x', 'y', 'z', index);
-        translate.x = x;
-        translate.y = y;
-        translate.z = z;
+        var translate = this.createTranslate(x,y,z);
         if (!this.validateFloat(translate.x))
             return "unable to parse x of translate";
         if (!this.validateFloat(translate.y))
@@ -1034,6 +1012,67 @@ class MySceneGraph {
             return "unable to parse z of translate";
         vector.push(translate);
         return null;
+    }
+
+    /**
+     * Creates a struct scale that holds the information for a scale transformation
+     * @param {Object} x Scale x-value
+     * @param {Object} y Scale y-value
+     * @param {Object} z Scale z-value
+     * @returns {Object} Scale struct containing the received information
+     */
+    createScale(x,y,z)
+    {
+        var scale = {
+            class: 'scale',
+            x: null,
+            y: null,
+            z: null
+        }
+        scale.x = x;
+        scale.y = y;
+        scale.z = z;
+        return scale;
+    }
+
+      /**
+     * Creates a struct rotate that holds the information for a rotate transformation
+     * @param {Object} axis Rotation axis 
+     * @param {Object} angle Rotatio angle
+     * @returns {Object} Rotate struct containing the received information
+     */
+    createRotate(axis,angle, rad)
+    {
+        var rotate = {
+            class: 'rotate',
+            axis: null,
+            angle: null, 
+            rad: null
+        }
+        rotate.axis = axis;
+        rotate.angle = angle;
+        rotate.rad = rad;
+        return rotate;
+    }
+
+    /**
+     * Creates a struc translate that holds the information for a translate transformation
+     * @param {Object} x Translation x-coordinate
+     * @param {Object} y Translation y-coordinate
+     * @param {Object} z Translation z-coordinate
+     * @returns {Object} Translate struct containing the received information
+     */
+    createTranslate(x,y,z) {
+        var translate = {
+            class: 'translate',
+            x: null,
+            y: null,
+            z: null
+        }
+        translate.x = x;
+        translate.y = y;
+        translate.z = z;
+        return translate;
     }
 
     /**
@@ -2234,7 +2273,10 @@ class MySceneGraph {
      * @param {Object} rotate Structer containing the necessary information to apply a rotation to the scene
      */
     applyRotate(rotate) {
-        var angle = Math.PI / 180 * rotate.angle;
+        if (rotate.rad == false)
+            var angle = Math.PI / 180 * rotate.angle;
+        else
+            angle = rotate.angle;
         switch (rotate.axis) {
             case "x":
             case "X":
@@ -2343,6 +2385,7 @@ class MySceneGraph {
             {
                 this.scene.rotate(-animation.angle, 0, 1, 0);
                 node.currentAnimationIndex++;
+
             }  
         }
     }
@@ -2373,10 +2416,31 @@ class MySceneGraph {
         else {
             this.applyTransformationsPush(node.transformations.transformations);
         }
-
+        
+        //TODO: by me, change to applyAnimation
         if (node.currentAnimationIndex != null) 
-            this.applyAnimation(node,remainingTime);
-
+        {
+            //this.applyAnimation(node,remainingTime);
+            let animationIndex = node.currentAnimationIndex;
+            let animationId = node.animations[animationIndex];
+            let animation = this.animations[animationId];
+            animation.update(remainingTime);
+            var animationTranslate = this.createTranslate(animation.x, animation.y, animation.z);
+            var animationRotate = this.createRotate("y", animation.angle, true);
+            //transformations.push(animationTranslate);
+            //transformations.push(animationRotate);
+           this.applyTransformation(animationTranslate);
+           this.applyTransformation(animationRotate);
+            if(animation.end == true)
+            {
+                if(animationIndex < node.animations.length -1)
+                {
+                    this.scene.rotate(-animation.angle, 0, 1, 0);
+                    node.currentAnimationIndex++;
+    
+                }  
+            }
+        }    
         if (is_inherit)
             index = parent_currentMaterialIndex;
         else

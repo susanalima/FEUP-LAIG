@@ -150,10 +150,4 @@ class LinearAnimation extends Animation {
         //console.log('Z: ' + this.z);
     }
 
-
-    
-    apply(){
-
-    }
-
 }
