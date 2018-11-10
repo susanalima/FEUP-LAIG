@@ -2,6 +2,7 @@ class LinearAnimation extends Animation {
 
     constructor(controlPoints, time) {
         super();
+        this.type = "Linear";
         this.controlPoints = controlPoints;
         this.segment = 0;
         this.point = 0;
@@ -112,16 +113,21 @@ class LinearAnimation extends Animation {
             deltaT = 0;
         else
             deltaT = currTime - this.lastTime;
-        this.animate_fixed_your_function_hope_you_dont_hate_me_anymore(deltaT);
+        this.animate_thanks_i_dont_hate_anymore(deltaT);
         this.lastTime = currTime;
 
     }
  
-    animate_fixed_your_function_hope_you_dont_hate_me_anymore(deltaT){
+    animate_thanks_i_dont_hate_anymore(deltaT){
         let deltaDistX;
         let deltaDistZ;
-        if(this.index >= this.maxPoint)
+        if(this.end == true)
             return;
+        if(this.index >= this.maxPoint)
+        {
+            this.end = true;
+            return;
+        }
         var deltaDistance = this.distance*deltaT/this.time;
         var distSegment = this.getDistanceSegment(this.index);
         this.segment += deltaDistance;
@@ -133,7 +139,6 @@ class LinearAnimation extends Animation {
             if(this.index < this.maxPoint -1)
                 this.angle += this.calcAngle(this.vectors[this.index], this.vectors[this.index +1]);
             this.index++;
-
             this.segment = 0;
         } 
         else{
@@ -142,8 +147,8 @@ class LinearAnimation extends Animation {
         }
         this.x += deltaDistX;
         this.z += deltaDistZ;
-        
-        console.log('X: ' + this.x);
-        console.log('Z: ' + this.z);
+        //console.log('X: ' + this.x);
+        //console.log('Z: ' + this.z);
     }
+
 }

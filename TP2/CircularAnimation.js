@@ -1,26 +1,42 @@
 class CircularAnimation extends Animation{
 
-    constructor(centerX, centerY, centerZ, radius, initialAngle, rotation, time){
+    constructor(time, centerX, centerY, centerZ, radius, startang, rotang){
+        super();
+        this.type = "Circular";
         this.centerX = centerX;
         this.centerY = centerY;
         this.centerZ = centerZ;
         this.radius = radius;
-        this.initialAngle = initialAngle*Math.PI/180;
-        this.rotation = rotation*Math.PI/180;
+        this.startang = startang*Math.PI/180;
+        this.rotang = rotang*Math.PI/180;
         this.time = time;
+        this.distance = this.calculateDistance();
+        this.end = false;
     }
 
+    calculateDistance()
+    {
+        return this.radius*Math.PI*2;
+    }
 
     update(currTime)
     {
+        var deltaT;
         if(this.lastTime == null)
             deltaT = currTime;
         else
             deltaT = currTime - this.lastTime;
 
-        animate(deltaT);
+        this.animate(deltaT);
         this.lastTime = currTime;
         
     }
+
+    animate(deltaT){
+        var deltaDistance = this.distance*deltaT/this.time;
+        this.rotang = this.rotang + deltaDistance;
+    }
+
+   
 
 }
