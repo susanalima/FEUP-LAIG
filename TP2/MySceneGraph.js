@@ -1083,35 +1083,33 @@ class MySceneGraph {
         var error;
         var numControlPoints = 0;
 
-          //get the id of current animation
+        //get the id of current animation
         let animationId = this.reader.getString(children[index], 'id');
         if (!this.validateString(animationId))
             return "no ID defined for animation";
 
-         // Checks for repeated IDs.   
+        // Checks for repeated IDs.   
         if (this.animations[animationId] != null)
             return "ID must be unique for each animation (conflict: ID = " + animationId + ")";
 
-        linearAnimation.span = this.reader.getFloat(children[index],'span');
+        linearAnimation.span = this.reader.getFloat(children[index], 'span');
         if (!this.validateFloat(linearAnimation.span))
             return "unable to parse span value for linear animation for ID " + animationId;
 
         grandChildren = children[index].children;
-        var nodeNames = []; 
+        var nodeNames = [];
         for (let j = 0; j < grandChildren.length; j++) {
             nodeNames.push(grandChildren[j].nodeName);
         }
 
-        for(let i = 0; i < grandChildren.length; i++){
-            if(grandChildren[i].nodeName == "controlpoint")
-            {
-                error = this.parseAnimationLinearControlPoint(grandChildren,i,linearAnimation.controlpoints);
+        for (let i = 0; i < grandChildren.length; i++) {
+            if (grandChildren[i].nodeName == "controlpoint") {
+                error = this.parseAnimationLinearControlPoint(grandChildren, i, linearAnimation.controlpoints);
                 if (error != null)
                     return error;
                 numControlPoints++;
             }
-            else
-            {
+            else {
                 this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
                 continue;
             }
@@ -1120,17 +1118,17 @@ class MySceneGraph {
         if (numControlPoints < 2)
             return "at least two controlpoints must be defined";
 
-        this.animations[animationId] =  this.createLinearAnimation(linearAnimation);
+        this.animations[animationId] = this.createLinearAnimation(linearAnimation);
         return null;
     }
 
-     /**
-     * Creates a new linear animation
-     * @param {Object} linearAnimation Struct which contains the information needed to create the new linear animation
-     * @returns {Object} New linear animation
-     */
+    /**
+    * Creates a new linear animation
+    * @param {Object} linearAnimation Struct which contains the information needed to create the new linear animation
+    * @returns {Object} New linear animation
+    */
     createLinearAnimation(linearAnimation) {
-      return new LinearAnimation(linearAnimation.controlpoints, linearAnimation.span);
+        return new LinearAnimation(linearAnimation.controlpoints, linearAnimation.span);
     }
 
     /**
@@ -1141,62 +1139,61 @@ class MySceneGraph {
      * @param {Object} animationId The id of the animations being parsed
      * @returns {Object} Null or string containing appropriate error message
      */
-    parseAnimationLinearControlPoint(children,index,controlpoints,animationId)
-    {
+    parseAnimationLinearControlPoint(children, index, controlpoints, animationId) {
         var controlpoint = [];
-        var error = this.parseAndValidateXYZvalues(children,index,animationId,"linear animation","controlpoint",controlpoint);
+        var error = this.parseAndValidateXYZvalues(children, index, animationId, "linear animation", "controlpoint", controlpoint);
         controlpoints.push(controlpoint);
         return error;
     }
 
     //TODO: CENTER THING
-   /**
-     * Parses animations of type Circular
-     * @param {Object} children Children of the <animations> block 
-     * @param {Object} index Index of the child being parsed
-     * @returns {Object} Null or string containing appropriate error message
-     */
+    /**
+      * Parses animations of type Circular
+      * @param {Object} children Children of the <animations> block 
+      * @param {Object} index Index of the child being parsed
+      * @returns {Object} Null or string containing appropriate error message
+      */
     parseAnimationCircular(children, index) {
         var circularAnimation = {
             class: 'circular',
             span: null,
             center: null,
             radius: null,
-            startang : null,
-            rotang : null
+            startang: null,
+            rotang: null
         };
-    
-          //get the id of current animation
+
+        //get the id of current animation
         let animationId = this.reader.getString(children[index], 'id');
         if (!this.validateString(animationId))
             return "no ID defined for animation";
 
-         // Checks for repeated IDs.   
+        // Checks for repeated IDs.   
         if (this.animations[animationId] != null)
             return "ID must be unique for each animation (conflict: ID = " + animationId + ")";
 
-        circularAnimation.span = this.reader.getFloat(children[index],'span');
+        circularAnimation.span = this.reader.getFloat(children[index], 'span');
         if (!this.validateFloat(circularAnimation.span))
             return "unable to parse span value for circular animation for ID " + animationId;
-        
-        circularAnimation.center = this.reader.getFloat(children[index],'center');
+
+        circularAnimation.center = this.reader.getFloat(children[index], 'center');
         if (!this.validateFloat(circularAnimation.center))
             return "unable to parse center value for circular animation for ID " + animationId;
-        
-        circularAnimation.radius = this.reader.getFloat(children[index],'radius');
+
+        circularAnimation.radius = this.reader.getFloat(children[index], 'radius');
         if (!this.validateFloat(circularAnimation.radius))
             return "unable to parse radius value for circular animation for ID " + animationId;
-        
-        circularAnimation.startang = this.reader.getFloat(children[index],'startang');
+
+        circularAnimation.startang = this.reader.getFloat(children[index], 'startang');
         if (!this.validateFloat(circularAnimation.startang))
             return "unable to parse startang value for circular animation for ID " + animationId;
-        
-        circularAnimation.rotang = this.reader.getFloat(children[index],'rotang');
+
+        circularAnimation.rotang = this.reader.getFloat(children[index], 'rotang');
         if (!this.validateFloat(circularAnimation.rotang))
             return "unable to parse rotang value for circular animation for ID " + animationId;
-        
+
         this.animations[animationId] = this.createCircularAnimation(circularAnimation);
-        
+
         return null;
     }
 
@@ -1208,7 +1205,7 @@ class MySceneGraph {
      */
     createCircularAnimation(circularAnimation) {
         return circularAnimation
-      }
+    }
 
 
 
@@ -1354,7 +1351,7 @@ class MySceneGraph {
 
             },
             currentAnimationIndex: null, //animations are optional therefore the index can be nulls
-            animations :[],
+            animations: [],
             children: {
                 componentsRef: [],
                 primitivesRef: []
@@ -1491,15 +1488,14 @@ class MySceneGraph {
         return null;
     }
 
-      /**
-     * Parses the animations of a component
-     * @param {Object} children Children of the <component> node
-     * @param {Object} component Component being parsed
-     * @param {Object} componentId Id of the component being parsed
-     * @returns {Object} Null or string containing appropriate error message
-     */
-    parseComponentAnimations(children,component,componentId)
-    {
+    /**
+   * Parses the animations of a component
+   * @param {Object} children Children of the <component> node
+   * @param {Object} component Component being parsed
+   * @param {Object} componentId Id of the component being parsed
+   * @returns {Object} Null or string containing appropriate error message
+   */
+    parseComponentAnimations(children, component, componentId) {
         for (let k = 0; k < children.length; k++) {
             let nodeName = children[k].nodeName;
             if (nodeName == "animationref") {
@@ -2065,14 +2061,14 @@ class MySceneGraph {
         return (this.transformations[id] != null);
     }
 
-    
+
     /**
     * Validates if the passed id corresponds to an existing animation in the animations array  
     * @param {Object} id The id from the animation to be validated
     * @returns {Object} Standard true or false
     */
-   isAnimation(id) {
-    return (this.animations[id] != null);
+    isAnimation(id) {
+        return (this.animations[id] != null);
     }
 
 
@@ -2126,7 +2122,7 @@ class MySceneGraph {
      * @param {Object} component Component cointainig the CurrentAnimationIndex to initialize
      */
     inicializeComponentCurrentAnimationIndex(component) {
-        if(component.animations.length > 0)
+        if (component.animations.length > 0)
             component.currentAnimationIndex = 0;
     }
 
@@ -2329,6 +2325,29 @@ class MySceneGraph {
     }
 
     /**
+     * Applies a compoenent animation
+     * @param {Object} node Node which contains  animation to be applied
+     * @param {Object} remainingTime time to update the animation
+     */
+    applyAnimation(node,remainingTime) {
+        let animationIndex = node.currentAnimationIndex;
+        let animationId = node.animations[animationIndex];
+        let animation = this.animations[animationId];
+        animation.update(remainingTime);
+        this.scene.translate(animation.x, animation.y, animation.z);
+        this.scene.rotate(animation.angle, 0, 1, 0);
+
+        if(animation.end == true)
+        {
+            if(animationIndex < node.animations.length -1)
+            {
+                this.scene.rotate(-animation.angle, 0, 1, 0);
+                node.currentAnimationIndex++;
+            }  
+        }
+    }
+
+    /**
      * Visits the next node in the scene graph
      * @param {Object} node Node being visited
      * @param {Object} transformations Array with transformations from the node ancestors
@@ -2339,7 +2358,7 @@ class MySceneGraph {
      */
     visitNode(node, transformations, materials, textures, none_texture, parent_currentMaterialIndex = null) {
         var currTime = this.scene.currTime;
-	    var remainingTime = currTime;
+        var remainingTime = currTime;
 
         none_texture = this.pushTexture(node.texture, textures, none_texture);
 
@@ -2355,15 +2374,8 @@ class MySceneGraph {
             this.applyTransformationsPush(node.transformations.transformations);
         }
 
-        if(node.animations.length != 0)
-        {
-          this.animations[node.animations[0]].update(remainingTime);
-          this.scene.translate(this.animations[node.animations[0]].x,0,this.animations[node.animations[0]].z);
-          this.scene.rotate(this.animations[node.animations[0]].angle, 0,1,0);
-
-         // console.log(this.animations[node.animations[0]].x);
-        } 
-
+        if (node.currentAnimationIndex != null) 
+            this.applyAnimation(node,remainingTime);
 
         if (is_inherit)
             index = parent_currentMaterialIndex;
