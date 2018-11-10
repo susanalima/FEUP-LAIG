@@ -36,6 +36,11 @@ class LinearAnimation extends Animation {
         return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaZ, 2));
     }
 
+    getDistanceVertical(index)
+    {
+       return this.controlPoints[index + 1][1] - this.controlPoints[index][1];
+    }
+
     getDistanceTotal() {
 
         var totalDistance = 0;
@@ -120,7 +125,9 @@ class LinearAnimation extends Animation {
  
     animate_thanks_i_dont_hate_anymore(deltaT){
         let deltaDistX;
+        let deltaDistY;
         let deltaDistZ;
+        let deltaVertical;
         if(this.end == true)
             return;
         if(this.index >= this.maxPoint)
@@ -130,11 +137,13 @@ class LinearAnimation extends Animation {
         }
         var deltaDistance = this.distance*deltaT/this.time;
         var distSegment = this.getDistanceSegment(this.index);
+        deltaVertical = this.getDistanceVertical(this.index);
         this.segment += deltaDistance;
         if (this.segment > distSegment)
         {
             deltaDistance -= (this.segment - distSegment);
             deltaDistX = deltaDistance*Math.sin(this.angle);
+            deltaDistY = deltaVertical * deltaDistance/ distSegment;
             deltaDistZ = deltaDistance*Math.cos(this.angle);
             if(this.index < this.maxPoint -1)
                 this.angle += this.calcAngle(this.vectors[this.index], this.vectors[this.index +1]);
@@ -143,12 +152,15 @@ class LinearAnimation extends Animation {
         } 
         else{
         deltaDistX = deltaDistance*Math.sin(this.angle);
+        deltaDistY = deltaVertical * deltaDistance/ distSegment;
         deltaDistZ = deltaDistance*Math.cos(this.angle);
         }
         this.x += deltaDistX;
+        this.y += deltaDistY;
         this.z += deltaDistZ;
-        //console.log('X: ' + this.x);
-        //console.log('Z: ' + this.z);
+        console.log('X: ' + this.x);
+        console.log('Y: ' + this.y);
+        console.log('Z: ' + this.z);
     }
 
 }
