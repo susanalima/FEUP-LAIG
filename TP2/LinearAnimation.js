@@ -112,12 +112,12 @@ class LinearAnimation extends Animation {
             deltaT = 0;
         else
             deltaT = currTime - this.lastTime;
-        this.animate_fixed_your_function_hope_you_dont_hate_me_anymore(deltaT);
+        this.animate_thanks_i_dont_hate_anymore(deltaT);
         this.lastTime = currTime;
 
     }
  
-    animate_fixed_your_function_hope_you_dont_hate_me_anymore(deltaT){
+    animate_thanks_i_dont_hate_anymore(deltaT){
         let deltaDistX;
         let deltaDistZ;
         if(this.end == true)
