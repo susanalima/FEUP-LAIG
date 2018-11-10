@@ -152,7 +152,7 @@ class LinearAnimation extends Animation {
         } 
         else{
         deltaDistX = deltaDistance*Math.sin(this.angle);
-        deltaDistY = deltaVertical * deltaDistance/ distSegment;
+        deltaDistY = deltaVertical*deltaDistance/ distSegment;
         deltaDistZ = deltaDistance*Math.cos(this.angle);
         }
         this.x += deltaDistX;
