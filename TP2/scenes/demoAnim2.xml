@@ -208,8 +208,8 @@
         <controlpoint x="5.0" y="10.0" z="5.0"/>
 	</linear>
 
-	<circular id="c1" span="5000" center="4.0 0.0 0.0" radius="2.0" 
-		startang="10" rotang="80"/>
+	<circular id="c1" span="7000" center="0.0 0.0 0.0" radius="1.0" 
+		startang="10.0" rotang="60"/>
  </animations>
 
  <primitives>
@@ -249,8 +249,8 @@
  			<translate x="0" y="2.0" z="0"/>
 		</transformation>
 			<animations>
-			<animationref id = "l1"/>
-			<animationref id = "l2"/>
+			<animationref id = "c1"/>
+			
 		</animations>
 		<materials>
 			 <material id="mat2" />

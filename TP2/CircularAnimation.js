@@ -12,6 +12,8 @@ class CircularAnimation extends Animation{
         this.time = time;
         this.distance = this.calculateDistance();
         this.end = false;
+        //this.deltang = this.startang;
+        //this.angularV = this.rotang/this.time;
     }
 
     calculateDistance()
@@ -25,7 +27,9 @@ class CircularAnimation extends Animation{
         if(this.lastTime == null)
             deltaT = currTime;
         else
-            deltaT = currTime - this.lastTime;
+        {
+          deltaT = currTime - this.lastTime;
+        }
 
         this.animate(deltaT);
         this.lastTime = currTime;
@@ -33,8 +37,10 @@ class CircularAnimation extends Animation{
     }
 
     animate(deltaT){
+        //this.deltang = this.startang + this.angularV*deltaT;
         var deltaDistance = this.distance*deltaT/this.time;
         this.rotang = this.rotang + deltaDistance;
+      
     }
 
    
