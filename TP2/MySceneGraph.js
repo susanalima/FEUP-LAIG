@@ -2416,11 +2416,11 @@ class MySceneGraph {
         //this.scene.translate(animation.centerX, animation.centerZ, animation.centerY);
        // this.scene.rotate(animation.rotang, 0, 1, 0);
         //this.scene.translate(0, 0, animation.radius);
-        var animationTranslate1 = this.createTranslate(animation.x, animation.y, animation.z);
-        //var animationRotate = this.createRotate("y", animation.rotang, true);
+        var animationTranslate1 = this.createTranslate(animation.x, 0, animation.z);
+        var animationRotate = this.createRotate("y", -animation.angle, true);
         //var animationTranslate2 = this.createTranslate(0,0, animation.radius);
         node.transformations.push(animationTranslate1);
-        //node.transformations.push(animationRotate);
+        node.transformations.push(animationRotate);        
         //node.transformations.push(animationTranslate2);
 
 

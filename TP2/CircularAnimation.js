@@ -45,12 +45,12 @@ class CircularAnimation extends Animation {
             this.angle = this.startang + this.rotang;
             this.end = true;
         }
-        if (!this.end) {
+        
             this.x = this.radius * Math.cos(this.angle);
             this.z = this.radius * Math.sin(this.angle);
             console.log('X: ' + this.x);
             console.log('Z: ' + this.z);
-        }
+        
 
     }
 }
