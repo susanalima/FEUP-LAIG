@@ -2378,27 +2378,51 @@ class MySceneGraph {
     }
 
     /**
-     * Applies a compoenent animation
-     * @param {Object} node Node which contains  animation to be applied
+     * Applies a component animation
+     * @param {Object} node Component node which contains  animation to be applied
      * @param {Object} remainingTime time to update the animation
      */
     applyAnimation(node,remainingTime) {
+        var popAnimations = true;
         let animationIndex = node.currentAnimationIndex;
         let animationId = node.animations[animationIndex];
         let animation = this.animations[animationId];
         animation.update(remainingTime);
-        this.scene.translate(animation.x, animation.y, animation.z);
-        this.scene.rotate(animation.angle, 0, 1, 0);
+        switch(animation.type){
+            case "Linear" :
+            this.applyAnimationLinear(animation, node);
+            break;
+            case "Circular":
+            //this.scene.translate(animation.centerX,animation.centerZ,animation.centerY);
+            //this.scene.rotate(animation.rotang,0,1,0);
+            //this.scene.translate(0,0,animation.radius);
+            break;
 
+        }     
         if(animation.end == true)
         {
             if(animationIndex < node.animations.length -1)
             {
-                this.scene.rotate(-animation.angle, 0, 1, 0);
                 node.currentAnimationIndex++;
-
+                popAnimations = false;
             }  
         }
+        else
+          popAnimations = true;
+
+        return popAnimations;
+    }
+
+    /**
+     * Applies a component linear animation
+     * @param {Object} animation Animation to be applied
+     * @param {Object} node Component node which contains  animation to be applied
+     */
+    applyAnimationLinear(animation, node) {
+        var animationTranslate = this.createTranslate(animation.x, animation.y, animation.z);
+        var animationRotate = this.createRotate("y", animation.angle, true);
+        node.transformations.transformations.push(animationTranslate);
+        node.transformations.transformations.push(animationRotate);
     }
 
     /**
@@ -2413,48 +2437,15 @@ class MySceneGraph {
     visitNode(node, transformations, materials, textures, none_texture, parent_currentMaterialIndex = null) {
         var currTime = this.scene.currTime;
         var remainingTime = currTime;
-        let  popAnimations = true;
-        none_texture = this.pushTexture(node.texture, textures, none_texture);
+        let  popAnimations = false;
 
+        none_texture = this.pushTexture(node.texture, textures, none_texture);
         let is_inherit = this.pushMaterials(materials, node, parent_currentMaterialIndex);
 
-          //TODO: by me, change to applyAnimation
-          if (node.currentAnimationIndex != null) 
-          {
-              //this.applyAnimation(node,remainingTime);
-              let animationIndex = node.currentAnimationIndex;
-              let animationId = node.animations[animationIndex];
-              let animation = this.animations[animationId];
-              animation.update(remainingTime);
-              switch(animation.type){
-                  case "Linear" :
-                  var animationTranslate = this.createTranslate(animation.x, animation.y, animation.z);
-                  var animationRotate = this.createRotate("y", animation.angle, true);
-                  node.transformations.transformations.push(animationTranslate);
-                  node.transformations.transformations.push(animationRotate);
-                  //this.applyTransformation(animationTranslate);
-                  //this.applyTransformation(animationRotate);
-                  break;
-                  case "Circular":
-                  //this.scene.translate(animation.centerX,animation.centerZ,animation.centerY);
-                  //this.scene.rotate(animation.rotang,0,1,0);
-                  //this.scene.translate(0,0,animation.radius);
-                  break;
-  
-              }
-             
-              if(animation.end == true)
-              {
-                  if(animationIndex < node.animations.length -1)
-                  {
-                      //this.scene.rotate(-animation.angle, 0, 1, 0);
-                      node.currentAnimationIndex++;
-                      popAnimations = false;
-                  }  
-              }
-              else
-                popAnimations = true;
-          }
+        if (node.currentAnimationIndex != null) 
+        {
+            popAnimations = this.applyAnimation(node,remainingTime);    
+        }
 
         transformations.push(node.transformations);
         let index = 0;
@@ -2466,7 +2457,7 @@ class MySceneGraph {
             this.applyTransformationsPush(node.transformations.transformations);
         }
         
-    
+
         if (is_inherit)
             index = parent_currentMaterialIndex;
         else
@@ -2478,13 +2469,16 @@ class MySceneGraph {
             this.visitNode(this.components[node.children.componentsRef[i]], transformations, materials, textures, none_texture, index);
         }
 
-        if (popAnimations)
+        if (node.currentAnimationIndex != null) 
         {
+            if (popAnimations)
+            {
+                node.transformations.transformations.pop();
+             
+            }
             node.transformations.transformations.pop();
-         
         }
-        node.transformations.transformations.pop();
-
+      
         this.scene.popMatrix();
         transformations.pop();
         materials.pop();
