@@ -1394,12 +1394,9 @@ class MySceneGraph {
                 length_s: 0,
                 length_t: 0
             },
-            transformations: {
-                tref: false,
-                trefID: null,
-                transformations: []
+    
+            transformations : [],
 
-            },
             currentAnimationIndex: null, //animations are optional therefore the index can be nulls
             animations: [],
             children: {
@@ -1500,8 +1497,12 @@ class MySceneGraph {
             return "no id defined for transformation for component ID: " + componentId;
         if (!this.isTransformation(id))
             return "invalid id defined for transformation " + id + " for component ID: " + componentId;
-        component.transformations.trefID = id;
-        component.transformations.tref = true;
+        
+        for(let i = 0; i < this.transformations[id].length; i++)
+        {
+            component.transformations.push(this.transformations[id][i]);
+        }
+    
         return null;
     }
 
@@ -1517,17 +1518,17 @@ class MySceneGraph {
         var error;
         switch (nodeName) {
             case "translate":
-                error = this.parseTransformationTranslate(children, index, component.transformations.transformations);
+                error = this.parseTransformationTranslate(children, index, component.transformations);
                 if (error != null)
                     return error;
                 break;
             case "rotate":
-                error = this.parseTransformationRotate(children, index, component.transformations.transformations);
+                error = this.parseTransformationRotate(children, index, component.transformations);
                 if (error != null)
                     return error;
                 break;
             case "scale":
-                error = this.parseTransformationScale(children, index, component.transformations.transformations);
+                error = this.parseTransformationScale(children, index, component.transformations);
                 if (error != null)
                     return error;
                 break;
@@ -2421,8 +2422,8 @@ class MySceneGraph {
     applyAnimationLinear(animation, node) {
         var animationTranslate = this.createTranslate(animation.x, animation.y, animation.z);
         var animationRotate = this.createRotate("y", animation.angle, true);
-        node.transformations.transformations.push(animationTranslate);
-        node.transformations.transformations.push(animationRotate);
+        node.transformations.push(animationTranslate);
+        node.transformations.push(animationRotate);
     }
 
     /**
@@ -2450,14 +2451,10 @@ class MySceneGraph {
         transformations.push(node.transformations);
         let index = 0;
         this.scene.pushMatrix();
-        if (node.transformations.tref) {
-            this.applyTransformations(this.transformations[node.transformations.trefID]);
-        }
-        else {
-            this.applyTransformationsPush(node.transformations.transformations);
-        }
+      
+        this.applyTransformationsPush(node.transformations);
         
-
+    
         if (is_inherit)
             index = parent_currentMaterialIndex;
         else
@@ -2473,10 +2470,9 @@ class MySceneGraph {
         {
             if (popAnimations)
             {
-                node.transformations.transformations.pop();
-             
+                node.transformations.pop();
             }
-            node.transformations.transformations.pop();
+            node.transformations.pop();
         }
       
         this.scene.popMatrix();
