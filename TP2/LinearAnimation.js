@@ -112,7 +112,7 @@ class LinearAnimation extends Animation {
             deltaT = 0;
         else
             deltaT = currTime - this.lastTime;
-        this.animate_mine_i_hate_this_and_i_hate_u(deltaT);
+        this.animate_fixed_your_function_hope_you_dont_hate_me_anymore(deltaT);
         this.lastTime = currTime;
 
     }
