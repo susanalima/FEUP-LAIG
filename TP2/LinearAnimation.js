@@ -2,6 +2,7 @@ class LinearAnimation extends Animation {
 
     constructor(controlPoints, time) {
         super();
+        this.type = "Linear";
         this.controlPoints = controlPoints;
         this.segment = 0;
         this.point = 0;
