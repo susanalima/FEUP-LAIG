@@ -2382,9 +2382,13 @@ class MySceneGraph {
      * Applies a component animation
      * @param {Object} node Component node which contains  animation to be applied
      * @param {Object} remainingTime time to update the animation
+     * @returns {Object} Structure containing the animation type and the popAnimation flag values
      */
     applyAnimation(node,remainingTime) {
-        var popAnimations = true;
+        var apAnimation = {
+            popAnimations : true,
+            type : null,
+        } 
         let animationIndex = node.currentAnimationIndex;
         let animationId = node.animations[animationIndex];
         let animation = this.animations[animationId];
@@ -2392,9 +2396,11 @@ class MySceneGraph {
         switch(animation.type){
             case "Linear" :
             this.applyAnimationLinear(animation, node);
+            apAnimation.type = "Linear";
             break;
             case "Circular":
             this.applyAnimationCircular(animation,node);
+            apAnimation.type = "Circular";
             break;
 
         }     
@@ -2403,27 +2409,27 @@ class MySceneGraph {
             if(animationIndex < node.animations.length -1)
             {
                 node.currentAnimationIndex++;
-                popAnimations = false;
+                apAnimation.popAnimations = false;
             }  
         }
         else
-          popAnimations = true;
+          apAnimation.popAnimations = true;
 
-        return popAnimations;
+        return  apAnimation;
     }
 
+    /**
+     * Applies a component circular animation
+     * @param {Object} animation Animation to be applied
+     * @param {Object} node Component node which contains animation to be applied
+     */
     applyAnimationCircular(animation, node) {
-        //this.scene.translate(animation.centerX, animation.centerZ, animation.centerY);
-       // this.scene.rotate(animation.rotang, 0, 1, 0);
-        //this.scene.translate(0, 0, animation.radius);
         var animationTranslate1 = this.createTranslate(animation.x, 0, animation.z);
         var animationRotate = this.createRotate("y", -animation.angle, true);
-        //var animationTranslate2 = this.createTranslate(0,0, animation.radius);
+        var animationTranslate2 = this.createTranslate(animation.centerX, animation.centerZ, animation.centerY);
+        node.transformations.push(animationTranslate2);
         node.transformations.push(animationTranslate1);
         node.transformations.push(animationRotate);        
-        //node.transformations.push(animationTranslate2);
-
-
     }
 
     /**
@@ -2450,14 +2456,14 @@ class MySceneGraph {
     visitNode(node, transformations, materials, textures, none_texture, parent_currentMaterialIndex = null) {
         var currTime = this.scene.currTime;
         var remainingTime = currTime;
-        let  popAnimations = false;
-
+        //let  popAnimations = false;
+        let apAnimation;
         none_texture = this.pushTexture(node.texture, textures, none_texture);
         let is_inherit = this.pushMaterials(materials, node, parent_currentMaterialIndex);
 
         if (node.currentAnimationIndex != null) 
         {
-            popAnimations = this.applyAnimation(node,remainingTime);    
+            apAnimation = this.applyAnimation(node,remainingTime);    
         }
 
         transformations.push(node.transformations);
@@ -2480,9 +2486,11 @@ class MySceneGraph {
 
         if (node.currentAnimationIndex != null) 
         {
-            if (popAnimations)
+            if (apAnimation.popAnimations)
             {
                 node.transformations.pop();
+                if(apAnimation.type == "Circular")
+                    node.transformations.pop();
             }
             node.transformations.pop();
         }
