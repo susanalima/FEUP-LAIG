@@ -3,7 +3,10 @@ class Terrain extends CGFobject{
     constructor(scene,texture,heightmap,parts,heightscale){
         super(scene);
         this.scene = scene;
-        this.texture = new CGFtexture(this.scene, "./scenes/images/height_map.jpg");
+        //this.texture = new CGFtexture(this.scene, "./scenes/images/height_map.jpg");
+        this.texture = new CGFtexture(this.scene, "./scenes/images/mountain.jpg");
+        //this.texture = new CGFtexture(this.scene, "./scenes/images/vulcano.jpg");
+        //this.texture = new CGFtexture(this.scene, "./scenes/images/metal.png");
         this.heightmap = heightmap;
         this.parts = parts;
         this.heightscale = heightscale;

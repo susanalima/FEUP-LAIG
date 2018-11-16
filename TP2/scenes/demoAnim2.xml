@@ -263,7 +263,7 @@
 	</primitive >
 
 	<primitive id="terrain">
-		<terrain idTexture= "metal" idheightmap="metal" parts="20" heightscale="0.5" />
+		<terrain idTexture= "metal" idheightmap="metal" parts="20" heightscale="0.1" />
 	</primitive >
 
 	<primitive id="water">
