@@ -276,8 +276,6 @@
  			<translate x="0" y="2.0" z="0"/>
 		</transformation>
 		<animations>
-			<animationref id = "l1"/>
-			<animationref id = "l2"/>
 		</animations>
 		<materials>
 			 <material id="mat2" />
@@ -301,7 +299,7 @@
 		</materials>
 		<texture id="metal" length_s="2" length_t="1" />
 		<children>
-			<primitiveref id="torus"/>
+			<primitiveref id="plane"/>
 		</children>
 	 </component>
 

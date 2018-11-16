@@ -1725,8 +1725,7 @@ class MySceneGraph {
      * @returns {Object} New plane
      */
     createPlane(plane) {
-        // return new MyPlane(this.scene...);
-        return null;
+        return new Plane(this.scene, plane.npartsU, plane.npartsV);
     }
 
     /**
