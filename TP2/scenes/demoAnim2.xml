@@ -1,7 +1,7 @@
 <yas>
 
-      <scene root="root" axis_length="5.0" />
-  <views default="p1" >
+<scene root="root" axis_length="5.0" />
+<views default="p1" >
 	<perspective id="p1" near="0.1" far="1000" angle="60">
 		 <from x="15.0" y="15.0" z="15.0" />
 		 <to x="0.0" y="0.0" z="0.0" />
@@ -208,7 +208,7 @@
         <controlpoint x="5.0" y="10.0" z="5.0"/>
 	</linear>
 
-	<circular id="c1" span="5000" center="0.0 0.0 0.0" radius="1.0" 
+	<circular id="c1" span="5000" center="4.0 0.0 0.0" radius="1.0" 
 		startang="10.0" rotang="180"/>
  </animations>
 
@@ -239,6 +239,33 @@
 		<cylinder base="0.4" top="0.2" height="0.6" slices="20" stacks="5" />
 	</primitive >
 
+	<primitive id="plane">
+		<plane npartsU="2" npartsV="2" />
+	</primitive >
+
+	<primitive id="patch">
+		<patch npointsU="2" npointsV="1" npartsU="2" npartsV="2">
+			<controlpoint x="0.0" y="0.0" z="0.0"/>
+			<controlpoint x="0.0" y="0.0" z="0.0"/>
+		</patch>
+	</primitive >
+
+	<primitive id="cylinder2">
+		<cylinder2 base="0.4" top="0.2" height="0.6" slices="20" stacks="5" />
+	</primitive >
+
+	<primitive id="vehicle">
+		<vehicle />
+	</primitive >
+
+	<primitive id="terrain">
+		<terrain idTexture= "metal" idheightmap="metal" parts="2" heightscale="2" />
+	</primitive >
+
+	<primitive id="water">
+		<water idTexture= "metal" idwavemap="metal" parts="2" heightscale="2" texscale="2"/>
+	</primitive >
+
  </primitives >
 
 
@@ -250,7 +277,6 @@
 		</transformation>
 			<animations>
 			<animationref id = "c1"/>
-			
 		</animations>
 		<materials>
 			 <material id="mat2" />
