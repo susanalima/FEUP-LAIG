@@ -1120,7 +1120,7 @@ class MySceneGraph {
         };
         var grandChildren = [];
         var error;
-        var numControlPoints = 0;
+        let numControlPoints = 0;
 
         //get the id of current animation
         let animationId = this.reader.getString(children[index], 'id');
@@ -1170,22 +1170,7 @@ class MySceneGraph {
         return new LinearAnimation(linearAnimation.controlpoints, linearAnimation.span);
     }
 
-    /**
-     * Parses a controlpoint for a linear animation
-     * @param {Object} children Children of the <animation> node
-     * @param {Object} index Index of the child being parsed
-     * @param {Object} controlpoints Array to store the controlpoint information
-     * @param {Object} animationId The id of the animations being parsed
-     * @returns {Object} Null or string containing appropriate error message
-     */
-    parseAnimationLinearControlPoint(children, index, controlpoints, animationId) {
-        var controlpoint = [];
-        var error = this.parseAndValidateXYZvalues(children, index, animationId, "linear animation", "controlpoint", controlpoint);
-        controlpoints.push(controlpoint);
-        return error;
-    }
 
-    //TODO: CENTER THING
     /**
       * Parses animations of type Circular
       * @param {Object} children Children of the <animations> block 
@@ -1323,7 +1308,7 @@ class MySceneGraph {
                     return error;
                 break;
             case "cylinder":
-                error = this.parseCylinder(grandChildren, 0, primitiveId);
+                error = this.parseCylinder(grandChildren, 0, primitiveId,1);
                 if (error != null)
                     return error;
                 break;
@@ -1334,6 +1319,36 @@ class MySceneGraph {
                 break;
             case "torus":
                 error = this.parseTorus(grandChildren, 0, primitiveId);
+                if (error != null)
+                    return error;
+                break;
+            case "plane":
+                error = this.parsePlane(grandChildren, 0, primitiveId);
+                if (error != null)
+                    return error;
+                break;
+            case "patch":
+                error = this.parsePatch(grandChildren, 0, primitiveId);
+                if (error != null)
+                    return error;
+                break;
+            case "vehicle":
+                error = this.parseVehicle(grandChildren, 0, primitiveId);
+                if (error != null)
+                    return error;
+                break;
+            case "cylinder2":
+                error = this.parseCylinder2(grandChildren, 0, primitiveId);
+                if (error != null)
+                    return error;
+                break;
+            case "terrain":
+                error = this.parseTerrain(grandChildren, 0, primitiveId);
+                if (error != null)
+                    return error;
+                break;
+            case "water":
+                error = this.parseWater(grandChildren, 0, primitiveId);
                 if (error != null)
                     return error;
                 break;
@@ -1702,6 +1717,66 @@ class MySceneGraph {
     createTorus(torus) {
         return new MyTorus(this.scene, torus.inner, torus.outer, torus.slices, torus.loops);
     }
+    
+    // TODO
+    /**
+     * Creates a new plane
+     * @param {Object} plane Struct which contains the information needed to create the new plane
+     * @returns {Object} New plane
+     */
+    createPlane(plane) {
+        // return new MyPlane(this.scene...);
+        return null;
+    }
+
+    /**
+     * Creates a new patch
+     * @param {Object} plane Struct which contains the information needed to create the new patch
+     * @returns {Object} New patch
+     */
+    createPatch(patch) {
+        // return new MyPatch(this.scene...);
+        return null;
+    }
+
+    /**
+     * Creates a new vehicle
+     * @returns {Object} New vehicle
+     */
+    createVehicle() {
+        // return new MyVehicle();
+        return null;
+    }
+
+    /**
+     * Creates a new cylinder2
+     * @param {Object} cylinder Struct which contains the information needed to create the new cylinder2
+     * @returns {Object} New cylinder
+     */
+    createCylinder2(cylinder) {
+        // return new MyCylinder2(this.scene...);
+        return null;
+    }
+
+    /**
+     * Creates a new terrain
+     * @param {Object} plane Struct which contains the information needed to create the new terrain
+     * @returns {Object} New terrain
+     */
+    createTerrain(terrain) {
+        // return new MyTerrain(this.scene...);
+        return null;
+    }
+
+    /**
+     * Creates a new water
+     * @param {Object} water Struct which contains the information needed to create the new water
+     * @returns {Object} New water
+     */
+    createWater(water) {
+        // return new MyWater(this.scene...);
+        return null;
+    }
 
 
     /**
@@ -1774,7 +1849,10 @@ class MySceneGraph {
      * @param {Object} id The id for the primitive being parsed
      * @returns {Object} null or string containig an appropriate error message
      */
-    parseCylinder(children, index, id) {
+    parseCylinder(children, index, id, number) {
+        let n = "";
+        if (number == 2)
+            n = number;
         var cylinder = {
             base: null,
             top: null,
@@ -1784,25 +1862,34 @@ class MySceneGraph {
         }
         cylinder.base = this.reader.getFloat(children[index], 'base');
         if (!this.validateFloat(cylinder.base))
-            return "unable to parse base of cylinder for ID " + id;
+            return "unable to parse base of cylinder"+ n +" for ID " + id;
 
         cylinder.top = this.reader.getFloat(children[index], 'top');
         if (!this.validateFloat(cylinder.top))
-            return "unable to parse top of cylinder for ID " + id;
+            return "unable to parse top of cylinder"+ n +" for ID " + id;
 
         cylinder.height = this.reader.getFloat(children[index], 'height');
         if (!this.validateFloat(cylinder.height))
-            return "unable to parse height of cylinder for ID " + id;
+            return "unable to parse height of cylinder"+ n +" for ID " + id;
 
         cylinder.stacks = this.reader.getFloat(children[index], 'stacks');
         if (!this.validateFloat(cylinder.stacks))
-            return "unable to parse stacks of cylinder for ID " + id;
+            return "unable to parse stacks of cylinder"+ n +" for ID " + id;
 
         cylinder.slices = this.reader.getFloat(children[index], 'slices');
         if (!this.validateFloat(cylinder.slices))
-            return "unable to parse slices of cylinder for ID " + id;
+            return "unable to parse slices of cylinder"+ n +"for ID " + id;
 
-        this.primitives[id] = this.createCylinder(cylinder);
+        switch(number) {
+            case 1:
+                this.primitives[id] = this.createCylinder(cylinder);
+                break;
+            case 2:
+                this.primitives[id] = this.createCylinder2(cylinder);
+                break;
+            default:
+                return "invalid cylinder for ID " + id;
+        } 
         return null;
     }
 
@@ -1895,6 +1982,242 @@ class MySceneGraph {
 
         this.primitives[id] = this.createTriangle(triangle);
         return null;
+    }
+
+    /**
+     * Parses grandchild of the <primitives> node of type plane
+     * @param {Object} children GrandChildren of the <primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null or string containig an appropriate error message
+     */
+    parsePlane(children, index, id) {
+        var plane = {
+            npartsU : null,
+            npartsV : null
+        }
+        plane.npartsU = this.reader.getFloat(children[index], 'npartsU');
+        if (!this.validateFloat(plane.npartsU))
+            return "unable to parse npartsU of plane for ID " + id;
+
+        plane.npartsV = this.reader.getFloat(children[index], 'npartsV');
+        if (!this.validateFloat(plane.npartsV))
+            return "unable to parse npartsV of plane for ID " + id;
+
+        this.primitives[id] = this.createPlane(plane);
+
+        return null;
+    }
+
+     /**
+     * Parses grandchild of the <primitives> node of type patch
+     * @param {Object} children GrandChildren of the <primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null or string containig an appropriate error message
+     */
+    parsePatch(children, index, id) {
+        var patch = {
+            npointsU : null,
+            npointsV : null,
+            npartsU : null,
+            npartsV : null,
+            controlpoints : []
+        }
+
+        patch.npointsU = this.reader.getFloat(children[index], 'npointsU');
+        if (!this.validateFloat(patch.npointsU))
+            return "unable to parse npointsU of patch for ID " + id;
+
+        patch.npointsV = this.reader.getFloat(children[index], 'npointsV');
+        if (!this.validateFloat(patch.npointsV))
+            return "unable to parse npointsV of patch for ID " + id;
+
+        patch.npartsU = this.reader.getFloat(children[index], 'npartsU');
+        if (!this.validateFloat(patch.npartsU))
+            return "unable to parse npartsU of patch for ID " + id;
+
+        patch.npartsV = this.reader.getFloat(children[index], 'npartsV');
+        if (!this.validateFloat(patch.npartsV))
+            return "unable to parse npartsV of patch for ID " + id;
+
+        var error;
+        let numControlPoints = 0;
+        let grandChildren = children[index].children;
+        var nodeNames = [];
+        for (let j = 0; j < grandChildren.length; j++) {
+            nodeNames.push(grandChildren[j].nodeName);
+        }
+
+        for (let i = 0; i < grandChildren.length; i++) {
+            if (grandChildren[i].nodeName == "controlpoint") {
+                error = this.parsePatchControlPoint(grandChildren, i, patch.controlpoints);
+                if (error != null)
+                    return error;
+                numControlPoints++;
+            }
+            else {
+                this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
+                continue;
+            }
+        }
+        if (numControlPoints != patch.npointsU*patch.npointsV)
+            return "invalid number of controlpoints, the number of controlPoints in a patch must be npointsU * npointsV";
+
+        this.primitives[id] = this.createPatch(patch);
+        return null;
+    }
+
+    /**
+     * Parses grandchild of the <primitives> node of type vehicle
+     * @param {Object} children GrandChildren of the <primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null 
+     */
+    parseVehicle(children, index, id) {
+        this.primitives[id] = this.createVehicle();
+        return null;
+    }
+
+    /**
+     * Parses grandchild of the <primitives> node of type cylinder2
+     * @param {Object} children GrandChildren of the <primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null or string containig an appropriate error message
+     */
+    parseCylinder2(children, index, id) {
+        return this.parseCylinder(children,index,id,2);
+    }
+
+    /**
+     * Parses grandchild of the <primitives> node of type terrain
+     * @param {Object} children GrandChildren of the <primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null or string containig an appropriate error message
+     */
+    parseTerrain(children, index, id) {
+        var terrain = {
+            idTexture : null,
+            idheightmap : null,
+            parts : null,
+            heightscale : null
+        }
+
+        terrain.idTexture = this.reader.getString(children[index], 'idTexture');
+        if (!this.validateString(terrain.idTexture))
+            return "unable to parse idTexture of terrain for ID " + id;
+    
+        if (!this.isTexture(terrain.idTexture))
+            return "invalid isTexture of terrain for ID " + id;
+
+        terrain.idheightmap = this.reader.getString(children[index], 'idheightmap');
+        if (!this.validateString(terrain.idheightmap))
+            return "unable to parse idheightmap of terrain for ID " + id;
+
+        if (!this.isTexture(terrain.idheightmap))
+            return "invalid idheightmap of terrain for ID " + id;
+
+        terrain.parts = this.reader.getFloat(children[index], 'parts');
+        if (!this.validateFloat(terrain.parts))
+            return "unable to parse parts of terrain for ID " + id;
+
+        terrain.heightscale = this.reader.getFloat(children[index], 'heightscale');
+        if (!this.validateFloat(terrain.heightscale))
+            return "unable to parse heightscale of terrain for ID " + id;
+
+        this.primitives[id] = this.createTerrain(terrain);
+        return null;
+    }
+
+     /**
+     * Parses grandchild of the <primitives> node of type water
+     * @param {Object} children GrandChildren of the <primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null or string containig an appropriate error message
+     */
+    parseWater(children, index, id) {
+        var water = {
+            idTexture : null,
+            idwavemap : null,
+            parts : null,
+            heightscale : null,
+            texscale : null,
+        }
+
+        water.idTexture = this.reader.getString(children[index], 'idTexture');
+        if (!this.validateString(water.idTexture))
+            return "unable to parse isTexture of water for ID " + id;
+        
+        if (!this.isTexture(water.idTexture))
+            return "invalid idTexture of water for ID " + id;
+
+        water.idwavemap = this.reader.getString(children[index], 'idwavemap');
+        if (!this.validateString(water.idwavemap))
+            return "unable to parse idwavemap of water for ID " + id;
+   
+        if (!this.isTexture(water.idwavemap))
+            return "invalid idwavemap of water for ID " + id;
+
+        water.parts = this.reader.getFloat(children[index], 'parts');
+        if (!this.validateFloat(water.parts))
+            return "unable to parse parts of water for ID " + id;
+
+        water.heightscale = this.reader.getFloat(children[index], 'heightscale');
+        if (!this.validateFloat(water.heightscale))
+            return "unable to parse heightscale of water for ID " + id;
+
+        water.texscale = this.reader.getFloat(children[index], 'texscale');
+        if (!this.validateFloat(water.texscale))
+            return "unable to parse texscale of water for ID " + id;
+
+        this.primitives[id] = this.createWater(water);
+        return null;
+    }
+
+
+    
+     /**
+     * Parses a controlpoint 
+     * @param {Object} children Children of the <node> node
+     * @param {Object} index Index of the child being parsed
+     * @param {Object} controlpoints Array to store the controlpoint information
+     * @param {Object} animationId The id of the animations being parsed
+     * @param {Object} s1 string containing relevant information
+     * @returns {Object} Null or string containing appropriate error message
+     */
+    parseControlPoint(children, index, controlpoints, id, s1) {
+        var controlpoint = [];
+        var error = this.parseAndValidateXYZvalues(children, index, id, s1, "controlpoint", controlpoint);
+        controlpoints.push(controlpoint);
+        return error;
+    }
+
+    /**
+     * Parses a controlpoint for a linear animation
+     * @param {Object} children Children of the <animation> node
+     * @param {Object} index Index of the child being parsed
+     * @param {Object} controlpoints Array to store the controlpoint information
+     * @param {Object} animationId The id of the animations being parsed
+     * @returns {Object} Null or string containing appropriate error message
+     */
+    parseAnimationLinearControlPoint(children, index, controlpoints, animationId) {
+        return this.parseControlPoint(children, index, controlpoints, animationId, "linear animation");
+    }
+
+     /**
+     * Parses a controlpoint for a patch
+     * @param {Object} children Children of a patch primitve
+     * @param {Object} index Index of the child being parsed
+     * @param {Object} controlpoints Array to store the controlpoint information
+     * @param {Object} animationId The id of the animations being parsed
+     * @returns {Object} Null or string containing appropriate error message
+     */
+    parsePatchControlPoint(children, index, controlpoints, patchId) {
+        return this.parseControlPoint(children, index, controlpoints, patchId, "patch");
     }
 
     /**
@@ -2415,7 +2738,7 @@ class MySceneGraph {
         else
           apAnimation.popAnimations = true;
 
-        return  apAnimation;
+        return apAnimation;
     }
 
     /**
