@@ -533,7 +533,7 @@ class MySceneGraph {
             return "at least one light must be defined";
 
         this.log("Parsed lights");
-        console.dir(this.lights);
+        //console.dir(this.lights);
         return null;
     }
 
@@ -1752,8 +1752,8 @@ class MySceneGraph {
      * @returns {Object} New cylinder
      */
     createCylinder2(cylinder) {
-        // return new MyCylinder2(this.scene...);
-        return null;
+        return new MyCylinder2Body(this.scene, cylinder.slices, cylinder.stacks, cylinder.base, cylinder.top, cylinder.height); //TODO
+
     }
 
     /**

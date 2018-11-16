@@ -12,7 +12,7 @@ class Patch extends CGFobject{
         this.controlPoints = controlPoints;
         this.controlVertexes = [];
         this.getControlVertexes();
-        console.dir(this.controlVertexes);
+        //console.dir(this.controlVertexes);
         this.makeSurface();
        
     }

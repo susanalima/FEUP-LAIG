@@ -255,7 +255,7 @@
 	</primitive >
 
 	<primitive id="cylinder2">
-		<cylinder2 base="0.4" top="0.2" height="0.6" slices="20" stacks="5" />
+		<cylinder2 base="1" top="0.2" height="10" slices="20" stacks="5" />
 	</primitive >
 
 	<primitive id="vehicle">
@@ -303,7 +303,7 @@
 		</materials>
 		<texture id="metal" length_s="2" length_t="1" />
 		<children>
-			<primitiveref id="patch"/>
+			<primitiveref id="cylinder2"/>
 		</children>
 	 </component>
 

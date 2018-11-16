@@ -18,7 +18,7 @@ class Plane extends CGFobject{
 
     makeSurface(){
         var nurbsSurface = new CGFnurbsSurface(this.degree1, this.degree2, this.controlPoints);
-        console.dir(this.controlPoints);
+        //console.dir(this.controlPoints);
         this.plane = new CGFnurbsObject(this.scene, this.nparts_u, this.nparts_v, nurbsSurface);
 
     }

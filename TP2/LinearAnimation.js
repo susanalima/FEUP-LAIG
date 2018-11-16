@@ -9,7 +9,7 @@ class LinearAnimation extends Animation {
         this.maxPoint = this.controlPoints.length - 1;
         this.time = time;
         this.lastTime = null;
-        console.dir(this.controlPoints);
+        //console.dir(this.controlPoints);
         this.x = this.controlPoints[0][0];
         this.y = this.controlPoints[0][1];
         this.z = this.controlPoints[0][2];
@@ -25,7 +25,7 @@ class LinearAnimation extends Animation {
         this.vectors = [];
         this.getVectors();
 
-        console.dir(this.vectors);
+        //console.dir(this.vectors);
         this.angle = this.calcAngle(this.vectors[0],[0,1]);
     }
 
