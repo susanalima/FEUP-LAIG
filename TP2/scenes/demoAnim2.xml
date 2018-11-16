@@ -263,7 +263,7 @@
 	</primitive >
 
 	<primitive id="terrain">
-		<terrain idTexture= "metal" idheightmap="metal" parts="2" heightscale="2" />
+		<terrain idTexture= "metal" idheightmap="metal" parts="20" heightscale="2" />
 	</primitive >
 
 	<primitive id="water">
@@ -303,7 +303,7 @@
 		</materials>
 		<texture id="metal" length_s="2" length_t="1" />
 		<children>
-			<primitiveref id="cylinder2"/>
+			<primitiveref id="terrain"/>
 		</children>
 	 </component>
 

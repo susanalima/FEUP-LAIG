@@ -1762,8 +1762,9 @@ class MySceneGraph {
      * @returns {Object} New terrain
      */
     createTerrain(terrain) {
-        // return new MyTerrain(this.scene...);
-        return null;
+        var texture = this.animations[terrain.idTexture];
+        var map = this.animations[terrain.idheightmap];
+        return new Terrain(this.scene,texture,map,terrain.parts, terrain.heightscale);
     }
 
     /**
