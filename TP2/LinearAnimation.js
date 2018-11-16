@@ -9,9 +9,10 @@ class LinearAnimation extends Animation {
         this.maxPoint = this.controlPoints.length - 1;
         this.time = time;
         this.lastTime = null;
-        this.x = 0;
-        this.y = 0;
-        this.z = 0;
+        console.dir(this.controlPoints);
+        this.x = this.controlPoints[0][0];
+        this.y = this.controlPoints[0][1];
+        this.z = this.controlPoints[0][2];
         this.index = 0;
         this.distance = this.getDistanceTotal();
     
