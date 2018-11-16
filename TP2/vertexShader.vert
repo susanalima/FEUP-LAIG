@@ -22,4 +22,5 @@ void main()
 {
   vec4 rgba = texture2D(uSampler2, aTextureCoord);  
   gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition + vec3(0,0,(rgba[0]+rgba[1]+rgba[2])*normScale), 1.0);
+  vTextureCoord = aTextureCoord;
 }

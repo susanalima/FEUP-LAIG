@@ -2,24 +2,21 @@
 precision highp float;
 #endif
 
-/* mat4 uMVMatrix;
- mat4 uPMatrix;
- mat4 uNMatrix;
+ uniform mat4 uMVMatrix;
+uniform mat4 uPMatrix;
+uniform mat4 uNMatrix;
  
- vec4 uGlobalAmbient;
 
- bool uUseTexture; 	
 
- vec3 aVertexPosition;
- vec3 aVertexNormal;
- vec2 aTextureCoord;
+varying vec2 vTextureCoord;
+uniform sampler2D uSampler2;
 
- */
-
+uniform float normScale;
 
 void main()
 {
-gl_FragColor = vec4(0.0,0.5,0.5, 1.0) * 0.5;
+  gl_FragColor = texture2D(uSampler2, vTextureCoord);  
+
 }
 
 
