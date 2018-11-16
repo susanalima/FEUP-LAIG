@@ -2725,7 +2725,6 @@ class MySceneGraph {
             this.applyAnimationCircular(animation,node);
             apAnimation.type = "Circular";
             break;
-
         }     
         if(animation.end == true)
         {
@@ -2779,23 +2778,19 @@ class MySceneGraph {
     visitNode(node, transformations, materials, textures, none_texture, parent_currentMaterialIndex = null) {
         var currTime = this.scene.currTime;
         var remainingTime = currTime;
-        //let  popAnimations = false;
         let apAnimation;
         none_texture = this.pushTexture(node.texture, textures, none_texture);
         let is_inherit = this.pushMaterials(materials, node, parent_currentMaterialIndex);
 
         if (node.currentAnimationIndex != null) 
-        {
             apAnimation = this.applyAnimation(node,remainingTime);    
-        }
-
+    
         transformations.push(node.transformations);
         let index = 0;
         this.scene.pushMatrix();
       
         this.applyTransformationsPush(node.transformations);
         
-    
         if (is_inherit)
             index = parent_currentMaterialIndex;
         else
@@ -2807,6 +2802,8 @@ class MySceneGraph {
             this.visitNode(this.components[node.children.componentsRef[i]], transformations, materials, textures, none_texture, index);
         }
 
+        //ver se o comeca onde ficou ou no ponto de controlo seguinte
+        // achp que e aqui que se mudar, deve ser o ultimo pop not sure
         if (node.currentAnimationIndex != null) 
         {
             if (apAnimation.popAnimations)
