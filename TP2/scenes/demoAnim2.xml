@@ -244,9 +244,13 @@
 	</primitive >
 
 	<primitive id="patch">
-		<patch npointsU="2" npointsV="1" npartsU="2" npartsV="2">
-			<controlpoint x="0.0" y="0.0" z="0.0"/>
-			<controlpoint x="0.0" y="0.0" z="0.0"/>
+		<patch npointsU="3" npointsV="2" npartsU="20" npartsV="20">
+			<controlpoint x="-1.5" y="-1.5" z="0.0"/>
+			<controlpoint x="-1.5" y="1.5" z="0.0"/>
+			<controlpoint x="0" y="-1.5" z="3.0"/>
+			<controlpoint x="0" y="1.5" z="3.0"/>
+			<controlpoint x="1.5" y="-1.5" z="0.0"/>
+			<controlpoint x="1.5" y="1.5" z="0.0"/>
 		</patch>
 	</primitive >
 
@@ -299,7 +303,7 @@
 		</materials>
 		<texture id="metal" length_s="2" length_t="1" />
 		<children>
-			<primitiveref id="plane"/>
+			<primitiveref id="patch"/>
 		</children>
 	 </component>
 

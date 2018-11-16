@@ -1734,8 +1734,7 @@ class MySceneGraph {
      * @returns {Object} New patch
      */
     createPatch(patch) {
-        // return new MyPatch(this.scene...);
-        return null;
+        return new Patch(this.scene, patch.npointsU,patch.npointsV, patch.npartsU, patch.npartsV, patch.controlpoints);
     }
 
     /**
