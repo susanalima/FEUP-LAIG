@@ -1,4 +1,4 @@
-class Plane extends CGFobject{
+class Patch extends CGFobject{
     
     constructor(scene, nparts_u, nparts_v){
         super(scene);
@@ -7,13 +7,10 @@ class Plane extends CGFobject{
         this.degree2 = 1;
         this.nparts_u = nparts_u;
         this.nparts_v = nparts_v;
-        let controlPoint1 = [-0.5, -0.5, 0, 1];
-        let controlPoint2 = [-0.5, 0.5, 0, 1];
-        let controlPoint3 = [0.5, -0.5, 0, 1];
-        let controlPoint4 = [0.5, 0.5, 0, 1];
-        this.controlPoints = [[controlPoint1,controlPoint2],[controlPoint3,controlPoint4]];
+        
+        this.controlPoints;
         this.makeSurface();
-      
+       
     }
 
     makeSurface(){
