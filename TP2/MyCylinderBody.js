@@ -1,5 +1,5 @@
 /**
- * MyCylinder (regular) to be changed 
+ * MyCylinderBody
  * @param gl {WebGLRenderingContext}
  * @constructor
  */

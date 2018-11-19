@@ -4,31 +4,27 @@ class LinearAnimation extends Animation {
         super();
         this.type = "Linear";
         this.controlPoints = controlPoints;
-        this.segment = 0;
-        this.point = 0;
         this.maxPoint = this.controlPoints.length - 1;
         this.time = time;
+        this.distance = this.getDistanceTotal();
+        this.vectors = [];
+        this.getVectors();
+        this.restart();
+    }
+
+    restart() {
+        this.segment = 0;
+        this.point = 0;
         this.lastTime = null;
-        //console.dir(this.controlPoints);
         this.x = this.controlPoints[0][0];
         this.y = this.controlPoints[0][1];
         this.z = this.controlPoints[0][2];
         this.index = 0;
-        this.distance = this.getDistanceTotal();
-    
-        this.distanceComponents = [0,0];
-        this.prevDistanceX = 0;
-        this.prevDistanceZ = 0;
         this.end = false;
-        this.getDistanceComponents();
-
-        this.vectors = [];
-        this.getVectors();
-
-        //console.dir(this.vectors);
         this.angle = this.calcAngle(this.vectors[0],[0,1]);
     }
 
+ 
     getDistanceSegment(index) {
 
         let deltaX = this.controlPoints[index + 1][0] - this.controlPoints[index][0];
@@ -159,9 +155,6 @@ class LinearAnimation extends Animation {
         this.x += deltaDistX;
         this.y += deltaDistY;
         this.z += deltaDistZ;
-        console.log('X: ' + this.x);
-        console.log('Y: ' + this.y);
-        console.log('Z: ' + this.z);
     }
 
 }

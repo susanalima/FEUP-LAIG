@@ -10,14 +10,16 @@ class CircularAnimation extends Animation {
         this.centerY = centerY;
         this.centerZ = centerZ;
         this.time = time;
-        this.x = centerX + radius * Math.cos(this.startang);
-        this.y = centerY;
-        this.z = centerZ + radius * Math.sin(this.startang);
+        this.restart();
+    }
+
+    restart() {
+        this.x = this.centerX + this.radius * Math.cos(this.startang);
+        this.y = this.centerY;
+        this.z = this.centerZ + this.radius * Math.sin(this.startang);
         this.distance = this.calculateDistance();
         this.end = false;
         this.angle = this.startang;
-        //this.deltang = this.startang;
-        //this.angularV = this.rotang/this.time;
     }
 
     calculateDistance() {

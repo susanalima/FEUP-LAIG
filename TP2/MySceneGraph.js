@@ -2728,9 +2728,11 @@ class MySceneGraph {
         {
             if(animationIndex < node.animations.length -1)
             {
+                animation.restart();
                 node.currentAnimationIndex++;
                 apAnimation.popAnimations = false;
-            }  
+            }
+         
         }
         else
           apAnimation.popAnimations = true;

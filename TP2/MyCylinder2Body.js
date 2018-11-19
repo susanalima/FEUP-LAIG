@@ -1,15 +1,15 @@
 /**
- * MyCylinder (regular) to be changed 
+ * MyCylinder2Body 
  * @param gl {WebGLRenderingContext}
  * @constructor
  */
 
 /**
- * MyCylinder2BodyClass is used to represent the side of a cylinder
+ * MyCylinder2Body Class is used to represent the side of a cylinder2
  */
 class MyCylinder2Body extends CGFobject {
 	/**
-	 * Constructor for MyCylinderBody class
+	 * Constructor for MyCylinder2Body class
 	 * @param {Object} scene Scene where the object will be displayed
 	 * @param {Object} slices Number of slices of the cylinder, in other words, the number of sides of the polygon
 	 * @param {Object} stacks Number of stacks that constitute the cylinder.
@@ -37,19 +37,41 @@ class MyCylinder2Body extends CGFobject {
         this.makeSurface();
     };
 
+    //TODO refactoring
     calculateControlPoints(){
         let angle = 0;
         let xb,yb,xt,yt;
         let z = 0;
 
         let points = [];
+        let boots;
         for(let i = 0; i < 9; i++)
         {
-            xb = this.base*Math.cos(angle);
-            yb = this.base*Math.sin(angle);
+            if (i == 1 || i == 3 )
+            {
+                yb = this.base/4 +  this.base*Math.sin(angle);
+                yt = this.top/4 + this.top*Math.sin(angle);
+            }
+            else
+            {
+                if ( i == 5 || i == 7)
+                {
+                    yb = -this.base/4 +  this.base*Math.sin(angle);
+                    yt = -this.top/4 + this.top*Math.sin(angle);
+                }
+                else{
+                    yb = this.base*Math.sin(angle);
+                    yt = this.top*Math.sin(angle);
+                }
+              
+            }
+            if( angle > Math.PI/2 && angle < Math.PI*3/2)
+                boots = this.base/4;
+            else 
+                boots = 0;
+            xb = -boots + this.base*Math.cos(angle);
             xt = this.top*Math.cos(angle);
-            yt = this.top*Math.sin(angle);
-            points.push([xb,yb,z,1],[xt,yt,this.height,1]);
+            points.push([xb,yb,z],[xt,yt,this.height]);
             angle += Math.PI/4;
         }
         this.controlPoints = points;
@@ -68,6 +90,7 @@ class MyCylinder2Body extends CGFobject {
                
             this.controlVertexes.push(tmpvert);
         }
+        console.dir(this.controlVertexes);
          
     }
 
