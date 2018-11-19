@@ -1706,7 +1706,7 @@ class MySceneGraph {
      * @returns {Object} New cylinder
      */
     createCylinder(cylinder) {
-        return new MyCylinder(this.scene, cylinder.slices, cylinder.stacks, cylinder.base, cylinder.top, cylinder.height); //TODO
+        return new MyCylinder(this.scene, cylinder.slices, cylinder.stacks, cylinder.base, cylinder.top, cylinder.height,1); 
     }
 
     /**
@@ -1718,7 +1718,6 @@ class MySceneGraph {
         return new MyTorus(this.scene, torus.inner, torus.outer, torus.slices, torus.loops);
     }
     
-    // TODO
     /**
      * Creates a new plane
      * @param {Object} plane Struct which contains the information needed to create the new plane
@@ -1752,7 +1751,7 @@ class MySceneGraph {
      * @returns {Object} New cylinder
      */
     createCylinder2(cylinder) {
-        return new MyCylinder2Body(this.scene, cylinder.slices, cylinder.stacks, cylinder.base, cylinder.top, cylinder.height); //TODO
+        return new MyCylinder(this.scene, cylinder.slices, cylinder.stacks, cylinder.base, cylinder.top, cylinder.height,2);
 
     }
 

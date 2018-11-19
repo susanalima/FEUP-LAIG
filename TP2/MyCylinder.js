@@ -1,6 +1,6 @@
 
 /**
- * Class MyCilinder represents a cylinder is composed by three objects (2 MyCylinderBase and 1 MyCylinderBody)
+ * Class MyCylinder represents a cylinder is composed by three objects (2 MyCylinderBase and 1 MyCylinderBody or MyCylinder2Body)
  */
 class MyCylinder extends CGFobject {
 
@@ -12,17 +12,30 @@ class MyCylinder extends CGFobject {
 	 * @param {Object} base The radius of the base
 	 * @param {Object} top The radius of the top
 	 * @param {Object} height The distance between the top and base
+	 * @param {Object} type Indicates the type of cylinder body being created (MyCylinderBody ou MyCylinder2Body)
 	 */
-	constructor(scene, slices, stacks, base, top, height) {
+	constructor(scene, slices, stacks, base, top, height, type) {
 		super(scene);
 
-		
-		this.body = new MyCylinderBody(scene,slices,stacks,base,top,height);
 		this.top = new MyCylinderBase(scene,slices,top);
 		this.base = new MyCylinderBase(scene,slices,base);
-
+		this.createBody( slices, stacks, base, top, height, type);
 		this.initBuffers();
 	};
+
+	createBody(slices,stacks,base,top,height,type) {
+		switch(type) {
+			case 1:
+			this.body = new MyCylinderBody(this.scene,slices,stacks,base,top,height);
+			break;
+			case 2:
+			this.body = new MyCylinder2Body(this.scene,slices,stacks,base,top,height);
+			break;
+			default:
+			this.body = new MyCylinderBody(this.scene,slices,stacks,base,top,height);
+			break;
+		}
+	}
 
 	/**
 	 * Displays the cylinder in member scene

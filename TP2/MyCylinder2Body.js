@@ -39,18 +39,17 @@ class MyCylinder2Body extends CGFobject {
 
     calculateControlPoints(){
         let angle = 0;
-        let x,y;
+        let xb,yb,xt,yt;
         let z = 0;
-
 
         let points = [];
         for(let i = 0; i < 9; i++)
         {
-            let point = [];
-            x = this.base*Math.cos(angle);
-            y = this.base*Math.sin(angle);
-            point.push(x,y,z,1);
-            points.push(point,[x,y,this.height,1]);
+            xb = this.base*Math.cos(angle);
+            yb = this.base*Math.sin(angle);
+            xt = this.top*Math.cos(angle);
+            yt = this.top*Math.sin(angle);
+            points.push([xb,yb,z,1],[xt,yt,this.height,1]);
             angle += Math.PI/4;
         }
         this.controlPoints = points;
