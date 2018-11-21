@@ -1157,19 +1157,10 @@ class MySceneGraph {
         if (numControlPoints < 2)
             return "at least two controlpoints must be defined";
 
-        this.animations[animationId] = this.createLinearAnimation(linearAnimation);
+       // this.animations[animationId] = this.createLinearAnimation(linearAnimation);
+       this.animations[animationId] = linearAnimation;
         return null;
     }
-
-    /**
-    * Creates a new linear animation
-    * @param {Object} linearAnimation Struct which contains the information needed to create the new linear animation
-    * @returns {Object} New linear animation
-    */
-    createLinearAnimation(linearAnimation) {
-        return new LinearAnimation(linearAnimation.controlpoints, linearAnimation.span);
-    }
-
 
     /**
       * Parses animations of type Circular
@@ -1229,10 +1220,35 @@ class MySceneGraph {
         if (!this.validateFloat(circularAnimation.rotang))
             return "unable to parse rotang value for circular animation for ID " + animationId;
 
-        this.animations[animationId] = this.createCircularAnimation(circularAnimation);
+       // this.animations[animationId] = this.createCircularAnimation(circularAnimation);
 
+        this.animations[animationId] = circularAnimation;
         return null;
     }
+
+    /**
+    * Creates a new animation according with the animation received
+    * @param {Object} animation Struct which contains the information needed to create the new animation
+    * @returns {Object}  animation
+    */
+    createAnimation(animation) {
+        switch(animation.class) {
+            case 'linear' :
+            return this.createLinearAnimation(animation);
+            case 'circular':
+            return this.createCircularAnimation(animation);
+        }
+    }
+
+    /**
+    * Creates a new linear animation
+    * @param {Object} linearAnimation Struct which contains the information needed to create the new linear animation
+    * @returns {Object} New linear animation
+    */
+   createLinearAnimation(linearAnimation) {
+    return new LinearAnimation(linearAnimation.controlpoints, linearAnimation.span);
+}
+
 
     /**
      * Creates a new circular animation
@@ -1243,6 +1259,7 @@ class MySceneGraph {
         return new CircularAnimation(circularAnimation.span, circularAnimation.centerX,circularAnimation.centerY,circularAnimation.centerZ,
             circularAnimation.radius,circularAnimation.startang,circularAnimation.rotang);
     }
+
 
     /**
      * Parses the <primitives> node.
@@ -1411,8 +1428,8 @@ class MySceneGraph {
             },
     
             transformations : [],
-
             currentAnimationIndex: null, //animations are optional therefore the index can be nulls
+            currentAnimationInfo : null,
             animations: [],
             children: {
                 componentsRef: [],
@@ -1554,6 +1571,8 @@ class MySceneGraph {
         return null;
     }
 
+    
+
     /**
    * Parses the animations of a component
    * @param {Object} children Children of the <component> node
@@ -1570,7 +1589,9 @@ class MySceneGraph {
                     return "no id defined for animationref for component ID: " + componentId;
                 if (!this.isAnimation(id))
                     return "invalid id defined for animationref " + id + " for component ID: " + componentId;
-                component.animations.push(id);
+                //component.animations.push(id);
+                var animation = this.createAnimation(this.animations[id]);
+                component.animations.push(animation);
             }
             else
                 this.onXMLMinorError("unknown tag <" + children[k].nodeName + ">");
@@ -2711,8 +2732,9 @@ class MySceneGraph {
             type : null,
         } 
         let animationIndex = node.currentAnimationIndex;
-        let animationId = node.animations[animationIndex];
-        let animation = this.animations[animationId];
+        //let animationId = node.animations[animationIndex];
+        //let animation = this.animations[animationId];
+        let animation = node.animations[animationIndex];
         animation.update(remainingTime);
         switch(animation.type){
             case "Linear" :

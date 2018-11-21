@@ -48,30 +48,7 @@ class LinearAnimation extends Animation {
         return totalDistance;
     }
 
-    getDistanceComponents(){
-        let vec2, vec1 = [0,0];
-        for(let ind= 0; ind < this.controlPoints.length - 1; ind++)
-        {
-            vec2 = this.getVector(ind);
-            this.distanceComponents[0] += Math.abs(vec2[0]);
-            this.distanceComponents[1] += Math.abs(vec2[1]);
-            vec1 = vec2;
-        }
-    }
-
-    getDistanceComponent(index){
-        let vec1,vec2;
-        if(index == 0)
-        {
-            vec1 = [0,0];
-        }
-        else
-            {
-                vec1 = this.getVector(index);
-                vec2 = this.getVector(index +1);
-            }
-        return [Math.abs(vec2[0] - vec1[0]),Math.abs(vec2[1] - vec1[1])];
-    }
+   
 
     getVectors()
     {
@@ -91,10 +68,7 @@ class LinearAnimation extends Animation {
         return vector;
     }
 
-    getCos() {
-        return this.controlPoints[this.index][0] / Math.sqrt(Math.pow(this.controlPoints[this.index][0], 2) + Math.pow(this.controlPoints[this.index][2], 2));
-    }
-
+ 
     calcAngle(vector1, vector2)
     {
       let v1_x = vector1[0];
@@ -115,12 +89,11 @@ class LinearAnimation extends Animation {
             deltaT = 0;
         else
             deltaT = currTime - this.lastTime;
-        this.animate_thanks_i_dont_hate_anymore(deltaT);
+        this.animate(deltaT);
         this.lastTime = currTime;
-
     }
  
-    animate_thanks_i_dont_hate_anymore(deltaT){
+    animate(deltaT){
         let deltaDistX;
         let deltaDistY;
         let deltaDistZ;

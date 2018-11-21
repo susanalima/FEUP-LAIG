@@ -17,11 +17,30 @@ class MyCylinder extends CGFobject {
 	constructor(scene, slices, stacks, base, top, height, type) {
 		super(scene);
 
-		this.top = new MyCylinderBase(scene,slices,top);
-		this.base = new MyCylinderBase(scene,slices,base);
+		//this.top = new MyCylinderBase(scene,slices,top);
+		//this.base = new MyCylinderBase(scene,slices,base);
+		this. base = this.createBase(slices,base,type);
+		this.top = this.createBase(slices, top, type);
 		this.createBody( slices, stacks, base, top, height, type);
 		this.initBuffers();
 	};
+
+	createBase(slices,radius, type) {
+		var base;
+		switch(type) {
+			case 1:
+			base = new MyCylinderBase(this.scene,slices,radius);
+			break;
+			case 2:
+			base = new MyCylinderBase(this.scene,slices,radius);
+			break;
+			default:
+			base = new MyCylinderBase(this.scene,slices,radius);
+			break;
+		}
+		return base;
+	}
+
 
 	/**
 	 * Creates the body for the cylinder according with the specified type

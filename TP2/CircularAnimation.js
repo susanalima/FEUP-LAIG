@@ -10,6 +10,7 @@ class CircularAnimation extends Animation {
         this.centerY = centerY;
         this.centerZ = centerZ;
         this.time = time;
+        this.distance = this.calculateDistance();
         this.restart();
     }
 
@@ -17,7 +18,6 @@ class CircularAnimation extends Animation {
         this.x = this.centerX + this.radius * Math.cos(this.startang);
         this.y = this.centerY;
         this.z = this.centerZ + this.radius * Math.sin(this.startang);
-        this.distance = this.calculateDistance();
         this.end = false;
         this.angle = this.startang;
     }
@@ -52,7 +52,5 @@ class CircularAnimation extends Animation {
             this.z = this.radius * Math.sin(this.angle);
             console.log('X: ' + this.x);
             console.log('Z: ' + this.z);
-        
-
     }
 }

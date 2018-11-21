@@ -7,7 +7,7 @@
 /**
  * MyCylinder2Body Class is used to represent the side of a cylinder2
  */
-class MyCylinder2Body extends CGFobject {
+class MyCylinder2Base extends CGFobject {
 	/**
 	 * Constructor for MyCylinder2Body class
 	 * @param {Object} scene Scene where the object will be displayed
@@ -17,60 +17,38 @@ class MyCylinder2Body extends CGFobject {
 	 * @param {Object} top Radius of the top
 	 * @param {Object} height Length of the cylinder
 	 */
-	constructor(scene, slices, stacks, base, top, height) {
+	constructor(scene, slices, radius)  {
 		super(scene);
 
-		this.height = height;
-		this.base = base;
-        this.top = top;
+		this.radius = radius;
         this.npoints_u = 9;
-        this.npoints_v = 2;
+        this.npoints_v = 1;
         this.degree1 = 8;
-        this.degree2 = 1;
+        this.degree2 = 0;
         this.nparts_u = slices;
-        this.nparts_v = stacks;
+        this.nparts_v = slices;
         this.controlPoints = [];
         this.controlVertexes = [];
         this.calculateControlPoints();
+        console.dir(this.controlPoints);
         this.getControlVertexes();
+        console.dir(this.controlVertexes);
         this.makeSurface();
     };
 
     //TODO refactoring
     calculateControlPoints(){
         let angle = 0;
-        let xb,yb,xt,yt;
+        let x,y;
         let z = 0;
 
         let points = [];
-        let boots;
         for(let i = 0; i < 9; i++)
         {
-            if (i == 1 || i == 3 )
-            {
-                yb = this.base/4 +  this.base*Math.sin(angle);
-                yt = this.top/4 + this.top*Math.sin(angle);
-            }
-            else
-            {
-                if ( i == 5 || i == 7)
-                {
-                    yb = -this.base/4 +  this.base*Math.sin(angle);
-                    yt = -this.top/4 + this.top*Math.sin(angle);
-                }
-                else{
-                    yb = this.base*Math.sin(angle);
-                    yt = this.top*Math.sin(angle);
-                }
-              
-            }
-            if( angle > Math.PI/2 && angle < Math.PI*3/2)
-                boots = this.base/4;
-            else 
-                boots = 0;
-            xb = -boots + this.base*Math.cos(angle);
-            xt = this.top*Math.cos(angle);
-            points.push([xb,yb,z],[xt,yt,this.height]);
+           
+            x = this.radius*Math.cos(angle);
+            y = this.radius*Math.sin(angle);
+            points.push([x,y,z]);
             angle += Math.PI/4;
         }
         this.controlPoints = points;
@@ -89,7 +67,8 @@ class MyCylinder2Body extends CGFobject {
                
             this.controlVertexes.push(tmpvert);
         }
-        
+        console.dir(this.controlVertexes);
+         
     }
 
     makeSurface(){

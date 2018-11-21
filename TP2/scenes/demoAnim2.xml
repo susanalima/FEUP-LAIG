@@ -187,19 +187,13 @@
 
  <animations>
 	<!--pode ser vazia-->
-	<linear id="l2" span="10000">
+	<linear id="l2" span="1000">
 	<controlpoint x="0.0" y="0.0" z="0.0"/>
-		<controlpoint x="10.0" y="10.0" z="10.0"/>
-		<controlpoint x="0.0" y="0.0" z="0.0"/>
-		<controlpoint x="5.0" y="10.0" z="5.0"/>
-		<controlpoint x="10.0" y="10.0" z="5.0"/>
-		<controlpoint x="0.0" y="10.0" z="5.0"/>
-        <controlpoint x="5.0" y="10.0" z="5.0"/>
-
+		<controlpoint x="10.0" y="0.0" z="10.0"/>
 	</linear>
 
 	<linear id="l1" span="10000">
-		<controlpoint x="6.0" y="0.0" z="6.0"/>
+		<controlpoint x="0.0" y="0.0" z="0.0"/>
 		<controlpoint x="10.0" y="0.0" z="10.0"/>
 		<controlpoint x="0.0" y="0.0" z="0.0"/>
 		<controlpoint x="5.0" y="0.0" z="5.0"/>
@@ -208,7 +202,7 @@
         <controlpoint x="5.0" y="0.0" z="5.0"/>
 	</linear>
 
-	<circular id="c1" span="5000" center="4.0 0.0 0.0" radius="1.0" 
+	<circular id="c1" span="5000" center="0.0 0.0 0.0" radius="1.0" 
 		startang="10.0" rotang="180"/>
  </animations>
 
@@ -258,6 +252,11 @@
 		<cylinder2 base="1" top="0.2" height="10" slices="20" stacks="5" />
 	</primitive >
 
+	<primitive id="cylinder1">
+		<cylinder base="1" top="0.2" height="10" slices="20" stacks="5" />
+	</primitive >
+
+
 	<primitive id="vehicle">
 		<vehicle />
 	</primitive >
@@ -277,10 +276,8 @@
 
  	<component id="root">
 		<transformation>
- 			<translate x="0" y="2.0" z="0"/>
+ 		
 		</transformation>
-		<animations>
-		</animations>
 		<materials>
 			 <material id="mat2" />
 			 <material id="mat1" />
@@ -298,26 +295,34 @@
 	  <component id="comp18">
 	 	<transformation>
 		</transformation>
+		<animations>
+				<animationref id = "c1"/>
+				<animationref id = "l1"/>
+		</animations>
 		<materials>
 			 <material id="inherit" />
 		</materials>
 		<texture id="metal" length_s="2" length_t="1" />
 		<children>
-			<primitiveref id="terrain"/>
+			<primitiveref id="torus"/>
 		</children>
 	 </component>
 
 
 	  <component id="comp19">
 	 	<transformation>
-		 	<translate x="1" y="10.0" z="1"/>
+		 	<translate x="0" y="5.0" z="0"/>
 		</transformation>
+		<animations>
+			<animationref id = "l1"/>	
+			<animationref id = "l1"/>	
+		</animations>
 		<materials>
 			 <material id="inherit" />
 		</materials>
 		<texture id="metal" length_s="2" length_t="1" />
 		<children>
-			<primitiveref id="sphere"/>
+			<primitiveref id="torus"/>
 		</children>
 	 </component>
 
