@@ -296,15 +296,14 @@
 	 	<transformation>
 		</transformation>
 		<animations>
-				<animationref id = "c1"/>
-				<animationref id = "l1"/>
+				
 		</animations>
 		<materials>
 			 <material id="inherit" />
 		</materials>
 		<texture id="metal" length_s="2" length_t="1" />
 		<children>
-			<primitiveref id="torus"/>
+			<primitiveref id="water"/>
 		</children>
 	 </component>
 

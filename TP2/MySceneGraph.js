@@ -1793,8 +1793,8 @@ class MySceneGraph {
      * @returns {Object} New water
      */
     createWater(water) {
-        // return new MyWater(this.scene...);
-        return null;
+        return new Water(this.scene,20,0.05);
+
     }
 
 

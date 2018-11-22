@@ -73,11 +73,11 @@ class MyCylinder extends CGFobject {
 		this.body.display();
 		this.scene.pushMatrix();
 		this.scene.translate(0,0,this.body.height);
-		this.top.display();
+		//this.top.display();
 		this.scene.popMatrix();
 		this.scene.pushMatrix();
 		this.scene.scale(-1,1,1);
-		this.base.display();
+		//this.base.display();
 		this.scene.popMatrix();
 	}
 };

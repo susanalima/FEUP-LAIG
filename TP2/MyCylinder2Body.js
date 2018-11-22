@@ -31,8 +31,8 @@ class MyCylinder2Body extends CGFobject {
         this.nparts_v = stacks;
         this.controlPoints = [];
         this.controlVertexes = [];
-        this.calculateControlPoints();
-        this.getControlVertexes();
+        //this.calculateControlPoints();
+        this.getControlVertexes2();
         this.makeSurface();
     };
 
@@ -92,19 +92,31 @@ class MyCylinder2Body extends CGFobject {
         
     }
 
+    getControlVertexes2(){
+        this.controlVertexes = [
+            [[this.base,0,0,1],[this.base,0,this.height,1]],
+            [[this.base,this.base,0,0.707],[this.base,this.base,this.height,0.707]],
+            [[0,this.base,0,1],[0,this.base,this.height,1]],
+            [[-this.base,this.base,0,0.707],[-this.base,this.base,this.height,0.707]],
+            [[-this.base,0,0,1],[-this.base,0,this.height,1]],
+            [[-this.base,-this.base,0,0.707],[-this.base,-this.base,this.height,0.707]],
+            [[0,-this.base,0,1],[0,-this.base,this.height,1]],
+            [[this.base,-this.base,0,0.707],[this.base,-this.base,this.height,0.707]],
+            [[this.base,0,0,1],[this.base,0,this.height,1]]
+        ];
+    }
+
     makeSurface(){
+        console.dir(this.controlVertexes);
         var nurbsSurface = new CGFnurbsSurface(this.degree1,this.degree2, this.controlVertexes);
         this.cylinder2 = new CGFnurbsObject(this.scene, this.nparts_u, this.nparts_v, nurbsSurface);
 
     }
 
     display(){
+        this.scene.pushMatrix();
+        this.scene.translate(2,2,0);
         this.cylinder2.display();
+        this.scene.popMatrix();
     }
-
-    
-
-
-
-
 };
