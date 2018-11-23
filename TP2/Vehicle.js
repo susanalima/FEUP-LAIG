@@ -75,7 +75,7 @@ class Vehicle extends CGFobject {
 
         this.scene.pushMatrix();
         
-        this.explosionTexture.bind(4);
+        this.vertexTexture.bind(4);
         this.explosionTexture.bind(5);
 
         this.scene.rotate(-Math.PI/2,1,0,0);
@@ -98,7 +98,7 @@ class Vehicle extends CGFobject {
         this.scene.translate(2,1,-0.2);
         this.scene.pushMatrix();
         this.scene.translate(0.15,0,0.2);
-        this.scene.setActiveShader(explosionShader);
+        this.scene.setActiveShader( this.explosionShader);
         this.circle.display();
         this.scene.rotate(Math.PI,0,1,0);
         this.circle.display();
@@ -109,7 +109,7 @@ class Vehicle extends CGFobject {
         this.scene.translate(0,-2,0);
         this.scene.pushMatrix();
         this.scene.translate(0.15,0,0.2);
-        this.scene.setActiveShader(explosionShader);
+        this.scene.setActiveShader( this.explosionShader);
         this.circle.display();
         this.scene.rotate(Math.PI,0,1,0);
         this.circle.display();
@@ -121,7 +121,7 @@ class Vehicle extends CGFobject {
         this.scene.translate(-4.3,0,0);
         this.scene.pushMatrix();
         this.scene.translate(0.15,0,0.2);
-        this.scene.setActiveShader(explosionShader);
+        this.scene.setActiveShader( this.explosionShader);
         this.circle.display();
         this.scene.rotate(Math.PI,0,1,0);
         this.circle.display();
@@ -133,7 +133,7 @@ class Vehicle extends CGFobject {
         this.scene.translate(0,2,0);
         this.scene.pushMatrix();
         this.scene.translate(0.15,0,0.2);
-        this.scene.setActiveShader(explosionShader);
+        this.scene.setActiveShader(this.explosionShader);
         this.circle.display();
         this.scene.rotate(Math.PI,0,1,0);
         this.circle.display();
