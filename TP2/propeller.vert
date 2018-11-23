@@ -1,5 +1,4 @@
 
-
 #ifdef GL_ES
 precision highp float;
 #endif
@@ -17,17 +16,16 @@ varying vec2 vTextureCoord;
 uniform sampler2D uSampler2;
 uniform sampler2D uSampler1;
 
-uniform float normScale;
-uniform float time;
+uniform float normScale2;
+uniform float time2;
 
 
 void main()
 {
   vTextureCoord = aTextureCoord;
   vec2 meu = aTextureCoord;
-  meu.x += time;
-  meu.y += time;
+  float time3 = 0.0 + abs(0.5*time2);
   vec4 rgba = texture2D(uSampler2, meu);  
-  gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition + vec3(0,0,(rgba[0])*normScale), 1.0);
+  gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition + vec3(0,0,(rgba[0])*normScale2*time3), 1.0);
   vTextureCoord = aTextureCoord;
 }

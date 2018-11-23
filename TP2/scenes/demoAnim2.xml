@@ -245,8 +245,7 @@
 		<texture id="metal" length_s="2" length_t="1" />
 
 		<children>
-			<componentref id="water"/>
-			<componentref id="mountain"/>
+		
 			<componentref id="ship"/>
 
 		</children>
@@ -286,15 +285,10 @@
 
 	  <component id="ship">
 	 	<transformation>
-		 	<translate x="-5.5" y="1.2" z="-1.5"/>
+		 	<translate x="5.5" y="5.5" z="5.5"/>
 		</transformation>
 		<animations>
-			<animationref id="l1"/>
-			<animationref id="c1"/>
-			<animationref id="l2"/>
-			<animationref id="l3"/>
-			<animationref id="c1"/>
-			<animationref id="l4"/>
+		
 		</animations>
 		<materials>
 			 <material id="inherit" />

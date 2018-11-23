@@ -62,22 +62,33 @@ class Vehicle extends CGFobject {
         this.circle = new MyCylinderBase(scene,20,0.55);
 
         this.explosionTexture = new CGFtexture(this.scene, "./scenes/images/lava.png");
-        this.vertexTexture = new CGFtexture(this.scene, "./scenes/images/waves.jpg")
-        this.explosionShader = new CGFshader(this.scene.gl, "waterShader.vert", "fragShader.frag");
-        this.explosionShader.setUniformsValues({ uSampler2: 4 });
-        this.explosionShader.setUniformsValues({ uSampler1: 5 });
-        this.explosionShader.setUniformsValues({ normScale: this.heightscale });
+        this.vertexTexture = new CGFtexture(this.scene, "./scenes/images/height_volcano.jpg");
+        this.explosionVertex = new CGFtexture(this.scene, "scenes/images/explosion_texture.png");
         
-
+        this.explosionShaderTop = new CGFshader(this.scene.gl, "waterShader.vert", "fragShader.frag");
+        this.explosionShaderTop.setUniformsValues({ uSampler2: 6 });
+        this.explosionShaderTop.setUniformsValues({ uSampler1: 5 });
+        this.explosionShaderTop.setUniformsValues({ normScale: 0.2 });
+        
+        this.explosionShaderBottom = new CGFshader(this.scene.gl, "propeller.vert", "fragShader.frag");
+        this.explosionShaderBottom.setUniformsValues({ uSampler2: 4 });
+        this.explosionShaderBottom.setUniformsValues({ uSampler1: 5 });
+        this.explosionShaderBottom.setUniformsValues({ normScale2: 1.0 });       
     };
 
     display() {
+
+        let timeFactor = (Math.sin((this.scene.currTime / 10000) % 256 * 2));
+        let timeFactor2 = (Math.sin((this.scene.currTime / 1000) % 256 * 5));
+        this.explosionShaderTop.setUniformsValues({ time: timeFactor });
+        this.explosionShaderBottom.setUniformsValues({time2: timeFactor2});
 
         this.scene.pushMatrix();
         
         this.vertexTexture.bind(4);
         this.explosionTexture.bind(5);
-
+        this.explosionVertex.bind(6);
+        this.scene.setActiveShader(this.scene.defaultShader);
         this.scene.rotate(-Math.PI/2,1,0,0);
         this.scene.scale(0.5,0.5,0.5);
     
@@ -98,10 +109,13 @@ class Vehicle extends CGFobject {
         this.scene.translate(2,1,-0.2);
         this.scene.pushMatrix();
         this.scene.translate(0.15,0,0.2);
-        this.scene.setActiveShader( this.explosionShader);
+        this.scene.setActiveShader(this.explosionShaderTop);
         this.circle.display();
         this.scene.rotate(Math.PI,0,1,0);
+        this.scene.pushMatrix();
+        this.scene.setActiveShader(this.explosionShaderBottom);
         this.circle.display();
+        this.scene.popMatrix();
         this.scene.popMatrix();
         this.scene.setActiveShader(this.scene.defaultShader);
         this.cylinder.display(); 
@@ -109,10 +123,13 @@ class Vehicle extends CGFobject {
         this.scene.translate(0,-2,0);
         this.scene.pushMatrix();
         this.scene.translate(0.15,0,0.2);
-        this.scene.setActiveShader( this.explosionShader);
+        this.scene.setActiveShader(this.explosionShaderTop);
         this.circle.display();
         this.scene.rotate(Math.PI,0,1,0);
+        this.scene.pushMatrix();
+        this.scene.setActiveShader(this.explosionShaderBottom);
         this.circle.display();
+        this.scene.popMatrix();
         this.scene.popMatrix();
         this.scene.setActiveShader(this.scene.defaultShader);
         this.cylinder.display();
@@ -121,22 +138,28 @@ class Vehicle extends CGFobject {
         this.scene.translate(-4.3,0,0);
         this.scene.pushMatrix();
         this.scene.translate(0.15,0,0.2);
-        this.scene.setActiveShader( this.explosionShader);
+        this.scene.setActiveShader( this.explosionShaderTop);
         this.circle.display();
         this.scene.rotate(Math.PI,0,1,0);
+        this.scene.pushMatrix();
+        this.scene.setActiveShader(this.explosionShaderBottom);
         this.circle.display();
-        this.scene.setActiveShader(this.scene.defaultShader);
         this.scene.popMatrix();
+        this.scene.popMatrix();
+        this.scene.setActiveShader(this.scene.defaultShader);
         this.cylinder.display();
 
         
         this.scene.translate(0,2,0);
         this.scene.pushMatrix();
         this.scene.translate(0.15,0,0.2);
-        this.scene.setActiveShader(this.explosionShader);
+        this.scene.setActiveShader(this.explosionShaderTop);
         this.circle.display();
         this.scene.rotate(Math.PI,0,1,0);
+        this.scene.pushMatrix();
+        this.scene.setActiveShader(this.explosionShaderBottom);
         this.circle.display();
+        this.scene.popMatrix();
         this.scene.popMatrix();
         this.scene.setActiveShader(this.scene.defaultShader);
         this.cylinder.display();
