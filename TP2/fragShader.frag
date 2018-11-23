@@ -9,13 +9,14 @@ uniform mat4 uNMatrix;
 
 
 varying vec2 vTextureCoord;
+uniform sampler2D uSampler1;
 uniform sampler2D uSampler2;
 
 uniform float normScale;
 
 void main()
 {
-  gl_FragColor = texture2D(uSampler2, vTextureCoord);  
+  gl_FragColor = texture2D(uSampler1, vTextureCoord);  
 
 }
 

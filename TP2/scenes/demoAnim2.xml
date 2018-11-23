@@ -73,16 +73,17 @@
         <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
         <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
     </omni>
-
-
  </lights>
+
     <textures>
         <texture id="table" file="./scenes/images/table.png" />
         <texture id="floor" file="./scenes/images/floor_wood.jpg" />
         <texture id="wall" file="./scenes/images/wall.jpg" />
         <texture id="metal" file="./scenes/images/metal.png" />
+		<texture id="mountain" file="./scenes/images/mountain.jpg" />
     </textures>
   <materials>
+
     <!--material do tampo-->
  	<material id="mat1" shininess = "8" >
 		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
@@ -230,7 +231,7 @@
     </primitive >
 
 	<primitive id="torus">
-		<cylinder base="0.4" top="0.2" height="0.6" slices="20" stacks="5" />
+		<cylinder2 base="0.4" top="0.2" height="0.6" slices="20" stacks="5" />
 	</primitive >
 
 	<primitive id="plane">
@@ -262,7 +263,7 @@
 	</primitive >
 
 	<primitive id="terrain">
-		<terrain idTexture= "metal" idheightmap="metal" parts="20" heightscale="0.1" />
+		<terrain idTexture= "mountain" idheightmap="mountain" parts="20" heightscale="0.1" />
 	</primitive >
 
 	<primitive id="water">

@@ -13,15 +13,20 @@ attribute vec3 aVertexNormal;
 attribute vec2 aTextureCoord;
 
 varying vec2 vTextureCoord;
-uniform sampler2D uSampler1;
 uniform sampler2D uSampler2;
+uniform sampler2D uSampler1;
 
 uniform float normScale;
+uniform float time;
 
 
 void main()
 {
-  vec4 rgba = texture2D(uSampler2, aTextureCoord);  
-  gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition + vec3(0,0,(rgba[0]+rgba[1]+rgba[2])*normScale), 1.0);
+  vTextureCoord = aTextureCoord;
+  vec2 meu = aTextureCoord;
+  meu.x += time;
+  meu.y += time;
+  vec4 rgba = texture2D(uSampler2, meu);  
+  gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition + vec3(0,0,(rgba[0])*normScale), 1.0);
   vTextureCoord = aTextureCoord;
 }

@@ -1802,7 +1802,7 @@ class MySceneGraph {
             texscale : null,
         } */
 
-        return new Water(this.scene,20,0.05);
+        return new Water(this.scene,20,0.5);
 
     }
 
