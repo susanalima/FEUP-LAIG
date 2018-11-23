@@ -1,14 +1,20 @@
 class Water extends CGFobject {
 
-    constructor(scene, parts, heightscale) {
+
+    //return new Water(this.scene,texture,map,water.parts, water.heightscale,water.texscale);
+
+    
+    constructor(scene,texture,wavemap, parts, heightscale,textscale) {
         super(scene);
         this.scene = scene;
-        this.texture = new CGFtexture(this.scene, "./scenes/images/water_texture.jpg");
-        this.heightmap = new CGFtexture(this.scene, "./scenes/images/waves.jpg")
-
-        this.parts = 20;
+        //this.texture = new CGFtexture(this.scene, "./scenes/images/water_texture.jpg");
+        //this.heightmap = new CGFtexture(this.scene, "./scenes/images/waves.jpg")
+        this.texture = texture;
+        this.wavemap = wavemap;
+        this.parts = parts;
         this.heightscale = heightscale;
-        this.plane = new Plane(scene, parts, parts);
+        this.textscale = textscale;
+        this.plane = new Plane(scene, this.parts, this.parts);
         this.wave_time = 2;
         this.lastTime = null;
 
@@ -33,7 +39,7 @@ class Water extends CGFobject {
         this.scene.setActiveShader(this.testShader);
         this.scene.pushMatrix();
         this.texture.bind(2);
-        this.heightmap.bind(1);
+        this.wavemap.bind(1);
         this.plane.display();
         this.scene.popMatrix();
         this.scene.setActiveShader(this.scene.defaultShader);

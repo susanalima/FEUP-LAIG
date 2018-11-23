@@ -82,6 +82,8 @@
         <texture id="metal" file="./scenes/images/metal.png" />
 		<texture id="mountain" file="./scenes/images/mountain.jpg" />
 		<texture id="ship" file="./scenes/images/ship2.jpg" />
+		<texture id="wave_texture" file= "./scenes/images/water_texture.jpg" />
+		<texture id="wave_map" file= "./scenes/images/waves.jpg" />
     </textures>
   <materials>
 
@@ -215,7 +217,7 @@
 	</primitive >
 
 	<primitive id="water">
-		<water idTexture= "metal" idwavemap="metal" parts="2" heightscale="2" texscale="2"/>
+		<water idTexture= "wave_texture" idwavemap="wave_map" parts="20" heightscale="0.5" texscale="2"/>
 	</primitive >
 
  </primitives >
@@ -259,7 +261,7 @@
 
 	<component id="mountain">
 	 	<transformation>
-		 			<transformationref id="terrain_transformation"/>
+		 	<transformationref id="terrain_transformation"/>
 		</transformation>
 		<animations>
 		</animations>

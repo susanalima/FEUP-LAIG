@@ -1801,8 +1801,11 @@ class MySceneGraph {
             texscale : null,
         } */
 
-        return new Water(this.scene,20,0.5);
+        //return new Water(this.scene,20,0.5);
 
+        var texture = this.textures[water.idTexture];
+        var map = this.textures[water.idwavemap];
+        return new Water(this.scene,texture,map,water.parts, water.heightscale,water.texscale);
     }
 
 
