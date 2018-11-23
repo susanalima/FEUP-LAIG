@@ -98,28 +98,34 @@ class Vehicle extends CGFobject {
         this.scene.translate(2,1,-0.2);
         this.scene.pushMatrix();
         this.scene.translate(0.15,0,0.2);
+        this.scene.setActiveShader(explosionShader);
         this.circle.display();
         this.scene.rotate(Math.PI,0,1,0);
         this.circle.display();
         this.scene.popMatrix();
+        this.scene.setActiveShader(this.scene.defaultShader);
         this.cylinder.display(); 
 
         this.scene.translate(0,-2,0);
         this.scene.pushMatrix();
         this.scene.translate(0.15,0,0.2);
+        this.scene.setActiveShader(explosionShader);
         this.circle.display();
         this.scene.rotate(Math.PI,0,1,0);
         this.circle.display();
         this.scene.popMatrix();
+        this.scene.setActiveShader(this.scene.defaultShader);
         this.cylinder.display();
 
    
         this.scene.translate(-4.3,0,0);
         this.scene.pushMatrix();
         this.scene.translate(0.15,0,0.2);
+        this.scene.setActiveShader(explosionShader);
         this.circle.display();
         this.scene.rotate(Math.PI,0,1,0);
         this.circle.display();
+        this.scene.setActiveShader(this.scene.defaultShader);
         this.scene.popMatrix();
         this.cylinder.display();
 
@@ -127,10 +133,12 @@ class Vehicle extends CGFobject {
         this.scene.translate(0,2,0);
         this.scene.pushMatrix();
         this.scene.translate(0.15,0,0.2);
+        this.scene.setActiveShader(explosionShader);
         this.circle.display();
         this.scene.rotate(Math.PI,0,1,0);
         this.circle.display();
         this.scene.popMatrix();
+        this.scene.setActiveShader(this.scene.defaultShader);
         this.cylinder.display();
         this.scene.popMatrix();
 
