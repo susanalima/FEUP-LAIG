@@ -79,7 +79,7 @@ class Vehicle extends CGFobject {
         this.explosionTexture.bind(5);
 
         this.scene.rotate(-Math.PI/2,1,0,0);
-        this.scene.scale(0.55,0.55,0.55);
+        this.scene.scale(0.5,0.5,0.5);
     
         this.scene.pushMatrix();
         this.top.display();
