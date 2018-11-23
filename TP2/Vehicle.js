@@ -1,4 +1,3 @@
-
 class Vehicle extends CGFobject {
 
 
@@ -61,7 +60,13 @@ class Vehicle extends CGFobject {
         this.cylinder = new MyCylinder(scene,20,10,0.8,0.8,0.4,2);
 
         this.circle = new MyCylinderBase(scene,20,0.55);
-        
+
+        this.explosionTexture = new CGFtexture(this.scene, "./scenes/images/lava.png");
+        this.vertexTexture = new CGFtexture(this.scene, "./scenes/images/waves.jpg")
+        this.explosionShader = new CGFshader(this.scene.gl, "waterShader.vert", "fragShader.frag");
+        this.explosionShader.setUniformsValues({ uSampler2: 4 });
+        this.explosionShader.setUniformsValues({ uSampler1: 5 });
+        this.explosionShader.setUniformsValues({ normScale: this.heightscale });
         
 
     };
@@ -69,6 +74,9 @@ class Vehicle extends CGFobject {
     display() {
 
         this.scene.pushMatrix();
+        
+        this.explosionTexture.bind(4);
+        this.explosionTexture.bind(5);
 
         this.scene.rotate(-Math.PI/2,1,0,0);
         this.scene.scale(0.5,0.5,0.5);
