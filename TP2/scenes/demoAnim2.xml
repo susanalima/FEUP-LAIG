@@ -83,7 +83,7 @@
 		<texture id="mountain" file="./scenes/images/mountain.jpg" />
 		<texture id="newzealand_text" file="./scenes/images/new-zealand-texture.png"/>
 		<texture id="newzealand_map" file="./scenes/images/new-zealand-map.png"/>
-
+		<texture id="ship" file="./scenes/images/ship2.jpg" />
     </textures>
   <materials>
 
@@ -124,68 +124,16 @@
   
   <transformations>
 
-	<transformation id="tf1">
-		 <rotate axis="x" angle= "-90" />
-         <translate x="0" y="-10" z="0" />
+	<transformation id="water_transformation">
+		  <scale x="20" y="1" z="20" />
+	 </transformation>
+
+	<transformation id="terrain_transformation">
+        <translate x="0" y="-2.5" z="0"/>
+		<scale x="20" y="25" z="20" />
 	 </transformation>
 	 
-	 <transformation id="tf2">
-		<rotate axis="y" angle="90" />
-        <translate x="-10" y="0" z="0" />
-	 </transformation>
-
-    <transformation id="tf3">
-		<rotate axis="x" angle="-90" />
-        <translate x="2" y="-3" z="0" />
-	 </transformation>
-
-    <transformation id="tf4">
-        <translate x="4" y="0" z="0" />
-	 </transformation>
-
-    <transformation id="tf5">
-        <translate x="0" y="0" z="3" />
-    </transformation>
-
-    <transformation id="tf6">
-        <translate x="-4" y="0" z="0" />
-	 </transformation>
-
-     <transformation id="tf7">
-       <translate x="0" y="0" z="0" />
-
-	 </transformation>
-
-     <transformation id="tf8">
-        <rotate axis="x" angle="-90" />
-        <translate x="0" y="0" z="1" />
-	 </transformation>
-
-      <transformation id="tf9">
-        <rotate axis="x" angle="-90" />
-        <translate x="0" y="0" z="1" />
-	 </transformation>
-
-    <transformation id="tf10">
-        <rotate axis="y" angle="-90" />
-        <translate x="-1" y="0" z="0" />
-	 </transformation>
-
-    <transformation id="tf11">
-        <rotate axis="z" angle="-90" />
-        <translate x="-1" y="0" z="0" />
-	 </transformation>
-
-     <transformation id="tf12">
-        <rotate axis="z" angle="-90" />
-        <translate x="-1" y="0" z="0" />
-	 </transformation>
-
-      
-       <transformation id= "tf13">
-       <translate x="1.5" y="3" z="6.5" />
-        <scale x="5" y="0.3" z="4" />
-       </transformation>
+	 
 
  </transformations>
 
@@ -280,7 +228,6 @@
 
  	<component id="root">
 		<transformation>
- 		
 		</transformation>
 		<materials>
 			 <material id="mat2" />
@@ -290,17 +237,19 @@
 		<texture id="metal" length_s="2" length_t="1" />
 
 		<children>
-			<componentref id="comp18"/>
-			<componentref id="comp19"/>
+			<componentref id="water"/>
+			<componentref id="mountain"/>
+		
+
 		</children>
 
  	</component>
 
-	  <component id="comp18">
+	  <component id="water">
 	 	<transformation>
+		 	<transformationref id="water_transformation"/>
 		</transformation>
-		<animations>
-				
+		<animations>		
 		</animations>
 		<materials>
 			 <material id="inherit" />
@@ -311,8 +260,23 @@
 		</children>
 	 </component>
 
+	<component id="mountain">
+	 	<transformation>
+		 			<transformationref id="terrain_transformation"/>
+		</transformation>
+		<animations>
+		</animations>
+		<materials>
+			 <material id="inherit" />
+		</materials>
+		<texture id="metal" length_s="2" length_t="1" />
+		<children>
+			<primitiveref id="terrain"/>
+		</children>
+	 </component>
 
-	  <component id="comp19">
+
+	  <component id="ship">
 	 	<transformation>
 		 	<translate x="0" y="0" z="-0.97"/>
 			 <scale x="10" y="10" z="10"/>
@@ -323,11 +287,14 @@
 		<materials>
 			 <material id="inherit" />
 		</materials>
-		<texture id="metal" length_s="2" length_t="1" />
+		<texture id="ship" length_s="2" length_t="1" />
 		<children>
-			<primitiveref id="terrain"/>
+			<primitiveref id="vehicle"/>
 		</children>
 	 </component>
+
+
+
 
  </components>
  
