@@ -13,15 +13,18 @@ uniform sampler2D uSampler1;
 
 uniform float normScale;
 uniform float time;
+uniform float textscale;
 
 
 void main()
 {
   vec2 meu = vTextureCoord;
-  meu.x += time;
+  meu.x += time/6.0;
   meu.x = mod(meu.x,1.0);
-  meu.y += time;
+  meu.x *= textscale;
+  meu.y += time/6.0;
   meu.y = mod(meu.y,1.0);
+  meu.y *= textscale;
   vec4 rgba = texture2D(uSampler1, meu);  
   gl_FragColor = rgba;
 }

@@ -23,7 +23,7 @@
 
  <ambient>
  	<ambient r="0" g="0" b="0" a="1" />
- 	<background r="0" g="0" b="0" a="1" />
+ 	<background r="0.53" g="0.8" b="0.92" a="1" />
  </ambient>
 
 
@@ -127,7 +127,7 @@
   <transformations>
 
 	<transformation id="water_transformation">
-		  <scale x="20" y="1" z="20" />
+		  <scale x="30" y="1" z="30" />
 	 </transformation>
 
 	<transformation id="terrain_transformation">
@@ -140,24 +140,30 @@
  </transformations>
 
  <animations>
-	<!--pode ser vazia-->
-	<linear id="l2" span="1000">
-	<controlpoint x="0.0" y="0.0" z="0.0"/>
-		<controlpoint x="10.0" y="0.0" z="10.0"/>
+	<linear id="l3" span="2000">
+		<controlpoint x="0.0" y="0.0" z="0.0"/>
+		<controlpoint x="0.0" y="0.0" z="-8.0"/>
 	</linear>
 
-	<linear id="l1" span="10000">
+	<linear id="l2" span="5000">
 		<controlpoint x="0.0" y="0.0" z="0.0"/>
-		<controlpoint x="10.0" y="0.0" z="10.0"/>
-		<controlpoint x="0.0" y="0.0" z="0.0"/>
-		<controlpoint x="5.0" y="0.0" z="5.0"/>
-		<controlpoint x="10.0" y="0.0" z="5.0"/>
-		<controlpoint x="0.0" y="0.0" z="5.0"/>
-        <controlpoint x="5.0" y="0.0" z="5.0"/>
+		<controlpoint x="12.0" y="-4.0" z="0.0"/>
 	</linear>
 
-	<circular id="c1" span="5000" center="0.0 0.0 0.0" radius="1.0" 
-		startang="10.0" rotang="180"/>
+	<linear id="l1" span="1000">
+		<controlpoint x="0.0" y="0.0" z="0.0"/>
+		<controlpoint x="0.0" y="10.0" z="1"/>
+	</linear>
+
+	<linear id="l4" span="1000">
+		<controlpoint x="0.0" y="0.0" z="0.0"/>
+		<controlpoint x="0.0" y="-4.6" z="1"/>
+	</linear>
+
+	<circular id="c1" span="5000" center="-3.0 0.0 0.0" radius="3" 
+		startang="0" rotang="360"/>
+
+
  </animations>
 
  <primitives>
@@ -220,7 +226,7 @@
 	</primitive >
 
 	<primitive id="water">
-		<water idTexture= "wave_texture" idwavemap="wave_map" parts="20" heightscale="0.5" texscale="2"/>
+		<water idTexture= "wave_texture" idwavemap="wave_map" parts="20" heightscale="0.8" texscale="3"/>
 	</primitive >
 
  </primitives >
@@ -241,7 +247,7 @@
 		<children>
 			<componentref id="water"/>
 			<componentref id="mountain"/>
-		
+			<componentref id="ship"/>
 
 		</children>
 
@@ -280,11 +286,15 @@
 
 	  <component id="ship">
 	 	<transformation>
-		 	<translate x="0" y="0" z="-0.97"/>
-			 <scale x="10" y="10" z="10"/>
+		 	<translate x="-5.5" y="1.2" z="-1.5"/>
 		</transformation>
 		<animations>
-			
+			<animationref id="l1"/>
+			<animationref id="c1"/>
+			<animationref id="l2"/>
+			<animationref id="l3"/>
+			<animationref id="c1"/>
+			<animationref id="l4"/>
 		</animations>
 		<materials>
 			 <material id="inherit" />

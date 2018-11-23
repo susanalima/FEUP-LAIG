@@ -23,6 +23,7 @@ class Water extends CGFobject {
         this.testShader.setUniformsValues({ uSampler2: 1 });
         this.testShader.setUniformsValues({ uSampler1: 2 });
         this.testShader.setUniformsValues({ normScale: this.heightscale });
+        this.testShader.setUniformsValues({ textscale: this.textscale });
 
 
     }
