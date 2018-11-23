@@ -1762,8 +1762,7 @@ class MySceneGraph {
      * @returns {Object} New vehicle
      */
     createVehicle() {
-        // return new MyVehicle();
-        return null;
+        return new Vehicle(this.scene);
     }
 
     /**
