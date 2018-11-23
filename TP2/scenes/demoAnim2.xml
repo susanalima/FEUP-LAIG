@@ -81,6 +81,9 @@
         <texture id="wall" file="./scenes/images/wall.jpg" />
         <texture id="metal" file="./scenes/images/metal.png" />
 		<texture id="mountain" file="./scenes/images/mountain.jpg" />
+		<texture id="newzealand_text" file="./scenes/images/new-zealand-texture.png"/>
+		<texture id="newzealand_map" file="./scenes/images/new-zealand-map.png"/>
+
     </textures>
   <materials>
 
@@ -263,7 +266,7 @@
 	</primitive >
 
 	<primitive id="terrain">
-		<terrain idTexture= "mountain" idheightmap="mountain" parts="20" heightscale="0.1" />
+		<terrain idTexture= "newzealand_text" idheightmap="newzealand_map" parts="20" heightscale="0.1" />
 	</primitive >
 
 	<primitive id="water">
@@ -311,18 +314,18 @@
 
 	  <component id="comp19">
 	 	<transformation>
-		 	<translate x="0" y="5.0" z="0"/>
+		 	<translate x="0" y="0" z="-0.97"/>
+			 <scale x="10" y="10" z="10"/>
 		</transformation>
 		<animations>
-			<animationref id = "l1"/>	
-			<animationref id = "l1"/>	
+			
 		</animations>
 		<materials>
 			 <material id="inherit" />
 		</materials>
 		<texture id="metal" length_s="2" length_t="1" />
 		<children>
-			<primitiveref id="torus"/>
+			<primitiveref id="terrain"/>
 		</children>
 	 </component>
 

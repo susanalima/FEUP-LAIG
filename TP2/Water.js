@@ -23,7 +23,7 @@ class Water extends CGFobject{
 
 
     display(){
-       console.log(this.scene.currTime);
+    
        //let timeFactor = this.scene.currTime/800.0 % 1;
       // let timeFactor = Math.sin(this.scene.currTime/10000)*0.5 + 0.5;
       let timeFactor = (Math.sin((this.scene.currTime/10000) % 512*2));
