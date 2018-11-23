@@ -94,15 +94,15 @@ class MyCylinder2Body extends CGFobject {
 
     getControlVertexes2(){
         this.controlVertexes = [
-            [[this.base,0,0,1],[this.base,0,this.height,1]],
-            [[this.base,this.base,0,0.707],[this.base,this.base,this.height,0.707]],
+            [[this.base,0,0,1],[this.top,0,this.height,1]],
+            [[this.base,this.base,0,0.707],[this.top,this.top,this.height,0.707]],
             [[0,this.base,0,1],[0,this.base,this.height,1]],
-            [[-this.base,this.base,0,0.707],[-this.base,this.base,this.height,0.707]],
+            [[-this.base,this.base,0,0.707],[-this.top,this.top,this.height,0.707]],
             [[-this.base,0,0,1],[-this.base,0,this.height,1]],
-            [[-this.base,-this.base,0,0.707],[-this.base,-this.base,this.height,0.707]],
+            [[-this.base,-this.base,0,0.707],[-this.top,-this.top,this.height,0.707]],
             [[0,-this.base,0,1],[0,-this.base,this.height,1]],
-            [[this.base,-this.base,0,0.707],[this.base,-this.base,this.height,0.707]],
-            [[this.base,0,0,1],[this.base,0,this.height,1]]
+            [[this.base,-this.base,0,0.707],[this.top,-this.top,this.height,0.707]],
+            [[this.base,0,0,1],[this.top,0,this.height,1]]
         ];
     }
 
@@ -115,7 +115,7 @@ class MyCylinder2Body extends CGFobject {
 
     display(){
         this.scene.pushMatrix();
-        this.scene.translate(2,2,0);
+        //this.scene.translate(2,2,0);
         this.cylinder2.display();
         this.scene.popMatrix();
     }

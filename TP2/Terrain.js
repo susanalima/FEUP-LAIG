@@ -4,7 +4,7 @@ class Terrain extends CGFobject{
         super(scene);
         this.scene = scene;
         //this.texture = new CGFtexture(this.scene, "./scenes/images/height_map.jpg");
-        this.texture = new CGFtexture(this.scene, "./scenes/images/mountain.jpg");
+        this.texture = heightmap;// new CGFtexture(this.scene, "./scenes/images/mountain.jpg");
         //this.texture = new CGFtexture(this.scene, "./scenes/images/vulcano.jpg");
         //this.texture = new CGFtexture(this.scene, "./scenes/images/metal.png");
         this.heightmap = heightmap;

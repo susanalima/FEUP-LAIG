@@ -1782,8 +1782,8 @@ class MySceneGraph {
      * @returns {Object} New terrain
      */
     createTerrain(terrain) {
-        var texture = this.animations[terrain.idTexture];
-        var map = this.animations[terrain.idheightmap];
+        var texture = this.textures[terrain.idTexture];
+        var map = this.textures[terrain.idheightmap];
         return new Terrain(this.scene,texture,map,terrain.parts, terrain.heightscale);
     }
 
@@ -1793,6 +1793,15 @@ class MySceneGraph {
      * @returns {Object} New water
      */
     createWater(water) {
+
+        /** var water = {
+            idTexture : null,
+            idwavemap : null,
+            parts : null,
+            heightscale : null,
+            texscale : null,
+        } */
+
         return new Water(this.scene,20,0.05);
 
     }
