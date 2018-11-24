@@ -13,15 +13,12 @@ class MyCylinderBase extends CGFobject{
 	constructor(scene, slices, rad) 
 	{
 		super(scene);
-
 		this.slices = slices;
 		this.rad = rad;
-
 		this.minS = 0;
 		this.maxS = 1;
 		this.minT = 0;
 		this.maxT = 1;
-
 		this.initBuffers();
 	};
 

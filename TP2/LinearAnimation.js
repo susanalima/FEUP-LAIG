@@ -5,7 +5,6 @@ class LinearAnimation extends Animation {
         this.type = "Linear";
         this.controlPoints = controlPoints;
         this.normalizeZeros();
-        console.dir(this.controlPoints);
         this.maxPoint = this.controlPoints.length - 1;
         this.distance = this.getDistanceTotal();
         this.vectors = [];
@@ -111,11 +110,7 @@ class LinearAnimation extends Animation {
             return;
         }
         var deltaDistance = this.distance*deltaT/this.time;
-       // console.log('deltaDistance');
-       // console.log(deltaDistance);
         var distSegment = this.getDistanceSegment(this.index);
-       // console.log('distSegment');
-        //console.log(distSegment);
         deltaVertical = this.getDistanceVertical(this.index);
         this.segment += deltaDistance;
         if (this.segment > distSegment)
@@ -137,12 +132,6 @@ class LinearAnimation extends Animation {
         this.x += deltaDistX;
         this.y += deltaDistY;
         this.z += deltaDistZ;
-
-        console.log('angle: ' + this.angle);
-
-       console.log('X : ' + this.x);
-        console.log('Y : ' + this.y);
-        console.log('Z : ' + this.z);
     }
 
 }

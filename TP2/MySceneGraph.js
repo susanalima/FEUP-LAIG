@@ -1409,7 +1409,6 @@ class MySceneGraph {
         return null;
     }
 
-    //TODO: mudar para ter ordem obrigatoria e elementos obrigatorios ou nao
     /**
      * Sub function for parseComponents aids in parsing the components by parsing the different elements of a component
      * @param {Object} children Children of the <components> block
@@ -1727,7 +1726,7 @@ class MySceneGraph {
      * @returns {Object} New cylinder
      */
     createCylinder(cylinder) {
-        return new MyCylinder(this.scene, cylinder.slices, cylinder.stacks, cylinder.base, cylinder.top, cylinder.height,1); 
+        return new MyCylinder(this.scene, cylinder.slices, cylinder.stacks, cylinder.base, cylinder.top, cylinder.height); 
     }
 
     /**
@@ -1771,7 +1770,7 @@ class MySceneGraph {
      * @returns {Object} New cylinder
      */
     createCylinder2(cylinder) {
-        return new MyCylinder(this.scene, cylinder.slices, cylinder.stacks, cylinder.base, cylinder.top, cylinder.height,2);
+        return new MyCylinder2(this.scene, cylinder.slices, cylinder.stacks, cylinder.base, cylinder.top, cylinder.height);
 
     }
 
@@ -1792,17 +1791,6 @@ class MySceneGraph {
      * @returns {Object} New water
      */
     createWater(water) {
-
-        /** var water = {
-            idTexture : null,
-            idwavemap : null,
-            parts : null,
-            heightscale : null,
-            texscale : null,
-        } */
-
-        //return new Water(this.scene,20,0.5);
-
         var texture = this.textures[water.idTexture];
         var map = this.textures[water.idwavemap];
         return new Water(this.scene,texture,map,water.parts, water.heightscale,water.texscale);

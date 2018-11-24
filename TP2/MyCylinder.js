@@ -12,58 +12,16 @@ class MyCylinder extends CGFobject {
 	 * @param {Object} base The radius of the base
 	 * @param {Object} top The radius of the top
 	 * @param {Object} height The distance between the top and base
-	 * @param {Object} type Indicates the type of cylinder body being created (MyCylinderBody ou MyCylinder2Body)
 	 */
-	constructor(scene, slices, stacks, base, top, height, type) {
+	constructor(scene, slices, stacks, base, top, height) {
 		super(scene);
 
-		//this.top = new MyCylinderBase(scene,slices,top);
-		//this.base = new MyCylinderBase(scene,slices,base);
-		this. base = this.createBase(slices,base,type);
-		this.top = this.createBase(slices, top, type);
-		this.createBody( slices, stacks, base, top, height, type);
+		this.top = new MyCylinderBase(scene,slices,top);
+		this.base = new MyCylinderBase(scene,slices,base);
+		this.body = new MyCylinderBody(this.scene,slices,stacks,base,top,height);
 		this.initBuffers();
 	};
 
-	createBase(slices,radius, type) {
-		var base;
-		switch(type) {
-			case 1:
-			base = new MyCylinderBase(this.scene,slices,radius);
-			break;
-			case 2:
-			base = new MyCylinderBase(this.scene,slices,radius);
-			break;
-			default:
-			base = new MyCylinderBase(this.scene,slices,radius);
-			break;
-		}
-		return base;
-	}
-
-
-	/**
-	 * Creates the body for the cylinder according with the specified type
-	 * @param {Object} slices Number of slices the cylinder will have, in other words, the number of sides of the polygon.
-	 * @param {Object} stacks Number of stacks the cylinder will have
-	 * @param {Object} base The radius of the base
-	 * @param {Object} top The radius of the top
-	 * @param {Object} height The distance between the top and base
-	 * @param {Object} type Indicates the type of cylinder body being created (MyCylinderBody ou MyCylinder2Body)
-	 */
-	createBody(slices,stacks,base,top,height,type) {
-		switch(type) {
-			case 1:
-			this.body = new MyCylinderBody(this.scene,slices,stacks,base,top,height);
-			break;
-			case 2:
-			this.body = new MyCylinder2Body(this.scene,slices,stacks,base,top,height);
-			break;
-			default:
-			this.body = new MyCylinderBody(this.scene,slices,stacks,base,top,height);
-			break;
-		}
-	}
 
 	/**
 	 * Displays the cylinder in member scene
@@ -73,11 +31,11 @@ class MyCylinder extends CGFobject {
 		this.body.display();
 		this.scene.pushMatrix();
 		this.scene.translate(0,0,this.body.height);
-		//this.top.display();
+		this.top.display();
 		this.scene.popMatrix();
 		this.scene.pushMatrix();
 		this.scene.scale(-1,1,1);
-		//this.base.display();
+		this.base.display();
 		this.scene.popMatrix();
 	}
 };
