@@ -9,7 +9,7 @@
  */
 class MyCylinder2 extends CGFobject {
 	/**
-	 * Constructor for MyCylinder2Body class
+	 * Constructor for MyCylinder2 class
 	 * @param {Object} scene Scene where the object will be displayed
 	 * @param {Object} slices Number of slices of the cylinder, in other words, the number of sides of the polygon
 	 * @param {Object} stacks Number of stacks that constitute the cylinder.
@@ -34,6 +34,9 @@ class MyCylinder2 extends CGFobject {
         this.makeSurface();
     };
 
+    /**
+     * Creates the 9 control vertexes necessary to create the cylinder
+     */
     getControlVertexes(){
         this.controlVertexes = [
             [[this.base,0,0,1],[this.top,0,this.height,1]],
@@ -48,12 +51,18 @@ class MyCylinder2 extends CGFobject {
         ];
     }
 
+    /**
+     * Creates a new CGFnurbsObject from the information obtained
+     */
     makeSurface(){
         console.dir(this.controlVertexes);
         var nurbsSurface = new CGFnurbsSurface(this.degree1,this.degree2, this.controlVertexes);
         this.cylinder2 = new CGFnurbsObject(this.scene, this.nparts_u, this.nparts_v, nurbsSurface);
     }
 
+    /**
+     * Displays the cylinder
+     */
     display(){
         this.scene.pushMatrix();
         this.cylinder2.display();

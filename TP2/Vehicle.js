@@ -1,6 +1,12 @@
+/**
+ *  Class Vehicle is used to represent a vehicle primitive constructed with NURBS
+ */
 class Vehicle extends CGFobject {
 
-
+    /**
+     * Constructor for class Vehicle
+     * @param {Object} scene Scene where the object will be displayed
+     */
     constructor(scene) {
         super(scene);
         var controlpointsTop = [
@@ -128,7 +134,7 @@ class Vehicle extends CGFobject {
         this.displayRocketPropellers(-4.3,0,0); 
         this.displayRocketPropellers(0,2,0); 
         this.scene.popMatrix();
-        
+
         this.scene.popMatrix();
     
     }
