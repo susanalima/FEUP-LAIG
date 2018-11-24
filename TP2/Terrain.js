@@ -19,7 +19,7 @@ class Terrain extends CGFobject{
         this.parts = parts;
         this.heightscale = heightscale;
         this.plane = new Plane(scene,parts,parts);
-        this.testShader = new CGFshader(this.scene.gl,"vertexShader.vert", "fragShader.frag");
+        this.testShader = new CGFshader(this.scene.gl,"terrainShader.vert", "terrainShader.frag");
         this.testShader.setUniformsValues({uSampler2: 1});
         this.testShader.setUniformsValues({uSampler1: 2});
         this.testShader.setUniformsValues({normScale: this.heightscale});
