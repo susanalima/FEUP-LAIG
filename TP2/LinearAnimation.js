@@ -37,6 +37,9 @@ class LinearAnimation extends Animation {
         this.angle = this.calcAngle(this.vectors[0], [0, 1]);
     }
 
+    /**
+     * Normalizes the zeros from the controlpoints vector when necessary
+     */
     normalizeZeros() {
         for (let i = 0; i < this.controlPoints.length; i++) {
             if (this.controlPoints[i][0] == 0 && this.controlPoints[i][1] != 0 && this.controlPoints[i][2] == 0)
@@ -102,6 +105,10 @@ class LinearAnimation extends Animation {
         return vector;
     }
 
+    /**
+     * Calculates the angle between to vectors given from the vectors array
+     * @returns {Object} angle calculated
+     */
     calcAngleIndex(index) {
         let v1 = [this.vectors[index][0], this.vectors[index][1]];
         let v2 = [this.vectors[index + 1][0], this.vectors[index + 1][1]];
