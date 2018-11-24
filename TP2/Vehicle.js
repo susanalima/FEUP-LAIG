@@ -102,6 +102,8 @@ class Vehicle extends CGFobject {
      * Display the vehicle and updates the shaderes time factor values
      */
     display() {
+        this.scene.pushMatrix();
+        
         let timeFactor = (Math.sin((this.scene.currTime / 10000) % 256 * 2));
         let timeFactor2 = (Math.sin((this.scene.currTime / 1000) % 256 * 5));
         this.explosionShaderTop.setUniformsValues({ time: timeFactor });
@@ -134,6 +136,8 @@ class Vehicle extends CGFobject {
         this.displayRocketPropellers(0, -2, 0);
         this.displayRocketPropellers(-4.3, 0, 0);
         this.displayRocketPropellers(0, 2, 0);
+        this.scene.popMatrix();
+
         this.scene.popMatrix();
 
         this.scene.popMatrix();

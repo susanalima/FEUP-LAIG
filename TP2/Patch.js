@@ -1,4 +1,3 @@
-
 /**
  * Class Patch is used to represent a patch primitive generated with NURBS
  */

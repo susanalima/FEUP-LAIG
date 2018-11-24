@@ -1,5 +1,18 @@
+/**
+ * CircularAnimation class represents a circular animation
+ */
 class CircularAnimation extends Animation {
 
+    /**
+     * Class constructor of CircularAnimation
+     * @param {Object} time Length of the animation in seconds
+     * @param {Object} centerX X coordinate of the circular center
+     * @param {Object} centerY Y coordinate of the circular center
+     * @param {Object} centerZ Z coordinate of the circular center
+     * @param {Object} radius radius 
+     * @param {Object} startang inital angle in degrees
+     * @param {Object} rotang total angle of rotation in degrees
+     */
     constructor(time, centerX, centerY, centerZ, radius, startang, rotang) {
         super(time);
         this.type = "Circular";
@@ -12,6 +25,9 @@ class CircularAnimation extends Animation {
         this.restart();
     }
 
+    /**
+     * Restarts the animation by changing the class member values to the start values
+     */
     restart() {
         super.restart();
         this.x = this.centerX + this.radius * Math.cos(this.startang);
@@ -21,7 +37,10 @@ class CircularAnimation extends Animation {
         this.angle = this.startang;
     }
 
-  
+     /**
+     * Updates the class members according to the time passed between calls of this function
+     * @param {Object} deltaT 
+     */
     apply(deltaT) {
         let deltaAngle = this.rotang * deltaT / this.time;
         this.angle += deltaAngle;

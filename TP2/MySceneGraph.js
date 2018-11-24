@@ -2850,7 +2850,7 @@ class MySceneGraph {
      * @param {Object} currentMaterialIndex Index of the material being used by the content of the node
      * @param {Object} none_texture Flag to indicate if a node doesn't have a texture
      */
-    visitLeaf(leaf, materials, textures, currentMaterialIndex, none_texture = null) {
+    visitLeaf(leaf, materials, textures, currentMaterialIndex, none_texture) {
         let prim = this.primitives[leaf];
         this.scene.pushMatrix();
         let text = textures[textures.length - 1];

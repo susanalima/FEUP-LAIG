@@ -35,6 +35,7 @@ class Terrain extends CGFobject{
         this.scene.pushMatrix();
         this.texture.bind(2);
         this.heightmap.bind(1);
+        this.texture.bind();
         this.plane.display();
         this.scene.popMatrix();
         this.scene.setActiveShader(this.scene.defaultShader);

@@ -111,7 +111,7 @@
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="none"  />
+		<texture id="none" />
 		<children>
 			<componentref id="mountain"/>
 			<componentref id="water"/>
@@ -143,7 +143,7 @@
 		<materials>
 			 <material id="inherit" />
 		</materials>
-		<texture id="mountain" length_s="2" length_t="1" />
+		<texture id="mountain" length_s="2" length_t="1"/>
 		<children>
 			<primitiveref id="terrain"/>
 		</children>

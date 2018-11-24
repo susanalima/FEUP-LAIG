@@ -136,7 +136,7 @@ class LinearAnimation extends Animation {
 
     /**
        * Updates the class members according to the time passed between calls of this function
-       * @param {*} deltaT 
+       * @param {Object} deltaT 
        */
     apply(deltaT) {
         let deltaDistX;
