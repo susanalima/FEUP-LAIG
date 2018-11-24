@@ -1,24 +1,23 @@
 <yas>
-
 <scene root="root" axis_length="5.0" />
-<views default="p1" >
-	<perspective id="p1" near="0.1" far="1000" angle="60">
+
+<views default="normal_view" >
+	<perspective id="normal_view" near="0.1" far="1000" angle="60">
 		 <from x="15.0" y="15.0" z="15.0" />
 		 <to x="0.0" y="0.0" z="0.0" />
 	</perspective>
-	<perspective id="p2" near="0.1" far="1000" angle="30">
+	<perspective id="side_view" near="0.1" far="1000" angle="30">
 		 <from x="15.0" y="10.0" z="100.0" />
 		 <to x="0.0" y="0.0" z="0.0" />
 	</perspective>
-	<perspective id="p3" near="0.1" far="1000" angle="30">
+	<perspective id="up_view" near="0.1" far="1000" angle="30">
 		 <from x="15.0" y="100.0" z="10.0" />
 		 <to x="0.0" y="0.0" z="0.0" />
 	</perspective>
-	<ortho id="o1" near="0.1" far="1000" left="-15" right="15" top="15" bottom="-15" >
+	<ortho id="ortho" near="0.1" far="1000" left="-15" right="15" top="15" bottom="-15" >
  		<from x="15.0" y="15.0" z="15.0" />
  		<to x="0.0" y="0.0" z="0.0" />
  	</ortho>
-
  </views>
 
  <ambient>
@@ -26,49 +25,16 @@
  	<background r="0.53" g="0.8" b="0.92" a="1" />
  </ambient>
 
-
  <lights>
 
 	<omni id="omni1" enabled="1" >                                                     	      
-        <location x="10" y="0" z="10.0" w="1.0" />       	   
+        <location x="-5" y="10" z="5.0" w="1.0" />       	   
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
         <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
         <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
     </omni>
     <omni id="omni2" enabled="1" >                                                     	      
-        <location x="7" y="8" z="4" w="1.0" />       	   
-        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
-        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
-        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
-    </omni>
-
-
-      <omni id="omni3" enabled="1" >                                                     	      
-        <location x="0" y="0" z="0" w="1.0" />       	   
-        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
-        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
-        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
-    </omni>
-       <omni id="omni4" enabled="1" >                                                     	      
-        <location x="10" y="0" z="10" w="1.0" />       	   
-        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
-        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
-        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
-    </omni>
-      <omni id="omni5" enabled="1" >                                                     	      
-        <location x="5" y="0" z="5" w="1.0" />       	   
-        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
-        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
-        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
-    </omni>
-        <omni id="omni6" enabled="1" >                                                     	      
-        <location x="10" y="0" z="5" w="1.0" />       	   
-        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
-        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
-        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
-    </omni>
-      <omni id="omni7" enabled="1" >                                                     	      
-        <location x="0" y="0" z="5" w="1.0" />       	   
+        <location x="4" y="10" z="-8" w="1.0" />       	   
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
         <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
         <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
@@ -76,10 +42,6 @@
  </lights>
 
     <textures>
-        <texture id="table" file="./scenes/images/table.png" />
-        <texture id="floor" file="./scenes/images/floor_wood.jpg" />
-        <texture id="wall" file="./scenes/images/wall.jpg" />
-        <texture id="metal" file="./scenes/images/metal.png" />
 		<texture id="mountain" file="./scenes/images/mountain.jpg" />
 		<texture id="newzealand_text" file="./scenes/images/new-zealand-texture.png"/>
 		<texture id="newzealand_map" file="./scenes/images/new-zealand-map.png"/>
@@ -87,56 +49,24 @@
 		<texture id="wave_texture" file= "./scenes/images/water_texture.jpg" />
 		<texture id="wave_map" file= "./scenes/images/waves.jpg" />
     </textures>
+  
   <materials>
-
-    <!--material do tampo-->
  	<material id="mat1" shininess = "8" >
 		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
 		 <ambient r="0.39" g="0.2" b="0.1" a="1" />
 		 <diffuse r="0.39" g="0.2" b="0.1" a="1" />
 		 <specular r="0.1" g="0.1" b="0.1" a="1" />
 	 </material>
-
-      <!--material das pernas-->
- 	<material id="mat2" shininess = "120" >
-		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
-		 <ambient r="0.6" g="0.6" b="0.6" a="1" />
-		 <diffuse r="0.6" g="0.6" b="0.6" a="1" />
-		 <specular r="1" g="1" b="1" a="1" />
-	 </material>
-
-
-      <!--material das paredes-->
- 	<material id="mat3" shininess = "4" >
-		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
-		 <ambient r="0.9" g="0.8" b="0.6" a="1" />
-		 <diffuse r="0.9" g="0.8" b="0.6" a="1" />
-		 <specular r="0.1" g="0.1" b="0.1" a="1" />
-	 </material>
-
-      <!--material do chao-->
- 	<material id="mat4" shininess = "20" >
-		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
-		 <ambient r="0.3" g="0.5" b="0.4" a="1" />
-		 <diffuse r="0.3" g="0.5" b="0.4" a="1" />
-		 <specular r="0.3" g="0.3" b="0.3" a="1" />
-	 </material>
-
  </materials>
   
   <transformations>
-
 	<transformation id="water_transformation">
 		  <scale x="30" y="1" z="30" />
 	 </transformation>
-
 	<transformation id="terrain_transformation">
         <translate x="0" y="-2.5" z="0"/>
 		<scale x="20" y="25" z="20" />
 	 </transformation>
-	 
-	 
-
  </transformations>
 
  <animations>
@@ -144,90 +74,27 @@
 		<controlpoint x="0.0" y="0.0" z="0.0"/>
 		<controlpoint x="0.0" y="0.0" z="-8.0"/>
 	</linear>
-
 	<linear id="l2" span="0.6">
 		<controlpoint x="0.0" y="0.0" z="0.0"/>
 		<controlpoint x="12.0" y="0.0" z="0.0"/>
 		<controlpoint x="12.0" y="0.0" z="-8.0"/>
 	</linear>
-
 	<linear id="l1" span="1">
 		<controlpoint x="0.0" y="0.0" z="0.0"/>
 		<controlpoint x="0.0" y="10.0" z="0.0"/>
 	</linear>
-
 	<linear id="l4" span="1">
 		<controlpoint x="0.0" y="0.0" z="0.0"/>
 		<controlpoint x="0.0" y="-9" z="1"/>
 	</linear>
-
 	<circular id="c1" span="4" center="-3.0 0.0 0.0" radius="3" 
 		startang="0" rotang="360"/>
-
-	<linear id="test" span="4">
-		<controlpoint x="0.0" y="0.0" z="0.0"/>
-		<controlpoint x="10" y="0.0" z="10.0"/>
-		<controlpoint x="0" y="2.0" z="2.0"/>
-	</linear>
-
-
  </animations>
 
  <primitives>
- 	<primitive id="rectangle">
- 		<rectangle x1="0" y1="0" x2="11" y2="11" />
-    </primitive >
-
-    <primitive id="quad">
- 		<rectangle x1="0" y1="0" x2="1" y2="1" />
-    </primitive >
-
-	<primitive id="cylinder">
-		<cylinder base="0.4" top="0.2" height="3" slices="20" stacks="5" />
-    </primitive >
-
-	<primitive id="sphere">
-		<sphere radius="0.5" slices="60" stacks="60" />
-    </primitive >
-
-	<primitive id="triangle">
-		<triangle x1="1" y1="1" z1="1"
-				  x2="2" y2="1" z2="1"
-				  x3="1" y3="2" z3="1" />
-    </primitive >
-
-	<primitive id="torus">
-		<cylinder2 base="0.4" top="0.2" height="0.6" slices="20" stacks="5" />
-	</primitive >
-
-	<primitive id="plane">
-		<plane npartsU="2" npartsV="2" />
-	</primitive >
-
-	<primitive id="patch">
-		<patch npointsU="3" npointsV="2" npartsU="20" npartsV="20">
-			<controlpoint x="-1.5" y="-1.5" z="0.0"/>
-			<controlpoint x="-1.5" y="1.5" z="0.0"/>
-			<controlpoint x="0" y="-1.5" z="3.0"/>
-			<controlpoint x="0" y="1.5" z="3.0"/>
-			<controlpoint x="1.5" y="-1.5" z="0.0"/>
-			<controlpoint x="1.5" y="1.5" z="0.0"/>
-		</patch>
-	</primitive >
-
-	<primitive id="cylinder2">
-		<cylinder2 base="1" top="0.2" height="10" slices="20" stacks="5" />
-	</primitive >
-
-	<primitive id="cylinder1">
-		<cylinder base="1" top="0.2" height="10" slices="20" stacks="5" />
-	</primitive >
-
-
 	<primitive id="vehicle">
 		<vehicle />
 	</primitive >
-
 	<primitive id="terrain">
 		<terrain idTexture= "newzealand_text" idheightmap="newzealand_map" parts="20" heightscale="0.1" />
 	</primitive >
@@ -235,29 +102,21 @@
 	<primitive id="water">
 		<water idTexture= "wave_texture" idwavemap="wave_map" parts="20" heightscale="0.8" texscale="3"/>
 	</primitive >
-
  </primitives >
 
-
  <components>
-
  	<component id="root">
 		<transformation>
 		</transformation>
 		<materials>
-			 <material id="mat2" />
 			 <material id="mat1" />
-			 <material id="mat2" />
 		</materials>
-		<texture id="metal" length_s="2" length_t="1" />
-
+		<texture id="none"  />
 		<children>
 			<componentref id="mountain"/>
 			<componentref id="water"/>
 			<componentref id="ship"/>
-
 		</children>
-
  	</component>
 
 	  <component id="water">
@@ -269,7 +128,7 @@
 		<materials>
 			 <material id="inherit" />
 		</materials>
-		<texture id="metal" length_s="2" length_t="1" />
+		<texture id="wave_texture" length_s="2" length_t="1" />
 		<children>
 			<primitiveref id="water"/>
 		</children>
@@ -284,12 +143,11 @@
 		<materials>
 			 <material id="inherit" />
 		</materials>
-		<texture id="metal" length_s="2" length_t="1" />
+		<texture id="mountain" length_s="2" length_t="1" />
 		<children>
 			<primitiveref id="terrain"/>
 		</children>
 	 </component>
-
 
 	  <component id="ship">
 	 	<transformation>
@@ -310,7 +168,5 @@
 			<primitiveref id="vehicle"/>
 		</children>
 	 </component>
-
  </components>
- 
 </yas>

@@ -31,24 +31,23 @@ class Vehicle extends CGFobject {
     /**
      * Creates the objects of type Patch necessary to construct the vehicle
      */
-    createPatches()
-    {
+    createPatches() {
         var controlpointsTop = [
-            [-1.5, -1.5, 0.0],  
-            [-1.5, 1.5, 0.0],  
-            [0, -1.5, 2.5],    
-            [0, 1.5, 2.5],    
-            [1.5, -1.5, 0.0],  
-            [1.5, 1.5, 0.0]    
+            [-1.5, -1.5, 0.0],
+            [-1.5, 1.5, 0.0],
+            [0, -1.5, 2.5],
+            [0, 1.5, 2.5],
+            [1.5, -1.5, 0.0],
+            [1.5, 1.5, 0.0]
         ]
         this.top = new Patch(this.scene, 3, 2, 20, 20, controlpointsTop);
         var controlpointsBase = [
-        [-1.5, -1.5, 0.0],  
-        [-1.5, 1.5, 0.0],  
-        [0, -1.5, 1],    
-        [0, 1.5, 1],    
-        [1.5, -1.5, 0.0],  
-        [1.5, 1.5, 0.0]    
+            [-1.5, -1.5, 0.0],
+            [-1.5, 1.5, 0.0],
+            [0, -1.5, 1],
+            [0, 1.5, 1],
+            [1.5, -1.5, 0.0],
+            [1.5, 1.5, 0.0]
         ]
         this.base = new Patch(this.scene, 3, 2, 20, 20, controlpointsBase);
         var controlpointsFrontBase = [
@@ -58,7 +57,7 @@ class Vehicle extends CGFobject {
             [0, 1.5, 1],
             [0, 3, 0.0],
             [0, 3, 0.0],
-            [1.5, 1.5, 0.0], 
+            [1.5, 1.5, 0.0],
             [0.8, 3, 0.0],
             [0, 3, 0.0],
         ]
@@ -70,7 +69,7 @@ class Vehicle extends CGFobject {
             [0, 1.5, 2.5],
             [0, 3, 0.0],
             [0, 3, 0.0],
-            [1.5, 1.5, 0.0], 
+            [1.5, 1.5, 0.0],
             [0.8, 3, 0.0],
             [0, 3, 0.0],
         ]
