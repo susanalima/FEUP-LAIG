@@ -1,3 +1,6 @@
+/**
+ * LinearAnimation class represents a linear animation
+ */
 class LinearAnimation extends Animation {
 
     /**
