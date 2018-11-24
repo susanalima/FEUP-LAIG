@@ -1,4 +1,4 @@
-class LinearAnimation2 extends Animation {
+class LinearAnimation extends Animation {
 
     constructor(controlPoints, time) {
         super(time);
@@ -28,7 +28,12 @@ class LinearAnimation2 extends Animation {
 
         let deltaX = this.controlPoints[index + 1][0] - this.controlPoints[index][0];
         let deltaZ = this.controlPoints[index + 1][2] - this.controlPoints[index][2];
-        return Math.sqrt(Math.pow(deltaX, 2)  + Math.pow(deltaZ, 2));
+        return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaZ, 2));
+    }
+
+    getDistanceVertical(index)
+    {
+       return this.controlPoints[index + 1][1] - this.controlPoints[index][1];
     }
 
     getDistanceTotal() {
@@ -64,6 +69,7 @@ class LinearAnimation2 extends Animation {
  
     calcAngle(vector1, vector2)
     {
+
       let v1_x = vector1[0];
       let v1_z = vector1[1];
       let v2_x = vector2[0];
@@ -79,11 +85,17 @@ class LinearAnimation2 extends Animation {
   
  
     apply(deltaT){
-        let deltaDistX,deltaDistY,deltaDistZ,deltaVertical;
-        if(this.index >= this.maxPoint)
-            this.end = true;
-         if(this.end == true)
+        let deltaDistX;
+        let deltaDistY;
+        let deltaDistZ;
+        let deltaVertical;
+        if(this.end == true)
             return;
+        if(this.index >= this.maxPoint)
+        {
+            this.end = true;
+            return;
+        }
         var deltaDistance = this.distance*deltaT/this.time;
        // console.log('deltaDistance');
        // console.log(deltaDistance);
