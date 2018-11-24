@@ -152,7 +152,7 @@
 
 	<linear id="l1" span="0.1">
 		<controlpoint x="0.0" y="0.0" z="0.0"/>
-		<controlpoint x="0.0" y="10.0" z="1"/>
+		<controlpoint x="0.0" y="10.0" z="0.0"/>
 	</linear>
 
 	<linear id="l4" span="1">
@@ -162,6 +162,11 @@
 
 	<circular id="c1" span="4" center="-3.0 0.0 0.0" radius="3" 
 		startang="0" rotang="360"/>
+
+	<linear id="test" span="10">
+		<controlpoint x="0.0" y="0.0" z="0.0"/>
+		<controlpoint x="0" y="10.0" z="10.0"/>
+	</linear>
 
 
  </animations>
@@ -289,12 +294,12 @@
 		 	<translate x="-5.5" y="1.2" z="-1.5"/>
 		</transformation>
 		<animations>
-			<animationref id="l1"/>
-			<animationref id="c1"/>
+			<animationref id="test"/>
+			<!--<animationref id="c1"/>
 			<animationref id="l2"/>
 			<animationref id="l3"/>
 			<animationref id="c1"/>
-			<animationref id="l4"/>
+			<animationref id="l4"/>-->
 		</animations>
 		<materials>
 			 <material id="inherit" />

@@ -1,9 +1,10 @@
-class LinearAnimation extends Animation {
+class LinearAnimation2 extends Animation {
 
     constructor(controlPoints, time) {
         super(time);
         this.type = "Linear";
         this.controlPoints = controlPoints;
+        this.maxPoint = this.controlPoints.length - 1;
         this.distance = this.getDistanceTotal();
         this.vectors = [];
         this.getVectors();
@@ -12,15 +13,35 @@ class LinearAnimation extends Animation {
 
     restart() {
         super.restart();
+        this.segment = 0;
+        this.point = 0;
         this.x = this.controlPoints[0][0];
         this.y = this.controlPoints[0][1];
         this.z = this.controlPoints[0][2];
+        this.index = 0;
         this.end = false;
         this.angle = this.calcAngle(this.vectors[0],[0,1]);
-        this.index = 0;
-        this.maxIndex = this.controlPoints.length - 1;
     }
 
+ 
+    getDistanceSegment(index) {
+
+        let deltaX = this.controlPoints[index + 1][0] - this.controlPoints[index][0];
+        let deltaZ = this.controlPoints[index + 1][2] - this.controlPoints[index][2];
+        return Math.sqrt(Math.pow(deltaX, 2)  + Math.pow(deltaZ, 2));
+    }
+
+    getDistanceTotal() {
+
+        var totalDistance = 0;
+
+        for (var i = 0; i < this.controlPoints.length - 1; i++)
+            totalDistance += this.getDistanceSegment(i);
+
+        return totalDistance;
+    }
+
+   
 
     getVectors()
     {
@@ -51,81 +72,49 @@ class LinearAnimation extends Animation {
       let n_v1 = Math.sqrt(v1_x*v1_x + v1_z*v1_z);
       let n_v2 = Math.sqrt(v2_x*v2_x + v2_z*v2_z);
 
-      if(n_v1 == 0 || n_v2 == 0)
-        return 0;
-
       let cos = (v1_x*v2_x + v1_z*v2_z)/(n_v1*n_v2);
       return Math.acos(cos);
     }
 
-    getDistanceSegment(index) {
-        let deltaX = this.getDeltaX(index)
-        let deltaY = this.getDeltaY(index);
-        let deltaZ = this.getDeltaZ(index);
-        return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY,2)  + Math.pow(deltaZ, 2));
-    }
-
-    getDistanceTotal() {
-        var totalDistance = 0;
-        for (var i = 0; i < this.controlPoints.length - 1; i++)
-            totalDistance += this.getDistanceSegment(i);
-        return totalDistance;
-    }
-
-    getDeltaX(index) {
-        return this.controlPoints[index + 1][0] - this.controlPoints[index][0];
-    }
-
-    getDeltaY(index) {
-        return this.controlPoints[index + 1][1] - this.controlPoints[index][1];
-    }
-
-    getDeltaZ(index) {
-        return this.controlPoints[index + 1][2] - this.controlPoints[index][2];
-    }
-
-    getCurrentDist(deltaX,deltaY,deltaZ) {
-        return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY,2)  + Math.pow(deltaZ, 2));
-    }
-
-
+  
+ 
     apply(deltaT){
-        if(this.index >= this.maxIndex)
+        let deltaDistX,deltaDistY,deltaDistZ,deltaVertical;
+        if(this.index >= this.maxPoint)
             this.end = true;
          if(this.end == true)
             return;
-        
-        console.log('index ' + this.index);
-        let deltaDistX,deltaDistY,deltaDistZ, currentDist;
-        deltaDistX = this.getDeltaX(this.index)*deltaT/this.time;
-        deltaDistY = this.getDeltaY(this.index)*deltaT/this.time;
-        deltaDistZ = this.getDeltaZ(this.index)*deltaT/this.time;
+        var deltaDistance = this.distance*deltaT/this.time;
+       // console.log('deltaDistance');
+       // console.log(deltaDistance);
         var distSegment = this.getDistanceSegment(this.index);
-        currentDist = this.getCurrentDist(this.x,this.y,this.z);
-
-        console.log('distSeg : ' + distSegment);
-        console.log('currentDist : ' + currentDist);
-
-        if (this.currentDist >= distSegment)
+       // console.log('distSegment');
+        //console.log(distSegment);
+        deltaVertical = this.getDistanceVertical(this.index);
+        this.segment += deltaDistance;
+        if (this.segment > distSegment)
         {
-           if(this.index < this.maxIndex -1)
+            deltaDistance -= (this.segment - distSegment);
+            deltaDistX = deltaDistance*Math.sin(this.angle);
+            deltaDistY = deltaVertical * deltaDistance/ distSegment;
+            deltaDistZ = deltaDistance*Math.cos(this.angle);
+            if(this.index < this.maxPoint -1)
                 this.angle += this.calcAngle(this.vectors[this.index], this.vectors[this.index +1]);
             this.index++;
+            this.segment = 0;
+        } 
+        else{
+        deltaDistX = deltaDistance*Math.sin(this.angle);
+        deltaDistY = deltaVertical*deltaDistance/ distSegment;
+        deltaDistZ = deltaDistance*Math.cos(this.angle);
         }
-
         this.x += deltaDistX;
         this.y += deltaDistY;
         this.z += deltaDistZ;
 
-        console.log('X : ' + this.x);
+      /*  console.log('X : ' + this.x);
         console.log('Y : ' + this.y);
-        console.log('Z : ' + this.z);
-         
-          
-           
+        console.log('Z : ' + this.z);*/
     }
-
-
-    
 
 }
