@@ -1,11 +1,10 @@
 class LinearAnimation extends Animation {
 
     constructor(controlPoints, time) {
-        super();
+        super(time);
         this.type = "Linear";
         this.controlPoints = controlPoints;
         this.maxPoint = this.controlPoints.length - 1;
-        this.time = time;
         this.distance = this.getDistanceTotal();
         this.vectors = [];
         this.getVectors();
@@ -13,9 +12,9 @@ class LinearAnimation extends Animation {
     }
 
     restart() {
+        super.restart();
         this.segment = 0;
         this.point = 0;
-        this.lastTime = null;
         this.x = this.controlPoints[0][0];
         this.y = this.controlPoints[0][1];
         this.z = this.controlPoints[0][2];
@@ -83,28 +82,14 @@ class LinearAnimation extends Animation {
       return Math.acos(cos);
     }
 
-    update(currTime) {
-        var deltaT;
-        if (this.lastTime == null)
-            deltaT = 0;
-        else
-            deltaT = currTime - this.lastTime;
-        this.animate(deltaT);
-        this.lastTime = currTime;
-    }
+  
  
-    animate(deltaT){
-        let deltaDistX;
-        let deltaDistY;
-        let deltaDistZ;
-        let deltaVertical;
-        if(this.end == true)
-            return;
+    apply(deltaT){
+        let deltaDistX,deltaDistY,deltaDistZ,deltaVertical;
         if(this.index >= this.maxPoint)
-        {
             this.end = true;
+         if(this.end == true)
             return;
-        }
         var deltaDistance = this.distance*deltaT/this.time;
        // console.log('deltaDistance');
        // console.log(deltaDistance);

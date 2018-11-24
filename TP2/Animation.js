@@ -1,14 +1,26 @@
 class Animation{
 
-    constructor(){
-
+    constructor(time){
+        this.time = time*1000;
+    }
+    
+    restart() {
+        this.lastTime = null;
     }
 
-    update(time){
-
+    update(currTime) {
+        var deltaT;
+        if (this.lastTime == null)
+            deltaT = 0;
+        else {
+            deltaT = currTime - this.lastTime;
+        }
+        this.apply(deltaT);
+        this.lastTime = currTime;
     }
 
-    apply(){
+    apply(deltaT)
+    {
 
     }
 

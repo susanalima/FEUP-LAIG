@@ -140,27 +140,27 @@
  </transformations>
 
  <animations>
-	<linear id="l3" span="2000">
+	<linear id="l3" span="0.4">
 		<controlpoint x="0.0" y="0.0" z="0.0"/>
 		<controlpoint x="0.0" y="0.0" z="-8.0"/>
 	</linear>
 
-	<linear id="l2" span="5000">
+	<linear id="l2" span="0.6">
 		<controlpoint x="0.0" y="0.0" z="0.0"/>
 		<controlpoint x="12.0" y="-4.0" z="0.0"/>
 	</linear>
 
-	<linear id="l1" span="1000">
+	<linear id="l1" span="0.1">
 		<controlpoint x="0.0" y="0.0" z="0.0"/>
 		<controlpoint x="0.0" y="10.0" z="1"/>
 	</linear>
 
-	<linear id="l4" span="1000">
+	<linear id="l4" span="1">
 		<controlpoint x="0.0" y="0.0" z="0.0"/>
 		<controlpoint x="0.0" y="-4.6" z="1"/>
 	</linear>
 
-	<circular id="c1" span="5000" center="-3.0 0.0 0.0" radius="3" 
+	<circular id="c1" span="4" center="-3.0 0.0 0.0" radius="3" 
 		startang="0" rotang="360"/>
 
 
@@ -245,7 +245,8 @@
 		<texture id="metal" length_s="2" length_t="1" />
 
 		<children>
-		
+			<componentref id="mountain"/>
+			<componentref id="water"/>
 			<componentref id="ship"/>
 
 		</children>
@@ -285,10 +286,15 @@
 
 	  <component id="ship">
 	 	<transformation>
-		 	<translate x="5.5" y="5.5" z="5.5"/>
+		 	<translate x="-5.5" y="1.2" z="-1.5"/>
 		</transformation>
 		<animations>
-		
+			<animationref id="l1"/>
+			<animationref id="c1"/>
+			<animationref id="l2"/>
+			<animationref id="l3"/>
+			<animationref id="c1"/>
+			<animationref id="l4"/>
 		</animations>
 		<materials>
 			 <material id="inherit" />

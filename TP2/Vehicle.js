@@ -73,7 +73,7 @@ class Vehicle extends CGFobject {
         this.explosionShaderBottom = new CGFshader(this.scene.gl, "propeller.vert", "fragShader.frag");
         this.explosionShaderBottom.setUniformsValues({ uSampler2: 4 });
         this.explosionShaderBottom.setUniformsValues({ uSampler1: 5 });
-        this.explosionShaderBottom.setUniformsValues({ normScale2: 1.0 });       
+        this.explosionShaderBottom.setUniformsValues({ normScale2: 1.2 });       
     };
 
     display() {
@@ -106,6 +106,7 @@ class Vehicle extends CGFobject {
         this.scene.popMatrix();
 
         this.scene.pushMatrix();
+
         this.scene.translate(2,1,-0.2);
         this.scene.pushMatrix();
         this.scene.translate(0.15,0,0.2);
@@ -163,6 +164,8 @@ class Vehicle extends CGFobject {
         this.scene.popMatrix();
         this.scene.setActiveShader(this.scene.defaultShader);
         this.cylinder.display();
+
+        
         this.scene.popMatrix();
 
         this.scene.popMatrix();
