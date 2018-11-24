@@ -1,5 +1,10 @@
 class LinearAnimation extends Animation {
 
+    /**
+     * Class constructor of LinearAnimation
+     * @param {Object} controlPoints Array of the control points
+     * @param {Object} time Length of the animation in seconds
+     */
     constructor(controlPoints, time) {
         super(time);
         this.type = "Linear";
@@ -11,6 +16,9 @@ class LinearAnimation extends Animation {
         this.restart();
     }
 
+    /**
+     * Restarts the animation by changing the class member values to the start values
+     */
     restart() {
         super.restart();
         this.segment = 0;
@@ -23,7 +31,10 @@ class LinearAnimation extends Animation {
         this.angle = this.calcAngle(this.vectors[0],[0,1]);
     }
 
- 
+    /**
+     * Returns the length of the segment of the animation being used 
+     * @param {Object} index Index of the segment of the animation
+     */
     getDistanceSegment(index) {
 
         let deltaX = this.controlPoints[index + 1][0] - this.controlPoints[index][0];
@@ -31,11 +42,18 @@ class LinearAnimation extends Animation {
         return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaZ, 2));
     }
 
+    /**
+     * Returns the vertical length of the segment of the animation being used 
+     * @param {Object} index Index of the segment of the animation
+     */
     getDistanceVertical(index)
     {
        return this.controlPoints[index + 1][1] - this.controlPoints[index][1];
     }
 
+    /**
+     * Returns the total distance travelled in the animation
+     */
     getDistanceTotal() {
 
         var totalDistance = 0;
@@ -47,7 +65,9 @@ class LinearAnimation extends Animation {
     }
 
    
-
+    /**
+     * Returns an array of arrays. The arrays represent the vectors of the translations correspondent to each of the animation segments
+     */
     getVectors()
     {
         for(let i = 0; i < this.controlPoints.length - 1; i++)
@@ -57,6 +77,10 @@ class LinearAnimation extends Animation {
         }
     }
 
+    /**
+     * Returns the an array which represents the vector of the animation segment of the index given
+     * @param {*} index Index of the segment of the animation
+     */
     getVector(index) {
         if (index >= this.controlPoints - 1) {
             console.log("ERROR: this.index of control point out of range!\n");
@@ -66,7 +90,11 @@ class LinearAnimation extends Animation {
         return vector;
     }
 
- 
+    /**
+     * Calculates the angle between to vectors given as arguments
+     * @param {Array} vector1 Array which represent a segments' vector
+     * @param {Array} vector2 Array which represent a segments' vector
+     */
     calcAngle(vector1, vector2)
     {
 
@@ -83,7 +111,10 @@ class LinearAnimation extends Animation {
     }
 
   
- 
+    /**
+     * Updates the class members according to the time passed between calls of this function
+     * @param {*} deltaT 
+     */
     apply(deltaT){
         let deltaDistX;
         let deltaDistY;
