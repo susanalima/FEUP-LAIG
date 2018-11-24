@@ -124,8 +124,4 @@ class LinearAnimation extends Animation {
           
            
     }
-
-
-    
-
 }
