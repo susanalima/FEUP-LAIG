@@ -2862,6 +2862,11 @@ class MySceneGraph {
                 prim.updateTexCoordLength(text.length_s, text.length_t);
             this.textures[text.id].bind();
         }
+        else
+        {
+            if (prim.constructor.name == "Terrain" || prim.constructor.name == "Water")
+                prim.texture.bind();
+        }
         prim.display();
         this.scene.popMatrix();
     }
