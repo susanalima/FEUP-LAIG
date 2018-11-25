@@ -156,7 +156,9 @@
 		</transformation>
 		<animations>
 			<animationref id="l1"/>
+			<animationref id="c1"/>
 			<animationref id="l2"/>
+			<animationref id="c1"/>
 			<animationref id="l4"/>
 		</animations>
 		<materials>
