@@ -173,8 +173,6 @@ class MySceneGraph {
     * @returns {Object} Null or string containing appropriate error message
     */
     parseScene(sceneNode) {
-        console.log("scenenode");
-        console.log(sceneNode);
         this.root = this.reader.getString(sceneNode, 'root');
         if (!this.validateString(this.root))
             return "unable to parse root value";
