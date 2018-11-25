@@ -13,7 +13,6 @@ class LinearAnimation extends Animation {
         super(time);
         this.type = "Linear";
         this.controlPoints = controlPoints;
-        //this.normalizeZeros();
         this.maxPoint = this.controlPoints.length - 1;
         this.distance = this.getDistanceTotal();
         this.vectors = [];
@@ -36,15 +35,7 @@ class LinearAnimation extends Animation {
         this.angle = this.calcAngleHorizontal(this.vectors[0], [0, 0,1]);
     }
 
-    /**
-     * Normalizes the zeros from the controlpoints vector when necessary
-     */
-    normalizeZeros() {
-        for (let i = 0; i < this.controlPoints.length; i++) {
-            if (this.controlPoints[i][0] == 0 && this.controlPoints[i][1] != 0 && this.controlPoints[i][2] == 0)
-                this.controlPoints[i][2] = 0.001;
-        }
-    }
+
 
     /**
     * Returns the length of the segment of the animation being used 
@@ -56,15 +47,6 @@ class LinearAnimation extends Animation {
         let deltaY = this.controlPoints[index + 1][1] - this.controlPoints[index][1];
         let deltaZ = this.controlPoints[index + 1][2] - this.controlPoints[index][2];
         return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaZ, 2) + Math.pow(deltaY, 2));
-    }
-
-
-    /**
-     * Returns the vertical length of the segment of the animation being used 
-     * @param {Object} index Index of the segment of the animation
-     */
-    getDistanceVertical(index) {
-        return this.controlPoints[index + 1][1] - this.controlPoints[index][1];
     }
 
 
@@ -108,7 +90,7 @@ class LinearAnimation extends Animation {
     }
 
     /**
-     * Calculates the angle between to vectors given from the vectors array
+     * Calculates the angle between two two dimensional(horizontal) vectors given from the vectors array
      * @returns {Object} angle calculated
      */
     calcAngleIndexHorizontal(index) {
@@ -118,7 +100,7 @@ class LinearAnimation extends Animation {
     }
 
     /**
-    * Calculates the angle between to vectors given as arguments
+    * Calculates the angle between two vectors given as arguments
     * @param {Array} vector1 Array which represent a segments' vector
     * @param {Array} vector2 Array which represent a segments' vector
     */
@@ -138,7 +120,7 @@ class LinearAnimation extends Animation {
     }
 
     /**
-     * Calculates the angle between to vectors given from the vectors array
+     * Calculates the angle alpha which consists in the angle a vector does with his projection in the x0z plane
      * @returns {Object} angle calculated
      */
     calcAngleIndexAlpha(index) {
@@ -148,7 +130,7 @@ class LinearAnimation extends Animation {
     }
 
     /**
-     * Calculates the angle between to vectors given as arguments
+     * Calculates the angle between two vectors given as arguments
      * @param {Array} vector1 Array which represent a segments' vector
      * @param {Array} vector2 Array which represent a segments' vector
      */
@@ -182,19 +164,24 @@ class LinearAnimation extends Animation {
      * @param {Object} deltaT 
      */
     apply(deltaT) {
-        let deltaDistX,deltaDistY,deltaDistZ,deltaVertical,deltaHorizontal,alphaAngle;
+        let deltaDistX, deltaDistY, deltaDistZ, deltaVertical, deltaHorizontal, alphaAngle;
+        
         if (this.end == true)
             return;
         if (this.index >= this.maxPoint) {
             this.end = true;
             return;
         }
+
+
         var deltaDistance = this.distance * deltaT / this.time;
         var distSegment = this.getDistanceSegment(this.index);
         alphaAngle = this.calcAngleIndexAlpha(this.index);
         deltaVertical = distSegment*Math.sin(alphaAngle);
         deltaHorizontal = distSegment*Math.cos(alphaAngle);
         this.segment += deltaDistance;
+        
+        
         if (this.segment > distSegment) {
             deltaDistance -= (this.segment - distSegment);
             deltaDistX = deltaHorizontal * Math.sin(this.angle) * deltaDistance / distSegment;
@@ -205,11 +192,15 @@ class LinearAnimation extends Animation {
             this.index++;
             this.segment = 0;
         }
+        
+        
         else {
             deltaDistX = deltaHorizontal * Math.sin(this.angle) * deltaDistance / distSegment;
             deltaDistY = deltaVertical * deltaDistance / distSegment;
             deltaDistZ = deltaHorizontal * Math.cos(this.angle) * deltaDistance / distSegment;
         }
+        
+        
         this.x += deltaDistX;
         this.y += deltaDistY;
         this.z += deltaDistZ;
