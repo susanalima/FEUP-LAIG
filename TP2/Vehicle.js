@@ -12,6 +12,7 @@ class Vehicle extends CGFobject {
         this.createPatches();
         this.cylinder = new MyCylinder2(scene, 20, 10, 0.8, 0.8, 0.4);
         this.circle = new MyCylinderBase(scene, 20, 0.55);
+        this.backCylinder = new MyCylinder(scene, 20, 10, 0.6, 0.6, 0.1);
 
         this.explosionTexture = new CGFtexture(this.scene, "./scenes/images/lava.png");
         this.vertexTexture = new CGFtexture(this.scene, "./scenes/images/height_volcano.jpg");
@@ -132,10 +133,15 @@ class Vehicle extends CGFobject {
         this.scene.popMatrix();
 
         this.scene.pushMatrix();
-        this.displayRocketPropellers(2, 1, -0.2);
+        this.displayRocketPropellers(2, 1, 0);
         this.displayRocketPropellers(0, -2, 0);
         this.displayRocketPropellers(-4.3, 0, 0);
         this.displayRocketPropellers(0, 2, 0);
+        this.scene.popMatrix();
+
+        this.scene.pushMatrix();
+        this.scene.translate(0,-1,1.2);
+        this.backCylinder.display();
         this.scene.popMatrix();
 
         this.scene.popMatrix();

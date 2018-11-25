@@ -34,12 +34,11 @@
         <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
     </omni>
     <omni id="omni2" enabled="1" >                                                     	      
-        <location x="10" y="10" z="10" w="1.0" />       	   
+        <location x="4" y="10" z="-8" w="1.0" />       	   
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
         <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
         <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
     </omni>
-	
  </lights>
 
     <textures>
@@ -86,7 +85,7 @@
 	</linear>
 	<linear id="l4" span="1">
 		<controlpoint x="0.0" y="0.0" z="0.0"/>
-		<controlpoint x="0.0" y="-9" z="1"/>
+		<controlpoint x="0.0" y="-8.5" z="1"/>
 	</linear>
 	<circular id="c1" span="4" center="-3.0 0.0 0.0" radius="3" 
 		startang="0" rotang="360"/>

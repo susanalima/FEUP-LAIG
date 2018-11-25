@@ -18,7 +18,6 @@ class LinearAnimation extends Animation {
         this.distance = this.getDistanceTotal();
         this.vectors = [];
         this.getVectors();
-        console.dir(this.vectors);
         this.restart();
     }
 
@@ -183,13 +182,7 @@ class LinearAnimation extends Animation {
      * @param {Object} deltaT 
      */
     apply(deltaT) {
-        console.log(this.vectors);
-        let deltaDistX;
-        let deltaDistY;
-        let deltaDistZ;
-        let deltaVertical;
-        let deltaHorizontal;
-        let alphaAngle;
+        let deltaDistX,deltaDistY,deltaDistZ,deltaVertical,deltaHorizontal,alphaAngle;
         if (this.end == true)
             return;
         if (this.index >= this.maxPoint) {
@@ -220,8 +213,5 @@ class LinearAnimation extends Animation {
         this.x += deltaDistX;
         this.y += deltaDistY;
         this.z += deltaDistZ;
-        console.log('X:' + this.x + '::DeltaX:' + deltaDistX);
-        console.log('Y:' + this.y + '::DeltaY:' + deltaDistY);
-        console.log('Z:' + this.z + '::DeltaZ:' + deltaDistZ);
     }
 }
