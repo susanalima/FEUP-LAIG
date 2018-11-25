@@ -55,7 +55,7 @@ class MyCylinder2 extends CGFobject {
      * Creates a new CGFnurbsObject from the information obtained
      */
     makeSurface(){
-        console.dir(this.controlVertexes);
+      
         var nurbsSurface = new CGFnurbsSurface(this.degree1,this.degree2, this.controlVertexes);
         this.cylinder2 = new CGFnurbsObject(this.scene, this.nparts_u, this.nparts_v, nurbsSurface);
     }
