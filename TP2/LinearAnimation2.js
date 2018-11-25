@@ -175,8 +175,6 @@ class LinearAnimation extends Animation {
         this.x += deltaDistX;
         this.y += deltaDistY;
         this.z += deltaDistZ;
-        console.log('X:' + this.x + '::DeltaX:' + deltaDistX);
-        console.log('Y:' + this.y + '::DeltaY:' + deltaDistY);
-        console.log('Z:' + this.z + '::DeltaZ:' + deltaDistZ);
+        
     }
 }

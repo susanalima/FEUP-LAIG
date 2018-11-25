@@ -34,7 +34,7 @@ class LinearAnimation extends Animation {
         this.z = this.controlPoints[0][2];
         this.index = 0;
         this.end = false;
-        this.angle = this.calcAngleHorizontal(this.vectors[0], [0, 1]);
+        this.angle = this.calcAngleHorizontal(this.vectors[0], [0, 0,1]);
     }
 
     /**
@@ -113,8 +113,8 @@ class LinearAnimation extends Animation {
      * @returns {Object} angle calculated
      */
     calcAngleIndexHorizontal(index) {
-        let v1 = [this.vectors[index][0], this.vectors[index][2]];
-        let v2 = [this.vectors[index + 1][0], this.vectors[index + 1][2]];
+        let v1 = [this.vectors[index][0], this.vectors[index][1], this.vectors[index][2]];
+        let v2 = [this.vectors[index + 1][0],this.vectors[index+1][1], this.vectors[index + 1][2]];
         return this.calcAngleHorizontal(v1, v2);
     }
 
@@ -125,12 +125,14 @@ class LinearAnimation extends Animation {
     */
     calcAngleHorizontal(vector1, vector2) {
         let v1_x = vector1[0];
-        let v1_z = vector1[1];
+        let v1_z = vector1[2];
         let v2_x = vector2[0];
-        let v2_z = vector2[1];
+        let v2_z = vector2[2];
 
         let n_v1 = Math.sqrt(v1_x * v1_x + v1_z * v1_z);
         let n_v2 = Math.sqrt(v2_x * v2_x + v2_z * v2_z);
+        if(n_v1 * n_v2 == 0)
+            return 0;
 
         let cos = (v1_x * v2_x + v1_z * v2_z) / (n_v1 * n_v2);
         return Math.acos(cos);
