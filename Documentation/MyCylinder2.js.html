@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: MyCylinderBody.js</title>
+    <title>JSDoc: Source: MyCylinder2.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: MyCylinderBody.js</h1>
+    <h1 class="page-title">Source: MyCylinder2.js</h1>
 
     
 
@@ -27,17 +27,17 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * MyCylinderBody
+ * MyCylinder2
  * @param gl {WebGLRenderingContext}
  * @constructor
  */
 
 /**
- * MyCylinderBodyClass is used to represent the side of a cylinder
+ * MyCylinder2 Class is used to represent a cylinder2
  */
-class MyCylinderBody extends CGFobject {
+class MyCylinder2 extends CGFobject {
 	/**
-	 * Constructor for MyCylinderBody class
+	 * Constructor for MyCylinder2 class
 	 * @param {Object} scene Scene where the object will be displayed
 	 * @param {Object} slices Number of slices of the cylinder, in other words, the number of sides of the polygon
 	 * @param {Object} stacks Number of stacks that constitute the cylinder.
@@ -47,114 +47,55 @@ class MyCylinderBody extends CGFobject {
 	 */
 	constructor(scene, slices, stacks, base, top, height) {
 		super(scene);
-
-		this.slices = slices;
-		this.stacks = stacks;
 		this.height = height;
 		this.base = base;
-		this.top = top;
-		this.repeat = false;
-		this.initBuffers();
-	};
+        this.top = top;
+        this.npoints_u = 9;
+        this.npoints_v = 2;
+        this.degree1 = 8;
+        this.degree2 = 1;
+        this.nparts_u = slices;
+        this.nparts_v = stacks;
+        this.controlPoints = [];
+        this.controlVertexes = [];
+        this.getControlVertexes();
+        this.makeSurface();
+    };
 
-	/**
-	 * Function used to define the vertices, indices, normals and texture coordinates for the object
-	 */
-	initBuffers() {
-		this.vertices = [
-		];
+    /**
+     * Creates the 9 control vertexes necessary to create the cylinder
+     */
+    getControlVertexes(){
+        this.controlVertexes = [
+            [[this.base,0,0,1],[this.top,0,this.height,1]],
+            [[this.base,this.base,0,0.707],[this.top,this.top,this.height,0.707]],
+            [[0,this.base,0,1],[0,this.base,this.height,1]],
+            [[-this.base,this.base,0,0.707],[-this.top,this.top,this.height,0.707]],
+            [[-this.base,0,0,1],[-this.base,0,this.height,1]],
+            [[-this.base,-this.base,0,0.707],[-this.top,-this.top,this.height,0.707]],
+            [[0,-this.base,0,1],[0,-this.base,this.height,1]],
+            [[this.base,-this.base,0,0.707],[this.top,-this.top,this.height,0.707]],
+            [[this.base,0,0,1],[this.top,0,this.height,1]]
+        ];
+    }
 
-		this.indices = [
-		];
+    /**
+     * Creates a new CGFnurbsObject from the information obtained
+     */
+    makeSurface(){
+      
+        var nurbsSurface = new CGFnurbsSurface(this.degree1,this.degree2, this.controlVertexes);
+        this.cylinder2 = new CGFnurbsObject(this.scene, this.nparts_u, this.nparts_v, nurbsSurface);
+    }
 
-		this.normals = [
-		];
-
-		this.texCoords = [
-		];
-
-
-		var angle = Math.PI * 2 / (this.slices);
-		var newangle = 0;
-		var x = 0;
-		var y = 0;
-		var z = 0;
-
-		var count = 0;
-		var v = 0;
-
-		var delta = (this.base - this.top) / this.stacks;
-
-		while (count &lt;= this.slices) {
-			v = 0;
-			x = Math.cos(newangle);
-			y = Math.sin(newangle);
-
-			for (let i = 0; i &lt;= this.stacks; i++) {
-				this.vertices.push(x * (this.base - (delta * i)));
-				this.vertices.push(y * (this.base - (delta * i)));
-				this.vertices.push(this.height * v);
-
-				v += 1 / this.stacks;
-			}
-
-			for (let i = 0; i &lt;= this.stacks; i++) {
-				this.normals.push(x);
-				this.normals.push(y);
-				this.normals.push(0);
-			}
-
-			newangle = newangle + angle;
-			count++;
-		}
-
-		for (var i = 0; i &lt;= this.slices * (this.stacks + 1); i += (this.stacks + 1)) {
-
-			if (i == (this.slices) * (this.stacks + 1)) {
-				for (var j = 0; j &lt; this.stacks; j++) {
-
-					this.indices.push(j + 1);
-					this.indices.push(i + j);
-					this.indices.push(j);
-					this.indices.push(1 + j);
-					this.indices.push(i + j + 1);
-					this.indices.push(j + i);
-				}
-			}
-			else {
-				for (var j = 0; j &lt; this.stacks; j++) {
-
-					this.indices.push(i + j);
-					this.indices.push(i + j + this.stacks + 1);
-					this.indices.push(i + j + this.stacks + 1 + 1);
-
-					this.indices.push(i + j + this.stacks + 1 + 1);
-					this.indices.push(i + j + 1);
-					this.indices.push(i + j);
-				}
-			}
-
-		}
-
-		for (let i = 0; i &lt;= this.slices; i++) {
-			for (let j = 0; j &lt;= this.stacks; j++) {
-				this.texCoords.push(i / (this.slices), j / this.stacks);
-			}
-		}
-
-
-
-		this.primitiveType = this.scene.gl.TRIANGLES;
-		this.initGLBuffers();
-	};
-
-	/**
-	 * Function used to rotate the cylinder sides by -180 degrees
-	 */
-	rotate() {
-		this.scene.rotate(-Math.PI / 2, 1, 0, 0);
-	};
-
+    /**
+     * Displays the cylinder
+     */
+    display(){
+        this.scene.pushMatrix();
+        this.cylinder2.display();
+        this.scene.popMatrix();
+    }
 };</code></pre>
         </article>
     </section>

@@ -34,8 +34,9 @@ var LIGHTS_INDEX = 3;
 var TEXTURES_INDEX = 4;
 var MATERIALS_INDEX = 5;
 var TRANSFORMATIONS_INDEX = 6;
-var PRIMITIVES_INDEX = 7;
-var COMPONENTS_INDEX = 8;
+var ANIMATIONS_INDEX = 7;
+var PRIMITIVES_INDEX = 8;
+var COMPONENTS_INDEX = 9;
 var INHERIT = "inherit";
 var NONE = "none";
 var DEFAULT_MATERIAL = 0;
@@ -76,7 +77,7 @@ class MySceneGraph {
         this.reader.open('scenes/' + filename, this);
     }
 
-    
+
     onXMLReady() {
         this.log("XML Loading finished.");
         var rootElement = this.reader.xmlDoc.documentElement;
@@ -152,6 +153,11 @@ class MySceneGraph {
         if (error != null)
             return error;
 
+        // &lt;animations>
+        error = this.parseIndex(ANIMATIONS_INDEX, this.parseAnimations, nodeNames, nodes, "animations");
+        if (error != null)
+            return error;
+
         // &lt;primitives>
         error = this.parseIndex(PRIMITIVES_INDEX, this.parsePrimitives, nodeNames, nodes, "primitives");
         if (error != null)
@@ -195,8 +201,6 @@ class MySceneGraph {
     * @returns {Object} Null or string containing appropriate error message
     */
     parseScene(sceneNode) {
-        console.log("scenenode");
-        console.log(sceneNode);
         this.root = this.reader.getString(sceneNode, 'root');
         if (!this.validateString(this.root))
             return "unable to parse root value";
@@ -555,7 +559,7 @@ class MySceneGraph {
             return "at least one light must be defined";
 
         this.log("Parsed lights");
-        console.dir(this.lights);
+        //console.dir(this.lights);
         return null;
     }
 
@@ -631,12 +635,12 @@ class MySceneGraph {
         return null;
     }
 
-     /**
-     * Parses child of the &lt;lights> node of type spot
-     * @param {Object} children Children of the &lt;lights> node
-     * @param {Object} index Index of the child being parsed
-     * @returns {Object} Null or string containing appropriate error message
-     */
+    /**
+    * Parses child of the &lt;lights> node of type spot
+    * @param {Object} children Children of the &lt;lights> node
+    * @param {Object} index Index of the child being parsed
+    * @returns {Object} Null or string containing appropriate error message
+    */
     parseLightsSpot(children, index) {
 
         var grandChildren = [];
@@ -824,7 +828,6 @@ class MySceneGraph {
             specular: []
         }
         var grandChildren = [];
-        var error;
         //get the id of current material
         var materialId = this.reader.getString(children[index], 'id');
         if (!this.validateString(materialId))
@@ -841,14 +844,14 @@ class MySceneGraph {
 
         grandChildren = children[index].children;
         var nodeNames = [];
-        for (var j = 0; j &lt; grandChildren.length; j++) {
+        for (let j = 0; j &lt; grandChildren.length; j++) {
             nodeNames.push(grandChildren[j].nodeName);
         }
 
-        var emissionIndex = nodeNames.indexOf("emission");
-        var ambientIndex = nodeNames.indexOf("ambient");
-        var diffuseIndex = nodeNames.indexOf("diffuse");
-        var specularIndex = nodeNames.indexOf("specular");
+        let emissionIndex = nodeNames.indexOf("emission");
+        let ambientIndex = nodeNames.indexOf("ambient");
+        let diffuseIndex = nodeNames.indexOf("diffuse");
+        let specularIndex = nodeNames.indexOf("specular");
 
         if (emissionIndex == -1)
             return "material's emission undefined for ID " + materialId;
@@ -986,69 +989,47 @@ class MySceneGraph {
      * @returns {Object} Null or string containing appropriate error message
      */
     parseTransformationScale(children, index, vector) {
-        var scale = {
-            class: 'scale',
-            x: null,
-            y: null,
-            z: null
-        }
         var { x, y, z } = this.parsePointXYZ(children, 'x', 'y', 'z', index);
-        scale.x = x;
-        scale.y = y;
-        scale.z = z;
+        var scale = this.createScale(x,y,z);
         if (!this.validateFloat(scale.x))
             return "unable to parse x of scale";
         if (!this.validateFloat(scale.y))
             return "unable to parse y of scale";
         if (!this.validateFloat(scale.z))
             return "unable to parse z of scale";
-
         vector.push(scale);
         return null;
     }
 
-     /**
-     * Parses transformations of type rotate
-     * @param {Object} children Children of the &lt;transformation> block 
-     * @param {Object} index Index of the child being parsed
-     * @param {Object} vector Place where the stucts representing the transformations of type rotate will be stored
-     * @returns {Object} Null or string containing appropriate error message
-     */
-    parseTransformationRotate(children, index, vector) {
-        var rotate = {
-            class: 'rotate',
-            axis: null,
-            angle: null
-        }
-        rotate.axis = this.reader.getString(children[index], 'axis');
-        if (!this.validateAxis(rotate.axis))
+    /**
+    * Parses transformations of type rotate
+    * @param {Object} children Children of the &lt;transformation> block 
+    * @param {Object} index Index of the child being parsed
+    * @param {Object} vector Place where the stucts representing the transformations of type rotate will be stored
+    * @returns {Object} Null or string containing appropriate error message
+    */
+    parseTransformationRotate(children, index, vector) {  
+        var axis = this.reader.getString(children[index], 'axis');
+        if (!this.validateAxis(axis))
             return "unable to parse axis of rotate";
-
-        rotate.angle = this.reader.getFloat(children[index], 'angle');
-        if (!this.validateFloat(rotate.angle))
+        var angle = this.reader.getFloat(children[index], 'angle');
+        if (!this.validateFloat(angle))
             return "unable to parse angle of rotate";
+        var rotate = this.createRotate(axis,angle,false);
         vector.push(rotate);
         return null;
     }
 
-     /**
-     * Parses transformations of type translate
-     * @param {Object} children Children of the &lt;transformation> block 
-     * @param {Object} index Index of the child being parsed
-     * @param {Object} vector Place where the stucts representing the transformations of type translate will be stored
-     * @returns {Object} Null or string containing appropriate error message
-     */
+    /**
+    * Parses transformations of type translate
+    * @param {Object} children Children of the &lt;transformation> block 
+    * @param {Object} index Index of the child being parsed
+    * @param {Object} vector Place where the stucts representing the transformations of type translate will be stored
+    * @returns {Object} Null or string containing appropriate error message
+    */
     parseTransformationTranslate(children, index, vector) {
-        var translate = {
-            class: 'translate',
-            x: null,
-            y: null,
-            z: null
-        }
         var { x, y, z } = this.parsePointXYZ(children, 'x', 'y', 'z', index);
-        translate.x = x;
-        translate.y = y;
-        translate.z = z;
+        var translate = this.createTranslate(x,y,z);
         if (!this.validateFloat(translate.x))
             return "unable to parse x of translate";
         if (!this.validateFloat(translate.y))
@@ -1057,6 +1038,252 @@ class MySceneGraph {
             return "unable to parse z of translate";
         vector.push(translate);
         return null;
+    }
+
+    /**
+     * Creates a struct scale that holds the information for a scale transformation
+     * @param {Object} x Scale x-value
+     * @param {Object} y Scale y-value
+     * @param {Object} z Scale z-value
+     * @returns {Object} Scale struct containing the received information
+     */
+    createScale(x,y,z)
+    {
+        var scale = {
+            class: 'scale',
+            x: null,
+            y: null,
+            z: null
+        }
+        scale.x = x;
+        scale.y = y;
+        scale.z = z;
+        return scale;
+    }
+
+      /**
+     * Creates a struct rotate that holds the information for a rotate transformation
+     * @param {Object} axis Rotation axis 
+     * @param {Object} angle Rotatio angle
+     * @returns {Object} Rotate struct containing the received information
+     */
+    createRotate(axis,angle, rad)
+    {
+        var rotate = {
+            class: 'rotate',
+            axis: null,
+            angle: null, 
+            rad: null
+        }
+        rotate.axis = axis;
+        rotate.angle = angle;
+        rotate.rad = rad;
+        return rotate;
+    }
+
+    /**
+     * Creates a struc translate that holds the information for a translate transformation
+     * @param {Object} x Translation x-coordinate
+     * @param {Object} y Translation y-coordinate
+     * @param {Object} z Translation z-coordinate
+     * @returns {Object} Translate struct containing the received information
+     */
+    createTranslate(x,y,z) {
+        var translate = {
+            class: 'translate',
+            x: null,
+            y: null,
+            z: null
+        }
+        translate.x = x;
+        translate.y = y;
+        translate.z = z;
+        return translate;
+    }
+
+    /**
+      * Parses the &lt;animations> node.
+      * @param {Object} primitivesNode Animations block element
+      * @returns {Object} Null or string containing appropriate error message
+      */
+    parseAnimations(animationsNode) {
+        var children = animationsNode.children;
+        this.animations = [];
+        var error;
+        for (var i = 0; i &lt; children.length; i++) {
+            switch (children[i].nodeName) {
+                case "linear":
+                    error = this.parseAnimationLinear(children, i);
+                    if (error != null)
+                        return error;
+                    break;
+                case "circular":
+                    error = this.parseAnimationCircular(children, i);
+                    if (error != null)
+                        return error;
+                    break;
+                default:
+                    this.onXMLMinorError("unknown tag &lt;" + children[i].nodeName + ">");
+                    continue;
+            }
+        }
+
+        this.log("Parsed animations");
+        return null;
+    }
+
+    /**
+     * Parses animations of type Linear
+     * @param {Object} children Children of the &lt;animations> block 
+     * @param {Object} index Index of the child being parsed
+     * @returns {Object} Null or string containing appropriate error message
+     */
+    parseAnimationLinear(children, index) {
+        var linearAnimation = {
+            class: 'linear',
+            span: null,
+            controlpoints: []
+        };
+        var grandChildren = [];
+        var error;
+        let numControlPoints = 0;
+
+        //get the id of current animation
+        let animationId = this.reader.getString(children[index], 'id');
+        if (!this.validateString(animationId))
+            return "no ID defined for animation";
+
+        // Checks for repeated IDs.   
+        if (this.animations[animationId] != null)
+            return "ID must be unique for each animation (conflict: ID = " + animationId + ")";
+
+        linearAnimation.span = this.reader.getFloat(children[index], 'span');
+        if (!this.validateFloat(linearAnimation.span))
+            return "unable to parse span value for linear animation for ID " + animationId;
+
+        grandChildren = children[index].children;
+        var nodeNames = [];
+        for (let j = 0; j &lt; grandChildren.length; j++) {
+            nodeNames.push(grandChildren[j].nodeName);
+        }
+
+        for (let i = 0; i &lt; grandChildren.length; i++) {
+            if (grandChildren[i].nodeName == "controlpoint") {
+                error = this.parseAnimationLinearControlPoint(grandChildren, i, linearAnimation.controlpoints);
+                if (error != null)
+                    return error;
+                numControlPoints++;
+            }
+            else {
+                this.onXMLMinorError("unknown tag &lt;" + grandChildren[i].nodeName + ">");
+                continue;
+            }
+        }
+
+        if (numControlPoints &lt; 2)
+            return "at least two controlpoints must be defined";
+
+       // this.animations[animationId] = this.createLinearAnimation(linearAnimation);
+       this.animations[animationId] = linearAnimation;
+        return null;
+    }
+
+    /**
+      * Parses animations of type Circular
+      * @param {Object} children Children of the &lt;animations> block 
+      * @param {Object} index Index of the child being parsed
+      * @returns {Object} Null or string containing appropriate error message
+      */
+    parseAnimationCircular(children, index) {
+        var circularAnimation = {
+            class: 'circular',
+            span: null,
+            centerX: null,
+            centerY: null,
+            centerZ: null,
+            radius: null,
+            startang: null,
+            rotang: null
+        };
+
+        //get the id of current animation
+        let animationId = this.reader.getString(children[index], 'id');
+        if (!this.validateString(animationId))
+            return "no ID defined for animation";
+
+        // Checks for repeated IDs.   
+        if (this.animations[animationId] != null)
+            return "ID must be unique for each animation (conflict: ID = " + animationId + ")";
+
+        circularAnimation.span = this.reader.getFloat(children[index], 'span');
+        if (!this.validateFloat(circularAnimation.span))
+            return "unable to parse span value for circular animation for ID " + animationId;
+
+        let center = this.reader.getString(children[index], 'center');
+        if (!this.validateString(center))
+            return "unable to parse center value for circular animation for ID " + animationId;
+        
+        var centerS = center.split(' ');
+        circularAnimation.centerX = parseFloat(centerS[0]);
+        if (!this.validateFloat(circularAnimation.centerX))
+             return "unable to parse center x coordinate for circular animation for ID " + animationId;
+        circularAnimation.centerY = parseFloat(centerS[1]);
+        if (!this.validateFloat(circularAnimation.centerY))
+             return "unable to parse center y coordinate for circular animation for ID " + animationId;
+        circularAnimation.centerZ = parseFloat(centerS[2]);
+        if (!this.validateFloat(circularAnimation.centerZ))
+             return "unable to parse center z coordinate for circular animation for ID " + animationId;  
+
+        circularAnimation.radius = this.reader.getFloat(children[index], 'radius');
+        if (!this.validateFloat(circularAnimation.radius))
+            return "unable to parse radius value for circular animation for ID " + animationId;
+
+        circularAnimation.startang = this.reader.getFloat(children[index], 'startang');
+        if (!this.validateFloat(circularAnimation.startang))
+            return "unable to parse startang value for circular animation for ID " + animationId;
+
+        circularAnimation.rotang = this.reader.getFloat(children[index], 'rotang');
+        if (!this.validateFloat(circularAnimation.rotang))
+            return "unable to parse rotang value for circular animation for ID " + animationId;
+
+       // this.animations[animationId] = this.createCircularAnimation(circularAnimation);
+
+        this.animations[animationId] = circularAnimation;
+        return null;
+    }
+
+    /**
+    * Creates a new animation according with the animation received
+    * @param {Object} animation Struct which contains the information needed to create the new animation
+    * @returns {Object}  animation
+    */
+    createAnimation(animation) {
+        switch(animation.class) {
+            case 'linear' :
+            return this.createLinearAnimation(animation);
+            case 'circular':
+            return this.createCircularAnimation(animation);
+        }
+    }
+
+    /**
+    * Creates a new linear animation
+    * @param {Object} linearAnimation Struct which contains the information needed to create the new linear animation
+    * @returns {Object} New linear animation
+    */
+   createLinearAnimation(linearAnimation) {
+    return new LinearAnimation(linearAnimation.controlpoints, linearAnimation.span);
+}
+
+
+    /**
+     * Creates a new circular animation
+     * @param {Object} linearAnimation Struct which contains the information needed to create the new circular animation
+     * @returns {Object} New circular animation
+     */
+    createCircularAnimation(circularAnimation) {
+        return new CircularAnimation(circularAnimation.span, circularAnimation.centerX,circularAnimation.centerY,circularAnimation.centerZ,
+            circularAnimation.radius,circularAnimation.startang,circularAnimation.rotang);
     }
 
 
@@ -1124,7 +1351,7 @@ class MySceneGraph {
                     return error;
                 break;
             case "cylinder":
-                error = this.parseCylinder(grandChildren, 0, primitiveId);
+                error = this.parseCylinder(grandChildren, 0, primitiveId,1);
                 if (error != null)
                     return error;
                 break;
@@ -1135,6 +1362,36 @@ class MySceneGraph {
                 break;
             case "torus":
                 error = this.parseTorus(grandChildren, 0, primitiveId);
+                if (error != null)
+                    return error;
+                break;
+            case "plane":
+                error = this.parsePlane(grandChildren, 0, primitiveId);
+                if (error != null)
+                    return error;
+                break;
+            case "patch":
+                error = this.parsePatch(grandChildren, 0, primitiveId);
+                if (error != null)
+                    return error;
+                break;
+            case "vehicle":
+                error = this.parseVehicle(grandChildren, 0, primitiveId);
+                if (error != null)
+                    return error;
+                break;
+            case "cylinder2":
+                error = this.parseCylinder2(grandChildren, 0, primitiveId);
+                if (error != null)
+                    return error;
+                break;
+            case "terrain":
+                error = this.parseTerrain(grandChildren, 0, primitiveId);
+                if (error != null)
+                    return error;
+                break;
+            case "water":
+                error = this.parseWater(grandChildren, 0, primitiveId);
                 if (error != null)
                     return error;
                 break;
@@ -1187,28 +1444,24 @@ class MySceneGraph {
     parseComponentsComponent(children, index) {
         var error;
         var component = {
-
             materials: [],
             currentMaterialIndex: 0,
-  
             texture: {
                 id: "0",
                 length_s: 0,
                 length_t: 0
             },
-
-            transformations: {
-                tref: false,
-                trefID: null,
-                transformations: []
-
-            },
-
+    
+            transformations : [],
+            currentAnimationIndex: null, //animations are optional therefore the index can be nulls
+            currentAnimationInfo : null,
+            animations: [],
             children: {
                 componentsRef: [],
                 primitivesRef: []
             }
         }
+
         var grandChildren = [];
         var componentId = this.reader.getString(children[index], "id");
         if (!this.validateString(componentId))
@@ -1226,10 +1479,15 @@ class MySceneGraph {
         for (var j = 0; j &lt; grandChildren.length; j++) {
 
             var nodeName = grandChildren[j].nodeName;
-            var ggrandChildren = grandChildren[j].children; 
+            var ggrandChildren = grandChildren[j].children;
             switch (nodeName) {
                 case "transformation":
                     error = this.parseComponentTransformations(ggrandChildren, component, componentId);
+                    if (error != null)
+                        return error;
+                    break;
+                case "animations":
+                    error = this.parseComponentAnimations(ggrandChildren, component, componentId);
                     if (error != null)
                         return error;
                     break;
@@ -1256,7 +1514,7 @@ class MySceneGraph {
         this.components[componentId] = component;
         return null;
     }
-    
+
     /**
      * Parses the transformations of a component
      * @param {Object} children Children of the &lt;component> node
@@ -1269,14 +1527,14 @@ class MySceneGraph {
         for (let k = 0; k &lt; children.length; k++) {
             let nodeName2 = children[k].nodeName;
             if (nodeName2 == "transformationref") {
-              error = this.parseComponentTransformationsTransformationRef(children,k,component,componentId);
-              if(error != null)
-                return error;
+                error = this.parseComponentTransformationsTransformationRef(children, k, component, componentId);
+                if (error != null)
+                    return error;
             }
             else {
-              error = this.parseComponentTransformationsTransformation(nodeName2,children,k,component);
-              if (error != null)
-                return error;
+                error = this.parseComponentTransformationsTransformation(nodeName2, children, k, component);
+                if (error != null)
+                    return error;
             }
         }
         return null;
@@ -1290,15 +1548,18 @@ class MySceneGraph {
      * @param {Object} componentId The id of the component being parsed
      * @returns {Object} Null or string containing appropriate error message
      */
-    parseComponentTransformationsTransformationRef(children,index,component,componentId)
-    {
+    parseComponentTransformationsTransformationRef(children, index, component, componentId) {
         let id = this.reader.getString(children[index], 'id');
         if (!this.validateString(id))
             return "no id defined for transformation for component ID: " + componentId;
-        if(!this.isTransformation(id))
+        if (!this.isTransformation(id))
             return "invalid id defined for transformation " + id + " for component ID: " + componentId;
-        component.transformations.trefID = id;
-        component.transformations.tref = true;
+        
+        for(let i = 0; i &lt; this.transformations[id].length; i++)
+        {
+            component.transformations.push(this.transformations[id][i]);
+        }
+    
         return null;
     }
 
@@ -1310,22 +1571,21 @@ class MySceneGraph {
      * @param {Object} component Component being parsed
      * @returns {Object} Null or string containing appropriate error message
      */
-    parseComponentTransformationsTransformation(nodeName,children,index,component)
-    {
+    parseComponentTransformationsTransformation(nodeName, children, index, component) {
         var error;
         switch (nodeName) {
             case "translate":
-                error = this.parseTransformationTranslate(children, index, component.transformations.transformations);
+                error = this.parseTransformationTranslate(children, index, component.transformations);
                 if (error != null)
                     return error;
                 break;
             case "rotate":
-                error = this.parseTransformationRotate(children, index, component.transformations.transformations);
+                error = this.parseTransformationRotate(children, index, component.transformations);
                 if (error != null)
                     return error;
                 break;
             case "scale":
-                error = this.parseTransformationScale(children, index, component.transformations.transformations);
+                error = this.parseTransformationScale(children, index, component.transformations);
                 if (error != null)
                     return error;
                 break;
@@ -1333,6 +1593,35 @@ class MySceneGraph {
                 this.onXMLMinorError("unknown tag &lt;" + children[k].nodeName + ">");
                 break;
         }
+        return null;
+    }
+
+    
+
+    /**
+   * Parses the animations of a component
+   * @param {Object} children Children of the &lt;component> node
+   * @param {Object} component Component being parsed
+   * @param {Object} componentId Id of the component being parsed
+   * @returns {Object} Null or string containing appropriate error message
+   */
+    parseComponentAnimations(children, component, componentId) {
+        for (let k = 0; k &lt; children.length; k++) {
+            let nodeName = children[k].nodeName;
+            if (nodeName == "animationref") {
+                let id = this.reader.getString(children[k], 'id');
+                if (!this.validateString(id))
+                    return "no id defined for animationref for component ID: " + componentId;
+                if (!this.isAnimation(id))
+                    return "invalid id defined for animationref " + id + " for component ID: " + componentId;
+                //component.animations.push(id);
+                var animation = this.createAnimation(this.animations[id]);
+                component.animations.push(animation);
+            }
+            else
+                this.onXMLMinorError("unknown tag &lt;" + children[k].nodeName + ">");
+        }
+        this.inicializeComponentCurrentAnimationIndex(component);
         return null;
     }
 
@@ -1359,7 +1648,7 @@ class MySceneGraph {
                 this.onXMLMinorError("unknown tag &lt;" + children[k].nodeName + ">");
 
         }
-    
+
         return null;
     }
 
@@ -1378,17 +1667,17 @@ class MySceneGraph {
             return "no id defined for texture for component ID: " + componentId;
         if (!this.isTexture(component.texture.id))
             return "invalid id defined for texture " + component.texture.id + " for component ID: " + componentId;
-            
+
         component.texture.length_s = this.reader.getFloat(children[index], 'length_s', false);
-        if (!this.validateFloat(component.texture.length_s)){
-            if(component.texture.id == "none" || component.texture.id == "inherit")
+        if (!this.validateFloat(component.texture.length_s)) {
+            if (component.texture.id == "none" || component.texture.id == "inherit")
                 component.texture.length_s = 0;
             else
                 return "Unable to parse texture's lenght_s value for component ID: " + componentId;
         }
         component.texture.length_t = this.reader.getFloat(children[index], 'length_t', false);
-        if (!this.validateFloat(component.texture.length_t)){
-            if(component.texture.id == "none" || component.texture.id == "inherit")
+        if (!this.validateFloat(component.texture.length_t)) {
+            if (component.texture.id == "none" || component.texture.id == "inherit")
                 component.texture.length_t = 0;
             else
                 return "Unable to parse texture's lenght_t value for component ID: " + componentId;
@@ -1396,7 +1685,7 @@ class MySceneGraph {
         return null;
     }
 
-  
+
     /**
      * Parses the children of a component(primitives and other components) 
      * @param {Object} children Children of the component being parsed
@@ -1419,7 +1708,7 @@ class MySceneGraph {
                     if ((!this.validateString(idP)))
                         return "no id defined for primitiveref for component ID: " + componentId;
                     if (!this.isPrimitive(idP))
-                        return "invalid id defined for primitiveref "+ idP + " for component ID: " + componentId;
+                        return "invalid id defined for primitiveref " + idP + " for component ID: " + componentId;
                     component.children.primitivesRef.push(idP);
                     break;
                 default:
@@ -1463,7 +1752,7 @@ class MySceneGraph {
      * @returns {Object} New cylinder
      */
     createCylinder(cylinder) {
-        return new MyCylinder(this.scene, cylinder.slices, cylinder.stacks, cylinder.base, cylinder.top, cylinder.height); //TODO
+        return new MyCylinder(this.scene, cylinder.slices, cylinder.stacks, cylinder.base, cylinder.top, cylinder.height); 
     }
 
     /**
@@ -1474,8 +1763,66 @@ class MySceneGraph {
     createTorus(torus) {
         return new MyTorus(this.scene, torus.inner, torus.outer, torus.slices, torus.loops);
     }
+    
+    /**
+     * Creates a new plane
+     * @param {Object} plane Struct which contains the information needed to create the new plane
+     * @returns {Object} New plane
+     */
+    createPlane(plane) {
+        return new Plane(this.scene, plane.npartsU, plane.npartsV);
+    }
 
- 
+    /**
+     * Creates a new patch
+     * @param {Object} plane Struct which contains the information needed to create the new patch
+     * @returns {Object} New patch
+     */
+    createPatch(patch) {
+        return new Patch(this.scene, patch.npointsU,patch.npointsV, patch.npartsU, patch.npartsV, patch.controlpoints);
+    }
+
+    /**
+     * Creates a new vehicle
+     * @returns {Object} New vehicle
+     */
+    createVehicle() {
+        return new Vehicle(this.scene);
+    }
+
+    /**
+     * Creates a new cylinder2
+     * @param {Object} cylinder Struct which contains the information needed to create the new cylinder2
+     * @returns {Object} New cylinder
+     */
+    createCylinder2(cylinder) {
+        return new MyCylinder2(this.scene, cylinder.slices, cylinder.stacks, cylinder.base, cylinder.top, cylinder.height);
+
+    }
+
+    /**
+     * Creates a new terrain
+     * @param {Object} plane Struct which contains the information needed to create the new terrain
+     * @returns {Object} New terrain
+     */
+    createTerrain(terrain) {
+        var texture = this.textures[terrain.idTexture];
+        var map = this.textures[terrain.idheightmap];
+        return new Terrain(this.scene,texture,map,terrain.parts, terrain.heightscale);
+    }
+
+    /**
+     * Creates a new water
+     * @param {Object} water Struct which contains the information needed to create the new water
+     * @returns {Object} New water
+     */
+    createWater(water) {
+        var texture = this.textures[water.idTexture];
+        var map = this.textures[water.idwavemap];
+        return new Water(this.scene,texture,map,water.parts, water.heightscale,water.texscale);
+    }
+
+
     /**
      * Parses grandchild of the &lt;primitives> node of type torus
      * @param {Object} children GrandChildren of the &lt;primitives> block
@@ -1546,7 +1893,10 @@ class MySceneGraph {
      * @param {Object} id The id for the primitive being parsed
      * @returns {Object} null or string containig an appropriate error message
      */
-    parseCylinder(children, index, id) {
+    parseCylinder(children, index, id, number) {
+        let n = "";
+        if (number == 2)
+            n = number;
         var cylinder = {
             base: null,
             top: null,
@@ -1556,25 +1906,34 @@ class MySceneGraph {
         }
         cylinder.base = this.reader.getFloat(children[index], 'base');
         if (!this.validateFloat(cylinder.base))
-            return "unable to parse base of cylinder for ID " + id;
+            return "unable to parse base of cylinder"+ n +" for ID " + id;
 
         cylinder.top = this.reader.getFloat(children[index], 'top');
         if (!this.validateFloat(cylinder.top))
-            return "unable to parse top of cylinder for ID " + id;
+            return "unable to parse top of cylinder"+ n +" for ID " + id;
 
         cylinder.height = this.reader.getFloat(children[index], 'height');
         if (!this.validateFloat(cylinder.height))
-            return "unable to parse height of cylinder for ID " + id;
+            return "unable to parse height of cylinder"+ n +" for ID " + id;
 
         cylinder.stacks = this.reader.getFloat(children[index], 'stacks');
         if (!this.validateFloat(cylinder.stacks))
-            return "unable to parse stacks of cylinder for ID " + id;
+            return "unable to parse stacks of cylinder"+ n +" for ID " + id;
 
         cylinder.slices = this.reader.getFloat(children[index], 'slices');
         if (!this.validateFloat(cylinder.slices))
-            return "unable to parse slices of cylinder for ID " + id;
+            return "unable to parse slices of cylinder"+ n +"for ID " + id;
 
-        this.primitives[id] = this.createCylinder(cylinder);
+        switch(number) {
+            case 1:
+                this.primitives[id] = this.createCylinder(cylinder);
+                break;
+            case 2:
+                this.primitives[id] = this.createCylinder2(cylinder);
+                break;
+            default:
+                return "invalid cylinder for ID " + id;
+        } 
         return null;
     }
 
@@ -1670,6 +2029,242 @@ class MySceneGraph {
     }
 
     /**
+     * Parses grandchild of the &lt;primitives> node of type plane
+     * @param {Object} children GrandChildren of the &lt;primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null or string containig an appropriate error message
+     */
+    parsePlane(children, index, id) {
+        var plane = {
+            npartsU : null,
+            npartsV : null
+        }
+        plane.npartsU = this.reader.getFloat(children[index], 'npartsU');
+        if (!this.validateFloat(plane.npartsU))
+            return "unable to parse npartsU of plane for ID " + id;
+
+        plane.npartsV = this.reader.getFloat(children[index], 'npartsV');
+        if (!this.validateFloat(plane.npartsV))
+            return "unable to parse npartsV of plane for ID " + id;
+
+        this.primitives[id] = this.createPlane(plane);
+
+        return null;
+    }
+
+     /**
+     * Parses grandchild of the &lt;primitives> node of type patch
+     * @param {Object} children GrandChildren of the &lt;primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null or string containig an appropriate error message
+     */
+    parsePatch(children, index, id) {
+        var patch = {
+            npointsU : null,
+            npointsV : null,
+            npartsU : null,
+            npartsV : null,
+            controlpoints : []
+        }
+
+        patch.npointsU = this.reader.getFloat(children[index], 'npointsU');
+        if (!this.validateFloat(patch.npointsU))
+            return "unable to parse npointsU of patch for ID " + id;
+
+        patch.npointsV = this.reader.getFloat(children[index], 'npointsV');
+        if (!this.validateFloat(patch.npointsV))
+            return "unable to parse npointsV of patch for ID " + id;
+
+        patch.npartsU = this.reader.getFloat(children[index], 'npartsU');
+        if (!this.validateFloat(patch.npartsU))
+            return "unable to parse npartsU of patch for ID " + id;
+
+        patch.npartsV = this.reader.getFloat(children[index], 'npartsV');
+        if (!this.validateFloat(patch.npartsV))
+            return "unable to parse npartsV of patch for ID " + id;
+
+        var error;
+        let numControlPoints = 0;
+        let grandChildren = children[index].children;
+        var nodeNames = [];
+        for (let j = 0; j &lt; grandChildren.length; j++) {
+            nodeNames.push(grandChildren[j].nodeName);
+        }
+
+        for (let i = 0; i &lt; grandChildren.length; i++) {
+            if (grandChildren[i].nodeName == "controlpoint") {
+                error = this.parsePatchControlPoint(grandChildren, i, patch.controlpoints);
+                if (error != null)
+                    return error;
+                numControlPoints++;
+            }
+            else {
+                this.onXMLMinorError("unknown tag &lt;" + grandChildren[i].nodeName + ">");
+                continue;
+            }
+        }
+        if (numControlPoints != patch.npointsU*patch.npointsV)
+            return "invalid number of controlpoints, the number of controlPoints in a patch must be npointsU * npointsV";
+
+        this.primitives[id] = this.createPatch(patch);
+        return null;
+    }
+
+    /**
+     * Parses grandchild of the &lt;primitives> node of type vehicle
+     * @param {Object} children GrandChildren of the &lt;primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null 
+     */
+    parseVehicle(children, index, id) {
+        this.primitives[id] = this.createVehicle();
+        return null;
+    }
+
+    /**
+     * Parses grandchild of the &lt;primitives> node of type cylinder2
+     * @param {Object} children GrandChildren of the &lt;primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null or string containig an appropriate error message
+     */
+    parseCylinder2(children, index, id) {
+        return this.parseCylinder(children,index,id,2);
+    }
+
+    /**
+     * Parses grandchild of the &lt;primitives> node of type terrain
+     * @param {Object} children GrandChildren of the &lt;primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null or string containig an appropriate error message
+     */
+    parseTerrain(children, index, id) {
+        var terrain = {
+            idTexture : null,
+            idheightmap : null,
+            parts : null,
+            heightscale : null
+        }
+
+        terrain.idTexture = this.reader.getString(children[index], 'idTexture');
+        if (!this.validateString(terrain.idTexture))
+            return "unable to parse idTexture of terrain for ID " + id;
+    
+        if (!this.isTexture(terrain.idTexture))
+            return "invalid isTexture of terrain for ID " + id;
+
+        terrain.idheightmap = this.reader.getString(children[index], 'idheightmap');
+        if (!this.validateString(terrain.idheightmap))
+            return "unable to parse idheightmap of terrain for ID " + id;
+
+        if (!this.isTexture(terrain.idheightmap))
+            return "invalid idheightmap of terrain for ID " + id;
+
+        terrain.parts = this.reader.getFloat(children[index], 'parts');
+        if (!this.validateFloat(terrain.parts))
+            return "unable to parse parts of terrain for ID " + id;
+
+        terrain.heightscale = this.reader.getFloat(children[index], 'heightscale');
+        if (!this.validateFloat(terrain.heightscale))
+            return "unable to parse heightscale of terrain for ID " + id;
+
+        this.primitives[id] = this.createTerrain(terrain);
+        return null;
+    }
+
+     /**
+     * Parses grandchild of the &lt;primitives> node of type water
+     * @param {Object} children GrandChildren of the &lt;primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null or string containig an appropriate error message
+     */
+    parseWater(children, index, id) {
+        var water = {
+            idTexture : null,
+            idwavemap : null,
+            parts : null,
+            heightscale : null,
+            texscale : null,
+        }
+
+        water.idTexture = this.reader.getString(children[index], 'idTexture');
+        if (!this.validateString(water.idTexture))
+            return "unable to parse isTexture of water for ID " + id;
+        
+        if (!this.isTexture(water.idTexture))
+            return "invalid idTexture of water for ID " + id;
+
+        water.idwavemap = this.reader.getString(children[index], 'idwavemap');
+        if (!this.validateString(water.idwavemap))
+            return "unable to parse idwavemap of water for ID " + id;
+   
+        if (!this.isTexture(water.idwavemap))
+            return "invalid idwavemap of water for ID " + id;
+
+        water.parts = this.reader.getFloat(children[index], 'parts');
+        if (!this.validateFloat(water.parts))
+            return "unable to parse parts of water for ID " + id;
+
+        water.heightscale = this.reader.getFloat(children[index], 'heightscale');
+        if (!this.validateFloat(water.heightscale))
+            return "unable to parse heightscale of water for ID " + id;
+
+        water.texscale = this.reader.getFloat(children[index], 'texscale');
+        if (!this.validateFloat(water.texscale))
+            return "unable to parse texscale of water for ID " + id;
+
+        this.primitives[id] = this.createWater(water);
+        return null;
+    }
+
+
+    
+     /**
+     * Parses a controlpoint 
+     * @param {Object} children Children of the &lt;node> node
+     * @param {Object} index Index of the child being parsed
+     * @param {Object} controlpoints Array to store the controlpoint information
+     * @param {Object} animationId The id of the animations being parsed
+     * @param {Object} s1 string containing relevant information
+     * @returns {Object} Null or string containing appropriate error message
+     */
+    parseControlPoint(children, index, controlpoints, id, s1) {
+        var controlpoint = [];
+        var error = this.parseAndValidateXYZvalues(children, index, id, s1, "controlpoint", controlpoint);
+        controlpoints.push(controlpoint);
+        return error;
+    }
+
+    /**
+     * Parses a controlpoint for a linear animation
+     * @param {Object} children Children of the &lt;animation> node
+     * @param {Object} index Index of the child being parsed
+     * @param {Object} controlpoints Array to store the controlpoint information
+     * @param {Object} animationId The id of the animations being parsed
+     * @returns {Object} Null or string containing appropriate error message
+     */
+    parseAnimationLinearControlPoint(children, index, controlpoints, animationId) {
+        return this.parseControlPoint(children, index, controlpoints, animationId, "linear animation");
+    }
+
+     /**
+     * Parses a controlpoint for a patch
+     * @param {Object} children Children of a patch primitve
+     * @param {Object} index Index of the child being parsed
+     * @param {Object} controlpoints Array to store the controlpoint information
+     * @param {Object} animationId The id of the animations being parsed
+     * @returns {Object} Null or string containing appropriate error message
+     */
+    parsePatchControlPoint(children, index, controlpoints, patchId) {
+        return this.parseControlPoint(children, index, controlpoints, patchId, "patch");
+    }
+
+    /**
      * Parses the x,y and z values of a given array
      * @param {Object} vector Array containing the values to be parsed
      * @param {Object} x1 x value
@@ -1685,7 +2280,7 @@ class MySceneGraph {
         return { x, y, z };
     }
 
-    
+
     /**
      * Parses the x,y,z and w values of a given array
      * @param {Object} vector Array containing the values to be parsed
@@ -1772,16 +2367,16 @@ class MySceneGraph {
         return null;
     }
 
-   /**
-     * Parses and validates the x,y,z and w values of a given array
-     * @param {Object} children Array containing the values to be parsed
-     * @param {Object} index The children's index
-     * @param {Object} id Id of the structured from where the values parsed will be apart of
-     * @param {Object} s1 informative string
-     * @param {Object} s2 informative string
-     * @param {Object} vector Array containing the parsed and validated values
-     * @returns {Object} null or string containig an appropriate error message
-     */
+    /**
+      * Parses and validates the x,y,z and w values of a given array
+      * @param {Object} children Array containing the values to be parsed
+      * @param {Object} index The children's index
+      * @param {Object} id Id of the structured from where the values parsed will be apart of
+      * @param {Object} s1 informative string
+      * @param {Object} s2 informative string
+      * @param {Object} vector Array containing the parsed and validated values
+      * @returns {Object} null or string containig an appropriate error message
+      */
     parseAndValidateXYZWvalues(children, index, id, s1, s2, vector) {
         var { x, y, z, w } = this.parsePointXYZW(children, 'x', 'y', 'z', 'w', index);
         if (!this.validateFloat(x))
@@ -1841,13 +2436,12 @@ class MySceneGraph {
      * @param {Object} id The id from the material to be validated
      * @returns {Object} standard true or false
      */
-    isMaterial(id)
-    {
-        switch(id){
+    isMaterial(id) {
+        switch (id) {
             case INHERIT:
-            return true;
+                return true;
             default:
-            return (this.materials[id] != null);
+                return (this.materials[id] != null);
         }
     }
 
@@ -1856,65 +2450,70 @@ class MySceneGraph {
      * @param {Object} id The id from the texture to be validated
      * @returns {Object} standard true or false
      */
-    isTexture(id)
-    {
-        switch(id){
+    isTexture(id) {
+        switch (id) {
             case INHERIT:
             case NONE:
-            return true;
+                return true;
             default:
-            return(this.textures[id] != null);
+                return (this.textures[id] != null);
         }
     }
 
-    
-     /**
-     * Validates if the passed id corresponds to an existing component in the components array  
-     * @param {Object} id The id from the component to be validated
-     * @returns {Object} standard true or false
-     */
-    isComponent(id)
-    {
+
+    /**
+    * Validates if the passed id corresponds to an existing component in the components array  
+    * @param {Object} id The id from the component to be validated
+    * @returns {Object} Standard true or false
+    */
+    isComponent(id) {
         return (this.components[id] != null);
     }
 
-     /**
-     * Validates if the passed id corresponds to an existing transformation in the transformations array  
-     * @param {Object} id The id from the transformation to be validated
-     * @returns {Object} standard true or false
-     */
-    isTransformation(id)
-    {
-        return(this.transformations[id]!=null);
+    /**
+    * Validates if the passed id corresponds to an existing transformation in the transformations array  
+    * @param {Object} id The id from the transformation to be validated
+    * @returns {Object} Standard true or false
+    */
+    isTransformation(id) {
+        return (this.transformations[id] != null);
     }
+
+
+    /**
+    * Validates if the passed id corresponds to an existing animation in the animations array  
+    * @param {Object} id The id from the animation to be validated
+    * @returns {Object} Standard true or false
+    */
+    isAnimation(id) {
+        return (this.animations[id] != null);
+    }
+
 
     /**
      * Validates if the passed id corresponds to an existing primitive in the primitives array  
      * @param {Object} id The id from the primitive to be validated
-     * @returns {Object} standard true or false
+     * @returns {Object} Standard true or false
      */
-    isPrimitive(id)
-    {
+    isPrimitive(id) {
         return (this.primitives[id] != null);
     }
 
     /**
      * Validates if the default value for the views is an existing view
-     * @returns {Object} null or string containing an appropriate error message
+     * @returns {Object} Null or string containing an appropriate error message
      */
-    validateViewsDefaultValue()
-    {
-        if(this.views.views[this.views.default] == null)
-            return "invalid default value for views :  " + this.views.default;  
+    validateViewsDefaultValue() {
+        if (this.views.views[this.views.default] == null)
+            return "invalid default value for views :  " + this.views.default;
         return null;
     }
 
     /**
      * Validates if the root value is an existing component
-     * @returns {Object} null or string containing an appropriate error message
+     * @returns {Object} Null or string containing an appropriate error message
      */
-    validateRootComponent()
-    {
+    validateRootComponent() {
         if (this.components[this.root] == null)
             return "invalid root component ID " + this.root;
         return null;
@@ -1922,21 +2521,27 @@ class MySceneGraph {
 
     /**
      * Validates the components componentRef children
-     * @returns {Object} null or string containing an appropriate error message
+     * @returns {Object} Null or string containing an appropriate error message
      */
-    validateComponentsChildren()
-    {
-        for(let key in this.components)
-        {
+    validateComponentsChildren() {
+        for (let key in this.components) {
             let component = this.components[key];
-            for (let i = 0; i &lt; component.children.componentsRef.length; i++)
-            {
+            for (let i = 0; i &lt; component.children.componentsRef.length; i++) {
                 let child = component.children.componentsRef[i];
-                if(!this.isComponent(child))
+                if (!this.isComponent(child))
                     return "invalid id defined for component children " + child + " for component ID: " + key;
             }
         }
         return null;
+    }
+
+    /**
+     * Initializes a component CurrentAnimationIndex to zero if the component has any animations, if not itd value stays null
+     * @param {Object} component Component cointainig the CurrentAnimationIndex to initialize
+     */
+    inicializeComponentCurrentAnimationIndex(component) {
+        if (component.animations.length > 0)
+            component.currentAnimationIndex = 0;
     }
 
 
@@ -1945,7 +2550,7 @@ class MySceneGraph {
      * @param {Object} float Value to check
      * @param {Object} lower Lower value
      * @param {Object} upper Upper value
-     * @return standard true or false
+     * @return Standard true or false
      */
     isInBetween(float, lower, upper) {
         return (float >= lower &amp;&amp; float &lt;= upper)
@@ -1956,7 +2561,7 @@ class MySceneGraph {
      * @param {Object} float Value to check
      * @param {Object} lower Lower value
      * @param {Object} upper Upper value
-     * @returns standard true or false
+     * @returns Standard true or false
      */
     isFloatInBetween(float, lower, upper) {
         return (this.validateFloat(float) &amp;&amp; this.isInBetween(float, lower, upper));
@@ -1998,7 +2603,7 @@ class MySceneGraph {
         var transformations = [];
         var materials = [];
         var textures = [];
-        this.visitNode(this.components[this.root], transformations, materials, textures, false,0);
+        this.visitNode(this.components[this.root], transformations, materials, textures, false, 0);
 
     }
 
@@ -2037,7 +2642,7 @@ class MySceneGraph {
             case "rotate":
                 this.applyRotate(transformation);
                 break;
-            default: 
+            default:
                 this.onXMLError("invalid transformation to apply");
                 break;
         }
@@ -2047,7 +2652,10 @@ class MySceneGraph {
      * @param {Object} rotate Structer containing the necessary information to apply a rotation to the scene
      */
     applyRotate(rotate) {
-        var angle = Math.PI / 180 * rotate.angle;
+        if (rotate.rad == false)
+            var angle = Math.PI / 180 * rotate.angle;
+        else
+            angle = rotate.angle;
         switch (rotate.axis) {
             case "x":
             case "X":
@@ -2061,7 +2669,7 @@ class MySceneGraph {
             case "Z":
                 this.scene.rotate(angle, 0, 0, 1);
                 break;
-            default: 
+            default:
                 this.onXMLError("Invalid axis to rotate");
                 break;
         }
@@ -2072,14 +2680,13 @@ class MySceneGraph {
      * @param {Object} texture Texture of the component
      * @param {Object} textures All the textures parsed
      */
-    checkLengthInherit(texture,textures)
-    {
+    checkLengthInherit(texture, textures) {
         var tmp_t = textures[textures.length - 1];
-        if(texture.length_s != 0)
+        if (texture.length_s != 0)
             tmp_t.length_s = texture.length_s;
-        if(texture.length_t != 0)
+        if (texture.length_t != 0)
             tmp_t.length_t = texture.length_t;
-        if(texture.length_t == 0 &amp;&amp; texture.length_s == 0)
+        if (texture.length_t == 0 &amp;&amp; texture.length_s == 0)
             textures.push(textures[textures.length - 1]);
         else
             textures.push(tmp_t);
@@ -2087,16 +2694,16 @@ class MySceneGraph {
 
     /**
      * Adds a texture to the texture array and updates its texture factors
-     * @param {*} texture Texture being added
-     * @param {*} textures All parsed textures
-     * @param {*} none_texture Flag to indicate if the component has texture 'none'(no texture)
-     * @returns true or false for successful or unsuccessful texture push
+     * @param {Object} texture Texture being added
+     * @param {Object} textures All parsed textures
+     * @param {Object} none_texture Flag to indicate if the component has texture 'none'(no texture)
+     * @returns {Object} True or false for successful or unsuccessful texture push
      */
     pushTexture(texture, textures, none_texture) {
         switch (texture.id) {
             case INHERIT:
                 if (!none_texture)
-                   this.checkLengthInherit(texture, textures);
+                    this.checkLengthInherit(texture, textures);
                 else
                     return true;
                 break;
@@ -2139,6 +2746,74 @@ class MySceneGraph {
     }
 
     /**
+     * Applies a component animation
+     * @param {Object} node Component node which contains  animation to be applied
+     * @param {Object} remainingTime time to update the animation
+     * @returns {Object} Structure containing the animation type and the popAnimation flag values
+     */
+    applyAnimation(node,remainingTime) {
+        var apAnimation = {
+            popAnimations : true,
+            type : null,
+        } 
+        let animationIndex = node.currentAnimationIndex;
+        //let animationId = node.animations[animationIndex];
+        //let animation = this.animations[animationId];
+        let animation = node.animations[animationIndex];
+        animation.update(remainingTime);
+        switch(animation.type){
+            case "Linear" :
+            this.applyAnimationLinear(animation, node);
+            apAnimation.type = "Linear";
+            break;
+            case "Circular":
+            this.applyAnimationCircular(animation,node);
+            apAnimation.type = "Circular";
+            break;
+        }     
+        if(animation.end == true)
+        {
+            if(animationIndex &lt; node.animations.length -1)
+            {
+                animation.restart();
+                node.currentAnimationIndex++;
+                apAnimation.popAnimations = false;
+            }
+         
+        }
+        else
+          apAnimation.popAnimations = true;
+
+        return apAnimation;
+    }
+
+    /**
+     * Applies a component circular animation
+     * @param {Object} animation Animation to be applied
+     * @param {Object} node Component node which contains animation to be applied
+     */
+    applyAnimationCircular(animation, node) {
+        var animationTranslate1 = this.createTranslate(animation.x, 0, animation.z);
+        var animationRotate = this.createRotate("y", -animation.angle, true);
+        var animationTranslate2 = this.createTranslate(animation.centerX, animation.centerY, animation.centerZ);
+        node.transformations.push(animationTranslate2);
+        node.transformations.push(animationTranslate1);
+        node.transformations.push(animationRotate);        
+    }
+
+    /**
+     * Applies a component linear animation
+     * @param {Object} animation Animation to be applied
+     * @param {Object} node Component node which contains  animation to be applied
+     */
+    applyAnimationLinear(animation, node) {
+        var animationTranslate = this.createTranslate(animation.x, animation.y, animation.z);
+        var animationRotate = this.createRotate("y", animation.angle, true);
+        node.transformations.push(animationTranslate);
+        node.transformations.push(animationRotate);
+    }
+
+    /**
      * Visits the next node in the scene graph
      * @param {Object} node Node being visited
      * @param {Object} transformations Array with transformations from the node ancestors
@@ -2147,23 +2822,22 @@ class MySceneGraph {
      * @param {Object} none_texture Flag to indicate if a node doesn't have a texture
      * @param {Object} parent_currentMaterialIndex Index of the current material being used by the parent node
      */
-    visitNode(node, transformations, materials, textures, none_texture,parent_currentMaterialIndex = null) {
-
-
+    visitNode(node, transformations, materials, textures, none_texture, parent_currentMaterialIndex = null) {
+        var currTime = this.scene.currTime;
+        var remainingTime = currTime;
+        let apAnimation;
         none_texture = this.pushTexture(node.texture, textures, none_texture);
-
         let is_inherit = this.pushMaterials(materials, node, parent_currentMaterialIndex);
-
+    
         transformations.push(node.transformations);
         let index = 0;
         this.scene.pushMatrix();
-        if (node.transformations.tref) {
-            this.applyTransformations(this.transformations[node.transformations.trefID]);
-        }
-        else {
-            this.applyTransformationsPush(node.transformations.transformations);
-        }
 
+        if (node.currentAnimationIndex != null) 
+        apAnimation = this.applyAnimation(node,remainingTime);    
+      
+        this.applyTransformationsPush(node.transformations);
+        
         if (is_inherit)
             index = parent_currentMaterialIndex;
         else
@@ -2175,6 +2849,17 @@ class MySceneGraph {
             this.visitNode(this.components[node.children.componentsRef[i]], transformations, materials, textures, none_texture, index);
         }
 
+        if (node.currentAnimationIndex != null) 
+        {
+            if (apAnimation.popAnimations)
+            {
+                node.transformations.pop();
+                if(apAnimation.type == "Circular")
+                    node.transformations.pop();
+            }
+            node.transformations.pop();
+        }
+      
         this.scene.popMatrix();
         transformations.pop();
         materials.pop();
@@ -2191,20 +2876,23 @@ class MySceneGraph {
      * @param {Object} currentMaterialIndex Index of the material being used by the content of the node
      * @param {Object} none_texture Flag to indicate if a node doesn't have a texture
      */
-    visitLeaf(leaf, materials, textures, currentMaterialIndex, none_texture = null) {
+    visitLeaf(leaf, materials, textures, currentMaterialIndex, none_texture) {
         let prim = this.primitives[leaf];
         this.scene.pushMatrix();
         let text = textures[textures.length - 1];
         let mat = materials[materials.length - 1];
         let m = this.materials[mat[currentMaterialIndex]];
         m.apply();
-        if (!none_texture){
-           if(prim.constructor.name == "MyRectangle" || prim.constructor.name == "MyTriangle")
-               prim.updateTexCoordLength(text.length_s,text.length_t);
+        if (!none_texture) {
+            if (prim.constructor.name == "MyRectangle" || prim.constructor.name == "MyTriangle")
+                prim.updateTexCoordLength(text.length_s, text.length_t);
             this.textures[text.id].bind();
-
         }
-        
+        else
+        {
+            if (prim.constructor.name == "Terrain" || prim.constructor.name == "Water")
+                prim.texture.bind();
+        }
         prim.display();
         this.scene.popMatrix();
     }
@@ -2215,7 +2903,7 @@ class MySceneGraph {
     updateComponentsCurrentMaterialIndex() {
         for (let key in this.components) {
             let comp = this.components[key];
-            if (comp.currentMaterialIndex >= comp.materials.length-1)
+            if (comp.currentMaterialIndex >= comp.materials.length - 1)
                 comp.currentMaterialIndex = 0;
             else
                 comp.currentMaterialIndex++;
@@ -2235,13 +2923,13 @@ class MySceneGraph {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="MyRectangle.html">MyRectangle</a></li><li><a href="MySceneGraph.html">MySceneGraph</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Animation.html">Animation</a></li><li><a href="CircularAnimation.html">CircularAnimation</a></li><li><a href="LinearAnimation.html">LinearAnimation</a></li><li><a href="MyCylinder.html">MyCylinder</a></li><li><a href="MyCylinder2.html">MyCylinder2</a></li><li><a href="MyCylinderBase.html">MyCylinderBase</a></li><li><a href="MyCylinderBody.html">MyCylinderBody</a></li><li><a href="MyInterface.html">MyInterface</a></li><li><a href="MyRectangle.html">MyRectangle</a></li><li><a href="MySceneGraph.html">MySceneGraph</a></li><li><a href="MySphere.html">MySphere</a></li><li><a href="MyTorus.html">MyTorus</a></li><li><a href="MyTriangle.html">MyTriangle</a></li><li><a href="Patch.html">Patch</a></li><li><a href="Plane.html">Plane</a></li><li><a href="Terrain.html">Terrain</a></li><li><a href="Vehicle.html">Vehicle</a></li><li><a href="Water.html">Water</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 21 2018 22:22:52 GMT+0100 (GMT Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Nov 25 2018 23:01:26 GMT+0000 (GMT Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

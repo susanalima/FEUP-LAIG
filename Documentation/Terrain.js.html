@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: MyCylinder.js</title>
+    <title>JSDoc: Source: Terrain.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: MyCylinder.js</h1>
+    <h1 class="page-title">Source: Terrain.js</h1>
 
     
 
@@ -26,47 +26,49 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>
-/**
- * Class MyCylinder represents a cylinder is composed by three objects (2 MyCylinderBase and 1 MyCylinderBody or MyCylinder2Body)
+            <pre class="prettyprint source linenums"><code>/**
+ * Class Terrain is used to represent a terrain primitive based in shaders
  */
-class MyCylinder extends CGFobject {
+class Terrain extends CGFobject{
+    
+    /**
+     * Constructor for class Water
+     * @param {Object} scene Scene where the object will be displayed
+     * @param {Object} texture Texture visualized 
+     * @param {Object} heightmap Texture for the heigt map
+     * @param {Object} parts Number of divisions in s and t
+     * @param {Object} heightscale Height factor
+     */
+    constructor(scene,texture,heightmap,parts,heightscale){
+        super(scene);
+        this.scene = scene;
+        this.texture = texture;
+        this.heightmap = heightmap;
+        this.parts = parts;
+        this.heightscale = heightscale;
+        this.plane = new Plane(scene,parts,parts);
+        this.testShader = new CGFshader(this.scene.gl,"terrainShader.vert", "terrainShader.frag");
+        this.testShader.setUniformsValues({uSampler2: 1});
+        this.testShader.setUniformsValues({uSampler1: 2});
+        this.testShader.setUniformsValues({normScale: this.heightscale});
+    }
 
-	/**
-	 * Constructs an object of clas MyCylinder
-	 * @param {Object} scene Scene in which the cylinder is represented
-	 * @param {Object} slices Number of slices the cylinder will have, in other words, the number of sides of the polygon.
-	 * @param {Object} stacks Number of stacks the cylinder will have
-	 * @param {Object} base The radius of the base
-	 * @param {Object} top The radius of the top
-	 * @param {Object} height The distance between the top and base
-	 */
-	constructor(scene, slices, stacks, base, top, height) {
-		super(scene);
-
-		this.top = new MyCylinderBase(scene,slices,top);
-		this.base = new MyCylinderBase(scene,slices,base);
-		this.body = new MyCylinderBody(this.scene,slices,stacks,base,top,height);
-		this.initBuffers();
-	};
-
-
-	/**
-	 * Displays the cylinder in member scene
-	 */
-	display()
-	{
-		this.body.display();
-		this.scene.pushMatrix();
-		this.scene.translate(0,0,this.body.height);
-		this.top.display();
-		this.scene.popMatrix();
-		this.scene.pushMatrix();
-		this.scene.scale(-1,1,1);
-		this.base.display();
-		this.scene.popMatrix();
-	}
-};</code></pre>
+    /**
+     * Displays the terrain
+     */
+    display(){
+        this.scene.pushMatrix();
+        this.scene.rotate(-Math.PI/2,1,0,0);
+        this.scene.setActiveShader(this.testShader);
+        this.scene.pushMatrix();
+        this.texture.bind(2);
+        this.heightmap.bind(1);
+        this.plane.display();
+        this.scene.popMatrix();
+        this.scene.setActiveShader(this.scene.defaultShader);
+        this.scene.popMatrix();
+    }
+}</code></pre>
         </article>
     </section>
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: MyCylinder.js</title>
+    <title>JSDoc: Source: Plane.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: MyCylinder.js</h1>
+    <h1 class="page-title">Source: Plane.js</h1>
 
     
 
@@ -28,45 +28,46 @@
         <article>
             <pre class="prettyprint source linenums"><code>
 /**
- * Class MyCylinder represents a cylinder is composed by three objects (2 MyCylinderBase and 1 MyCylinderBody or MyCylinder2Body)
+ * Class Plane is used to represent a plane primitive generated with NURBS
  */
-class MyCylinder extends CGFobject {
+class Plane extends CGFobject {
 
-	/**
-	 * Constructs an object of clas MyCylinder
-	 * @param {Object} scene Scene in which the cylinder is represented
-	 * @param {Object} slices Number of slices the cylinder will have, in other words, the number of sides of the polygon.
-	 * @param {Object} stacks Number of stacks the cylinder will have
-	 * @param {Object} base The radius of the base
-	 * @param {Object} top The radius of the top
-	 * @param {Object} height The distance between the top and base
-	 */
-	constructor(scene, slices, stacks, base, top, height) {
-		super(scene);
+    /**
+     * Constructor for class Plane
+     * @param {Object} scene Scene where the object will be displayed
+     * @param {Object} nparts_u Division in parts of the U domain
+     * @param {Object} nparts_v Division in parts of the V domain
+     */
+    constructor(scene, nparts_u, nparts_v) {
+        super(scene);
+        this.scene = scene;
+        this.degree1 = 1;
+        this.degree2 = 1;
+        this.nparts_u = nparts_u;
+        this.nparts_v = nparts_v;
+        let controlPoint1 = [-0.5, -0.5, 0, 1];
+        let controlPoint2 = [-0.5, 0.5, 0, 1];
+        let controlPoint3 = [0.5, -0.5, 0, 1];
+        let controlPoint4 = [0.5, 0.5, 0, 1];
+        this.controlPoints = [[controlPoint1, controlPoint2], [controlPoint3, controlPoint4]];
+        this.makeSurface();
+    }
 
-		this.top = new MyCylinderBase(scene,slices,top);
-		this.base = new MyCylinderBase(scene,slices,base);
-		this.body = new MyCylinderBody(this.scene,slices,stacks,base,top,height);
-		this.initBuffers();
-	};
+    /**
+     * Creates a new CGFnurbsObject from the information obtained
+     */
+    makeSurface() {
+        var nurbsSurface = new CGFnurbsSurface(this.degree1, this.degree2, this.controlPoints);
+        this.plane = new CGFnurbsObject(this.scene, this.nparts_u, this.nparts_v, nurbsSurface);
+    }
 
-
-	/**
-	 * Displays the cylinder in member scene
-	 */
-	display()
-	{
-		this.body.display();
-		this.scene.pushMatrix();
-		this.scene.translate(0,0,this.body.height);
-		this.top.display();
-		this.scene.popMatrix();
-		this.scene.pushMatrix();
-		this.scene.scale(-1,1,1);
-		this.base.display();
-		this.scene.popMatrix();
-	}
-};</code></pre>
+    /**
+     * Displays the plane
+     */
+    display() {
+        this.plane.display();
+    }
+}</code></pre>
         </article>
     </section>
 
