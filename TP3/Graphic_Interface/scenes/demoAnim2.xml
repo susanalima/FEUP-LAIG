@@ -1,0 +1,172 @@
+<yas>
+<scene root="root" axis_length="5.0" />
+
+<views default="normal_view" >
+	<perspective id="normal_view" near="0.1" far="1000" angle="60">
+		 <from x="15.0" y="15.0" z="15.0" />
+		 <to x="0.0" y="0.0" z="0.0" />
+	</perspective>
+	<perspective id="side_view" near="0.1" far="1000" angle="30">
+		 <from x="15.0" y="10.0" z="100.0" />
+		 <to x="0.0" y="0.0" z="0.0" />
+	</perspective>
+	<perspective id="up_view" near="0.1" far="1000" angle="30">
+		 <from x="15.0" y="100.0" z="10.0" />
+		 <to x="0.0" y="0.0" z="0.0" />
+	</perspective>
+	<ortho id="ortho" near="0.1" far="1000" left="-15" right="15" top="15" bottom="-15" >
+ 		<from x="15.0" y="15.0" z="15.0" />
+ 		<to x="0.0" y="0.0" z="0.0" />
+ 	</ortho>
+ </views>
+
+ <ambient>
+ 	<ambient r="0" g="0" b="0" a="1" />
+ 	<background r="0.53" g="0.8" b="0.92" a="1" />
+ </ambient>
+
+ <lights>
+
+	<omni id="omni1" enabled="1" >                                                     	      
+        <location x="-5" y="10" z="5.0" w="1.0" />       	   
+        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
+        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
+    </omni>
+    <omni id="omni2" enabled="1" >                                                     	      
+        <location x="4" y="10" z="-8" w="1.0" />       	   
+        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
+        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
+    </omni>
+ </lights>
+
+    <textures>
+		<texture id="mountain" file="./scenes/images/mountain.jpg" />
+		<texture id="newzealand_text" file="./scenes/images/new-zealand-texture.png"/>
+		<texture id="newzealand_map" file="./scenes/images/new-zealand-map.png"/>
+		<texture id="ship" file="./scenes/images/ship2.jpg" />
+		<texture id="wave_texture" file= "./scenes/images/water_texture.jpg" />
+		<texture id="wave_map" file= "./scenes/images/waves.jpg" />
+    </textures>
+  
+  <materials>
+ 	<material id="mat1" shininess = "8" >
+		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
+		 <ambient r="0.39" g="0.2" b="0.1" a="1" />
+		 <diffuse r="0.39" g="0.2" b="0.1" a="1" />
+		 <specular r="0.1" g="0.1" b="0.1" a="1" />
+	 </material>
+ </materials>
+  
+  <transformations>
+	<transformation id="water_transformation">
+		  <scale x="30" y="1" z="30" />
+	 </transformation>
+	<transformation id="terrain_transformation">
+        <translate x="0" y="-2.5" z="0"/>
+		<scale x="20" y="25" z="20" />
+	 </transformation>
+ </transformations>
+
+ <animations>
+	<linear id="l3" span="0.4">
+		<controlpoint x="0.0" y="0.0" z="0.0"/>
+		<controlpoint x="0.0" y="0.0" z="-8.0"/>
+	</linear>
+	<linear id="l2" span="0.6">
+		<controlpoint x="0.0" y="0.0" z="0.0"/>
+		<controlpoint x="12.0" y="0.0" z="0.0"/>
+		<controlpoint x="12.0" y="0.0" z="-8.0"/>
+	</linear>
+	<linear id="l1" span="1">
+		<controlpoint x="0.0" y="0.0" z="0.0"/>
+		<controlpoint x="0.0" y="10.0" z="0.0"/>
+	</linear>
+	<linear id="l4" span="1">
+		<controlpoint x="0.0" y="0.0" z="0.0"/>
+		<controlpoint x="0.0" y="-8.5" z="1"/>
+	</linear>
+	<circular id="c1" span="4" center="-3.0 0.0 0.0" radius="3" 
+		startang="0" rotang="360"/>
+ </animations>
+
+ <primitives>
+	<primitive id="vehicle">
+		<vehicle />
+	</primitive >
+	<primitive id="terrain">
+		<terrain idTexture= "newzealand_text" idheightmap="newzealand_map" parts="20" heightscale="0.1" />
+	</primitive >
+
+	<primitive id="water">
+		<water idTexture= "wave_texture" idwavemap="wave_map" parts="20" heightscale="0.8" texscale="3"/>
+	</primitive >
+ </primitives >
+
+ <components>
+ 	<component id="root">
+		<transformation>
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="none" />
+		<children>
+			<componentref id="mountain"/>
+			<componentref id="water"/>
+			<componentref id="ship"/>
+		</children>
+ 	</component>
+
+	  <component id="water">
+	 	<transformation>
+		 	<transformationref id="water_transformation"/>
+		</transformation>
+		<animations>		
+		</animations>
+		<materials>
+			 <material id="inherit" />
+		</materials>
+		<texture id="wave_texture" length_s="2" length_t="1" />
+		<children>
+			<primitiveref id="water"/>
+		</children>
+	 </component>
+
+	<component id="mountain">
+	 	<transformation>
+		 	<transformationref id="terrain_transformation"/>
+		</transformation>
+		<animations>
+		</animations>
+		<materials>
+			 <material id="inherit" />
+		</materials>
+		<texture id="mountain" length_s="2" length_t="1"/>
+		<children>
+			<primitiveref id="terrain"/>
+		</children>
+	 </component>
+
+	  <component id="ship">
+	 	<transformation>
+		 	<translate x="-5.5" y="1.2" z="-1.5"/>
+		</transformation>
+		<animations>
+			<animationref id="l1"/>
+			<animationref id="c1"/>
+			<animationref id="l2"/>
+			<animationref id="c1"/>
+			<animationref id="l4"/>
+		</animations>
+		<materials>
+			 <material id="inherit" />
+		</materials>
+		<texture id="ship" length_s="2" length_t="1" />
+		<children>
+			<primitiveref id="vehicle"/>
+		</children>
+	 </component>
+ </components>
+</yas>
