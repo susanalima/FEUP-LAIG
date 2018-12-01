@@ -1,6 +1,6 @@
 
 /**
- * Class MyPrism represents a cylinder is composed by three objects (2 MyCylinderBase and 1 MyPrimsBody)
+ * Class MyPrism represents a prism is composed by three objects (2 MyCylinderBase and 1 MyPrimsBody)
  */
 class MyPrism extends CGFobject {
 

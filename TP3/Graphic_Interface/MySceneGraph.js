@@ -1377,6 +1377,11 @@ class MySceneGraph {
                 if (error != null)
                     return error;
                 break;
+            case "piece":
+                error = this.parsePiece(grandChildren, 0, primitiveId,1);
+                if (error != null)
+                    return error;
+                break;
             default:
                 this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
                 break;
@@ -1812,13 +1817,22 @@ class MySceneGraph {
         return new MyPrism(this.scene, prism.slices, prism.stacks, prism.height, prism.radius); 
     }
 
-
     /**
      * Creates a new board
      * @returns {Object} New board
      */
-    createBoard() {
-        return new MyBoard(this.scene);
+    createBoard(board) {
+        var boardTexture = this.textures[board.idBoardTexture];
+        var cellTexture = this.textures[board.idCellTexture];
+        return new MyBoard(this.scene,boardTexture,cellTexture);
+    }
+
+     /**
+     * Creates a new piece
+     * @returns {Object} New piece
+     */
+    createPiece(){
+        return new Piece(this.scene);
     }
 
 
@@ -2265,7 +2279,38 @@ class MySceneGraph {
      * @returns {Object} null 
      */
     parseBoard(children, index, id) {
-        this.primitives[id] = this.createBoard();
+        var board = {
+            idBoardTexture : null,
+            idCellTexture : null
+        }
+
+        board.idBoardTexture = this.reader.getString(children[index], 'boardTextureId');
+        if (!this.validateString(board.idBoardTexture))
+            return "unable to parse idBoardTexture of board for ID " + id;
+        
+        if (!this.isTexture(board.idBoardTexture))
+            return "invalid idTexture of board for ID " + id;
+
+        board.idCellTexture = this.reader.getString(children[index], 'cellTextureId');
+        if (!this.validateString(board.idCellTexture))
+            return "unable to parse idCellTexture of board for ID " + id;
+   
+        if (!this.isTexture(board.idCellTexture))
+            return "invalid idCellTexture of board for ID " + id;
+
+        this.primitives[id] = this.createBoard(board);
+        return null;
+    }
+
+      /**
+     * Parses grandchild of the <primitives> node of type piece
+     * @param {Object} children GrandChildren of the <primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null 
+     */
+    parsePiece(children, index, id) {
+        this.primitives[id] = this.createPiece();
         return null;
     }
 

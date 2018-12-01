@@ -45,16 +45,18 @@
 		<texture id="mountain" file="./scenes/images/mountain.jpg" />
 		<texture id="newzealand_text" file="./scenes/images/new-zealand-texture.png"/>
 		<texture id="newzealand_map" file="./scenes/images/new-zealand-map.png"/>
-		<texture id="ship" file="./scenes/images/ship2.jpg" />
+		<texture id="ship" file="./scenes/images/ship1.jpg" />
 		<texture id="wave_texture" file= "./scenes/images/water_texture.jpg" />
 		<texture id="wave_map" file= "./scenes/images/waves.jpg" />
+		<texture id="moon" file= "./scenes/images/lua.jpg" />
+		<texture id="metal" file= "./scenes/images/metal2.jpg" />
     </textures>
   
   <materials>
  	<material id="mat1" shininess = "8" >
-		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
+		 <emission r="0.1" g="0.1" b="0.1" a="0.8" />
 		 <ambient r="0.39" g="0.2" b="0.1" a="1" />
-		 <diffuse r="0.39" g="0.2" b="0.1" a="1" />
+		 <diffuse r="0.4" g="0.4" b="0.4" a="1" />
 		 <specular r="0.1" g="0.1" b="0.1" a="1" />
 	 </material>
  </materials>
@@ -103,12 +105,12 @@
 		<water idTexture= "wave_texture" idwavemap="wave_map" parts="20" heightscale="0.8" texscale="3"/>
 	</primitive >
 
-	<primitive id="prism">
-		<prism  slices="6" stacks="5" height="0.05" radius="2"/>
+	<primitive id="piece">
+		<piece/>
     </primitive >
 
     <primitive id="board">
-		<board/>
+		<board boardTextureId="moon" cellTextureId="metal"/>
     </primitive >
 
 
@@ -124,9 +126,36 @@
 		</materials>
 		<texture id="none" />
 		<children>
+			<componentref id="board"/>
+			<componentref id="piece"/>
+		</children>
+ 	</component>
+
+	<component id="board">
+		<transformation>
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="none" />
+		<children>
 			<primitiveref id="board"/>
 		</children>
  	</component>
+
+
+	<component id="piece">
+		<transformation>
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="ship"  length_s="2" length_t="1" />
+		<children>
+			<primitiveref id="piece"/>
+		</children>
+ 	</component>
+
 
 	
  </components>
