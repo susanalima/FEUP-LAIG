@@ -1367,6 +1367,16 @@ class MySceneGraph {
                 if (error != null)
                     return error;
                 break;
+            case "prism":
+                error = this.parsePrism(grandChildren, 0, primitiveId,1);
+                if (error != null)
+                    return error;
+                break;
+            case "board":
+                error = this.parseBoard(grandChildren, 0, primitiveId,1);
+                if (error != null)
+                    return error;
+                break;
             default:
                 this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
                 break;
@@ -1720,7 +1730,7 @@ class MySceneGraph {
 
     /**
      * Creates a new cylinder
-     * @param {Object} sphere Struct which contains the information needed to create the new cylinder
+     * @param {Object} cylinder Struct which contains the information needed to create the new cylinder
      * @returns {Object} New cylinder
      */
     createCylinder(cylinder) {
@@ -1769,7 +1779,6 @@ class MySceneGraph {
      */
     createCylinder2(cylinder) {
         return new MyCylinder2(this.scene, cylinder.slices, cylinder.stacks, cylinder.base, cylinder.top, cylinder.height);
-
     }
 
     /**
@@ -1792,6 +1801,24 @@ class MySceneGraph {
         var texture = this.textures[water.idTexture];
         var map = this.textures[water.idwavemap];
         return new Water(this.scene,texture,map,water.parts, water.heightscale,water.texscale);
+    }
+
+    /**
+     * Creates a new prism
+     * @param {Object} prism Struct which contains the information needed to create the new prism
+     * @returns {Object} New cylinder
+     */
+    createPrism(prism) {
+        return new MyPrism(this.scene, prism.slices, prism.stacks, prism.height, prism.radius); 
+    }
+
+
+    /**
+     * Creates a new board
+     * @returns {Object} New board
+     */
+    createBoard() {
+        return new MyBoard(this.scene);
     }
 
 
@@ -2191,6 +2218,54 @@ class MySceneGraph {
             return "unable to parse texscale of water for ID " + id;
 
         this.primitives[id] = this.createWater(water);
+        return null;
+    }
+
+    /**
+     * Parses grandchild of the <primitives> node of type prism
+     * @param {Object} children GrandChildren of the <primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null or string containig an appropriate error message
+     */
+    parsePrism(children, index, id) {
+        var prism = {
+            stacks: null,
+            slices: null,
+            height: null,
+            radius: null
+        }
+
+        prism.slices = this.reader.getFloat(children[index], 'slices');
+        if (!this.validateFloat(prism.slices))
+            return "unable to parse slices of prism for ID " + id;
+               
+        prism.stacks = this.reader.getFloat(children[index], 'stacks');
+        if (!this.validateFloat(prism.stacks))
+            return "unable to parse stacks of prism for ID " + id;
+
+        prism.height = this.reader.getFloat(children[index], 'height');
+        if (!this.validateFloat(prism.height))
+            return "unable to parse height of prism for ID " + id;
+
+        prism.radius = this.reader.getFloat(children[index], 'radius');
+        if (!this.validateFloat(prism.radius))
+            return "unable to parse radius of prism for ID " + id;
+
+        this.primitives[id] = this.createPrism(prism);
+      
+        return null;
+    }
+
+    /**
+     * Parses grandchild of the <primitives> node of type board
+     * @param {Object} children GrandChildren of the <primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null 
+     */
+    parseBoard(children, index, id) {
+        this.primitives[id] = this.createBoard();
         return null;
     }
 
