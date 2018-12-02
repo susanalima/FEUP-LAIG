@@ -23,6 +23,7 @@ class MyBoard extends CGFobject {
         this.base = new MyPrism(scene,6,1,0.5,25);
         this.boardTexture = boardTexture;
         this.cellTexture = cellTexture;
+
     };
     
     /**
@@ -47,7 +48,6 @@ class MyBoard extends CGFobject {
                 let center = this.hex_to_pixel(q, r);
                 let cell = new BoardCell(this.scene,this.cell_radius,center);
                 this.cells.push(cell);
-                console.log(center);
 			}
 		}
     }
@@ -66,6 +66,7 @@ class MyBoard extends CGFobject {
      this.boardTexture.bind();
      this.base.display();
      this.scene.popMatrix();
+
 
      this.scene.pushMatrix();
      this.cellTexture.bind();
