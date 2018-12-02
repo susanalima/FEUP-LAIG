@@ -52,6 +52,7 @@
 		<texture id="metal" file= "./scenes/images/metal2.jpg" />
 		<texture id="green" file= "./scenes/images/neon.jpg" />
 		<texture id="roxo" file= "./scenes/images/roxo.png" />
+		<texture id="space" file= "./scenes/images/space.png" />
     </textures>
   
   <materials>
@@ -116,7 +117,9 @@
 		<board boardTextureId="moon" cellTextureId="metal"/>
     </primitive >
 
-
+	 <primitive id="world">
+            <sphere radius="100" slices="200" stacks="10" />
+        </primitive>
 
  </primitives >
 
@@ -130,7 +133,7 @@
 		<texture id="none" />
 		<children>
 			<componentref id="board"/>
-			<componentref id="piece"/>
+			<componentref id="space"/>
 		</children>
  	</component>
 
@@ -147,15 +150,15 @@
  	</component>
 
 
-	<component id="piece">
+	<component id="space">
 		<transformation>
 		</transformation>
 		<materials>
 			 <material id="mat1" />
 		</materials>
-		<texture id="roxo" length_s="2" length_t="1" />
+		<texture id="space" length_s="2" length_t="1" />
 		<children>
-			<primitiveref id="piece"/>
+			<primitiveref id="world"/>
 		</children>
  	</component>
 
