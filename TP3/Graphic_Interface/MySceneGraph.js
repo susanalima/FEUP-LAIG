@@ -26,7 +26,9 @@ class MySceneGraph {
 
         // Establish bidirectional references between scene and graph.
         this.scene = scene;
+        this.pickIndex = 0;
         scene.graph = this;
+       
 
         this.nodes = [];
 
@@ -2692,6 +2694,9 @@ class MySceneGraph {
      */
     displayScene() {
         // entry point for graph rendering
+        
+     
+
         var transformations = [];
         var materials = [];
         var textures = [];
@@ -2985,6 +2990,9 @@ class MySceneGraph {
             if (prim.constructor.name == "Terrain" || prim.constructor.name == "Water")
                 prim.texture.bind();
         }
+
+        
+
         prim.display();
         this.scene.popMatrix();
     }

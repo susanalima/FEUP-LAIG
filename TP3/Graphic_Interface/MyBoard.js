@@ -72,6 +72,7 @@ class MyBoard extends CGFobject {
      this.cellTexture.bind();
      for(let i = 0; i < this.cells.length; i++)
      {
+         this.scene.registerForPick(++this.scene.pickIndex, this.cells[i]);
          this.cells[i].display();
      }
      this.scene.popMatrix();
