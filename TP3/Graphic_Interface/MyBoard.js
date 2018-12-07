@@ -53,6 +53,7 @@ class MyBoard extends CGFobject {
     }
 
 
+
 	/**
 	 * Displays the board in member scene
 	 */
