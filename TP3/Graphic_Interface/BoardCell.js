@@ -26,6 +26,8 @@ class BoardCell extends CGFobject {
 		this.scene.pushMatrix();
 		this.scene.translate(this.x,0,this.z);
 		if(this.scene.pickIndex == this.scene.pickedIndex)
+			this.flag = true;
+			if(this.flag)
 			this.texture.bind();
 		this.cell.display();
 		this.texture.unbind();
