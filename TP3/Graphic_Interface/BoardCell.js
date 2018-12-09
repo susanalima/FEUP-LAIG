@@ -14,7 +14,7 @@ class BoardCell extends CGFobject {
         this.x = center[0]; 
 		this.z = center[1];
 		this.texture = new CGFtexture(this.scene, "scenes/images/batman.jpg");
-		this.flag = false;
+		this.selected = false;
     };
 
 	/**
@@ -25,11 +25,16 @@ class BoardCell extends CGFobject {
 		
 		this.scene.pushMatrix();
 		this.scene.translate(this.x,0,this.z);
+		
 		if(this.scene.pickIndex == this.scene.pickedIndex)
-			this.flag = true;
-			if(this.flag)
+			this.selected = !this.selected;
+		
+		if(this.selected)
 			this.texture.bind();
-		this.cell.display();
+		else
+			this.texture.unbind();
+		
+			this.cell.display();
 		this.texture.unbind();
       	this.scene.popMatrix();
 	}
