@@ -52,7 +52,25 @@ class MyBoard extends CGFobject {
 		}
     }
 
+    checkSelectedCells(){
+        let p1 = -1, p2 = -1;
+        for(let i = 0; i < this.cells.length; i++){
+            if(this.cells[i].getSelected()){
+                if(p1 != -1)
+                    p2 = i;
+                else
+                    p1 = i;
+            }
+        }
+        if(p1 != -1 && p2 != -1)
+            {
+                this.cells[p1].selected = false;
+                this.cells[p2].selected = false;
+                console.log("Pieces received x1: " + this.cells[p1].x + " y1: " + this.cells[p1].z + "\n");
+                console.log("x2: " + this.cells[p2].x + " y2: " + this.cells[p2].z + "\n");
+            }
 
+    }
 
 	/**
 	 * Displays the board in member scene
@@ -76,6 +94,7 @@ class MyBoard extends CGFobject {
          this.scene.registerForPick(++this.scene.pickIndex, this.cells[i]);
          this.cells[i].display();
      }
+     this.checkSelectedCells();
      this.scene.popMatrix();
      this.scene.popMatrix();
 	}

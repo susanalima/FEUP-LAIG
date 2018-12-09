@@ -15,7 +15,11 @@ class BoardCell extends CGFobject {
 		this.z = center[1];
 		this.texture = new CGFtexture(this.scene, "scenes/images/batman.jpg");
 		this.selected = false;
-    };
+	};
+	
+	getSelected(){
+		return this.selected;
+	}
 
 	/**
 	 * Displays the cell in member scene
