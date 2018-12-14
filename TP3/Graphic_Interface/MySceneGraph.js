@@ -141,7 +141,7 @@ class MySceneGraph {
             return error;
     }
 
-    /**Suzy
+    /**
      * Parses the block specifie by the given information
      * @param {Object} parseIndex Expected index of the tag
      * @param {Object} parseFunction Function called to parse the block
@@ -1382,6 +1382,11 @@ class MySceneGraph {
                 if (error != null)
                     return error;
                 break;
+            case "game":
+                error = this.parseGame(grandChildren, 0, primitiveId,1);
+                if (error != null)
+                    return error;
+                break;
             default:
                 this.onXMLMinorError("unknown tag <" + grandChildren[i].nodeName + ">");
                 break;
@@ -1833,6 +1838,19 @@ class MySceneGraph {
      */
     createPiece(){
         return new Piece(this.scene);
+    }
+
+
+    /**
+     * Creates a new game
+     * @returns {Object} New game
+     */
+    createGame(game){         
+        var boardTexture = this.textures[game.idBoardTexture];
+        var cellTexture = this.textures[game.idCellTexture];
+        var pieceTexture1 = this.textures[game.idpieceTexture1];
+        var pieceTexture2 = this.textures[game.idpieceTexture2]; 
+        return new TheGame(this.scene, boardTexture,cellTexture, pieceTexture1, pieceTexture2);
     }
 
 
@@ -2302,7 +2320,7 @@ class MySceneGraph {
         return null;
     }
 
-      /**
+    /**
      * Parses grandchild of the <primitives> node of type piece
      * @param {Object} children GrandChildren of the <primitives> block
      * @param {Object} index Position in the children's array
@@ -2311,6 +2329,56 @@ class MySceneGraph {
      */
     parsePiece(children, index, id) {
         this.primitives[id] = this.createPiece();
+        return null;
+    }
+
+
+    /**
+     * Parses grandchild of the <primitives> node of type piece
+     * @param {Object} children GrandChildren of the <primitives> block
+     * @param {Object} index Position in the children's array
+     * @param {Object} id The id for the primitive being parsed
+     * @returns {Object} null 
+     */
+    parseGame(children, index, id) {
+
+        var game = {
+            idBoardTexture : null,
+            idCellTexture : null,
+            idpieceTexture1 : null,
+            idpieceTexture2 : null   
+        }
+
+        //<game boardTextureId="moon" cellTextureId="metal"/>
+        //constructor(scene,boardTexture,cellTexture,pieceTexture1,pieceTexture2)
+
+        game.idBoardTexture = this.reader.getString(children[index], 'boardTextureId');
+        if (!this.validateString(game.idBoardTexture))
+            return "unable to parse idBoardTexture of game for ID " + id;
+        if (!this.isTexture(game.idBoardTexture))
+            return "invalid idTexture of game for ID " + id;
+
+        game.idCellTexture = this.reader.getString(children[index], 'cellTextureId');
+        if (!this.validateString(game.idCellTexture))
+            return "unable to parse idCellTexture of game for ID " + id;
+        if (!this.isTexture(game.idCellTexture))
+            return "invalid idCellTexture of game for ID " + id;
+
+        game.idpieceTexture1 = this.reader.getString(children[index], 'idpieceTexture1');
+        if (!this.validateString(game.idpieceTexture1))
+            return "unable to parse idpieceTexture1 of game for ID " + id;
+        if (!this.isTexture(game.idpieceTexture1))
+            return "invalid idpieceTexture1 of game for ID " + id;
+
+        game.idpieceTexture2 = this.reader.getString(children[index], 'idpieceTexture2');
+        if (!this.validateString(game.idpieceTexture2))
+            return "unable to parse idpieceTexture2 of game for ID " + id;
+        if (!this.isTexture(game.idpieceTexture2))
+            return "invalid idpieceTexture2 of game for ID " + id;
+
+
+
+        this.primitives[id] = this.createGame(game);
         return null;
     }
 

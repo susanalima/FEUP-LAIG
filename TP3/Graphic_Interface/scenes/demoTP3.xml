@@ -109,17 +109,19 @@
 		<water idTexture= "wave_texture" idwavemap="wave_map" parts="20" heightscale="0.8" texscale="3"/>
 	</primitive >
 
-	<primitive id="piece">
-		<piece/>
-    </primitive >
+	
 
     <primitive id="board">
 		<board boardTextureId="moon" cellTextureId="metal"/>
     </primitive >
 
-	 <primitive id="world">
-            <sphere radius="100" slices="200" stacks="10" />
-        </primitive>
+	<primitive id="world">
+        <sphere radius="100" slices="200" stacks="10" />
+    </primitive>
+
+	<primitive id="game">
+		<game boardTextureId="moon" cellTextureId="metal"  idpieceTexture1="green" idpieceTexture2="roxo"/>
+	</primitive>
 
  </primitives >
 
@@ -132,8 +134,10 @@
 		</materials>
 		<texture id="none" />
 		<children>
-			<componentref id="board"/>
+			<!--<componentref id="board"/>-->
 			<componentref id="space"/>
+			<componentref id="game"/>
+			<!--<componentref id="piece"/>-->
 		</children>
  	</component>
 
@@ -148,6 +152,22 @@
 			<primitiveref id="board"/>
 		</children>
  	</component>
+
+	<component id="game">
+		<transformation>
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="none" />
+		<children>
+			<primitiveref id="game"/>
+		</children>
+ 	</component>
+
+
+
+	
 
 
 	<component id="space">
