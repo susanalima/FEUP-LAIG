@@ -16,17 +16,18 @@ class MyPrism extends CGFobject {
         super(scene);
         this.top = new MyCylinderBase(scene,slices,radius);
 		this.base = new MyCylinderBase(scene,slices,radius);
-        this.body = new MyPrismBody(this.scene,slices,stacks,height, radius);
+		this.body = new MyPrismBody(this.scene,slices,stacks,height, radius);
+		this.picked = false;
 		this.initBuffers();
 	};
 
-
+	
 	/**
 	 * Displays the prism in member scene
 	 */
 	display()
 	{
-        this.scene.pushMatrix();
+		this.scene.pushMatrix();
         this.scene.rotate(Math.PI/2,0,0,1);
         this.scene.rotate(Math.PI/2,0,1,0);
 		this.body.display();
