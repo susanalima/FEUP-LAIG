@@ -30,12 +30,13 @@ class MyCylinder extends CGFobject {
 	{
 		this.scene.pushMatrix();
 		this.body.display();
+		this.scene.scale(-1,1,1);
 		this.scene.pushMatrix();
 		this.scene.translate(0,0,this.body.height);
 		this.top.display();
 		this.scene.popMatrix();
 		this.scene.pushMatrix();
-		this.scene.scale(-1,1,1);
+		this.scene.scale(1,-1,1);
 		this.base.display();
 		this.scene.popMatrix();
 		this.scene.popMatrix();

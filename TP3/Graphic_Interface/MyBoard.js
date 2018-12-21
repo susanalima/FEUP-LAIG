@@ -82,14 +82,15 @@ class MyBoard extends CGFobject {
 
         this.scene.pushMatrix();
         this.scene.translate(0, -0.5, 0);
+        this.scene.rotate(Math.PI, 1,0,0);
+
         this.boardTexture.bind();
         this.base.display();
         this.scene.popMatrix();
 
 
         this.scene.pushMatrix();
-        this.scene.rotate(Math.PI, 0,0,1);
-        this.scene.translate(0,-1,0);
+        this.scene.rotate(Math.PI, 1,0,0);
         this.cellTexture.bind();
         for (let i = 0; i < this.cells.length; i++){
             this.scene.registerForPick(++this.scene.pickIndex, this.cells[i]);

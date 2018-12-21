@@ -119,4 +119,10 @@ class MyCylinderBase extends CGFobject{
 		this.initGLBuffers();
 	};
 
+	display(){
+		this.scene.pushMatrix();
+		this.scene.scale(1,-1,1);
+		super.display();
+		this.scene.popMatrix();
+	}
 };

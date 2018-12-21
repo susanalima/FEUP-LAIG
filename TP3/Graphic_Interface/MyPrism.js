@@ -37,6 +37,7 @@ class MyPrism extends CGFobject {
 		this.scene.popMatrix();
 		this.scene.pushMatrix();
 		this.scene.scale(-1,1,1);
+		this.scene.rotate(Math.PI, 1,0,0);
 		this.base.display();
         this.scene.popMatrix();
         this.scene.popMatrix();
