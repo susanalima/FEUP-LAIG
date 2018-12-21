@@ -31,12 +31,10 @@ class Piece extends CGFobject {
 		this.lastTime = currTime;
 	}
 
-
-
 	animate(cellPosition, deltaT) {
 		let deltaX = cellPosition[0] - this.x;
 		let deltaY = cellPosition[1] - this.y;
-		console.log("position:" + cellPosition[0] + ":" + cellPosition[1]);
+		//console.log("position:" + cellPosition[0] + ":" + cellPosition[1]);
 		this.x += deltaX * deltaT / this.animationTime;
 		this.y += deltaY * deltaT / this.animationTime;
 	}
@@ -51,7 +49,6 @@ class Piece extends CGFobject {
 			this.selected = !this.selected;
 		if (this.selected && cell != null)
 			this.update([cell.x,cell.z], currTime);
-
 		this.scene.translate(this.x, this.y, 0);
 		this.texture.bind();
 		this.piece.display();

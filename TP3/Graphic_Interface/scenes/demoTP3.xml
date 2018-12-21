@@ -135,7 +135,7 @@
 		<texture id="none" />
 		<children>
 			<!--<componentref id="board"/>-->
-			<componentref id="space"/>
+			<!--<componentref id="space"/>-->
 			<componentref id="game"/>
 			<!--<componentref id="piece"/>-->
 		</children>
