@@ -18,11 +18,11 @@ class TheGame extends CGFobject {
 
         this.map_radius = 3;
         this.cell_space_radius = 2;
-        this.cell_radius =3;
+        this.cell_radius = 3;
         this.thanosPieces = [];
         this.gamoraPieces = [];
         this.createPieces(this.thanosPieces, pieceTexture1, pieceTexture2,18,32);
-        this.createPieces(this.gamoraPieces, pieceTexture1, pieceTexture2,-18,-32);
+        this.createPieces(this.gamoraPieces, pieceTexture2, pieceTexture1,-18,-32);
         console.log(this.thanosPieces);
         //this.createPieces(pieceTexture2);
     };
@@ -76,14 +76,19 @@ class TheGame extends CGFobject {
 
  
     display() {
-     
+        let currTime = this.scene.currTime;
         this.scene.pushMatrix();
         this.board.display();
         for(let i = 0; i < this.thanosPieces.length; i++)
         {
-            this.gamoraPieces[i].display();
-            this.thanosPieces[i].display();
+            this.scene.registerForPick(++this.scene.pickIndex,  this.gamoraPieces[i]);
+            this.gamoraPieces[i].display(this.board.selectedCell,currTime);
+        }
+        for(let i = 0; i < this.thanosPieces.length; i++){
+            this.scene.registerForPick(++this.scene.pickIndex,  this.thanosPieces[i]);
+            this.thanosPieces[i].display(this.board.selectedCell,currTime);
         }
         this.scene.popMatrix();
+    
     }
 };
