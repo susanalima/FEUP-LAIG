@@ -31,6 +31,19 @@ class Piece extends CGFobject {
 		this.lastTime = currTime;
 	}
 
+	parabolicAnimate(){
+
+	}
+
+	parabolicAnimation(begin, height, end){
+		var parabolic = {
+			actualX: begin[0],
+			actualY: 0,
+			actualZ: begin[1],
+			currTime: null,
+		}
+
+	}
 
 
 	animate(cellPosition, deltaT) {
