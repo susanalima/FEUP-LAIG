@@ -164,31 +164,56 @@ class TheGame extends CGFobject {
 
     requestQuit(){
         var quit = ['[00]'];
-        this.getPrologRequest(quit, this.handleReply);
+        this.getPrologRequest(quit, this.handleQuitReply);
     }
 
-    requestValidPlays() {
+    requestValidPlays(color) {
         let board = this.getBoardState();
-        var getValidPlays = ['[01', board, 'whitePiece]'];
-        this.getPrologRequest(getValidPlays, this.handleReply);
+        var getValidPlays = ['[01', board, color+']'];
+        this.getPrologRequest(getValidPlays, this.handleValidPlaysReply);
     }
 
     requestPlay(play) {
         let board = this.getBoardState();
         var play = ['[02',board, play + ']']; // '[0,0,whitePiece]'
-        this.getPrologRequest(play, this.handleReply);
+        this.getPrologRequest(play, this.handlePlayReply);
     }
 
     requestSwitchPlayer() {
          var switchPlayer = ['[03]'];
-         this.getPrologRequest(switchPlayer, this.handleReply);
+         this.getPrologRequest(switchPlayer, this.handleSwitchPlayerReply);
     }
 
-    handleReply(data) {
+    /*handleReply(data) {
+        console.log(data.target.response);
+    }*/
+
+    handleQuitReply(data) {
+        console.log(data.target.response);
+    }
+
+    handleValidPlaysReply() {
+        console.log(data.target.response);
+        //animation
+    }
+
+    handlePlayReply(data) {
+        console.log(data.target.response);
+        //animation
+    }
+
+    handleSwitchPlayerReply(data) {
         console.log(data.target.response);
     }
 
 
+    play(){
+        //this.requestPlay(play);
+    }
+
+    showValidCells(){
+        this.requestValidPlays();
+    }
 
     undoLastPlay(){
         this.playsCoords.pop();
