@@ -31,12 +31,12 @@ class MyPrism extends CGFobject {
         this.scene.rotate(Math.PI/2,0,0,1);
         this.scene.rotate(Math.PI/2,0,1,0);
 		this.body.display();
+		this.scene.scale(-1,1,1);
 		this.scene.pushMatrix();
 		this.scene.translate(0,0,this.body.height);
 		this.top.display();
 		this.scene.popMatrix();
 		this.scene.pushMatrix();
-		this.scene.scale(-1,1,1);
 		this.scene.rotate(Math.PI, 1,0,0);
 		this.base.display();
         this.scene.popMatrix();
