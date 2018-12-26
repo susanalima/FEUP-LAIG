@@ -21,22 +21,63 @@ class TheGame extends CGFobject {
         this.gamoraPieces = [];
         this.createPieces(this.thanosPieces, pieceTexture1, pieceTexture2, 18, 32, 'blackPiece');
         this.createPieces(this.gamoraPieces, pieceTexture2, pieceTexture1, -18, -32, 'whitePiece');
-        this.piece = new Piece(this.scene, [0,0], pieceTexture1, 'whitePiece');
-        this.plays = [];
+        this.piece = new Piece(this.scene, [0, 0], pieceTexture1, 'whitePiece');
+        this.createPlays();
+        this.addPlay(0, 1, 1, 'whitePiece');
+        this.addPlay(2, 0, 2, 'whitePiece');
+        this.addPlay(12, 5, 1, 'whitePiece');
+        console.log(this.playsCoords);
+        console.log(this.playsValues);
+        this.createBoardState();
+
     };
 
+    createPlays() {
+        this.playsValues = [];
+        this.playsCoords = [];
+    }
+
+    addPlay(x, y, player, color) {
+        let play = this.createPlay(x, y, player, color);
+        this.playsCoords.push(play[0]);
+        this.playsValues.push(play[1]);
+    }
+
     createPlay(x, y, player, color) {
-        var play = {
-            x: null,
-            y: null,
-            player: null,
-            color: null
+        return [[x, y], [player, color]];
+    }
+
+    searchCoords(coords) {
+        var coordsJson = JSON.stringify(coords); 
+        var playsCoordsJson = this.playsCoords.map(JSON.stringify);
+        return playsCoordsJson.indexOf(coordsJson);
+    }
+
+
+
+    createBoardState() {
+        let board = "[";
+        for (var q = -4; q <= 4; q++) {
+            var r1 = Math.max(-4, -q - 4);
+            var r2 = Math.min(4, -q + 4);
+            for (var r = r1; r <= r2; r++) {
+                let line = q+4;
+                let column = (q + r + 4) * 2;
+                let index  = this.searchCoords([column, line]);
+                if(index != -1)
+                {  
+                   let color = this.playsValues[index][1];
+                    board += `cell(${column},${line},${color}),`
+                }
+                else
+                {
+                    board += `cell(${column},${line},emptyCell),`
+                }
+            }
         }
-        play.x = x;
-        play.y = y;
-        play.player = player;
-        play.color = color;
-        return play;
+        board = board.slice(0, -1);;
+        board += ']';
+        console.log(board);
     }
 
 
@@ -96,7 +137,6 @@ class TheGame extends CGFobject {
             this.scene.registerForPick(++this.scene.pickIndex, this.thanosPieces[i]);
             this.thanosPieces[i].display(this.board.selectedCell, currTime);
         }
-
         this.scene.registerForPick(++this.scene.pickIndex, this.piece);
         this.piece.display();
         if (this.scene.pickIndex == this.scene.pickedIndex)
@@ -111,10 +151,8 @@ class TheGame extends CGFobject {
         var requestPort = port || 8081
         var request = new XMLHttpRequest();
         request.open('GET', 'http://localhost:' + requestPort + '/' + requestString, true);
-
         request.onload = onSuccess || function (data) { console.log("Request successful. Reply: " + data.target.response); };
         request.onerror = onError || function () { console.log("Error waiting for response"); };
-
         request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
         request.send();
     }
@@ -133,8 +171,5 @@ class TheGame extends CGFobject {
     handleReply(data) {
         console.log(data.target.response);
     }
-
-
-
-
 };
+
