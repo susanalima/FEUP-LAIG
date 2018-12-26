@@ -28,8 +28,6 @@ class TheGame extends CGFobject {
         this.addPlay(12, 5, 1, 'whitePiece');
         console.log(this.playsCoords);
         console.log(this.playsValues);
-        this.createBoardState();
-
     };
 
     createPlays() {
@@ -48,36 +46,33 @@ class TheGame extends CGFobject {
     }
 
     searchCoords(coords) {
-        var coordsJson = JSON.stringify(coords); 
+        var coordsJson = JSON.stringify(coords);
         var playsCoordsJson = this.playsCoords.map(JSON.stringify);
         return playsCoordsJson.indexOf(coordsJson);
     }
 
 
-
-    createBoardState() {
+    getBoardState() {
         let board = "[";
         for (var q = -4; q <= 4; q++) {
             var r1 = Math.max(-4, -q - 4);
             var r2 = Math.min(4, -q + 4);
             for (var r = r1; r <= r2; r++) {
-                let line = q+4;
+                let line = q + 4;
                 let column = (q + r + 4) * 2;
-                let index  = this.searchCoords([column, line]);
-                if(index != -1)
-                {  
-                   let color = this.playsValues[index][1];
+                let index = this.searchCoords([column, line]);
+                if (index != -1) {
+                    let color = this.playsValues[index][1];
                     board += `cell(${column},${line},${color}),`
                 }
-                else
-                {
+                else {
                     board += `cell(${column},${line},emptyCell),`
                 }
             }
         }
         board = board.slice(0, -1);;
         board += ']';
-        console.log(board);
+        return board;
     }
 
 
@@ -140,10 +135,9 @@ class TheGame extends CGFobject {
         this.scene.registerForPick(++this.scene.pickIndex, this.piece);
         this.piece.display();
         if (this.scene.pickIndex == this.scene.pickedIndex)
-            this.makeRequest();
+            this.requestQuit();
         this.scene.clearPickRegistration();
         this.scene.popMatrix();
-
     }
 
 
@@ -157,19 +151,50 @@ class TheGame extends CGFobject {
         request.send();
     }
 
-    makeRequest() {
+   /* makeRequest() {
         // Get Parameter Values
         var getValidPlays = ['[01', '[cell(0,0,emptyCell),cell(2,0,emptyCell),cell(4,0,emptyCell),cell(6,0,emptyCell),cell(8,0,emptyCell),cell(0,1,emptyCell),cell(2,1,emptyCell),cell(4,1,emptyCell),cell(6,1,emptyCell),cell(8,1,emptyCell),cell(10,1,emptyCell),cell(0,2,emptyCell),cell(2,2,emptyCell),cell(4,2,emptyCell),cell(6,2,emptyCell),cell(8,2,emptyCell),cell(10,2,emptyCell),cell(12,2,emptyCell),cell(0,3,emptyCell),cell(2,3,emptyCell),cell(4,3,emptyCell),cell(6,3,emptyCell),cell(8,3,emptyCell),cell(10,3,emptyCell),cell(12,3,emptyCell),cell(14,3,emptyCell),cell(0,4,emptyCell),cell(2,4,emptyCell),cell(4,4,emptyCell),cell(6,4,emptyCell),cell(8,4,emptyCell),cell(10,4,emptyCell),cell(12,4,emptyCell),cell(14,4,emptyCell),cell(16,4,emptyCell),cell(2,5,emptyCell),cell(4,5,emptyCell),cell(6,5,emptyCell),cell(8,5,emptyCell),cell(10,5,emptyCell),cell(12,5,emptyCell),cell(14,5,emptyCell),cell(16,5,emptyCell),cell(4,6,emptyCell),cell(6,6,emptyCell),cell(8,6,emptyCell),cell(10,6,emptyCell),cell(12,6,emptyCell),cell(14,6,emptyCell),cell(16,6,emptyCell),cell(6,7,emptyCell),cell(8,7,emptyCell),cell(10,7,emptyCell),cell(12,7,emptyCell),cell(14,7,emptyCell),cell(16,7,emptyCell),cell(8,8,emptyCell),cell(10,8,emptyCell),cell(12,8,emptyCell),cell(14,8,emptyCell),cell(16,8,emptyCell)]', 'whitePiece]'];
         var quit = ['[00]'];
         var play = ['[02', '[cell(0,0,emptyCell),cell(2,0,emptyCell),cell(4,0,emptyCell),cell(6,0,emptyCell),cell(8,0,emptyCell),cell(0,1,emptyCell),cell(2,1,emptyCell),cell(4,1,emptyCell),cell(6,1,emptyCell),cell(8,1,emptyCell),cell(10,1,emptyCell),cell(0,2,emptyCell),cell(2,2,emptyCell),cell(4,2,emptyCell),cell(6,2,emptyCell),cell(8,2,emptyCell),cell(10,2,emptyCell),cell(12,2,emptyCell),cell(0,3,emptyCell),cell(2,3,emptyCell),cell(4,3,emptyCell),cell(6,3,emptyCell),cell(8,3,emptyCell),cell(10,3,emptyCell),cell(12,3,emptyCell),cell(14,3,emptyCell),cell(0,4,emptyCell),cell(2,4,emptyCell),cell(4,4,emptyCell),cell(6,4,emptyCell),cell(8,4,emptyCell),cell(10,4,emptyCell),cell(12,4,emptyCell),cell(14,4,emptyCell),cell(16,4,emptyCell),cell(2,5,emptyCell),cell(4,5,emptyCell),cell(6,5,emptyCell),cell(8,5,emptyCell),cell(10,5,emptyCell),cell(12,5,emptyCell),cell(14,5,emptyCell),cell(16,5,emptyCell),cell(4,6,emptyCell),cell(6,6,emptyCell),cell(8,6,emptyCell),cell(10,6,emptyCell),cell(12,6,emptyCell),cell(14,6,emptyCell),cell(16,6,emptyCell),cell(6,7,emptyCell),cell(8,7,emptyCell),cell(10,7,emptyCell),cell(12,7,emptyCell),cell(14,7,emptyCell),cell(16,7,emptyCell),cell(8,8,emptyCell),cell(10,8,emptyCell),cell(12,8,emptyCell),cell(14,8,emptyCell),cell(16,8,emptyCell)]', '[0,0,whitePiece]]'];
         var switchPlayer = ['[03]'];
         // Make Request
+        this.getPrologRequest(getValidPlays, this.handleReply);
+    }*/
+
+
+    requestQuit(){
+        var quit = ['[00]'];
         this.getPrologRequest(quit, this.handleReply);
     }
 
-    //Handle the Reply
+    requestValidPlays() {
+        let board = this.getBoardState();
+        var getValidPlays = ['[01', board, 'whitePiece]'];
+        this.getPrologRequest(getValidPlays, this.handleReply);
+    }
+
+    requestPlay(play) {
+        let board = this.getBoardState();
+        var play = ['[02',board, play + ']']; // '[0,0,whitePiece]'
+        this.getPrologRequest(play, this.handleReply);
+    }
+
+    requestSwitchPlayer() {
+         var switchPlayer = ['[03]'];
+         this.getPrologRequest(switchPlayer, this.handleReply);
+    }
+
     handleReply(data) {
         console.log(data.target.response);
+    }
+
+
+
+    undoLastPlay(){
+        this.playsCoords.pop();
+        this.playsValues.pop();
+        this.requestSwitchPlayer();
+        //animacao
     }
 };
 
