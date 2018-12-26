@@ -7,7 +7,7 @@ class Piece extends CGFobject {
 	 * Constructs an object of class Piece
 	 * @param {Object} scene Scene in which the piece is represented
 	 */
-	constructor(scene, center, texture) {
+	constructor(scene, center, texture, color) {
 		super(scene);
 		//(scene, slices, stacks, base, top, height)
 		this.piece = new MyCylinder(scene, 30, 20, 1.5, 1.5, 0.8);
@@ -18,6 +18,7 @@ class Piece extends CGFobject {
 		this.selected = false;
 		this.lastTime = null;
 		this.animationTime = 1 * 1000;
+		this.color = color;
 	};
 
 	update(cellPosition, currTime) {
