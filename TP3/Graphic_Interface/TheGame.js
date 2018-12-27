@@ -117,13 +117,6 @@ class TheGame extends CGFobject {
         }
     }
 
-    setVisiblePieces() { //not used?
-        for (let i = 0; i < this.thanosPieces.length; i++) {
-            if (i >= 15 && i < 22)
-                this.thanosPieces[i].visible = false;
-        }
-    }
-
     checkSelected() {
         let counter = 0;
         for (let i = 0; i < this.thanosPieces.length; i++) {
@@ -146,7 +139,7 @@ class TheGame extends CGFobject {
                 }
             }
         }
-        console.log("Selected:" + counter);
+        //console.log("Selected:" + counter);
         if (counter == 1)
             return "OK"; //One piece selected
         else if (counter == 0)
@@ -252,7 +245,7 @@ class TheGame extends CGFobject {
     }
 };
 
-function parseValidPlays(validPlays) {
+/*function parseValidPlays(validPlays) {
     let cellCoordsArray = [];
     let validPlaysarr = validPlays.split('),');
     for(let i = 0; i < validPlaysarr.length; i++)
@@ -264,5 +257,5 @@ function parseValidPlays(validPlays) {
        cellCoordsArray.push([column,line]);
     }
     return cellCoordsArray;
-}
+}*/
 

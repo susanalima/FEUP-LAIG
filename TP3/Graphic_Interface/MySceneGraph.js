@@ -1852,7 +1852,7 @@ class MySceneGraph {
         var cellTexture = this.textures[game.idCellTexture];
         var pieceTexture1 = this.textures[game.idpieceTexture1];
         var pieceTexture2 = this.textures[game.idpieceTexture2]; 
-        return new TheGame(this.scene, boardTexture,cellTexture, pieceTexture1, pieceTexture2);
+        return new GameController(this.scene, boardTexture,cellTexture, pieceTexture1, pieceTexture2);
     }
 
 
