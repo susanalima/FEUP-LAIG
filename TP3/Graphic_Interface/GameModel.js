@@ -77,7 +77,8 @@ class GameModel  {
            let tmparr = movestr.split(',');
            let line = tmparr[1];
            let column = tmparr[0].split('(')[1];
-           cellCoordsArray.push([column,line]);
+
+           cellCoordsArray.push([parseFloat(column),parseFloat(line)]);
         }
         return cellCoordsArray;
     }
