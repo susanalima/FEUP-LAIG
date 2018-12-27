@@ -28,6 +28,8 @@ class TheGame extends CGFobject {
         this.addPlay(12, 5, 1, 'whitePiece');
         console.log(this.playsCoords);
         console.log(this.playsValues);
+
+        //https://editor.p5js.org/Gonca007/sketches/ByHifcMoX
     };
 
     createPlays() {
@@ -51,7 +53,6 @@ class TheGame extends CGFobject {
         return playsCoordsJson.indexOf(coordsJson);
     }
 
-
     getBoardState() {
         let board = "[";
         for (var q = -4; q <= 4; q++) {
@@ -70,12 +71,14 @@ class TheGame extends CGFobject {
                 }
             }
         }
-        board = board.slice(0, -1);;
+        board = board.slice(0, -1);
         board += ']';
         return board;
     }
 
 
+
+/******************************************* Board Display ***********************************************/
     /**
      * Matrix multiplication between a hexagon orientation matrix and the vector [q,r]
      * @param {Object} q 
@@ -135,12 +138,13 @@ class TheGame extends CGFobject {
         this.scene.registerForPick(++this.scene.pickIndex, this.piece);
         this.piece.display();
         if (this.scene.pickIndex == this.scene.pickedIndex)
-            this.requestQuit();
+            this.requestValidPlays(this.piece.color);
         this.scene.clearPickRegistration();
         this.scene.popMatrix();
     }
 
-
+/******************************************* Prolog Requests and Replies ***********************************************/
+    
     getPrologRequest(requestString, onSuccess, onError, port) {
         var requestPort = port || 8081
         var request = new XMLHttpRequest();
@@ -150,17 +154,6 @@ class TheGame extends CGFobject {
         request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
         request.send();
     }
-
-   /* makeRequest() {
-        // Get Parameter Values
-        var getValidPlays = ['[01', '[cell(0,0,emptyCell),cell(2,0,emptyCell),cell(4,0,emptyCell),cell(6,0,emptyCell),cell(8,0,emptyCell),cell(0,1,emptyCell),cell(2,1,emptyCell),cell(4,1,emptyCell),cell(6,1,emptyCell),cell(8,1,emptyCell),cell(10,1,emptyCell),cell(0,2,emptyCell),cell(2,2,emptyCell),cell(4,2,emptyCell),cell(6,2,emptyCell),cell(8,2,emptyCell),cell(10,2,emptyCell),cell(12,2,emptyCell),cell(0,3,emptyCell),cell(2,3,emptyCell),cell(4,3,emptyCell),cell(6,3,emptyCell),cell(8,3,emptyCell),cell(10,3,emptyCell),cell(12,3,emptyCell),cell(14,3,emptyCell),cell(0,4,emptyCell),cell(2,4,emptyCell),cell(4,4,emptyCell),cell(6,4,emptyCell),cell(8,4,emptyCell),cell(10,4,emptyCell),cell(12,4,emptyCell),cell(14,4,emptyCell),cell(16,4,emptyCell),cell(2,5,emptyCell),cell(4,5,emptyCell),cell(6,5,emptyCell),cell(8,5,emptyCell),cell(10,5,emptyCell),cell(12,5,emptyCell),cell(14,5,emptyCell),cell(16,5,emptyCell),cell(4,6,emptyCell),cell(6,6,emptyCell),cell(8,6,emptyCell),cell(10,6,emptyCell),cell(12,6,emptyCell),cell(14,6,emptyCell),cell(16,6,emptyCell),cell(6,7,emptyCell),cell(8,7,emptyCell),cell(10,7,emptyCell),cell(12,7,emptyCell),cell(14,7,emptyCell),cell(16,7,emptyCell),cell(8,8,emptyCell),cell(10,8,emptyCell),cell(12,8,emptyCell),cell(14,8,emptyCell),cell(16,8,emptyCell)]', 'whitePiece]'];
-        var quit = ['[00]'];
-        var play = ['[02', '[cell(0,0,emptyCell),cell(2,0,emptyCell),cell(4,0,emptyCell),cell(6,0,emptyCell),cell(8,0,emptyCell),cell(0,1,emptyCell),cell(2,1,emptyCell),cell(4,1,emptyCell),cell(6,1,emptyCell),cell(8,1,emptyCell),cell(10,1,emptyCell),cell(0,2,emptyCell),cell(2,2,emptyCell),cell(4,2,emptyCell),cell(6,2,emptyCell),cell(8,2,emptyCell),cell(10,2,emptyCell),cell(12,2,emptyCell),cell(0,3,emptyCell),cell(2,3,emptyCell),cell(4,3,emptyCell),cell(6,3,emptyCell),cell(8,3,emptyCell),cell(10,3,emptyCell),cell(12,3,emptyCell),cell(14,3,emptyCell),cell(0,4,emptyCell),cell(2,4,emptyCell),cell(4,4,emptyCell),cell(6,4,emptyCell),cell(8,4,emptyCell),cell(10,4,emptyCell),cell(12,4,emptyCell),cell(14,4,emptyCell),cell(16,4,emptyCell),cell(2,5,emptyCell),cell(4,5,emptyCell),cell(6,5,emptyCell),cell(8,5,emptyCell),cell(10,5,emptyCell),cell(12,5,emptyCell),cell(14,5,emptyCell),cell(16,5,emptyCell),cell(4,6,emptyCell),cell(6,6,emptyCell),cell(8,6,emptyCell),cell(10,6,emptyCell),cell(12,6,emptyCell),cell(14,6,emptyCell),cell(16,6,emptyCell),cell(6,7,emptyCell),cell(8,7,emptyCell),cell(10,7,emptyCell),cell(12,7,emptyCell),cell(14,7,emptyCell),cell(16,7,emptyCell),cell(8,8,emptyCell),cell(10,8,emptyCell),cell(12,8,emptyCell),cell(14,8,emptyCell),cell(16,8,emptyCell)]', '[0,0,whitePiece]]'];
-        var switchPlayer = ['[03]'];
-        // Make Request
-        this.getPrologRequest(getValidPlays, this.handleReply);
-    }*/
-
 
     requestQuit(){
         var quit = ['[00]'];
@@ -175,8 +168,8 @@ class TheGame extends CGFobject {
 
     requestPlay(play) {
         let board = this.getBoardState();
-        var play = ['[02',board, play + ']']; // '[0,0,whitePiece]'
-        this.getPrologRequest(play, this.handlePlayReply);
+        var move = ['[02',board, play + ']']; // '[0,0,whitePiece]'
+        this.getPrologRequest(move, this.handlePlayReply);
     }
 
     requestSwitchPlayer() {
@@ -184,17 +177,14 @@ class TheGame extends CGFobject {
          this.getPrologRequest(switchPlayer, this.handleSwitchPlayerReply);
     }
 
-    /*handleReply(data) {
-        console.log(data.target.response);
-    }*/
-
     handleQuitReply(data) {
         console.log(data.target.response);
     }
 
-    handleValidPlaysReply() {
-        console.log(data.target.response);
+    handleValidPlaysReply(data) {
+        //console.log(data.target.response);
         //animation
+       console.log(parseValidPlays(data.target.response));  
     }
 
     handlePlayReply(data) {
@@ -222,4 +212,18 @@ class TheGame extends CGFobject {
         //animacao
     }
 };
+
+function parseValidPlays(validPlays) {
+    let cellCoordsArray = [];
+    let validPlaysarr = validPlays.split('),');
+    for(let i = 0; i < validPlaysarr.length; i++)
+    {
+       let movestr = validPlaysarr[i];
+       let tmparr = movestr.split(',');
+       let line = tmparr[1];
+       let column = tmparr[0].split('(')[1];
+       cellCoordsArray.push([column,line]);
+    }
+    return cellCoordsArray;
+}
 

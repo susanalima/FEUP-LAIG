@@ -41,7 +41,6 @@ server_loop(Socket) :-
 		)),
 		
 		% Generate Response
-        write(Request), nl,
         handle_request(Request, MyReply, Status),
 		format('Request: ~q~n',[Request]),
 		format('Reply: ~q~n', [MyReply]),
@@ -78,8 +77,6 @@ read_request(Stream, Request) :-
 	atom_codes('GET /',Get),
 	append(Get,RL,LineCodes),
     read_request_aux(RL,RL2),	
-    nl,
-    write(RL2), nl,nl,
 	
 	catch(read_from_codes(RL2, Request), error(syntax_error(_),_), fail), !.
 read_request(_,syntax_error).
