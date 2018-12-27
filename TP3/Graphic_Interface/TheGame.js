@@ -22,6 +22,8 @@ class TheGame extends CGFobject {
         this.createPieces(this.thanosPieces, pieceTexture1, pieceTexture2, 18, 32, 'blackPiece');
         this.createPieces(this.gamoraPieces, pieceTexture2, pieceTexture1, -18, -32, 'whitePiece');
         this.piece = new Piece(this.scene, [0, 0], pieceTexture1, 'whitePiece');
+        this.plays = [];
+        this.selectedPiece = null;
         this.createPlays();
         this.addPlay(0, 1, 1, 'whitePiece');
         this.addPlay(2, 0, 2, 'whitePiece');
@@ -115,18 +117,55 @@ class TheGame extends CGFobject {
         }
     }
 
-    setVisiblePieces() {
+    setVisiblePieces() { //not used?
         for (let i = 0; i < this.thanosPieces.length; i++) {
             if (i >= 15 && i < 22)
                 this.thanosPieces[i].visible = false;
         }
     }
 
+    checkSelected() {
+        let counter = 0;
+        for (let i = 0; i < this.thanosPieces.length; i++) {
+            if (this.thanosPieces[i].selected) {
+                counter++;
+                if (this.thanosPieces[i] != this.selectedPiece) {
+                    if (this.selectedPiece != null)
+                        this.selectedPiece.selected = false;
+                    this.selectedPiece = this.thanosPieces[i];
+                }
+            }
+        }
+        for (let i = 0; i < this.gamoraPieces.length; i++) {
+            if (this.gamoraPieces[i].selected) {
+                counter++;
+                if (this.gamoraPieces[i] != this.selectedPiece) {
+                    if (this.selectedPiece != null)
+                        this.selectedPiece.selected = false;
+                    this.selectedPiece = this.gamoraPieces[i];
+                }
+            }
+        }
+        console.log("Selected:" + counter);
+        if (counter == 1)
+            return "OK"; //One piece selected
+        else if (counter == 0)
+            return "NOTOK"; // No pieces selected
+        else
+            return "ERROR"; //More than one piece was selected (Only one piece should be selected at any time)
+    }
+
 
     display() {
+        let ignore = true;
+        if (this.checkSelected() == "OK")
+            ignore = false;
+        else
+            ignore = true;
+
         let currTime = this.scene.currTime;
         this.scene.pushMatrix();
-        this.board.display();
+        this.board.display(ignore);
         for (let i = 0; i < this.thanosPieces.length; i++) {
             this.scene.registerForPick(++this.scene.pickIndex, this.gamoraPieces[i]);
             this.gamoraPieces[i].display(this.board.selectedCell, currTime);

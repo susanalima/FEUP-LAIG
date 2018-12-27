@@ -52,41 +52,59 @@ class MyBoard extends CGFobject {
     }
 //Needs to be changed/deleted
     checkSelectedCells(){
-        let p1 = -1, p2 = -1;
+        let noSelected = true;
         for (let i = 0; i < this.cells.length; i++) {
             if (this.cells[i].getSelected()) {
-                if(this.selectedCell != null)
+                if(this.selectedCell != null  && this.cells[i] != this.selectedCell)
                     this.selectedCell.selected = false;
                 this.selectedCell = this.cells[i];
-                if (p1 != -1)
-                    p2 = i;
-                else
-                    p1 = i;
+                noSelected = false;
             }
         }
-        if (p1 != -1 && p2 != -1){
-            this.cells[p1].selected = false;
-            this.cells[p2].selected = false;
-            console.log("Pieces received x1: " + this.cells[p1].x + " y1: " + this.cells[p1].z + "\n");
-            console.log("x2: " + this.cells[p2].x + " y2: " + this.cells[p2].z + "\n");
+        if(noSelected){
+            if(this.selectedCell != null)
+                this.selectedCell.selected = false;
+            this.selectedCell = null;
         }
+    }
+
+    ignorePicks(){
+        for (let i = 0; i < this.cells.length; i++) {
+            this.cells[i].selected = false;
+        }
+        this.selectedCell = null;
+        this.cellTexture.unbind();
     }
 
 	/**
 	 * Displays the board in member scene
 	 */
-    display() {
+    display(ignore) {
         this.scene.pushMatrix();
 
         this.scene.pushMatrix();
+        this.scene.translate(0, -0.5, 0);
         this.scene.rotate(Math.PI, 1,0,0);
+        this.scene.rotate(Math.PI/2, 0,1,0);
+
+        this.boardTexture.bind();
+        this.base.display();
+        this.scene.popMatrix();
+
+        
+        this.scene.pushMatrix();
+        this.scene.rotate(Math.PI, 1,0,0);
+       
         this.cellTexture.bind();
+        
         for (let i = 0; i < this.cells.length; i++){
-            this.scene.registerForPick(++this.scene.pickIndex, this.cells[i]);
+            if(!ignore)
+                this.scene.registerForPick(++this.scene.pickIndex, this.cells[i]);
             this.cells[i].display();
         }
         this.scene.clearPickRegistration();
         this.checkSelectedCells();
+        
         this.scene.popMatrix();
 
 
