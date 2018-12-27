@@ -21,18 +21,19 @@ class Piece extends CGFobject {
 		this.animationTime = 1 * 1000;
 		this.color = color;
 		this.parabolic = null;
+		this.locked = false //for when a piece is moved it cannot be moved anymore
 	};
 
-	update(cellPosition, currTime) {
+	update(currTime) {
 		var deltaT;
 		if (this.lastTime == null){
 			deltaT = 0;
-			this.createParabolicAnimation([this.x, this.y], 3, cellPosition);
 		}
 		else {
 			deltaT = currTime - this.lastTime;
 		}
-		this.parabolicAnimate(deltaT);
+		if(this.parabolic != null)
+			this.parabolicAnimate(deltaT);
 		this.lastTime = currTime;
 	}
 
@@ -48,15 +49,14 @@ class Piece extends CGFobject {
 	
 		let timeX = this.parabolic.deltaX * deltaT /this.animationTime;
 		let timeY = this.parabolic.deltaY * deltaT /this.animationTime;
-		let timeZ = this.parabolic.height * deltaT /this.animationTime;;
+		let timeZ = this.parabolic.maxZ * deltaT /this.animationTime;
 		
-		timeZ = this.parabolic.maxZ * deltaT /(this.animationTime/2);
 		
-		this.parabolic.time +=deltaT;
+		this.parabolic.time += deltaT;
 
 		this.x += timeX;
 		this.y += timeY;
-		if(this.parabolic.time > this.animationTime /2)	
+		if(this.parabolic.time > (this.animationTime /2))	
 			this.z -= timeZ;
 		else
 			this.z += timeZ;
@@ -101,8 +101,10 @@ class Piece extends CGFobject {
 		this.scene.rotate(-Math.PI / 2, 1, 0, 0);
 		if (this.scene.pickIndex == this.scene.pickedIndex)
 			this.selected = !this.selected;
-		if (this.selected && cell != null)
-			this.update([cell.x,cell.z], currTime);
+		if (this.selected && cell != null && this.parabolic == null)
+			this.createParabolicAnimation([this.x, this.y], 3, [cell.x,cell.z]);
+
+		this.update(currTime);
 		this.scene.translate(this.x, this.y, this.z);
 		this.texture.bind();
 		this.piece.display();
