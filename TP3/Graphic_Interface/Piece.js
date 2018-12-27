@@ -24,7 +24,7 @@ class Piece extends CGFobject {
 		this.locked = false //for when a piece is moved it cannot be moved anymore
 	};
 
-	update(currTime) {
+	update(currTime, cell) {
 		var deltaT;
 		if (this.lastTime == null){
 			deltaT = 0;
@@ -33,17 +33,19 @@ class Piece extends CGFobject {
 			deltaT = currTime - this.lastTime;
 		}
 		if(this.parabolic != null)
-			this.parabolicAnimate(deltaT);
+			this.parabolicAnimate(deltaT, cell);
 		this.lastTime = currTime;
 	}
 
-	parabolicAnimate(deltaT){
+	parabolicAnimate(deltaT, cell){
 		if(this.parabolic.end)
 			return;
 
 		if(this.parabolic.time > this.animationTime){
 			this.parabolic.end = true;
 			this.selected =false;
+			this.locked =true;
+			cell.selected = false;
 			return;
 		}
 	
@@ -104,7 +106,7 @@ class Piece extends CGFobject {
 		if (this.selected && cell != null && this.parabolic == null)
 			this.createParabolicAnimation([this.x, this.y], 3, [cell.x,cell.z]);
 
-		this.update(currTime);
+		this.update(currTime, cell);
 		this.scene.translate(this.x, this.y, this.z);
 		this.texture.bind();
 		this.piece.display();
