@@ -110,9 +110,10 @@ execute_request([Code,Board,Color], Reply) :-
     Code = 01,
     getValidPlays(Board,Color,Reply).
 
-execute_request([Code,Board,Move], [NewWinner,Move]) :-
+execute_request([Code,Board,Move], [Player,NewWinner,Move]) :-
     Code = 02,
-    read_move(Move, X, Y, Color),
+	read_move(Move, X, Y, Color),
+	getCurrentPlayer(Player),
     play(Board,X,Y,Color,NewBoard,NewWinner).
 
 execute_request([Code], Reply) :-

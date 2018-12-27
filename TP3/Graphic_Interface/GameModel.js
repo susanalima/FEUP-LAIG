@@ -77,10 +77,20 @@ class GameModel  {
            let tmparr = movestr.split(',');
            let line = tmparr[1];
            let column = tmparr[0].split('(')[1];
-
            cellCoordsArray.push([parseFloat(column),parseFloat(line)]);
         }
         return cellCoordsArray;
+    }
+
+    parsePlayReply(reply){
+        let replyarr = reply.split(',');
+        let player = parseFloat(replyarr[0].split('[')[1]);
+        let column = parseFloat(replyarr[2].split('[')[1]);
+        let line = parseFloat(replyarr[3]);
+        let color = replyarr[4].split(']')[0];
+        this.addPlay(column, line, player, color);
+        console.log(this.playsCoords);
+        console.log(this.playsValues);
     }
 
     undoLastPlay(){

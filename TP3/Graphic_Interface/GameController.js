@@ -67,6 +67,7 @@ class GameController extends CGFobject {
     handlePlayReply(data) {
         console.log(data.target.response);
         //animation
+        model.parsePlayReply(data.target.response);
     }
 
     handleSwitchPlayerReply(data) {
@@ -108,7 +109,11 @@ class GameController extends CGFobject {
         if (counter == 1)
             return "OK"; //One piece selected
         else if (counter == 0)
-            return "NOTOK"; // No pieces selected
+            {
+                this.selectedPiece = null;
+                return "NOTOK"; // No pieces selected
+            }
+          
         else
             return "ERROR"; //More than one piece was selected (Only one piece should be selected at any time)
     }
@@ -120,7 +125,13 @@ class GameController extends CGFobject {
         }
     }
 
+    play(){
+        if(this.selectedPiece != null && view.board.selectedCell != null )
+            this.requestPlay([view.board.selectedCell.line, view.board.selectedCell.column, this.selectedPiece.color])
+    }
+
     display() {
+        this.play();
         let ignore = true;
         if (this.checkSelected() == "OK")
             ignore = false;
@@ -131,11 +142,11 @@ class GameController extends CGFobject {
         view.board.display(ignore);
         this.displayPieces(view.gamoraPieces, currTime);
         this.displayPieces(view.thanosPieces, currTime);
-        this.scene.registerForPick(++this.scene.pickIndex, view.piece);
+        /*this.scene.registerForPick(++this.scene.pickIndex, view.piece);
         view.piece.display();
         if (this.scene.pickIndex == this.scene.pickedIndex)
-            this.requestPlay([0,0,'whitePiece'])    
-        //this.requestValidPlays(view.piece.color);
+            //this.requestPlay([0,0,'whitePiece'])    
+        this.requestValidPlays(view.piece.color);*/
         this.scene.clearPickRegistration();
         this.scene.popMatrix();
     }

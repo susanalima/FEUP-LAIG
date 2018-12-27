@@ -38,6 +38,10 @@ class Piece extends CGFobject {
 	}
 
 	parabolicAnimate(deltaT, cell){
+		if(cell != null)
+			cell.selected = false;
+		this.selected = false;
+		
 		if(this.parabolic.end)
 			return;
 
@@ -45,7 +49,7 @@ class Piece extends CGFobject {
 			this.parabolic.end = true;
 			this.selected =false;
 			this.locked =true;
-			cell.selected = false;
+			
 			return;
 		}
 	
