@@ -110,7 +110,7 @@ execute_request([Code,Board,Color], Reply) :-
     Code = 01,
     getValidPlays(Board,Color,Reply).
 
-execute_request([Code,Board,Move], [NewBoard,NewWinner]) :-
+execute_request([Code,Board,Move], [NewWinner,Move]) :-
     Code = 02,
     read_move(Move, X, Y, Color),
     play(Board,X,Y,Color,NewBoard,NewWinner).
@@ -127,7 +127,8 @@ parse_input([Code,Board,Color]) :-
     validateCode(Code),
     validateColor(Color).
 parse_input([Code,Board,Move]) :-
-    validateCode(Code).
+	validateCode(Code),
+	validateMove(Board,Move).
 parse_input([Code]) :-
     validateCode(Code).
 parse_input(test(C,N)) :- test(C,Res,N).
@@ -148,3 +149,7 @@ validateColor(Color) :-
     Color = 'blackPiece'.
 validateColor(Color) :-
     Color = 'whitePiece'.
+
+validateMove(Board,[X,Y,Color]) :-
+	isValidPlay(Board,X,Y,Color).
+

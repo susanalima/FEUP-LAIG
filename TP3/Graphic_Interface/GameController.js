@@ -22,7 +22,6 @@ class GameController extends CGFobject {
     };
 
 
-
     getPrologRequest(requestString, onSuccess, onError, port) {
         var requestPort = port || 8081
         var request = new XMLHttpRequest();
@@ -46,7 +45,7 @@ class GameController extends CGFobject {
 
     requestPlay(play) {
         let board = model.getBoardState();
-        var move = ['[02',board, play + ']']; // '[0,0,whitePiece]'
+        var move = ['[02',board, '[' + play + ']' + ']']; // '[0,0,whitePiece]'
         this.getPrologRequest(move, this.handlePlayReply);
     }
 
@@ -62,7 +61,6 @@ class GameController extends CGFobject {
     handleValidPlaysReply(data) {
         //console.log(data.target.response);
         //animation
-     
        console.log(model.parseValidPlays(data.target.response));  
     }
 
@@ -73,11 +71,6 @@ class GameController extends CGFobject {
 
     handleSwitchPlayerReply(data) {
         console.log(data.target.response);
-    }
-
-
-    play(){
-        //this.requestPlay(play);
     }
 
     showValidCells(){
@@ -133,7 +126,6 @@ class GameController extends CGFobject {
             ignore = false;
         else
             ignore = true;
-
         let currTime = this.scene.currTime;
         this.scene.pushMatrix();
         view.board.display(ignore);
@@ -142,7 +134,8 @@ class GameController extends CGFobject {
         this.scene.registerForPick(++this.scene.pickIndex, view.piece);
         view.piece.display();
         if (this.scene.pickIndex == this.scene.pickedIndex)
-            this.requestValidPlays(view.piece.color);
+            this.requestPlay([0,0,'whitePiece'])    
+        //this.requestValidPlays(view.piece.color);
         this.scene.clearPickRegistration();
         this.scene.popMatrix();
     }

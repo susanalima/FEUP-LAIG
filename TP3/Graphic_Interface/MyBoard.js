@@ -3,7 +3,6 @@
  */
 class MyBoard extends CGFobject {
 
-
     /**
  	 * Constructs an object of class MyBoard
 	 * @param {Object} scene Scene in which the board is represented
@@ -45,7 +44,9 @@ class MyBoard extends CGFobject {
             var r2 = Math.min(this.map_radius, -q + this.map_radius);
             for (var r = r1; r <= r2; r++) {
                 let center = this.hex_to_pixel(q, r);
-                let cell = new BoardCell(this.scene, this.cell_radius, center);
+                let line = q + 4;
+                let column = (q + r + 4) * 2;
+                let cell = new BoardCell(this.scene, this.cell_radius, center, line, column);
                 this.cells.push(cell);
             }
         }
@@ -106,16 +107,6 @@ class MyBoard extends CGFobject {
         this.checkSelectedCells();
         
         this.scene.popMatrix();
-
-
-        this.scene.pushMatrix();
-        this.scene.translate(0, -1, 0);
-        this.scene.rotate(Math.PI/6, 0,1,0);
-
-        this.boardTexture.bind();
-        this.base.display();
-        this.scene.popMatrix();
-
         this.scene.popMatrix();
     }
 };

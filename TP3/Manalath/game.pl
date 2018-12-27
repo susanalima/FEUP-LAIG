@@ -47,7 +47,8 @@ isValidPlay(Board,X,Y,Color) :-
   Count < 5,
   findall(TX-TY, getPiece(Board, TX, TY, Color), Colors),
   length(Colors, NumColors),
-  30 > NumColors.
+  30 > NumColors,
+  validate_info_Color(Color).
 
 % getValidPlays(+Board, +Color, -ValidPlays)
 % retrieves a list (ValidPlays) with all the valid plays in the specified board for the given color
