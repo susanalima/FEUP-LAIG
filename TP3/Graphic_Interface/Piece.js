@@ -15,34 +15,72 @@ class Piece extends CGFobject {
 		this.visible = true;
 		this.x = center[0];
 		this.y = center[1];
+		this.z = 0;
 		this.selected = false;
 		this.lastTime = null;
 		this.animationTime = 1 * 1000;
 		this.color = color;
+		this.parabolic = null;
 	};
 
 	update(cellPosition, currTime) {
 		var deltaT;
-		if (this.lastTime == null)
+		if (this.lastTime == null){
 			deltaT = 0;
+			this.createParabolicAnimation([this.x, this.y], 3, cellPosition);
+		}
 		else {
 			deltaT = currTime - this.lastTime;
 		}
-		this.animate(cellPosition, deltaT);
+		this.parabolicAnimate(deltaT);
 		this.lastTime = currTime;
 	}
 
-	parabolicAnimate(){
+	parabolicAnimate(deltaT){
+		if(this.parabolic.end)
+			return;
 
+		if(this.parabolic.time > this.animationTime){
+			this.parabolic.end = true;
+			this.selected =false;
+			return;
+		}
+	
+		let timeX = this.parabolic.deltaX * deltaT /this.animationTime;
+		let timeY = this.parabolic.deltaY * deltaT /this.animationTime;
+		let timeZ = this.parabolic.height * deltaT /this.animationTime;;
+		
+		timeZ = this.parabolic.maxZ * deltaT /(this.animationTime/2);
+		
+		this.parabolic.time +=deltaT;
+
+		this.x += timeX;
+		this.y += timeY;
+		if(this.parabolic.time > this.animationTime /2)	
+			this.z -= timeZ;
+		else
+			this.z += timeZ;
+
+		if(this.parabolic.time > this.animationTime){
+			this.x = this.parabolic.endX;
+			this.y = this.parabolic.endY;
+			this.z = 0;
+		}
 	}
 
-	parabolicAnimation(begin, height, end){
-		var parabolic = {
+	createParabolicAnimation(begin, height, end){
+		this.parabolic = {
 			actualX: begin[0],
-			actualY: 0,
-			actualZ: begin[1],
-			currTime: null,
-		}
+			actualZ: 0,
+			actualY: begin[1],
+			maxZ: height,
+			endX: end[0],
+			endY: end[1],
+			deltaX: end[0] - begin[0],
+			deltaY: end[1] - begin[1],
+			time: 0,
+			end: false
+		};
 
 	}
 
@@ -65,7 +103,7 @@ class Piece extends CGFobject {
 			this.selected = !this.selected;
 		if (this.selected && cell != null)
 			this.update([cell.x,cell.z], currTime);
-		this.scene.translate(this.x, this.y, 0);
+		this.scene.translate(this.x, this.y, this.z);
 		this.texture.bind();
 		this.piece.display();
 		this.scene.popMatrix();
