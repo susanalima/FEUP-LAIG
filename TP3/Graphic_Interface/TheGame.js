@@ -24,20 +24,57 @@ class TheGame extends CGFobject {
         this.piece = new Piece(this.scene, [0, 0], pieceTexture1, 'whitePiece');
         this.plays = [];
         this.selectedPiece = null;
+        this.createPlays();
+        this.addPlay(0, 1, 1, 'whitePiece');
+        this.addPlay(2, 0, 2, 'whitePiece');
+        this.addPlay(12, 5, 1, 'whitePiece');
+        console.log(this.playsCoords);
+        console.log(this.playsValues);
     };
 
+    createPlays() {
+        this.playsValues = [];
+        this.playsCoords = [];
+    }
+
+    addPlay(x, y, player, color) {
+        let play = this.createPlay(x, y, player, color);
+        this.playsCoords.push(play[0]);
+        this.playsValues.push(play[1]);
+    }
+
     createPlay(x, y, player, color) {
-        var play = {
-            x: null,
-            y: null,
-            player: null,
-            color: null
+        return [[x, y], [player, color]];
+    }
+
+    searchCoords(coords) {
+        var coordsJson = JSON.stringify(coords);
+        var playsCoordsJson = this.playsCoords.map(JSON.stringify);
+        return playsCoordsJson.indexOf(coordsJson);
+    }
+
+
+    getBoardState() {
+        let board = "[";
+        for (var q = -4; q <= 4; q++) {
+            var r1 = Math.max(-4, -q - 4);
+            var r2 = Math.min(4, -q + 4);
+            for (var r = r1; r <= r2; r++) {
+                let line = q + 4;
+                let column = (q + r + 4) * 2;
+                let index = this.searchCoords([column, line]);
+                if (index != -1) {
+                    let color = this.playsValues[index][1];
+                    board += `cell(${column},${line},${color}),`
+                }
+                else {
+                    board += `cell(${column},${line},emptyCell),`
+                }
+            }
         }
-        play.x = x;
-        play.y = y;
-        play.player = player;
-        play.color = color;
-        return play;
+        board = board.slice(0, -1);;
+        board += ']';
+        return board;
     }
 
 
@@ -134,14 +171,12 @@ class TheGame extends CGFobject {
             this.scene.registerForPick(++this.scene.pickIndex, this.thanosPieces[i]);
             this.thanosPieces[i].display(this.board.selectedCell, currTime);
         }
-
         this.scene.registerForPick(++this.scene.pickIndex, this.piece);
         this.piece.display();
         if (this.scene.pickIndex == this.scene.pickedIndex)
-            this.makeRequest();
+            this.requestQuit();
         this.scene.clearPickRegistration();
         this.scene.popMatrix();
-
     }
 
 
@@ -149,30 +184,81 @@ class TheGame extends CGFobject {
         var requestPort = port || 8081
         var request = new XMLHttpRequest();
         request.open('GET', 'http://localhost:' + requestPort + '/' + requestString, true);
-
         request.onload = onSuccess || function (data) { console.log("Request successful. Reply: " + data.target.response); };
         request.onerror = onError || function () { console.log("Error waiting for response"); };
-
         request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
         request.send();
     }
 
-    makeRequest() {
+   /* makeRequest() {
         // Get Parameter Values
         var getValidPlays = ['[01', '[cell(0,0,emptyCell),cell(2,0,emptyCell),cell(4,0,emptyCell),cell(6,0,emptyCell),cell(8,0,emptyCell),cell(0,1,emptyCell),cell(2,1,emptyCell),cell(4,1,emptyCell),cell(6,1,emptyCell),cell(8,1,emptyCell),cell(10,1,emptyCell),cell(0,2,emptyCell),cell(2,2,emptyCell),cell(4,2,emptyCell),cell(6,2,emptyCell),cell(8,2,emptyCell),cell(10,2,emptyCell),cell(12,2,emptyCell),cell(0,3,emptyCell),cell(2,3,emptyCell),cell(4,3,emptyCell),cell(6,3,emptyCell),cell(8,3,emptyCell),cell(10,3,emptyCell),cell(12,3,emptyCell),cell(14,3,emptyCell),cell(0,4,emptyCell),cell(2,4,emptyCell),cell(4,4,emptyCell),cell(6,4,emptyCell),cell(8,4,emptyCell),cell(10,4,emptyCell),cell(12,4,emptyCell),cell(14,4,emptyCell),cell(16,4,emptyCell),cell(2,5,emptyCell),cell(4,5,emptyCell),cell(6,5,emptyCell),cell(8,5,emptyCell),cell(10,5,emptyCell),cell(12,5,emptyCell),cell(14,5,emptyCell),cell(16,5,emptyCell),cell(4,6,emptyCell),cell(6,6,emptyCell),cell(8,6,emptyCell),cell(10,6,emptyCell),cell(12,6,emptyCell),cell(14,6,emptyCell),cell(16,6,emptyCell),cell(6,7,emptyCell),cell(8,7,emptyCell),cell(10,7,emptyCell),cell(12,7,emptyCell),cell(14,7,emptyCell),cell(16,7,emptyCell),cell(8,8,emptyCell),cell(10,8,emptyCell),cell(12,8,emptyCell),cell(14,8,emptyCell),cell(16,8,emptyCell)]', 'whitePiece]'];
         var quit = ['[00]'];
         var play = ['[02', '[cell(0,0,emptyCell),cell(2,0,emptyCell),cell(4,0,emptyCell),cell(6,0,emptyCell),cell(8,0,emptyCell),cell(0,1,emptyCell),cell(2,1,emptyCell),cell(4,1,emptyCell),cell(6,1,emptyCell),cell(8,1,emptyCell),cell(10,1,emptyCell),cell(0,2,emptyCell),cell(2,2,emptyCell),cell(4,2,emptyCell),cell(6,2,emptyCell),cell(8,2,emptyCell),cell(10,2,emptyCell),cell(12,2,emptyCell),cell(0,3,emptyCell),cell(2,3,emptyCell),cell(4,3,emptyCell),cell(6,3,emptyCell),cell(8,3,emptyCell),cell(10,3,emptyCell),cell(12,3,emptyCell),cell(14,3,emptyCell),cell(0,4,emptyCell),cell(2,4,emptyCell),cell(4,4,emptyCell),cell(6,4,emptyCell),cell(8,4,emptyCell),cell(10,4,emptyCell),cell(12,4,emptyCell),cell(14,4,emptyCell),cell(16,4,emptyCell),cell(2,5,emptyCell),cell(4,5,emptyCell),cell(6,5,emptyCell),cell(8,5,emptyCell),cell(10,5,emptyCell),cell(12,5,emptyCell),cell(14,5,emptyCell),cell(16,5,emptyCell),cell(4,6,emptyCell),cell(6,6,emptyCell),cell(8,6,emptyCell),cell(10,6,emptyCell),cell(12,6,emptyCell),cell(14,6,emptyCell),cell(16,6,emptyCell),cell(6,7,emptyCell),cell(8,7,emptyCell),cell(10,7,emptyCell),cell(12,7,emptyCell),cell(14,7,emptyCell),cell(16,7,emptyCell),cell(8,8,emptyCell),cell(10,8,emptyCell),cell(12,8,emptyCell),cell(14,8,emptyCell),cell(16,8,emptyCell)]', '[0,0,whitePiece]]'];
         var switchPlayer = ['[03]'];
         // Make Request
-        this.getPrologRequest(quit, this.handleReply);
+        this.getPrologRequest(getValidPlays, this.handleReply);
+    }*/
+
+
+    requestQuit(){
+        var quit = ['[00]'];
+        this.getPrologRequest(quit, this.handleQuitReply);
     }
 
-    //Handle the Reply
-    handleReply(data) {
+    requestValidPlays(color) {
+        let board = this.getBoardState();
+        var getValidPlays = ['[01', board, color+']'];
+        this.getPrologRequest(getValidPlays, this.handleValidPlaysReply);
+    }
+
+    requestPlay(play) {
+        let board = this.getBoardState();
+        var play = ['[02',board, play + ']']; // '[0,0,whitePiece]'
+        this.getPrologRequest(play, this.handlePlayReply);
+    }
+
+    requestSwitchPlayer() {
+         var switchPlayer = ['[03]'];
+         this.getPrologRequest(switchPlayer, this.handleSwitchPlayerReply);
+    }
+
+    /*handleReply(data) {
+        console.log(data.target.response);
+    }*/
+
+    handleQuitReply(data) {
+        console.log(data.target.response);
+    }
+
+    handleValidPlaysReply() {
+        console.log(data.target.response);
+        //animation
+    }
+
+    handlePlayReply(data) {
+        console.log(data.target.response);
+        //animation
+    }
+
+    handleSwitchPlayerReply(data) {
         console.log(data.target.response);
     }
 
 
+    play(){
+        //this.requestPlay(play);
+    }
 
+    showValidCells(){
+        this.requestValidPlays();
+    }
 
+    undoLastPlay(){
+        this.playsCoords.pop();
+        this.playsValues.pop();
+        this.requestSwitchPlayer();
+        //animacao
+    }
 };
+
