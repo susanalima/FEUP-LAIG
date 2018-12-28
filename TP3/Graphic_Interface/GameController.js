@@ -98,9 +98,11 @@ class GameController extends CGFobject {
                 if (view.thanosPieces[i] != this.selectedPiece) {
                     if (this.selectedPiece != null) {
                         this.selectedPiece.selected = false;
+                        this.selectedPiece.swapText();
                     }
                     this.selectedPiece = view.thanosPieces[i];
-
+                    if(!this.selectedPiece.locked)
+                        this.selectedPiece.swapText();
                 }
             }
         }
@@ -111,8 +113,11 @@ class GameController extends CGFobject {
                     if (this.selectedPiece != null)
                     {
                         this.selectedPiece.selected = false;
+                        this.selectedPiece.swapText();
                     }
                     this.selectedPiece = view.gamoraPieces[i];
+                    if(!this.selectedPiece.locked)
+                        this.selectedPiece.swapText();
                 }
             }
         }
@@ -121,6 +126,7 @@ class GameController extends CGFobject {
         if (counter == 1)
             return "OK"; //One piece selected
         else if (counter == 0) {
+            this.selectedPiece.swapText();
             this.selectedPiece = null;
             return "NOTOK"; // No pieces selected
         }

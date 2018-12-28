@@ -50,7 +50,7 @@ class Piece extends CGFobject {
 			this.parabolic.end = true;
 			this.selected = false;
 			this.locked = true;
-			this.swapText();
+	
 			return;
 		}
 	
@@ -114,8 +114,7 @@ class Piece extends CGFobject {
 		this.scene.rotate(-Math.PI / 2, 1, 0, 0);
 		if (this.scene.pickIndex == this.scene.pickedIndex){
 			this.selected = !this.selected;
-			this.swapText();
-			console.log("??: "+ this.selected);
+		
 		}
 		if (this.selected && cell != null && this.parabolic == null)
 			this.createParabolicAnimation([this.x, this.y], 10, [cell.x,cell.z]);
