@@ -53,6 +53,11 @@ getCurrentPlayerColor(Color) :-
 getCurrentPlayerBot(Bot) :-
     player(_,_,1,Bot).
 
+getPlayer1Bot(Bot) :-
+    player(1,_,_,Bot).
+
+getPlayer2Bot(Bot) :-
+    player(2,_,_,Bot).
 
 % setCurrentPlayer(+Player)
 % Set the current player value to 1 of the player with id Player in the database

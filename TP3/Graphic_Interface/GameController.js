@@ -32,6 +32,7 @@ class GameController extends CGFobject {
         request.send();
     }
 
+
     requestQuit(){
         var quit = ['[00]'];
         this.getPrologRequest(quit, this.handleQuitReply);
@@ -49,9 +50,30 @@ class GameController extends CGFobject {
         this.getPrologRequest(move, this.handlePlayReply);
     }
 
+    requestBotPlay(level) {
+        let board = model.getBoardState();
+        var botplay = ['[07',board, level + ']'];
+        this.getPrologRequest(botplay, this.handlePlayReply);
+    }
+
     requestSwitchPlayer() {
          var switchPlayer = ['[03]'];
          this.getPrologRequest(switchPlayer, this.handleSwitchPlayerReply);
+    }
+
+    requestPvP(){
+        var pvp = ['[04]'];
+        this.getPrologRequest(pvp, this.handlePRequest);
+    }
+
+    requestPvC(){
+        var pvc = ['[05]'];
+        this.getPrologRequest(pvc, this.handlePRequest);
+    }
+
+    requestCvC(){
+        var cvc = ['[06]'];
+        this.getPrologRequest(cvc, this.handlePRequest);
     }
 
     handleQuitReply(data) {
@@ -74,6 +96,10 @@ class GameController extends CGFobject {
         console.log(data.target.response);
     }
 
+    handlePRequest(data) {
+        console.log(data.target.response);
+    }
+
     showValidCells(){
         this.requestValidPlays();
     }
@@ -83,28 +109,26 @@ class GameController extends CGFobject {
         //animacao
     }
 
+
+    setSelected(pieces, counter){
+        for (let i = 0; i < pieces.length; i++) {
+            if (pieces[i].selected) {
+                counter++;
+                if (pieces[i] != this.selectedPiece) {
+                    if (this.selectedPiece != null)
+                        this.selectedPiece.selected = false;
+                    this.selectedPiece = pieces[i];
+                }
+            }
+        }
+        return counter;
+    }
+    
+
     checkSelected() {
         let counter = 0;
-        for (let i = 0; i < view.thanosPieces.length; i++) {
-            if (view.thanosPieces[i].selected) {
-                counter++;
-                if (view.thanosPieces[i] != this.selectedPiece) {
-                    if (this.selectedPiece != null)
-                        this.selectedPiece.selected = false;
-                    this.selectedPiece = view.thanosPieces[i];
-                }
-            }
-        }
-        for (let i = 0; i < view.gamoraPieces.length; i++) {
-            if (view.gamoraPieces[i].selected) {
-                counter++;
-                if (view.gamoraPieces[i] != this.selectedPiece) {
-                    if (this.selectedPiece != null)
-                        this.selectedPiece.selected = false;
-                    this.selectedPiece = view.gamoraPieces[i];
-                }
-            }
-        }
+        counter = this.setSelected(view.thanosPieces, counter);
+        counter = this.setSelected(view.gamoraPieces, counter);
         //console.log("Selected:" + counter);
         if (counter == 1)
             return "OK"; //One piece selected
@@ -112,8 +136,7 @@ class GameController extends CGFobject {
             {
                 this.selectedPiece = null;
                 return "NOTOK"; // No pieces selected
-            }
-          
+            } 
         else
             return "ERROR"; //More than one piece was selected (Only one piece should be selected at any time)
     }
@@ -142,11 +165,16 @@ class GameController extends CGFobject {
         view.board.display(ignore);
         this.displayPieces(view.gamoraPieces, currTime);
         this.displayPieces(view.thanosPieces, currTime);
-        /*this.scene.registerForPick(++this.scene.pickIndex, view.piece);
-        view.piece.display();
-        if (this.scene.pickIndex == this.scene.pickedIndex)
-            //this.requestPlay([0,0,'whitePiece'])    
-        this.requestValidPlays(view.piece.color);*/
+
+        this.scene.registerForPick(++this.scene.pickIndex, view.assertPlayer);
+        view.assertPlayer.display();
+        if (61 == this.scene.pickedIndex)
+            this.requestCvC();  
+        this.scene.registerForPick(++this.scene.pickIndex, view.assertPlayer);
+        view.playBot.display();
+        if (62 == this.scene.pickedIndex)
+            this.requestBotPlay(model.level);
+        
         this.scene.clearPickRegistration();
         this.scene.popMatrix();
     }
