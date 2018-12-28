@@ -181,7 +181,7 @@ class GameController extends CGFobject {
     displayPieces(pieces, currTime) {
         for (let i = 0; i < pieces.length; i++) {
             this.scene.registerForPick(++this.scene.pickIndex, pieces[i]);
-            pieces[i].display(view.board.selectedCell, currTime);
+            pieces[i].display(view.board.selectedCell, currTime, this.validPlay);
         }
     }
 
@@ -193,7 +193,7 @@ class GameController extends CGFobject {
     display() {
         this.play();
         let ignore = true;
-        if (this.checkSelected() == "OK" /*&& this.validPlay*/)
+        if (this.checkSelected() == "OK")
             ignore = false;
      
         let currTime = this.scene.currTime;
