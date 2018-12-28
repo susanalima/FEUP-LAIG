@@ -13,6 +13,7 @@ class Piece extends CGFobject {
 		this.piece = new MyCylinder(scene, 30, 20, 1.5, 1.5, 0.8);
 		this.texture = texture;
 		this.visible = true;
+		this.center = center;
 		this.x = center[0];
 		this.y = center[1];
 		this.z = 0;
@@ -22,6 +23,8 @@ class Piece extends CGFobject {
 		this.color = color;
 		this.parabolic = null;
 		this.locked = false //for when a piece is moved it cannot be moved anymore
+		this.line = null;
+		this.column = null;
 	};
 
 	update(currTime, cell) {
@@ -33,31 +36,33 @@ class Piece extends CGFobject {
 			deltaT = currTime - this.lastTime;
 		}
 		if(this.parabolic != null)
-			this.parabolicAnimate(deltaT, cell);
+		{
+			this.selected = false;
+			if(cell != null)
+			{
+				cell.selected = false;
+				this.column = cell.line;
+				this.line = cell.column;
+				console.log(this.line);
+				console.log(this.column);
+			}
+			this.parabolicAnimate(deltaT);
+		}
+			
 		this.lastTime = currTime;
 	}
 
-	parabolicAnimate(deltaT, cell){
-		if(cell != null)
-			cell.selected = false;
-		this.selected = false;
-		
+	parabolicAnimate(deltaT){
 		if(this.parabolic.end)
-			return;
-
+			true;
 		if(this.parabolic.time > this.animationTime){
 			this.parabolic.end = true;
-			this.selected =false;
-			this.locked =true;
-			
 			return;
 		}
-	
 		let timeX = this.parabolic.deltaX * deltaT /this.animationTime;
 		let timeY = this.parabolic.deltaY * deltaT /this.animationTime;
 		let timeZ = this.parabolic.maxZ * deltaT /this.animationTime;
-		
-		
+
 		this.parabolic.time += deltaT;
 
 		this.x += timeX;
@@ -109,7 +114,6 @@ class Piece extends CGFobject {
 			this.selected = !this.selected;
 		if (this.selected && cell != null && this.parabolic == null)
 			this.createParabolicAnimation([this.x, this.y], 3, [cell.x,cell.z]);
-
 		this.update(currTime, cell);
 		this.scene.translate(this.x, this.y, this.z);
 		this.texture.bind();

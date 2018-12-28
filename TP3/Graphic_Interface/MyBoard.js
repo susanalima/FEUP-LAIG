@@ -46,7 +46,7 @@ class MyBoard extends CGFobject {
                 let center = this.hex_to_pixel(q, r);
                 let line = q + 4;
                 let column = (q + r + 4) * 2;
-                let cell = new BoardCell(this.scene, this.cell_radius, center, line, column);
+                let cell = new BoardCell(this.scene, this.cell_radius, center, column, line);
                 this.cells.push(cell);
             }
         }

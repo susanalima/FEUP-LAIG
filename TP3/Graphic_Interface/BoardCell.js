@@ -10,7 +10,7 @@ class BoardCell extends CGFobject {
 	 */
 	constructor(scene, radius, center, column, line) {
         super(scene);
-        this.cell = new MyPrism(scene,6,1,0.1,radius);
+		this.cell = new MyPrism(scene,6,1,0.1,radius);
         this.x = center[0]; 
 		this.z = center[1];
 		this.texture = new CGFtexture(this.scene, "scenes/images/batman.jpg");

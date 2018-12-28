@@ -107,6 +107,8 @@ class GameController extends CGFobject {
     undoLastPlay(){
         this.requestSwitchPlayer();
         //animacao
+        let play = model.undoLastPlay();
+       // view.undoPlay(play[0][0], play[0][1], play[1][1]);
     }
 
 
@@ -150,7 +152,7 @@ class GameController extends CGFobject {
 
     play(){
         if(this.selectedPiece != null && view.board.selectedCell != null )
-            this.requestPlay([view.board.selectedCell.line, view.board.selectedCell.column, this.selectedPiece.color])
+            this.requestPlay([view.board.selectedCell.column, view.board.selectedCell.line, this.selectedPiece.color])
     }
 
     display() {
@@ -169,11 +171,11 @@ class GameController extends CGFobject {
         this.scene.registerForPick(++this.scene.pickIndex, view.assertPlayer);
         view.assertPlayer.display();
         if (61 == this.scene.pickedIndex)
-            this.requestCvC();  
+            this.requestPvP();  
         this.scene.registerForPick(++this.scene.pickIndex, view.assertPlayer);
         view.playBot.display();
         if (62 == this.scene.pickedIndex)
-            this.requestBotPlay(model.level);
+            this.undoLastPlay();
         
         this.scene.clearPickRegistration();
         this.scene.popMatrix();
