@@ -7,11 +7,12 @@ class Piece extends CGFobject {
 	 * Constructs an object of class Piece
 	 * @param {Object} scene Scene in which the piece is represented
 	 */
-	constructor(scene, center, texture, color) {
+	constructor(scene, center, texture, color, sText) {
 		super(scene);
 		//(scene, slices, stacks, base, top, height)
 		this.piece = new MyCylinder(scene, 30, 20, 1.5, 1.5, 0.8);
 		this.texture = texture;
+		this.selectedText = new CGFtexture(scene, "./scenes/images/selected_neon.jpg");
 		this.visible = true;
 		this.x = center[0];
 		this.y = center[1];
@@ -47,9 +48,9 @@ class Piece extends CGFobject {
 
 		if(this.parabolic.time > this.animationTime){
 			this.parabolic.end = true;
-			this.selected =false;
-			this.locked =true;
-			
+			this.selected = false;
+			this.locked = true;
+			this.swapText();
 			return;
 		}
 	
@@ -87,9 +88,15 @@ class Piece extends CGFobject {
 			time: 0,
 			end: false
 		};
+		
 
 	}
 
+	swapText(){
+		let temp = this.selectedText;
+		this.selectedText = this.texture;
+		this.texture = temp;
+	}
 
 	animate(cellPosition, deltaT) {
 		let deltaX = cellPosition[0] - this.x;
@@ -105,14 +112,20 @@ class Piece extends CGFobject {
 	display(cell, currTime) {
 		this.scene.pushMatrix();
 		this.scene.rotate(-Math.PI / 2, 1, 0, 0);
-		if (this.scene.pickIndex == this.scene.pickedIndex)
+		if (this.scene.pickIndex == this.scene.pickedIndex){
 			this.selected = !this.selected;
+			this.swapText();
+			console.log("??: "+ this.selected);
+		}
 		if (this.selected && cell != null && this.parabolic == null)
 			this.createParabolicAnimation([this.x, this.y], 10, [cell.x,cell.z]);
+	
+		this.texture.bind();
+
 
 		this.update(currTime, cell);
 		this.scene.translate(this.x, this.y, this.z);
-		this.texture.bind();
+		
 		this.piece.display();
 		this.scene.popMatrix();
 	}

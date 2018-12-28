@@ -53,6 +53,7 @@
 		<texture id="green" file= "./scenes/images/neon.jpg" />
 		<texture id="roxo" file= "./scenes/images/roxo.png" />
 		<texture id="space" file= "./scenes/images/space.png" />
+		
     </textures>
   
   <materials>

@@ -5,7 +5,7 @@ var view;
  */
 class GameController extends CGFobject {
 
-  
+
     /**
  	 * Constructs an object of class TheGame
 	 * @param {Object} scene Scene in which the game is represented
@@ -33,26 +33,26 @@ class GameController extends CGFobject {
         request.send();
     }
 
-    requestQuit(){
+    requestQuit() {
         var quit = ['[00]'];
         this.getPrologRequest(quit, this.handleQuitReply);
     }
 
     requestValidPlays(color) {
         let board = model.getBoardState();
-        var getValidPlays = ['[01', board, color+']'];
+        var getValidPlays = ['[01', board, color + ']'];
         this.getPrologRequest(getValidPlays, this.handleValidPlaysReply);
     }
 
     requestPlay(play) {
         let board = model.getBoardState();
-        var move = ['[02',board, '[' + play + ']' + ']']; // '[0,0,whitePiece]'
+        var move = ['[02', board, '[' + play + ']' + ']']; // '[0,0,whitePiece]'
         this.getPrologRequest(move, this.handlePlayReply);
     }
 
     requestSwitchPlayer() {
-         var switchPlayer = ['[03]'];
-         this.getPrologRequest(switchPlayer, this.handleSwitchPlayerReply);
+        var switchPlayer = ['[03]'];
+        this.getPrologRequest(switchPlayer, this.handleSwitchPlayerReply);
     }
 
     handleQuitReply(data) {
@@ -62,7 +62,7 @@ class GameController extends CGFobject {
     handleValidPlaysReply(data) {
         //console.log(data.target.response);
         //animation
-       console.log(model.parseValidPlays(data.target.response));  
+        console.log(model.parseValidPlays(data.target.response));
     }
 
     handlePlayReply(data) {
@@ -81,11 +81,11 @@ class GameController extends CGFobject {
         console.log(data.target.response);
     }
 
-    showValidCells(){
+    showValidCells() {
         this.requestValidPlays();
     }
 
-    undoLastPlay(){
+    undoLastPlay() {
         this.requestSwitchPlayer();
         //animacao
     }
@@ -96,9 +96,11 @@ class GameController extends CGFobject {
             if (view.thanosPieces[i].selected) {
                 counter++;
                 if (view.thanosPieces[i] != this.selectedPiece) {
-                    if (this.selectedPiece != null)
+                    if (this.selectedPiece != null) {
                         this.selectedPiece.selected = false;
+                    }
                     this.selectedPiece = view.thanosPieces[i];
+
                 }
             }
         }
@@ -107,53 +109,54 @@ class GameController extends CGFobject {
                 counter++;
                 if (view.gamoraPieces[i] != this.selectedPiece) {
                     if (this.selectedPiece != null)
+                    {
                         this.selectedPiece.selected = false;
+                    }
                     this.selectedPiece = view.gamoraPieces[i];
                 }
             }
         }
+        if (this.selectedPiece != null)
         //console.log("Selected:" + counter);
         if (counter == 1)
             return "OK"; //One piece selected
-        else if (counter == 0)
-            {
-                this.selectedPiece = null;
-                return "NOTOK"; // No pieces selected
-            }
-          
+        else if (counter == 0) {
+            this.selectedPiece = null;
+            return "NOTOK"; // No pieces selected
+        }
+
         else
             return "ERROR"; //More than one piece was selected (Only one piece should be selected at any time)
     }
 
-    displayPieces(pieces, currTime){
+    displayPieces(pieces, currTime) {
         for (let i = 0; i < pieces.length; i++) {
             this.scene.registerForPick(++this.scene.pickIndex, pieces[i]);
             pieces[i].display(view.board.selectedCell, currTime);
         }
     }
 
-    play(){
-        if(this.selectedPiece != null && view.board.selectedCell != null )
+    play() {
+        if (this.selectedPiece != null && view.board.selectedCell != null)
             this.requestPlay([view.board.selectedCell.line, view.board.selectedCell.column, this.selectedPiece.color])
     }
 
     display() {
         this.play();
         let ignore = true;
-        if (this.checkSelected() == "OK" && this.validPlay)
+        if (this.checkSelected() == "OK" /*&& this.validPlay*/)
             ignore = false;
-        else
-            ignore = true;
+     
         let currTime = this.scene.currTime;
         this.scene.pushMatrix();
         view.board.display(ignore);
         this.displayPieces(view.gamoraPieces, currTime);
         this.displayPieces(view.thanosPieces, currTime);
-        /*this.scene.registerForPick(++this.scene.pickIndex, view.piece);
+        this.scene.registerForPick(++this.scene.pickIndex, view.piece);
         view.piece.display();
         if (this.scene.pickIndex == this.scene.pickedIndex)
             //this.requestPlay([0,0,'whitePiece'])    
-        this.requestValidPlays(view.piece.color);*/
+            this.requestValidPlays(view.piece.color);
         this.scene.clearPickRegistration();
         this.scene.popMatrix();
     }
