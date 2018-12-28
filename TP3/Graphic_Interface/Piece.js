@@ -104,7 +104,7 @@ class Piece extends CGFobject {
 		if (this.scene.pickIndex == this.scene.pickedIndex)
 			this.selected = !this.selected;
 		if (this.selected && cell != null && this.parabolic == null)
-			this.createParabolicAnimation([this.x, this.y], 3, [cell.x,cell.z]);
+			this.createParabolicAnimation([this.x, this.y], 10, [cell.x,cell.z]);
 
 		this.update(currTime, cell);
 		this.scene.translate(this.x, this.y, this.z);

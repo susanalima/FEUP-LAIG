@@ -19,6 +19,7 @@ class GameController extends CGFobject {
         model = new GameModel();
         view = new GameView(scene, boardTexture, cellTexture, pieceTexture1, pieceTexture2);
         this.selectedPiece = null;
+        this.validPlay = false;
     };
 
 
@@ -66,7 +67,12 @@ class GameController extends CGFobject {
 
     handlePlayReply(data) {
         console.log(data.target.response);
-        //animation
+        this.validPlay = true; //animation
+        //Is this ok? should animation function be always called here?
+        //should only the first call to the animation be called here?
+        //which prolog file should be consulted game/main/?
+        //sicstus implementation for testing
+        //Meeting sugested...
     }
 
     handleSwitchPlayerReply(data) {
@@ -122,7 +128,7 @@ class GameController extends CGFobject {
 
     display() {
         let ignore = true;
-        if (this.checkSelected() == "OK")
+        if (this.checkSelected() == "OK" && this.validPlay)
             ignore = false;
         else
             ignore = true;
