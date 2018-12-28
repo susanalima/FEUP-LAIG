@@ -248,6 +248,11 @@ getInfo(Board,Lvl, X,Y,Color) :-
   getCurrentPlayerBot(1),
   choose_move(Board, Lvl, X, Y, Color).
 
+
+getBotInfo(Board,Lvl, X,Y,Color) :-
+  getCurrentPlayerBot(1),
+  choose_move(Board, Lvl, X, Y, Color).
+
 % play_game_loop(+Board, +Lvl, +Winner)
 % implements the game loop
 % the game loop ends where one of the players wins or a draw occurs

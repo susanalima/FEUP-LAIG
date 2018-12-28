@@ -50,7 +50,6 @@ class Piece extends CGFobject {
 			this.parabolic.end = true;
 			this.selected = false;
 			this.locked = true;
-	
 			return;
 		}
 	

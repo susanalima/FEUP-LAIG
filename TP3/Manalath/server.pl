@@ -114,7 +114,16 @@ execute_request([Code,Board,Move], [Player,NewWinner,Move]) :-
     Code = 02,
 	read_move(Move, X, Y, Color),
 	getCurrentPlayer(Player),
-    play(Board,X,Y,Color,NewBoard,NewWinner).
+	getCurrentPlayerBot(0),
+	play(Board,X,Y,Color,NewBoard,NewWinner), nl,nl,nl,
+	display_game(NewBoard,Player), !.
+
+execute_request([Code,Board, Lvl], [Player,NewWinner,[X,Y,Color]]) :-
+	Code = 07,
+	getBotInfo(Board,Lvl,X,Y,Color),
+	getCurrentPlayer(Player),
+	play(Board,X,Y,Color,NewBoard,NewWinner), nl,nl,nl,
+	display_game(NewBoard,Player), !.
 
 execute_request([Code], Reply) :-
     Code = 03,
@@ -124,6 +133,24 @@ execute_request([Code], Reply) :-
 execute_request([Code], quit) :-
     Code = 00.
 
+execute_request([Code], [Bot1, Bot2]) :-
+	Code = 04,
+	assertPlayers_PvP,
+	getPlayer1Bot(Bot1),
+	getPlayer2Bot(Bot2).
+
+execute_request([Code], [Bot1, Bot2]) :-
+	Code = 05,
+	assertPlayers_PvC,
+	getPlayer1Bot(Bot1),
+	getPlayer2Bot(Bot2).
+
+execute_request([Code], [Bot1, Bot2]) :-
+	Code = 06,
+	assertPlayers_CvC,
+	getPlayer1Bot(Bot1),
+	getPlayer2Bot(Bot2).
+
 parse_input([Code,Board,Color]) :-
     validateCode(Code),
     validateColor(Color).
@@ -132,6 +159,9 @@ parse_input([Code,Board,Move]) :-
 	validateMove(Board,Move).
 parse_input([Code]) :-
     validateCode(Code).
+parse_input([Code, Board, Level]) :-
+	validateCode(Code),
+	validateLevel(Level).
 parse_input(test(C,N)) :- test(C,Res,N).
 
 test(_,[],N) :- N =< 0.
@@ -145,6 +175,14 @@ validateCode(Code) :-
     Code = 02. %Play
 validateCode(Code) :-
     Code = 03. %SwitchPlayer
+validateCode(Code) :-
+	Code = 04.
+validateCode(Code) :-
+	Code = 05.
+validateCode(Code) :-
+	Code = 06.
+validateCode(Code) :-
+	Code = 07.
 
 validateColor(Color) :-
     Color = 'blackPiece'.
@@ -153,4 +191,7 @@ validateColor(Color) :-
 
 validateMove(Board,[X,Y,Color]) :-
 	isValidPlay(Board,X,Y,Color).
+
+validateLevel(1).
+validateLevel(2).
 

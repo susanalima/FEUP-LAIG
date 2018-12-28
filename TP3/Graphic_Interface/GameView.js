@@ -21,7 +21,9 @@ class GameView extends CGFobject {
         this.gamoraPieces = [];
         this.createPieces(this.thanosPieces, pieceTexture1, pieceTexture2, 18, 32, 'blackPiece', 'whitePiece');
         this.createPieces(this.gamoraPieces, pieceTexture2, pieceTexture1, -18, -32, 'whitePiece', 'blackPiece');
-        this.piece = new Piece(this.scene, [0, 0], pieceTexture1, 'whitePiece');
+        this.assertPlayer = new Piece(this.scene, [-30, 0], pieceTexture1, 'whitePiece');
+        this.playBot = new Piece(this.scene, [-25,8], pieceTexture2, 'blackPiece');
+
     };
 
 
