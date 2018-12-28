@@ -5,7 +5,7 @@ var view;
  */
 class GameController extends CGFobject {
 
-  
+
     /**
  	 * Constructs an object of class TheGame
 	 * @param {Object} scene Scene in which the game is represented
@@ -19,6 +19,7 @@ class GameController extends CGFobject {
         model = new GameModel();
         view = new GameView(scene, boardTexture, cellTexture, pieceTexture1, pieceTexture2);
         this.selectedPiece = null;
+        this.validPlay = false;
     };
 
 
@@ -40,13 +41,13 @@ class GameController extends CGFobject {
 
     requestValidPlays(color) {
         let board = model.getBoardState();
-        var getValidPlays = ['[01', board, color+']'];
+        var getValidPlays = ['[01', board, color + ']'];
         this.getPrologRequest(getValidPlays, this.handleValidPlaysReply);
     }
 
     requestPlay(play) {
         let board = model.getBoardState();
-        var move = ['[02',board, '[' + play + ']' + ']']; // '[0,0,whitePiece]'
+        var move = ['[02', board, '[' + play + ']' + ']']; // '[0,0,whitePiece]'
         this.getPrologRequest(move, this.handlePlayReply);
     }
 
@@ -57,8 +58,8 @@ class GameController extends CGFobject {
     }
 
     requestSwitchPlayer() {
-         var switchPlayer = ['[03]'];
-         this.getPrologRequest(switchPlayer, this.handleSwitchPlayerReply);
+        var switchPlayer = ['[03]'];
+        this.getPrologRequest(switchPlayer, this.handleSwitchPlayerReply);
     }
 
     requestPvP(){
@@ -83,11 +84,17 @@ class GameController extends CGFobject {
     handleValidPlaysReply(data) {
         //console.log(data.target.response);
         //animation
-       console.log(model.parseValidPlays(data.target.response));  
+        console.log(model.parseValidPlays(data.target.response));
     }
 
     handlePlayReply(data) {
         console.log(data.target.response);
+        this.validPlay = true; //animation
+        //Is this ok? should animation function be always called here?
+        //should only the first call to the animation be called here?
+        //which prolog file should be consulted game/main/?
+        //sicstus implementation for testing
+        //Meeting sugested...
         //animation
         model.parsePlayReply(data.target.response);
     }
@@ -104,11 +111,54 @@ class GameController extends CGFobject {
         this.requestValidPlays();
     }
 
-    undoLastPlay(){
+    undoLastPlay() {
         this.requestSwitchPlayer();
         //animacao
         let play = model.undoLastPlay();
        // view.undoPlay(play[0][0], play[0][1], play[1][1]);
+    }
+
+
+    checkSelected() {
+        let counter = 0;
+        for (let i = 0; i < view.thanosPieces.length; i++) {
+            if (view.thanosPieces[i].selected) {
+                counter++;
+                if (view.thanosPieces[i] != this.selectedPiece) {
+                    if (this.selectedPiece != null) {
+                        this.selectedPiece.selected = false;
+                        this.selectedPiece.swapText();
+                    }
+                    this.selectedPiece = view.thanosPieces[i];
+                    if(!this.selectedPiece.locked)
+                        this.selectedPiece.swapText();
+                }
+            }
+        }
+        for (let i = 0; i < view.gamoraPieces.length; i++) {
+            if (view.gamoraPieces[i].selected) {
+                counter++;
+                if (pieces[i] != this.selectedPiece) {
+                    if (this.selectedPiece != null)
+                    {
+                        this.selectedPiece.selected = false;
+                        this.selectedPiece.swapText();
+                    }
+                    this.selectedPiece = view.gamoraPieces[i];
+                    if(!this.selectedPiece.locked)
+                        this.selectedPiece.swapText();
+                }
+            }
+        }
+        if (this.selectedPiece != null)
+        //console.log("Selected:" + counter);
+        if (counter == 1)
+            return "OK"; //One piece selected
+        else if (counter == 0) {
+            this.selectedPiece.swapText();
+            this.selectedPiece = null;
+            return "NOTOK"; // No pieces selected
+        }
     }
 
 
@@ -118,32 +168,19 @@ class GameController extends CGFobject {
                 counter++;
                 if (pieces[i] != this.selectedPiece) {
                     if (this.selectedPiece != null)
+                    {
                         this.selectedPiece.selected = false;
-                    this.selectedPiece = pieces[i];
+                        this.selectedPiece = pieces[i];
+                    }
                 }
             }
         }
-        return counter;
-    }
-    
+            return counter;
+        }
+        
 
-    checkSelected() {
-        let counter = 0;
-        counter = this.setSelected(view.thanosPieces, counter);
-        counter = this.setSelected(view.gamoraPieces, counter);
-        //console.log("Selected:" + counter);
-        if (counter == 1)
-            return "OK"; //One piece selected
-        else if (counter == 0)
-            {
-                this.selectedPiece = null;
-                return "NOTOK"; // No pieces selected
-            } 
-        else
-            return "ERROR"; //More than one piece was selected (Only one piece should be selected at any time)
-    }
 
-    displayPieces(pieces, currTime){
+    displayPieces(pieces, currTime) {
         for (let i = 0; i < pieces.length; i++) {
             this.scene.registerForPick(++this.scene.pickIndex, pieces[i]);
             pieces[i].display(view.board.selectedCell, currTime);
@@ -158,10 +195,9 @@ class GameController extends CGFobject {
     display() {
         this.play();
         let ignore = true;
-        if (this.checkSelected() == "OK")
+        if (this.checkSelected() == "OK" /*&& this.validPlay*/)
             ignore = false;
-        else
-            ignore = true;
+     
         let currTime = this.scene.currTime;
         this.scene.pushMatrix();
         view.board.display(ignore);
@@ -169,7 +205,7 @@ class GameController extends CGFobject {
         this.displayPieces(view.thanosPieces, currTime);
 
         this.scene.registerForPick(++this.scene.pickIndex, view.assertPlayer);
-        view.assertPlayer.display();
+        //view.assertPlayer.display();
         if (61 == this.scene.pickedIndex)
             this.requestPvP();  
         this.scene.registerForPick(++this.scene.pickIndex, view.assertPlayer);
