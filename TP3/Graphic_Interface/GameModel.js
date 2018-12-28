@@ -84,8 +84,12 @@ class GameModel  {
     }
 
     undoLastPlay(){
+        let lastCoords = this.playsCoords[this.playsCoords.length -1];
         this.playsCoords.pop();
+        let lastValues = this.playsValues[this.playsValues.length -1];
         this.playsValues.pop();
+        console.log([lastCoords, lastValues]);
+        return [lastCoords, lastValues];
     }
 
 };

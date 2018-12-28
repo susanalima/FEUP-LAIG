@@ -19,8 +19,8 @@ class GameView extends CGFobject {
         this.cell_radius = 3;
         this.thanosPieces = [];
         this.gamoraPieces = [];
-        this.createPieces(this.thanosPieces, pieceTexture1, pieceTexture2, 18, 32, 'blackPiece', 'whitePiece');
-        this.createPieces(this.gamoraPieces, pieceTexture2, pieceTexture1, -18, -32, 'whitePiece', 'blackPiece');
+        this.createPieces(this.thanosPieces, pieceTexture2, 18, 32, 'blackPiece');
+        this.createPieces(this.gamoraPieces, pieceTexture1, -18, -32, 'whitePiece');
         this.assertPlayer = new Piece(this.scene, [-30, 0], pieceTexture1, 'whitePiece');
         this.playBot = new Piece(this.scene, [-25,8], pieceTexture2, 'blackPiece');
 
@@ -41,7 +41,7 @@ class GameView extends CGFobject {
     /**
      * Creates the boards cells
      */
-    createPieces(pieces, texture, texture2, translateValueX, translateValueY, color1, color2) {
+    createPieces(pieces, texture, translateValueX, translateValueY, color) {
         let index = 0;
         for (var q = -this.map_radius; q <= this.map_radius; q++) {
             var r1 = Math.max(-this.map_radius, -q - this.map_radius);
@@ -51,16 +51,50 @@ class GameView extends CGFobject {
                 center[1] += translateValueY;
                 center[0] += translateValueX;
                 if (index < 15) {
-                    let piece = new Piece(this.scene, center, texture, color2);
+                    let piece = new Piece(this.scene, center, texture, color);
                     pieces.push(piece);
                 }
                 if (index >= 22) {
-                    let piece = new Piece(this.scene, center, texture2, color1);
+                    let piece = new Piece(this.scene, center, texture, color);
                     pieces.push(piece);
                 }
                 index++;
             }
         }
+    }
+
+    undoPlay(x,y,color){
+        /*console.log(x);
+        console.log(y);*/
+        console.log(color);
+        let piece = this.getPiece(x,y,color);
+        console.log(piece);
+        if (piece == null)
+            return null;
+        piece.createParabolicAnimation([x,y],3,piece.center);
+        piece.line = null;
+        piece.column = null;
+        piece.locked = false;
+        piece.lastTime = null;
+    }
+
+    searchPiece(line,column,color,pieces) {
+        for (let i = 0; i < pieces.length; i++)
+        {
+            if(pieces[i].line == line && pieces[i].column == column && pieces[i].color == color)
+            return pieces[i];
+        }
+        return null;
+    }
+
+
+    getPiece(line,column,color) {
+        let piece;
+        if(color == 'blackPiece')
+            piece = this.searchPiece(line, column,color, this.thanosPieces);
+        if(color == 'whitePiece')
+            piece = this.searchPiece(line, column,color, this.gamoraPieces);
+        return piece;
     }
 
 };

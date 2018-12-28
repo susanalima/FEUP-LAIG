@@ -14,6 +14,7 @@ class Piece extends CGFobject {
 		this.texture = texture;
 		this.selectedText = new CGFtexture(scene, "./scenes/images/selected_neon.jpg");
 		this.visible = true;
+		this.center = center;
 		this.x = center[0];
 		this.y = center[1];
 		this.z = 0;
@@ -23,6 +24,8 @@ class Piece extends CGFobject {
 		this.color = color;
 		this.parabolic = null;
 		this.locked = false //for when a piece is moved it cannot be moved anymore
+		this.line = null;
+		this.column = null;
 	};
 
 	update(currTime, cell) {
@@ -34,30 +37,33 @@ class Piece extends CGFobject {
 			deltaT = currTime - this.lastTime;
 		}
 		if(this.parabolic != null)
-			this.parabolicAnimate(deltaT, cell);
+		{
+			this.selected = false;
+			if(cell != null)
+			{
+				cell.selected = false;
+				this.column = cell.line;
+				this.line = cell.column;
+				console.log(this.line);
+				console.log(this.column);
+			}
+			this.parabolicAnimate(deltaT);
+		}
+			
 		this.lastTime = currTime;
 	}
 
-	parabolicAnimate(deltaT, cell){
-		if(cell != null)
-			cell.selected = false;
-		this.selected = false;
-		
+	parabolicAnimate(deltaT){
 		if(this.parabolic.end)
-			return;
-
+			true;
 		if(this.parabolic.time > this.animationTime){
 			this.parabolic.end = true;
-			this.selected = false;
-			this.locked = true;
 			return;
 		}
-	
 		let timeX = this.parabolic.deltaX * deltaT /this.animationTime;
 		let timeY = this.parabolic.deltaY * deltaT /this.animationTime;
 		let timeZ = this.parabolic.maxZ * deltaT /this.animationTime;
-		
-		
+
 		this.parabolic.time += deltaT;
 
 		this.x += timeX;
