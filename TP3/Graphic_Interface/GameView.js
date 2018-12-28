@@ -19,8 +19,8 @@ class GameView extends CGFobject {
         this.cell_radius = 3;
         this.thanosPieces = [];
         this.gamoraPieces = [];
-        this.createPieces(this.thanosPieces, pieceTexture1, pieceTexture2, 18, 32, 'blackPiece');
-        this.createPieces(this.gamoraPieces, pieceTexture2, pieceTexture1, -18, -32, 'whitePiece');
+        this.createPieces(this.thanosPieces, pieceTexture1, pieceTexture2, 18, 32, 'blackPiece', 'whitePiece');
+        this.createPieces(this.gamoraPieces, pieceTexture2, pieceTexture1, -18, -32, 'whitePiece', 'blackPiece');
         this.piece = new Piece(this.scene, [0, 0], pieceTexture1, 'whitePiece');
     };
 
@@ -39,7 +39,7 @@ class GameView extends CGFobject {
     /**
      * Creates the boards cells
      */
-    createPieces(pieces, texture, texture2, translateValueX, translateValueY, color) {
+    createPieces(pieces, texture, texture2, translateValueX, translateValueY, color1, color2) {
         let index = 0;
         for (var q = -this.map_radius; q <= this.map_radius; q++) {
             var r1 = Math.max(-this.map_radius, -q - this.map_radius);
@@ -49,11 +49,11 @@ class GameView extends CGFobject {
                 center[1] += translateValueY;
                 center[0] += translateValueX;
                 if (index < 15) {
-                    let piece = new Piece(this.scene, center, texture, color);
+                    let piece = new Piece(this.scene, center, texture, color2);
                     pieces.push(piece);
                 }
                 if (index >= 22) {
-                    let piece = new Piece(this.scene, center, texture2, color);
+                    let piece = new Piece(this.scene, center, texture2, color1);
                     pieces.push(piece);
                 }
                 index++;
