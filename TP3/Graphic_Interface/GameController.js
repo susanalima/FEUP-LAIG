@@ -101,8 +101,9 @@ class GameController extends CGFobject {
 
     handlePlayReply(data) {
         console.log(data.target.response);
-        this.selectedPiece.createParabolicAnimation([this.selectedPiece.x, this.selectedPiece.y], 10, [view.board.selectedCell.x, view.board.selectedCell.z]);
-        
+        if(this.selectedPiece != null)
+            this.selectedPiece.createParabolicAnimation([this.selectedPiece.x, this.selectedPiece.y], 10, [view.board.selectedCell.x, view.board.selectedCell.z]);
+      
         //Is this ok? NO should animation function be always called here? SIM
         //should only the first call to the animation be called here? what?
         //which prolog file should be consulted game/main/? server
@@ -195,11 +196,11 @@ class GameController extends CGFobject {
 
 
     makePickingPiecesSide(pieces) {
+       
         for (let i = 0; i < pieces.length; i++){
             this.scene.registerForPick(++this.scene.pickIndex, pieces[i]);
             pieces[i].display(view.board.selectedCell, this.scene.currTime);
-           if(pieces[i].parabolic != null && pieces[i].parabolic.end == true)
-            this.alreadyWaiting =false;
+          
         }
     }
 
@@ -316,21 +317,30 @@ class GameController extends CGFobject {
 
 
     display() {
-        view.board.checkSelectedCells();
-
+        //view.board.checkSelectedCells();
+        view.board.checkSelectedCells(this.selectedPiece);
+      
         this.play();
+        if(this.selectedPiece !=null && this.selectedPiece.parabolic != null)
+        this.alreadyWaiting = false;
+
         let ignore = true;
         if (this.checkSelected() == "OK")
             ignore = false;
-
+    
         let currTime = this.scene.currTime;
         this.scene.pushMatrix();
         this.makePickingCells();
+   
         view.board.display();
+      
+
         this.makePickingPieces();
+    
 
         //this.displayPieces(view.gamoraPieces, currTime);
         //this.displayPieces(view.thanosPieces, currTime);
+       
 
         this.scene.registerForPick(++this.scene.pickIndex, view.assertPlayer);
         view.assertPlayer.display();
@@ -343,6 +353,7 @@ class GameController extends CGFobject {
 
         this.scene.clearPickRegistration();
         this.scene.popMatrix();
+
     }
 };
 

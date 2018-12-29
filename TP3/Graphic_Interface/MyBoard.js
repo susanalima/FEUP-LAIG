@@ -53,19 +53,17 @@ class MyBoard extends CGFobject {
         }
     }
 //Needs to be changed/deleted
-    checkSelectedCells(){
+    checkSelectedCells(piece){
         let noSelected = true;
         for (let i = 0; i < this.cells.length; i++) {
-            if (this.cells[i].getSelected()) {
+            if (this.cells[i].getSelected() && this.cells[i] != null) {
                 if(this.selectedCell != null  && this.cells[i] != this.selectedCell)
                     this.selectedCell.selected = false;
                 this.selectedCell = this.cells[i];
                 noSelected = false;
             }
         }
-        if(noSelected){
-            if(this.selectedCell != null)
-                this.selectedCell.selected = false;
+        if(this.selectedCell != null && this.selectedCell.selected ==false && piece == null){
             this.selectedCell = null;
         }
     }
@@ -81,8 +79,6 @@ class MyBoard extends CGFobject {
     displayCells(){
         for(let i = 0; i < this.cells.length ; i++)
             this.cells[i].display();
-        
-        
     }
 
 	/**
@@ -107,7 +103,7 @@ class MyBoard extends CGFobject {
         this.cellTexture.bind();
         //this.displayCells();
        
-        this.checkSelectedCells();
+        //this.checkSelectedCells();
         
         this.scene.popMatrix();
         this.scene.popMatrix();
