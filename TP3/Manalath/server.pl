@@ -153,7 +153,7 @@ execute_request([Code], [Bot1, Bot2]) :-
 
 execute_request([Code], Reply) :-
 	Code = 08,
-	getCurrentPlayerBot(Reply),
+	getCurrentPlayerBot(Reply).
 
 
 parse_input([Code,Board,Color]) :-
