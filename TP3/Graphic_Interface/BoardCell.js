@@ -14,9 +14,12 @@ class BoardCell extends CGFobject {
         this.x = center[0]; 
 		this.z = center[1];
 		this.texture = new CGFtexture(this.scene, "scenes/images/batman.jpg");
+		this.validText = new CGFtexture(scene, "./scenes/images/red.png");
+
 		this.selected = false;
 		this.column = column;
 		this.line = line;
+		this.valid = false;
 	};
 	
 	getSelected(){
@@ -34,8 +37,12 @@ class BoardCell extends CGFobject {
 			this.selected = !this.selected;
 		if(this.selected)
 			this.texture.bind();
-		else
-			this.texture.unbind();	
+		else{
+			if(this.valid)
+				this.validText.bind();
+			else
+				this.texture.unbind();
+		}
 		this.cell.display();
 		this.texture.unbind();
       	this.scene.popMatrix();

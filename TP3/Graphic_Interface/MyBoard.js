@@ -77,10 +77,17 @@ class MyBoard extends CGFobject {
         this.cellTexture.unbind();
     }
 
+    displayCells(){
+        for(let i = 0; i < this.cells.length ; i++)
+            this.cells[i].display();
+        
+        
+    }
+
 	/**
 	 * Displays the board in member scene
 	 */
-    display(ignore) {
+    display() {
         this.scene.pushMatrix();
 
         this.scene.pushMatrix();
@@ -97,13 +104,8 @@ class MyBoard extends CGFobject {
         this.scene.rotate(Math.PI, 1,0,0);
        
         this.cellTexture.bind();
-        
-        for (let i = 0; i < this.cells.length; i++){
-            if(!ignore)
-                this.scene.registerForPick(++this.scene.pickIndex, this.cells[i]);
-            this.cells[i].display();
-        }
-        this.scene.clearPickRegistration();
+        this.displayCells();
+       
         this.checkSelectedCells();
         
         this.scene.popMatrix();

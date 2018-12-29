@@ -14,10 +14,7 @@ class Vehicle extends CGFobject {
         this.circle = new MyCylinderBase(scene, 20, 0.55);
         this.backCylinder = new MyCylinder(scene, 20, 10, 0.6, 0.6, 0.1);
 
-        this.explosionTexture = new CGFtexture(this.scene, "./scenes/images/lava.png");
-        this.vertexTexture = new CGFtexture(this.scene, "./scenes/images/height_volcano.jpg");
-        this.explosionVertex = new CGFtexture(this.scene, "scenes/images/explosion_texture.png");
-
+     
         this.explosionShaderTop = new CGFshader(this.scene.gl, "waterShader.vert", "terrainShader.frag");
         this.explosionShaderTop.setUniformsValues({ uSampler2: 6 });
         this.explosionShaderTop.setUniformsValues({ uSampler1: 5 });

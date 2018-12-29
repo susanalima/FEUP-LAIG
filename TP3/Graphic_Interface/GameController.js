@@ -34,12 +34,12 @@ class GameController extends CGFobject {
         request.send();
     }
 
-    requestCurrentPlayerBot(){
+    requestCurrentPlayerBot() {
         let cp = ['[08]'];
         let handler = this.handleCurrentPlayerRequestBot.bind(this);
-        this.getPrologRequest(cp,handler);
+        this.getPrologRequest(cp, handler);
     }
-    requestQuit(){
+    requestQuit() {
         var quit = ['[00]'];
         let func = this.handleQuitReply.bind(this);
         this.getPrologRequest(quit, func);
@@ -48,7 +48,7 @@ class GameController extends CGFobject {
     requestValidPlays(color) {
         let board = model.getBoardState();
         var getValidPlays = ['[01', board, color + ']'];
-        let handler = this.handleCurrentPlayerRequestBot.bind(this);
+        let handler = this.handleValidPlaysReply.bind(this);
         this.getPrologRequest(getValidPlays, handler);
     }
 
@@ -60,7 +60,7 @@ class GameController extends CGFobject {
 
     requestBotPlay(level) {
         let board = model.getBoardState();
-        var botplay = ['[07',board, level + ']'];
+        var botplay = ['[07', board, level + ']'];
         this.getPrologRequest(botplay, this.handlePlayReply);
     }
 
@@ -69,17 +69,17 @@ class GameController extends CGFobject {
         this.getPrologRequest(switchPlayer, this.handleSwitchPlayerReply);
     }
 
-    requestPvP(){
+    requestPvP() {
         var pvp = ['[04]'];
         this.getPrologRequest(pvp, this.handlePRequest);
     }
 
-    requestPvC(){
+    requestPvC() {
         var pvc = ['[05]'];
         this.getPrologRequest(pvc, this.handlePRequest);
     }
 
-    requestCvC(){
+    requestCvC() {
         var cvc = ['[06]'];
         this.getPrologRequest(cvc, this.handlePRequest);
     }
@@ -93,6 +93,7 @@ class GameController extends CGFobject {
         //console.log(data.target.response);
         //animation
         console.log(model.parseValidPlays(data.target.response));
+        makePickingValidCells(model.parsePlayReply(data.target.response));
     }
 
     handlePlayReply(data) {
@@ -102,10 +103,9 @@ class GameController extends CGFobject {
         //should only the first call to the animation be called here? what?
         //which prolog file should be consulted game/main/? server
         //sicstus implementation for testing
-        //Meeting sugested... no
+        //Meeting sugested... no :(
         //animation
-        model.parsePlayReply(data.target.response);
-        
+
     }
 
     handleSwitchPlayerReply(data) {
@@ -116,13 +116,12 @@ class GameController extends CGFobject {
         console.log(data.target.response);
     }
 
-    handleCurrentPlayerRequestBot(data)
-    {
+    handleCurrentPlayerRequestBot(data) {
         console.log(data.target.response);
         this.currentPlayerBot = parseFloat(data.target.response);
     }
 
-    showValidCells(){
+    showValidCells() {
         this.requestValidPlays();
     }
 
@@ -130,7 +129,7 @@ class GameController extends CGFobject {
         this.requestSwitchPlayer();
         //animacao
         let play = model.undoLastPlay();
-       // view.undoPlay(play[0][0], play[0][1], play[1][1]);
+        // view.undoPlay(play[0][0], play[0][1], play[1][1]);
     }
 
 
@@ -139,98 +138,123 @@ class GameController extends CGFobject {
         counter = this.setSelected(view.thanosPieces, counter);
         counter = this.setSelected(view.gamoraPieces, counter);
         if (this.selectedPiece != null)
-        //console.log("Selected:" + counter);
-        if (counter == 1)
-            return "OK"; //One piece selected
-        else if (counter == 0) {
-            this.selectedPiece.swapText();
-            this.selectedPiece = null;
-            return "NOTOK"; // No pieces selected
-        }
+            //console.log("Selected:" + counter);
+            if (counter == 1)
+                return "OK"; //One piece selected
+            else if (counter == 0) {
+                this.selectedPiece.swapText();
+                this.selectedPiece = null;
+                return "NOTOK"; // No pieces selected
+            }
     }
 
-    setSelected(pieces, counter){
+    setSelected(pieces, counter) {
         for (let i = 0; i < pieces.length; i++) {
             if (pieces[i].selected) {
                 counter++;
                 if (pieces[i] != this.selectedPiece) {
-                    if (this.selectedPiece != null)
-                    {
+                    if (this.selectedPiece != null) {
                         this.selectedPiece.selected = false;
                         this.selectedPiece.swapText();
                     }
                     this.selectedPiece = pieces[i];
-                    if(!this.selectedPiece.locked)
+                    if (!this.selectedPiece.locked)
                         this.selectedPiece.swapText();
                 }
             }
         }
 
-      return counter;
+        return counter;
     }
-        
+
+    makePickingCells() {
+        for (let i = 0; i < this.board.cells.length; i++) {
+            this.scene.registerForPick(++this.scene.pickIndex, this.board.cells[i]);
+        }
+        this.scene.clearPickRegistration();
+    }
+
+    makePickingValidCells(validCells) {
+        let index = 0;
+        for (let i = 0; i < this.board.cells.length; i++) {
+            if (validCells[index][0] == this.board.cells[i].line && validCells[index][1] == this.board.cells[i].column) {
+                index++;
+                this.board.cells[i].valid = true;
+                this.scene.registerForPick(++this.scene.pickIndex, this.board.cells[i]);
+            }
+        }
+        this.scene.clearPickRegistration();
+    }
+
+
+    makePickingPiecesSide(pieces) {
+        for (let i = 0; i < pieces.length; i++)
+            this.scene.registerForPick(++this.scene.pickIndex, pieces[i]);
+    }
+    makePickingPieces() {
+        this.makePickingPiecesSide(this.gamoraPieces);
+        this.makePickingPiecesSide(this.thanosPieces);
+        this.scene.clearPickRegistration();
+    }
+
 
 
     displayPieces(pieces, currTime) {
         for (let i = 0; i < pieces.length; i++) {
-            this.scene.registerForPick(++this.scene.pickIndex, pieces[i]);
             if (pieces[i].selected && view.board.selectedCell != null && pieces[i].parabolic == null)
-                pieces[i].createParabolicAnimation([pieces[i].x, pieces[i].y], 10, [view.board.selectedCell.x,view.board.selectedCell.z]);
+                pieces[i].createParabolicAnimation([pieces[i].x, pieces[i].y], 10, [view.board.selectedCell.x, view.board.selectedCell.z]);
             pieces[i].display(view.board.selectedCell, currTime);
         }
     }
 
-    play(){
-        if(this.selectedPiece != null && view.board.selectedCell != null )
+    play() {
+        if (this.selectedPiece != null && view.board.selectedCell != null)
             this.requestPlay([view.board.selectedCell.column, view.board.selectedCell.line, this.selectedPiece.color])
     }
 
-    stateMachine(){
-        switch(this.state)
-        {
+    stateMachine() {
+        switch (this.state) {
             case 'START':
-            //buscar configuraçoes da cena e mandar request consoante as configuraçoes
-            model.updateConfigs();
-            this.state = 'PROCESS_PIECE';
-            break;
+                //buscar configuraçoes da cena e mandar request consoante as configuraçoes
+                model.updateConfigs();
+                this.state = 'PROCESS_PIECE';
+                break;
             case 'PROCESS_PIECE':
-            //ve se o jogado e bot ou nao
-            //se humano
-            //so as peças podem ser selecionadas, fica aqui ate se selecionada uma e faz request dos valid cells
-            //se peça selecionada passa proxima se nao fica aqui
-            //se bot vai para REQUESTBOT
-            break;
+                //ve se o jogado e bot ou nao
+                //se humano
+                //so as peças podem ser selecionadas, fica aqui ate se selecionada uma e faz request dos valid cells
+                //se peça selecionada passa proxima se nao fica aqui
+                //se bot vai para REQUESTBOT
+                break;
             case 'SELECT_CELL':
-            this.requestValidPlays();
-            //as casas sao selecionaveis e as peças tb
-            //se selecionar uma peça volta para p process piece
-            //se selecionar uma casa vai para o request play
-            //faz show das peças válidas selecionaveis
-            break;
-            case 'REQUEST_PLAY_P' :
-            //faz request do play e valida
-            //caso seja valido faz a animaçao e vai para o proximos
-            //caso seja invalida volta para o process piece i guess
-            // win condition se ganhou estado END GAME
-            break;
-            case 'REQUEST_PLAY_B' :
-            //faz request do play DO BOT 
-            // faz a animaçao e vai para o proximos
-            // win condition se ganhou estado END GAME
-            //CHANGE PLAYER BITCHESSSSS
-            break;
+                this.requestValidPlays();
+                //as casas sao selecionaveis e as peças tb
+                //se selecionar uma peça volta para p process piece
+                //se selecionar uma casa vai para o request play
+                //faz show das peças válidas selecionaveis
+                break;
+            case 'REQUEST_PLAY_P':
+                //faz request do play e valida
+                //caso seja valido faz a animaçao e vai para o proximos
+                //caso seja invalida volta para o process piece i guess
+                // win condition se ganhou estado END GAME
+                break;
+            case 'REQUEST_PLAY_B':
+                //faz request do play DO BOT 
+                // faz a animaçao e vai para o proximos
+                // win condition se ganhou estado END GAME
+                //CHANGE PLAYER BITCHESSSSS
+                break;
             case 'WAIT_UNDO':
-            //wait 2s
-            // se undo flag faz undo volta para o process piece
-            //se nao vai para o proximo
-            break;
-            case 'CHANGE_PLAYER' :
-            //animaçao de camara e afins
-            //PROCESS PIECE
-            break;
-            
+                //wait 2s
+                // se undo flag faz undo volta para o process piece
+                //se nao vai para o proximo
+                break;
+            case 'CHANGE_PLAYER':
+                //animaçao de camara e afins
+                //PROCESS PIECE
+                break;
         }
-
     }
 
 
@@ -239,7 +263,7 @@ class GameController extends CGFobject {
         let ignore = true;
         if (this.checkSelected() == "OK")
             ignore = false;
-     
+
         let currTime = this.scene.currTime;
         this.scene.pushMatrix();
         view.board.display(ignore);
@@ -249,12 +273,12 @@ class GameController extends CGFobject {
         this.scene.registerForPick(++this.scene.pickIndex, view.assertPlayer);
         view.assertPlayer.display();
         if (61 == this.scene.pickedIndex)
-            this.requestQuit();  
+            this.requestQuit();
         this.scene.registerForPick(++this.scene.pickIndex, view.assertPlayer);
         view.playBot.display();
         if (62 == this.scene.pickedIndex)
             this.requestValidPlays('blackPiece');
-        
+
         this.scene.clearPickRegistration();
         this.scene.popMatrix();
     }
