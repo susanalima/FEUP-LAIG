@@ -212,48 +212,91 @@ class GameController extends CGFobject {
             this.requestPlay([view.board.selectedCell.column, view.board.selectedCell.line, this.selectedPiece.color])
     }
 
-    stateMachine() {
-        switch (this.state) {
+    getCurrentSelectedPiece(){
+        for(let i = 0; this.thanosPieces.length; i++)
+        {
+            if(this.thanosPieces[i].selected)
+                return this.thanosPieces[i];
+            if(this.gamoraPieces[i].selected)
+                return this.gamoraPieces[i];
+        }
+    }
+
+    stateMachine(){
+        switch(this.state)
+        {
             case 'START':
                 //buscar configuraçoes da cena e mandar request consoante as configuraçoes
                 model.updateConfigs();
                 this.state = 'PROCESS_PIECE';
                 break;
             case 'PROCESS_PIECE':
-                //ve se o jogado e bot ou nao
-                //se humano
-                //so as peças podem ser selecionadas, fica aqui ate se selecionada uma e faz request dos valid cells
-                //se peça selecionada passa proxima se nao fica aqui
-                //se bot vai para REQUESTBOT
+            //ve se o jogado e bot ou nao
+            this.requestCurrentPlayerBot();
+            if(this.currentPlayerBot == 0)
+            {
+               if(this.selectedPiece != null)
+               {
+                   this.requestValidPlays(this.selectedPiece.color); //handle faz a animaçao das cores
+                   this.state = 'SELECT_CELL';
+                   break;
+               }
+                
+            }
+            else
+            {
+                this.state = 'REQUEST_PLAY_B';
                 break;
+            }
+            //se humano
+            //so as peças podem ser selecionadas, fica aqui ate se selecionada uma e faz request dos valid cells
+            //se peça selecionada passa proxima, se nao fica aqui
+            //se bot vai para REQUESTBOT
+            break;
             case 'SELECT_CELL':
-                this.requestValidPlays();
-                //as casas sao selecionaveis e as peças tb
-                //se selecionar uma peça volta para p process piece
-                //se selecionar uma casa vai para o request play
-                //faz show das peças válidas selecionaveis
+            if(this.getCurrentSelectedPiece() != this.selectedPiece)
+            {
+                this.state = 'PROCESS_PIECE';
                 break;
-            case 'REQUEST_PLAY_P':
-                //faz request do play e valida
-                //caso seja valido faz a animaçao e vai para o proximos
-                //caso seja invalida volta para o process piece i guess
-                // win condition se ganhou estado END GAME
-                break;
-            case 'REQUEST_PLAY_B':
-                //faz request do play DO BOT 
-                // faz a animaçao e vai para o proximos
-                // win condition se ganhou estado END GAME
-                //CHANGE PLAYER BITCHESSSSS
-                break;
+            }
+            else
+            {
+                if(this.view.board.selectedCell != null)
+                {
+                    this.state = 'REQUEST_PLAY_P';
+                    break;
+                }
+            }
+            //as casas sao selecionaveis e as peças tb
+            //se selecionar uma peça volta para o process piece
+            //se selecionar uma casa vai para o request play
+            //faz show das peças válidas selecionaveis
+            break;
+            case 'REQUEST_PLAY_P' :
+            this.requestPlay([view.board.selectedCell.column, view.board.selectedCell.line, this.selectedPiece.color])
+            //faz request do play e valida
+            //caso seja valido faz a animaçao e vai para o proximos
+            //caso seja invalida volta para o process piece i guess
+            // win condition se ganhou estado END GAME
+            break;
+            case 'REQUEST_PLAY_B' :
+            this.requestBotPlay(this.mode.level);//animaçao feita no handler
+            //faz request do play DO BOT 
+            // faz a animaçao e vai para o proximos
+            // win condition se ganhou estado END GAME
+            //CHANGE PLAYER BITCHESSSSS
+            this.state = 'CHANGE_PLAYER';
+            break;
             case 'WAIT_UNDO':
-                //wait 2s
-                // se undo flag faz undo volta para o process piece
-                //se nao vai para o proximo
-                break;
-            case 'CHANGE_PLAYER':
-                //animaçao de camara e afins
-                //PROCESS PIECE
-                break;
+            //wait 2s
+            // se undo flag faz undo volta para o process piece
+            //se nao vai para o proximo
+            break;
+            case 'CHANGE_PLAYER' :
+            //animaçao de camara e afins
+            //PROCESS PIECE
+            this.state = 'PROCESS_PIECE';
+            break;        
         }
     }
 
@@ -273,7 +316,7 @@ class GameController extends CGFobject {
         this.scene.registerForPick(++this.scene.pickIndex, view.assertPlayer);
         view.assertPlayer.display();
         if (61 == this.scene.pickedIndex)
-            this.requestQuit();
+            this.requestCurrentPlayerBot();  
         this.scene.registerForPick(++this.scene.pickIndex, view.assertPlayer);
         view.playBot.display();
         if (62 == this.scene.pickedIndex)
