@@ -168,10 +168,13 @@ class GameController extends CGFobject {
     }
 
     makePickingCells() {
-        for (let i = 0; i < this.board.cells.length; i++) {
-            this.scene.registerForPick(++this.scene.pickIndex, this.board.cells[i]);
+        this.scene.pushMatrix();
+        this.scene.rotate(Math.PI, 1,0,0);
+        for (let i = 0; i < view.board.cells.length; i++) {
+            this.scene.registerForPick(++this.scene.pickIndex, view.board.cells[i]);
+            view.board.cells[i].display();
         }
-        this.scene.clearPickRegistration();
+        this.scene.popMatrix();
     }
 
     makePickingValidCells(validCells) {
@@ -183,18 +186,22 @@ class GameController extends CGFobject {
                 this.scene.registerForPick(++this.scene.pickIndex, this.board.cells[i]);
             }
         }
-        this.scene.clearPickRegistration();
     }
 
 
     makePickingPiecesSide(pieces) {
-        for (let i = 0; i < pieces.length; i++)
+        for (let i = 0; i < pieces.length; i++){
             this.scene.registerForPick(++this.scene.pickIndex, pieces[i]);
+            if (pieces[i].selected && view.board.selectedCell != null && pieces[i].parabolic == null)
+                pieces[i].createParabolicAnimation([pieces[i].x, pieces[i].y], 10, [view.board.selectedCell.x, view.board.selectedCell.z]);
+            pieces[i].display(view.board.selectedCell, this.scene.currTime);
+        }
     }
+
     makePickingPieces() {
-        this.makePickingPiecesSide(this.gamoraPieces);
-        this.makePickingPiecesSide(this.thanosPieces);
-        this.scene.clearPickRegistration();
+        this.makePickingPiecesSide(view.gamoraPieces);
+        this.makePickingPiecesSide(view.thanosPieces);
+        
     }
 
 
@@ -309,9 +316,12 @@ class GameController extends CGFobject {
 
         let currTime = this.scene.currTime;
         this.scene.pushMatrix();
+        this.makePickingCells();
         view.board.display(ignore);
-        this.displayPieces(view.gamoraPieces, currTime);
-        this.displayPieces(view.thanosPieces, currTime);
+        this.makePickingPieces();
+
+        //this.displayPieces(view.gamoraPieces, currTime);
+        //this.displayPieces(view.thanosPieces, currTime);
 
         this.scene.registerForPick(++this.scene.pickIndex, view.assertPlayer);
         view.assertPlayer.display();

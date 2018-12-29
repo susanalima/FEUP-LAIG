@@ -8,13 +8,13 @@ class BoardCell extends CGFobject {
 	 * Constructs an object of class BoardCell
 	 * @param {Object} scene Scene in which the board cell is represented
 	 */
-	constructor(scene, radius, center, column, line) {
+	constructor(scene, radius, center, column, line, validText) {
         super(scene);
 		this.cell = new MyPrism(scene,6,1,0.1,radius);
         this.x = center[0]; 
 		this.z = center[1];
 		this.texture = new CGFtexture(this.scene, "scenes/images/batman.jpg");
-		this.validText = new CGFtexture(scene, "./scenes/images/red.png");
+		this.validText = validText;
 
 		this.selected = false;
 		this.column = column;

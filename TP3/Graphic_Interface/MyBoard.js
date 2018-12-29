@@ -39,6 +39,7 @@ class MyBoard extends CGFobject {
      * Creates the boards cells
      */
     createCells() {
+        let validText =  new CGFtexture(this.scene, "./scenes/images/red.png");
         for (var q = -this.map_radius; q <= this.map_radius; q++) {
             var r1 = Math.max(-this.map_radius, -q - this.map_radius);
             var r2 = Math.min(this.map_radius, -q + this.map_radius);
@@ -46,7 +47,7 @@ class MyBoard extends CGFobject {
                 let center = this.hex_to_pixel(q, r);
                 let line = q + 4;
                 let column = (q + r + 4) * 2;
-                let cell = new BoardCell(this.scene, this.cell_radius, center, column, line);
+                let cell = new BoardCell(this.scene, this.cell_radius, center, column, line, validText);
                 this.cells.push(cell);
             }
         }
@@ -104,7 +105,7 @@ class MyBoard extends CGFobject {
         this.scene.rotate(Math.PI, 1,0,0);
        
         this.cellTexture.bind();
-        this.displayCells();
+        //this.displayCells();
        
         this.checkSelectedCells();
         
