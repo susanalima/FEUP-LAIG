@@ -121,8 +121,8 @@ class Piece extends CGFobject {
 			this.selected = !this.selected;
 		
 		}
-		if (this.selected && cell != null && this.parabolic == null)
-			this.createParabolicAnimation([this.x, this.y], 10, [cell.x,cell.z]);
+		/*if (this.selected && cell != null && this.parabolic == null)
+			this.createParabolicAnimation([this.x, this.y], 10, [cell.x,cell.z]);*/
 	
 		this.texture.bind();
 

@@ -151,6 +151,11 @@ execute_request([Code], [Bot1, Bot2]) :-
 	getPlayer1Bot(Bot1),
 	getPlayer2Bot(Bot2).
 
+execute_request([Code], Reply) :-
+	Code = 08,
+	getCurrentPlayerBot(Reply),
+
+
 parse_input([Code,Board,Color]) :-
     validateCode(Code),
     validateColor(Color).
@@ -183,6 +188,8 @@ validateCode(Code) :-
 	Code = 06.
 validateCode(Code) :-
 	Code = 07.
+validateCode(Code) :-
+	Code = 08.
 
 validateColor(Color) :-
     Color = 'blackPiece'.
