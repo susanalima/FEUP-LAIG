@@ -26,6 +26,7 @@ class Piece extends CGFobject {
 		this.locked = false //for when a piece is moved it cannot be moved anymore
 		this.line = null;
 		this.column = null;
+		this.hasRequestedPlay = 0;
 	};
 
 	update(currTime, cell) {

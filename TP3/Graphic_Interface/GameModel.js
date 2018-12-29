@@ -64,7 +64,7 @@ class GameModel  {
         return board;
     }
 
-    parseValidPlays(validPlays) {
+    getValidPlays(validPlays) {
         let cellCoordsArray = [];
         let validPlaysarr = validPlays.split('),');
         for(let i = 0; i < validPlaysarr.length; i++)
@@ -80,14 +80,16 @@ class GameModel  {
 
     parsePlayReply(reply){
         let replyarr = reply.split(',');
-        let player = parseFloat(replyarr[0].split('[')[1]);
-        let column = parseFloat(replyarr[2].split('[')[1]);
-        let line = parseFloat(replyarr[3]);
-        let color = replyarr[4].split(']')[0];
+        let player = parseFloat(replyarr[1]);
+        let column = parseFloat(replyarr[3].split('[')[1]);
+        let line = parseFloat(replyarr[4]);
+        let color = replyarr[5].split(']')[0];
         this.addPlay(column, line, player, color);
-        console.log(this.playsCoords);
-        console.log(this.playsValues);
+        // console.log(this.playsCoords);
+        // console.log(this.playsValues);
     }
+
+
 
     undoLastPlay(){
         let lastCoords = this.playsCoords[this.playsCoords.length -1];

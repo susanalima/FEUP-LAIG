@@ -106,11 +106,11 @@ print_header_line(_).
 
 % Require your Prolog Files here
 
-execute_request([Code,Board,Color], Reply) :-
+execute_request([Code,Board,Color], [Code,Reply]) :-
     Code = 01,
     getValidPlays(Board,Color,Reply).
 
-execute_request([Code,Board,Move], [Player,NewWinner,Move]) :-
+execute_request([Code,Board,Move], [Code,Player,NewWinner,Move]) :-
     Code = 02,
 	read_move(Move, X, Y, Color),
 	getCurrentPlayer(Player),
@@ -118,14 +118,14 @@ execute_request([Code,Board,Move], [Player,NewWinner,Move]) :-
 	play(Board,X,Y,Color,NewBoard,NewWinner), nl,nl,nl,
 	display_game(NewBoard,Player), !.
 
-execute_request([Code,Board, Lvl], [Player,NewWinner,[X,Y,Color]]) :-
+execute_request([Code,Board, Lvl], [Code,Player,NewWinner,[X,Y,Color]]) :-
 	Code = 07,
 	getBotInfo(Board,Lvl,X,Y,Color),
 	getCurrentPlayer(Player),
 	play(Board,X,Y,Color,NewBoard,NewWinner), nl,nl,nl,
 	display_game(NewBoard,Player), !.
 
-execute_request([Code], Reply) :-
+execute_request([Code], [Code,Reply]) :-
     Code = 03,
     switchCurrentPlayer,
     getCurrentPlayer(Reply).
@@ -133,25 +133,25 @@ execute_request([Code], Reply) :-
 execute_request([Code], quit) :-
     Code = 00.
 
-execute_request([Code], [Bot1, Bot2]) :-
+execute_request([Code], [Code,Bot1, Bot2]) :-
 	Code = 04,
 	assertPlayers_PvP,
 	getPlayer1Bot(Bot1),
 	getPlayer2Bot(Bot2).
 
-execute_request([Code], [Bot1, Bot2]) :-
+execute_request([Code], [Code,Bot1, Bot2]) :-
 	Code = 05,
 	assertPlayers_PvC,
 	getPlayer1Bot(Bot1),
 	getPlayer2Bot(Bot2).
 
-execute_request([Code], [Bot1, Bot2]) :-
+execute_request([Code], [Code,Bot1, Bot2]) :-
 	Code = 06,
 	assertPlayers_CvC,
 	getPlayer1Bot(Bot1),
 	getPlayer2Bot(Bot2).
 
-execute_request([Code], Reply) :-
+execute_request([Code], [Code,Reply]) :-
 	Code = 08,
 	getCurrentPlayerBot(Reply).
 
