@@ -114,16 +114,15 @@ class Piece extends CGFobject {
 	/**
 	 * Displays the piece in member scene
 	 */
-	display(cell, currTime, valid) {
+	display(cell, currTime) {
 		this.scene.pushMatrix();
 		this.scene.rotate(-Math.PI / 2, 1, 0, 0);
 		if (this.scene.pickIndex == this.scene.pickedIndex){
 			this.selected = !this.selected;
 		
 		}
-		//console.log("aqui: "+ cell + ":" + valid);
-		if (this.selected && cell != null && this.parabolic == null && valid)
-			this.createParabolicAnimation([this.x, this.y], 10, [cell.x,cell.z]);
+		/*if (this.selected && cell != null && this.parabolic == null)
+			this.createParabolicAnimation([this.x, this.y], 10, [cell.x,cell.z]);*/
 	
 		this.texture.bind();
 

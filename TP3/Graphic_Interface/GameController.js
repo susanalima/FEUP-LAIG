@@ -19,7 +19,8 @@ class GameController extends CGFobject {
         model = new GameModel();
         view = new GameView(scene, boardTexture, cellTexture, pieceTexture1, pieceTexture2);
         this.selectedPiece = null;
-        this.validPlay = false;
+        this.state = 'START';
+        this.currentPlayerBot = null;
     };
 
 
@@ -33,10 +34,15 @@ class GameController extends CGFobject {
         request.send();
     }
 
-
+    requestCurrentPlayerBot(){
+        let cp = ['[08]'];
+        let handler = this.handleCurrentPlayerRequestBot.bind(this);
+        this.getPrologRequest(cp,handler);
+    }
     requestQuit(){
         var quit = ['[00]'];
-        this.getPrologRequest(quit, this.handleQuitReply);
+        let func = this.handleQuitReply.bind(this);
+        this.getPrologRequest(quit, func);
     }
 
     requestValidPlays(color) {
@@ -79,6 +85,7 @@ class GameController extends CGFobject {
 
     handleQuitReply(data) {
         console.log(data.target.response);
+        console.log(this);
     }
 
     handleValidPlaysReply(data) {
@@ -90,13 +97,14 @@ class GameController extends CGFobject {
     handlePlayReply(data) {
         console.log(data.target.response);
         this.validPlay = true; //animation
-        //Is this ok? should animation function be always called here?
-        //should only the first call to the animation be called here?
-        //which prolog file should be consulted game/main/?
+        //Is this ok? NO should animation function be always called here? SIM
+        //should only the first call to the animation be called here? what?
+        //which prolog file should be consulted game/main/? server
         //sicstus implementation for testing
-        //Meeting sugested...
+        //Meeting sugested... no
         //animation
         model.parsePlayReply(data.target.response);
+        
     }
 
     handleSwitchPlayerReply(data) {
@@ -105,6 +113,12 @@ class GameController extends CGFobject {
 
     handlePRequest(data) {
         console.log(data.target.response);
+    }
+
+    handleCurrentPlayerRequestBot(data)
+    {
+        console.log(data.target.response);
+        this.currentPlayerBot = parseFloat(data.target.response);
     }
 
     showValidCells(){
@@ -175,15 +189,17 @@ class GameController extends CGFobject {
                 }
             }
         }
-            return counter;
-        }
+      return counter;
+    }
         
 
 
     displayPieces(pieces, currTime) {
         for (let i = 0; i < pieces.length; i++) {
             this.scene.registerForPick(++this.scene.pickIndex, pieces[i]);
-            pieces[i].display(view.board.selectedCell, currTime, this.validPlay);
+            if (pieces[i].selected && view.board.selectedCell != null && pieces[i].parabolic == null)
+                pieces[i].createParabolicAnimation([pieces[i].x, pieces[i].y], 10, [view.board.selectedCell.x,view.board.selectedCell.z]);
+            pieces[i].display(view.board.selectedCell, currTime);
         }
     }
 
@@ -191,6 +207,52 @@ class GameController extends CGFobject {
         if(this.selectedPiece != null && view.board.selectedCell != null )
             this.requestPlay([view.board.selectedCell.column, view.board.selectedCell.line, this.selectedPiece.color])
     }
+
+    stateMachine(){
+        switch(this.state)
+        {
+            case 'START':
+            //buscar configuraçoes da cena e mandar request consoante as configuraçoes
+            this.state = 'PROCESS_PIECE';
+            break;
+            case 'PROCESS_PIECE':
+            //ve se o jogado e bot ou nao
+            //se humano
+            //so as peças podem ser selecionadas, fica aqui ate se selecionada uma e faz request dos valid cells
+            //se peça selecionada passa proxima se nao fica aqui
+            //se bot vai para REQUESTBOT
+            break;
+            case 'SELECT_CELL':
+            //as casas sao selecionaveis e as peças tb
+            //se selecionar uma peça volta para p process piece
+            //se selecionar uma casa vai para o request play
+            break;
+            case 'REQUEST_PLAY_P' :
+            //faz request do play e valida
+            //caso seja valido faz a animaçao e vai para o proximos
+            //caso seja invalida volta para o process piece i guess
+            // win condition se ganhou estado END GAME
+            break;
+            case 'REQUEST_PLAY_B' :
+            //faz request do play DO BOT 
+            // faz a animaçao e vai para o proximos
+            // win condition se ganhou estado END GAME
+            //CHANGE PLAYER BITCHESSSSS
+            break;
+            case 'WAIT_UNDO':
+            //wait 2s
+            // se undo flag faz undo volta para o process piece
+            //se nao vai para o proximo
+            break;
+            case 'CHANGE_PLAYER' :
+            //animaçao de camara e afins
+            //PROCESS PIECE
+            break;
+            
+        }
+
+    }
+
 
     display() {
         this.play();
@@ -207,11 +269,11 @@ class GameController extends CGFobject {
         this.scene.registerForPick(++this.scene.pickIndex, view.assertPlayer);
         view.assertPlayer.display();
         if (61 == this.scene.pickedIndex)
-            this.requestPvP();  
+            this.requestQuit();  
         this.scene.registerForPick(++this.scene.pickIndex, view.assertPlayer);
         view.playBot.display();
         if (62 == this.scene.pickedIndex)
-            this.undoLastPlay();
+            this.requestValidPlays('blackPiece');
         
         this.scene.clearPickRegistration();
         this.scene.popMatrix();
