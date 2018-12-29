@@ -48,7 +48,8 @@ class GameController extends CGFobject {
     requestValidPlays(color) {
         let board = model.getBoardState();
         var getValidPlays = ['[01', board, color + ']'];
-        this.getPrologRequest(getValidPlays, this.handleValidPlaysReply);
+        let handler = this.handleCurrentPlayerRequestBot.bind(this);
+        this.getPrologRequest(getValidPlays, handler);
     }
 
     requestPlay(play) {
@@ -135,35 +136,8 @@ class GameController extends CGFobject {
 
     checkSelected() {
         let counter = 0;
-        for (let i = 0; i < view.thanosPieces.length; i++) {
-            if (view.thanosPieces[i].selected) {
-                counter++;
-                if (view.thanosPieces[i] != this.selectedPiece) {
-                    if (this.selectedPiece != null) {
-                        this.selectedPiece.selected = false;
-                        this.selectedPiece.swapText();
-                    }
-                    this.selectedPiece = view.thanosPieces[i];
-                    if(!this.selectedPiece.locked)
-                        this.selectedPiece.swapText();
-                }
-            }
-        }
-        for (let i = 0; i < view.gamoraPieces.length; i++) {
-            if (view.gamoraPieces[i].selected) {
-                counter++;
-                if (view.gamoraPieces[i] != this.selectedPiece) {
-                    if (this.selectedPiece != null)
-                    {
-                        this.selectedPiece.selected = false;
-                        this.selectedPiece.swapText();
-                    }
-                    this.selectedPiece = view.gamoraPieces[i];
-                    if(!this.selectedPiece.locked)
-                        this.selectedPiece.swapText();
-                }
-            }
-        }
+        counter = this.setSelected(view.thanosPieces, counter);
+        counter = this.setSelected(view.gamoraPieces, counter);
         if (this.selectedPiece != null)
         //console.log("Selected:" + counter);
         if (counter == 1)
@@ -175,7 +149,6 @@ class GameController extends CGFobject {
         }
     }
 
-
     setSelected(pieces, counter){
         for (let i = 0; i < pieces.length; i++) {
             if (pieces[i].selected) {
@@ -184,11 +157,15 @@ class GameController extends CGFobject {
                     if (this.selectedPiece != null)
                     {
                         this.selectedPiece.selected = false;
-                        this.selectedPiece = pieces[i];
+                        this.selectedPiece.swapText();
                     }
+                    this.selectedPiece = pieces[i];
+                    if(!this.selectedPiece.locked)
+                        this.selectedPiece.swapText();
                 }
             }
         }
+
       return counter;
     }
         
@@ -223,6 +200,7 @@ class GameController extends CGFobject {
         {
             case 'START':
             //buscar configuraçoes da cena e mandar request consoante as configuraçoes
+            model.updateConfigs();
             this.state = 'PROCESS_PIECE';
             break;
             case 'PROCESS_PIECE':
@@ -265,6 +243,7 @@ class GameController extends CGFobject {
             //as casas sao selecionaveis e as peças tb
             //se selecionar uma peça volta para o process piece
             //se selecionar uma casa vai para o request play
+            //faz show das peças válidas selecionaveis
             break;
             case 'REQUEST_PLAY_P' :
             this.requestPlay([view.board.selectedCell.column, view.board.selectedCell.line, this.selectedPiece.color])
@@ -298,7 +277,7 @@ class GameController extends CGFobject {
     display() {
         this.play();
         let ignore = true;
-        if (this.checkSelected() == "OK" /*&& this.validPlay*/)
+        if (this.checkSelected() == "OK")
             ignore = false;
      
         let currTime = this.scene.currTime;

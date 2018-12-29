@@ -15,8 +15,14 @@ class GameModel  {
         this.playsCoords = [];
         this.endGame = false;
         this.level = 2;
+        this.type = "PvP";
         //https://editor.p5js.org/Gonca007/sketches/ByHifcMoX
-    };  
+    };
+
+    //updates the game configurations according to the chosen ones in te interface
+    updateConfigs(){
+
+    }
 
 
     addPlay(x, y, player, color) {
