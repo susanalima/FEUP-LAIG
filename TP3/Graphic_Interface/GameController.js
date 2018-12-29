@@ -21,6 +21,7 @@ class GameController extends CGFobject {
         this.selectedPiece = null;
         this.state = 'START';
         this.currentPlayerBot = null;
+        this.alreadyWaiting =false;
     };
 
 
@@ -55,7 +56,9 @@ class GameController extends CGFobject {
     requestPlay(play) {
         let board = model.getBoardState();
         var move = ['[02', board, '[' + play + ']' + ']']; // '[0,0,whitePiece]'
-        this.getPrologRequest(move, this.handlePlayReply);
+        let handler = this.handlePlayReply.bind(this);
+
+        this.getPrologRequest(move,handler);
     }
 
     requestBotPlay(level) {
@@ -98,7 +101,8 @@ class GameController extends CGFobject {
 
     handlePlayReply(data) {
         console.log(data.target.response);
-        this.validPlay = true; //animation
+        this.selectedPiece.createParabolicAnimation([this.selectedPiece.x, this.selectedPiece.y], 10, [view.board.selectedCell.x, view.board.selectedCell.z]);
+        
         //Is this ok? NO should animation function be always called here? SIM
         //should only the first call to the animation be called here? what?
         //which prolog file should be consulted game/main/? server
@@ -128,6 +132,7 @@ class GameController extends CGFobject {
     undoLastPlay() {
         this.requestSwitchPlayer();
         //animacao
+        
         let play = model.undoLastPlay();
         // view.undoPlay(play[0][0], play[0][1], play[1][1]);
     }
@@ -192,9 +197,9 @@ class GameController extends CGFobject {
     makePickingPiecesSide(pieces) {
         for (let i = 0; i < pieces.length; i++){
             this.scene.registerForPick(++this.scene.pickIndex, pieces[i]);
-            if (pieces[i].selected && view.board.selectedCell != null && pieces[i].parabolic == null)
-                pieces[i].createParabolicAnimation([pieces[i].x, pieces[i].y], 10, [view.board.selectedCell.x, view.board.selectedCell.z]);
             pieces[i].display(view.board.selectedCell, this.scene.currTime);
+           if(pieces[i].parabolic != null && pieces[i].parabolic.end == true)
+            this.alreadyWaiting =false;
         }
     }
 
@@ -215,8 +220,10 @@ class GameController extends CGFobject {
     }
 
     play() {
-        if (this.selectedPiece != null && view.board.selectedCell != null)
+        if (this.selectedPiece != null && view.board.selectedCell != null && !this.alreadyWaiting){
             this.requestPlay([view.board.selectedCell.column, view.board.selectedCell.line, this.selectedPiece.color])
+            this.alreadyWaiting = true;
+        }
     }
 
     getCurrentSelectedPiece(){
@@ -309,6 +316,8 @@ class GameController extends CGFobject {
 
 
     display() {
+        view.board.checkSelectedCells();
+
         this.play();
         let ignore = true;
         if (this.checkSelected() == "OK")
@@ -317,7 +326,7 @@ class GameController extends CGFobject {
         let currTime = this.scene.currTime;
         this.scene.pushMatrix();
         this.makePickingCells();
-        view.board.display(ignore);
+        view.board.display();
         this.makePickingPieces();
 
         //this.displayPieces(view.gamoraPieces, currTime);

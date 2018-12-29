@@ -74,7 +74,7 @@ class MyBoard extends CGFobject {
         for (let i = 0; i < this.cells.length; i++) {
             this.cells[i].selected = false;
         }
-        this.selectedCell = null;
+        //this.selectedCell = null;
         this.cellTexture.unbind();
     }
 
