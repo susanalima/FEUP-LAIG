@@ -26,105 +26,6 @@ class GameController extends CGFobject {
     };
 
 
-
-
-
-    /*getPrologRequest(requestString, onSuccess, onError, port) {
-        var requestPort = port || 8081
-        var request = new XMLHttpRequest();
-        request.open('GET', 'http://localhost:' + requestPort + '/' + requestString, true);
-        request.onload = onSuccess || function (data) { console.log("Request successful. Reply: " + data.target.response); };
-        request.onerror = onError || function () { console.log("Error waiting for response"); };
-        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-        request.send();
-    }
-
-    requestCurrentPlayerBot() {
-        let cp = ['[08]'];
-        let handler = this.handleCurrentPlayerRequestBot.bind(this);
-        this.getPrologRequest(cp, handler);
-    }
-    requestQuit() {
-        var quit = ['[00]'];
-        let func = this.handleQuitReply.bind(this);
-        this.getPrologRequest(quit, func);
-    }
-
-    requestValidPlays(color) {
-        let board = this.model.getBoardState();
-        var getValidPlays = ['[01', board, color + ']'];
-        let handler = this.handleValidPlaysReply.bind(this);
-        this.getPrologRequest(getValidPlays, handler);
-    }
-
-    requestPlay(play) {
-        let board = this.model.getBoardState();
-        var move = ['[02', board, '[' + play + ']' + ']']; // '[0,0,whitePiece]'
-        let handler = this.handlePlayReply.bind(this);
-
-        this.getPrologRequest(move,handler);
-    }
-
-    requestBotPlay(level) {
-        let board = this.model.getBoardState();
-        var botplay = ['[07', board, level + ']'];
-        this.getPrologRequest(botplay, this.handlePlayReply);
-    }
-
-    requestSwitchPlayer() {
-        var switchPlayer = ['[03]'];
-        this.getPrologRequest(switchPlayer, this.handleSwitchPlayerReply);
-    }
-
-    requestPvP() {
-        var pvp = ['[04]'];
-        this.getPrologRequest(pvp, this.handlePRequest);
-    }
-
-    requestPvC() {
-        var pvc = ['[05]'];
-        this.getPrologRequest(pvc, this.handlePRequest);
-    }
-
-    requestCvC() {
-        var cvc = ['[06]'];
-        this.getPrologRequest(cvc, this.handlePRequest);
-    }
-
-    handleQuitReply(data) {
-        console.log(data.target.response);
-        console.log(this);
-    }
-
-    handleValidPlaysReply(data) {
-        //console.log(data.target.response);
-        //animation
-        console.log(this.model.parseValidPlays(data.target.response));
-        makePickingValidCells(this.model.parsePlayReply(data.target.response));
-    }
-
-    handlePlayReply(data) {
-        console.log(data.target.response);
-        if(this.selectedPiece != null)
-            this.selectedPiece.createParabolicAnimation([this.selectedPiece.x, this.selectedPiece.y], 10, [this.view.board.selectedCell.x, this.view.board.selectedCell.z]);
-      
-        this.model.parsePlayReply(data.target.response);
-
-    }
-
-    handleSwitchPlayerReply(data) {
-        console.log(data.target.response);
-    }
-
-    handlePRequest(data) {
-        console.log(data.target.response);
-    }
-
-    handleCurrentPlayerRequestBot(data) {
-        console.log(data.target.response);
-        this.currentPlayerBot = parseFloat(data.target.response);
-    }*/
-
     showValidCells() {
         this.requestValidPlays();
     }
@@ -349,7 +250,7 @@ class GameController extends CGFobject {
             let piece = this.view.selectRandomPieceColor(reply[2]);
             let cell = this.view.selectCell(parseFloat(reply[0]), parseFloat(reply[1]));
             piece.createParabolicAnimation([piece.x,  piece.y], 10, [cell.x, cell.z]);
-            cell.hasRequestedPlay++;
+            piece.hasRequestedPlay++;
             break;
             case 8:
             this.currentPlayerBot = parseFloat(responsearr[1].split(']')[0]);
@@ -391,6 +292,7 @@ class GameController extends CGFobject {
          this.view.assertPlayer.display();
          if (122 == this.scene.pickedIndex)
              this.client.requestCvC();  
+             //this.client.requestQuit();
          this.scene.registerForPick(++this.scene.pickIndex, this.view.assertPlayer);
          this.view.playBot.display();
          if (123 == this.scene.pickedIndex)
@@ -404,3 +306,99 @@ class GameController extends CGFobject {
 
 
 
+
+    /*getPrologRequest(requestString, onSuccess, onError, port) {
+        var requestPort = port || 8081
+        var request = new XMLHttpRequest();
+        request.open('GET', 'http://localhost:' + requestPort + '/' + requestString, true);
+        request.onload = onSuccess || function (data) { console.log("Request successful. Reply: " + data.target.response); };
+        request.onerror = onError || function () { console.log("Error waiting for response"); };
+        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        request.send();
+    }
+
+    requestCurrentPlayerBot() {
+        let cp = ['[08]'];
+        let handler = this.handleCurrentPlayerRequestBot.bind(this);
+        this.getPrologRequest(cp, handler);
+    }
+    requestQuit() {
+        var quit = ['[00]'];
+        let func = this.handleQuitReply.bind(this);
+        this.getPrologRequest(quit, func);
+    }
+
+    requestValidPlays(color) {
+        let board = this.model.getBoardState();
+        var getValidPlays = ['[01', board, color + ']'];
+        let handler = this.handleValidPlaysReply.bind(this);
+        this.getPrologRequest(getValidPlays, handler);
+    }
+
+    requestPlay(play) {
+        let board = this.model.getBoardState();
+        var move = ['[02', board, '[' + play + ']' + ']']; // '[0,0,whitePiece]'
+        let handler = this.handlePlayReply.bind(this);
+
+        this.getPrologRequest(move,handler);
+    }
+
+    requestBotPlay(level) {
+        let board = this.model.getBoardState();
+        var botplay = ['[07', board, level + ']'];
+        this.getPrologRequest(botplay, this.handlePlayReply);
+    }
+
+    requestSwitchPlayer() {
+        var switchPlayer = ['[03]'];
+        this.getPrologRequest(switchPlayer, this.handleSwitchPlayerReply);
+    }
+
+    requestPvP() {
+        var pvp = ['[04]'];
+        this.getPrologRequest(pvp, this.handlePRequest);
+    }
+
+    requestPvC() {
+        var pvc = ['[05]'];
+        this.getPrologRequest(pvc, this.handlePRequest);
+    }
+
+    requestCvC() {
+        var cvc = ['[06]'];
+        this.getPrologRequest(cvc, this.handlePRequest);
+    }
+
+    handleQuitReply(data) {
+        console.log(data.target.response);
+        console.log(this);
+    }
+
+    handleValidPlaysReply(data) {
+        //console.log(data.target.response);
+        //animation
+        console.log(this.model.parseValidPlays(data.target.response));
+        makePickingValidCells(this.model.parsePlayReply(data.target.response));
+    }
+
+    handlePlayReply(data) {
+        console.log(data.target.response);
+        if(this.selectedPiece != null)
+            this.selectedPiece.createParabolicAnimation([this.selectedPiece.x, this.selectedPiece.y], 10, [this.view.board.selectedCell.x, this.view.board.selectedCell.z]);
+      
+        this.model.parsePlayReply(data.target.response);
+
+    }
+
+    handleSwitchPlayerReply(data) {
+        console.log(data.target.response);
+    }
+
+    handlePRequest(data) {
+        console.log(data.target.response);
+    }
+
+    handleCurrentPlayerRequestBot(data) {
+        console.log(data.target.response);
+        this.currentPlayerBot = parseFloat(data.target.response);
+    }*/

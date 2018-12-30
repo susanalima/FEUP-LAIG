@@ -24,7 +24,7 @@ class Client {
     requestQuit(){
         var quit = ['[00]'];
         let handler = this.handleRequest.bind(this);
-        this.getPrologRequest(quit, handle);
+        this.getPrologRequest(quit, handler);
     }
 
     requestValidPlays(color) {
