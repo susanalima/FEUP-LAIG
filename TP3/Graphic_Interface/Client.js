@@ -2,7 +2,8 @@ class Client {
     constructor(model)
     {       
         this.model = model;
-        this.response = null;
+        this.response = [];
+        this.requestId = 0;
     }
 
     getPrologRequest(requestString, onSuccess, onError, port) {
@@ -19,11 +20,13 @@ class Client {
     requestCurrentPlayerBot(){
         let cp = ['[08]'];
         let handler = this.handleRequest.bind(this);
+        this.requestId++;
         this.getPrologRequest(cp,handler);
     }
     requestQuit(){
         var quit = ['[00]'];
         let handler = this.handleRequest.bind(this);
+        this.requestId++;
         this.getPrologRequest(quit, handler);
     }
 
@@ -31,6 +34,7 @@ class Client {
         let board = this.model.getBoardState();
         var getValidPlays = ['[01', board, color + ']'];
         let handler = this.handleRequest.bind(this);
+        this.requestId++;
         this.getPrologRequest(getValidPlays, handler);
     }
 
@@ -39,6 +43,7 @@ class Client {
         let board = this.model.getBoardState();
         var move = ['[02', board, '[' + play + ']' + ']']; // '[0,0,whitePiece]'
         let handler = this.handleRequest.bind(this);
+        this.requestId++;
         this.getPrologRequest(move, handler);
     }
 
@@ -46,35 +51,41 @@ class Client {
         let board = this.model.getBoardState();
         var botplay = ['[07',board, level + ']'];
         let handler = this.handleRequest.bind(this);
+        this.requestId++;
         this.getPrologRequest(botplay, handler);
     }
 
     requestSwitchPlayer() {
         var switchPlayer = ['[03]'];
         let handler = this.handleRequest.bind(this);
+        this.requestId++;
         this.getPrologRequest(switchPlayer, handler);
     }
 
     requestPvP(){
         var pvp = ['[04]'];
         let handler = this.handleRequest.bind(this);
+        this.requestId++;
         this.getPrologRequest(pvp,handler);
     }
 
     requestPvC(){
         var pvc = ['[05]'];
         let handler = this.handleRequest.bind(this);
+        this.requestId++;
         this.getPrologRequest(pvc, handler);
     }
 
     requestCvC(){
         var cvc = ['[06]'];
         let handler = this.handleRequest.bind(this);
+        this.requestId++;
         this.getPrologRequest(cvc, handler);
     }
 
     handleRequest(data) {
         //console.log(data.target.response);
-        this.response = data.target.response;
+        this.response = [this.requestId,data.target.response];
+       // console.log(this.response);
     }
 }

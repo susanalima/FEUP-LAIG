@@ -22,7 +22,7 @@ class GameController extends CGFobject {
         this.currentPlayerBot = null;
         //this.alreadyWaiting = false;
         this.client = new Client(this.model);
-        this.lastResponse = null;
+        this.lastResponse = [];
     };
 
 
@@ -85,11 +85,11 @@ class GameController extends CGFobject {
 
     makePickingValidCells(validCells) {
         let index = 0;
-        for (let i = 0; i < this.board.cells.length; i++) {
-            if (validCells[index][0] == this.board.cells[i].line && validCells[index][1] == this.board.cells[i].column) {
+        for (let i = 0; i < this.view.board.cells.length; i++) {
+            if (validCells[index][0] == this.view.board.cells[i].line && validCells[index][1] == this.view.board.cells[i].column) {
                 index++;
-                this.board.cells[i].valid = true;
-                this.scene.registerForPick(++this.scene.pickIndex, this.board.cells[i]);
+                this.view.board.cells[i].valid = true;
+                this.scene.registerForPick(++this.scene.pickIndex, this.view.board.cells[i]);
             }
         }
     }
@@ -107,7 +107,6 @@ class GameController extends CGFobject {
     makePickingPieces() {
         this.makePickingPiecesSide(this.view.gamoraPieces);
         this.makePickingPiecesSide(this.view.thanosPieces);
-
     }
 
 
@@ -129,14 +128,7 @@ class GameController extends CGFobject {
         }
     }
 
-    getCurrentSelectedPiece() {
-        for (let i = 0; this.thanosPieces.length; i++) {
-            if (this.thanosPieces[i].selected)
-                return this.thanosPieces[i];
-            if (this.gamoraPieces[i].selected)
-                return this.gamoraPieces[i];
-        }
-    }
+ 
 
     stateMachine() {
         switch (this.state) {
@@ -148,10 +140,26 @@ class GameController extends CGFobject {
             case 'PROCESS_PIECE':
                 //ve se o jogado e bot ou nao
                 this.client.requestCurrentPlayerBot();
+                this.state = 'WAIT_CPB_RESPONSE';
+                //se humano
+                //so as peças podem ser selecionadas, fica aqui ate se selecionada uma e faz request dos valid cells
+                //se peça selecionada passa proxima, se nao fica aqui
+                //se bot vai para REQUESTBOT
+                break;
+            case 'WAIT_CPB_RESPONSE' :
+                if (this.lastResponse[0] != this.client.response[0])
+                {
+                    this.lastResponse = this.client.response;
+                    console.log(this.lastResponse);
+                    this.parseResponse(this.lastResponse[1]);
+                    this.state = 'REQUEST_VALID_CELLS';
+                }   
+                break;
+            case 'REQUEST_VALID_CELLS' :
                 if (this.currentPlayerBot == 0) {
                     if (this.selectedPiece != null) {
-                        this.requestValidPlays(this.selectedPiece.color); //handle faz a animaçao das cores
-                        this.state = 'SELECT_CELL';
+                        this.client.requestValidPlays(this.selectedPiece.color); //handle faz a animaçao das cores
+                        this.state = 'WAIT_VP_RESPONSE';
                         break;
                     }
                 }
@@ -159,13 +167,18 @@ class GameController extends CGFobject {
                     this.state = 'REQUEST_PLAY_B';
                     break;
                 }
-                //se humano
-                //so as peças podem ser selecionadas, fica aqui ate se selecionada uma e faz request dos valid cells
-                //se peça selecionada passa proxima, se nao fica aqui
-                //se bot vai para REQUESTBOT
+                break;
+            case 'WAIT_VP_RESPONSE':
+                if (this.lastResponse[0] != this.client.response[0])
+                {
+                    this.lastResponse = this.client.response;
+                    console.log(this.lastResponse);
+                    this.parseResponse(this.lastResponse[1]);
+                    this.state = 'SELECT_CELL';
+                }
                 break;
             case 'SELECT_CELL':
-                if (this.getCurrentSelectedPiece() != this.selectedPiece) {
+                if (this.view.getCurrentSelectedPiece() != this.selectedPiece) {
                     this.state = 'PROCESS_PIECE';
                     break;
                 }
@@ -181,24 +194,45 @@ class GameController extends CGFobject {
                 //faz show das peças válidas selecionaveis
                 break;
             case 'REQUEST_PLAY_P':
-                this.requestPlay([this.view.board.selectedCell.column, this.view.board.selectedCell.line, this.selectedPiece.color])
+                this.client.requestPlay([this.view.board.selectedCell.column, this.view.board.selectedCell.line, this.selectedPiece.color])
+                this.selectedPiece.hasRequestedPlay++;
+                this.state = 'WAIT_PP_RESPONSE';
                 //faz request do play e valida
                 //caso seja valido faz a animaçao e vai para o proximos
                 //caso seja invalida volta para o process piece i guess
                 // win condition se ganhou estado END GAME
                 break;
             case 'REQUEST_PLAY_B':
-                this.requestBotPlay(this.mode.level);//animaçao feita no handler
+                this.client.requestBotPlay(2);//animaçao feita no handler
+                this.state = 'WAIT_PB_RESPONSE';
                 //faz request do play DO BOT 
                 // faz a animaçao e vai para o proximos
                 // win condition se ganhou estado END GAME
                 //CHANGE PLAYER BITCHESSSSS
-                this.state = 'CHANGE_PLAYER';
+                break;
+            case 'WAIT_PP_RESPONSE' :
+                if (this.lastResponse[0] != this.client.response[0])
+                {
+                    this.lastResponse = this.client.response;
+                    console.log(this.lastResponse);
+                    this.parseResponse(this.lastResponse[1]);
+                    this.state = 'WAIT_UNDO';
+                }
+                break;
+            case 'WAIT_PB_RESPONSE' :
+                if (this.lastResponse[0] != this.client.response[0])
+                {
+                    this.lastResponse = this.client.response;
+                    console.log(this.lastResponse);
+                    this.parseResponse(this.lastResponse[1]);
+                    this.state = 'CHANGE_PLAYER';
+                }
                 break;
             case 'WAIT_UNDO':
                 //wait 2s
                 // se undo flag faz undo volta para o process piece
                 //se nao vai para o proximo
+                this.state = 'CHANGE_PLAYER';
                 break;
             case 'CHANGE_PLAYER':
                 //animaçao de camara e afins
@@ -209,10 +243,10 @@ class GameController extends CGFobject {
     }
 
     updateClientResponse() {
-        if (this.lastResponse != this.client.response) {
+        if (this.lastResponse[0] != this.client.response[0]) {
             this.lastResponse = this.client.response;
             console.log(this.lastResponse);
-            this.parseResponse(this.lastResponse);
+            this.parseResponse(this.lastResponse[1]);
         }
     }
 
@@ -232,6 +266,7 @@ class GameController extends CGFobject {
             let validPlays = response.split('[')[2] + '[';
             this.model.getValidPlays(validPlays);
             //animaçao das valid plays TODO
+            this.makePickingValidCells(this.model.parsePlayReply(response));
             break;
             case 2 :
             this.model.parsePlayReply(response);
@@ -262,11 +297,13 @@ class GameController extends CGFobject {
 
 
     display() {
-        this.updateClientResponse();
+        //this.updateClientResponse();
         //this.view.board.checkSelectedCells();
         this.view.board.checkSelectedCells(this.selectedPiece);
 
-        this.play();
+        //this.play();
+        this.stateMachine();
+        //console.log(this.state);
         /*if (this.selectedPiece != null && this.selectedPiece.parabolic != null)
             this.alreadyWaiting = false;*/
 
@@ -291,7 +328,8 @@ class GameController extends CGFobject {
          this.scene.registerForPick(++this.scene.pickIndex, this.view.assertPlayer);
          this.view.assertPlayer.display();
          if (122 == this.scene.pickedIndex)
-             this.client.requestCvC();  
+             //this.client.requestValidPlays('whitePiece');
+             this.client.requestPvC();  
              //this.client.requestQuit();
          this.scene.registerForPick(++this.scene.pickIndex, this.view.assertPlayer);
          this.view.playBot.display();

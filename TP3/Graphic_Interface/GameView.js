@@ -107,7 +107,8 @@ class GameView extends CGFobject {
         }
         if(availabelPieces.length == 0)
             return null;
-        let randomIndex =   Math.floor(Math.random() * availabelPieces.length); 
+        let randomIndex = Math.floor(Math.random() * availabelPieces.length); 
+        console.log(availabelPieces.length);
         return availabelPieces[randomIndex];
     }
 
@@ -123,6 +124,15 @@ class GameView extends CGFobject {
     selectCell(column, line)
     {
         return this.board.selectCell(column,line);
+    }
+
+    getCurrentSelectedPiece() {
+        for (let i = 0; this.thanosPieces.length; i++) {
+            if (this.thanosPieces[i].selected)
+                return this.thanosPieces[i];
+            if (this.gamoraPieces[i].selected)
+                return this.gamoraPieces[i];
+        }
     }
 
 };

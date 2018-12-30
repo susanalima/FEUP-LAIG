@@ -2,7 +2,7 @@
 
 %player(PlayerId, PlayerColor, CurrentlyPlaying, Bot)
 player(1,blackPiece,1,0).
-player(2,whitePiece,0,0).
+player(2,whitePiece,0,1).
 
 % assertPlayers_PvP
 % Removes all players from the database and adds two human players 
