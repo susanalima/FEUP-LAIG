@@ -129,6 +129,75 @@ class GameController extends CGFobject {
     }
 
  
+    wait_CurrentPlayerBot_response()
+    {
+        if (this.lastResponse[0] != this.client.response[0])
+        {
+            this.lastResponse = this.client.response;
+            console.log(this.lastResponse);
+            this.parseResponse(this.lastResponse[1]);
+            this.state = 'REQUEST_VALID_CELLS';
+        }   
+    }
+
+    request_validCells()
+    {
+        if (this.currentPlayerBot == 0) {
+            if (this.selectedPiece != null) {
+                this.client.requestValidPlays(this.selectedPiece.color); //handle faz a animaçao das cores
+                this.state = 'WAIT_VP_RESPONSE';
+            }
+        }
+        else {
+            this.state = 'REQUEST_PLAY_B';
+        }
+    }
+
+    wait_validCells_response()
+    {
+        if (this.lastResponse[0] != this.client.response[0])
+        {
+            this.lastResponse = this.client.response;
+            console.log(this.lastResponse);
+            this.parseResponse(this.lastResponse[1]);
+            this.state = 'SELECT_CELL';
+        }
+    }
+
+    selectCell()
+    {
+        if (this.view.getCurrentSelectedPiece() != this.selectedPiece) {
+            this.state = 'PROCESS_PIECE';
+        }
+        else {
+            if (this.view.board.selectedCell != null) {
+                this.state = 'REQUEST_PLAY_P';
+            }
+        }
+    }
+
+    wait_HumanPlay_response()
+    {
+        if (this.lastResponse[0] != this.client.response[0])
+        {
+            this.lastResponse = this.client.response;
+            console.log(this.lastResponse);
+            this.parseResponse(this.lastResponse[1]);
+            this.state = 'WAIT_UNDO';
+        }
+    }
+
+    wait_BotPlay_response()
+    {
+        if (this.lastResponse[0] != this.client.response[0])
+        {
+            this.lastResponse = this.client.response;
+            console.log(this.lastResponse);
+            this.parseResponse(this.lastResponse[1]);
+            this.state = 'CHANGE_PLAYER';
+        }
+    }
+
 
     stateMachine() {
         switch (this.state) {
@@ -147,47 +216,16 @@ class GameController extends CGFobject {
                 //se bot vai para REQUESTBOT
                 break;
             case 'WAIT_CPB_RESPONSE' :
-                if (this.lastResponse[0] != this.client.response[0])
-                {
-                    this.lastResponse = this.client.response;
-                    console.log(this.lastResponse);
-                    this.parseResponse(this.lastResponse[1]);
-                    this.state = 'REQUEST_VALID_CELLS';
-                }   
+                this.wait_CurrentPlayerBot_response();  
                 break;
             case 'REQUEST_VALID_CELLS' :
-                if (this.currentPlayerBot == 0) {
-                    if (this.selectedPiece != null) {
-                        this.client.requestValidPlays(this.selectedPiece.color); //handle faz a animaçao das cores
-                        this.state = 'WAIT_VP_RESPONSE';
-                        break;
-                    }
-                }
-                else {
-                    this.state = 'REQUEST_PLAY_B';
-                    break;
-                }
+                this.request_validCells();
                 break;
             case 'WAIT_VP_RESPONSE':
-                if (this.lastResponse[0] != this.client.response[0])
-                {
-                    this.lastResponse = this.client.response;
-                    console.log(this.lastResponse);
-                    this.parseResponse(this.lastResponse[1]);
-                    this.state = 'SELECT_CELL';
-                }
+                this.wait_validCells_response();
                 break;
             case 'SELECT_CELL':
-                if (this.view.getCurrentSelectedPiece() != this.selectedPiece) {
-                    this.state = 'PROCESS_PIECE';
-                    break;
-                }
-                else {
-                    if (this.view.board.selectedCell != null) {
-                        this.state = 'REQUEST_PLAY_P';
-                        break;
-                    }
-                }
+                this.selectCell();
                 //as casas sao selecionaveis e as peças tb
                 //se selecionar uma peça volta para o process piece
                 //se selecionar uma casa vai para o request play
@@ -211,22 +249,10 @@ class GameController extends CGFobject {
                 //CHANGE PLAYER BITCHESSSSS
                 break;
             case 'WAIT_PP_RESPONSE' :
-                if (this.lastResponse[0] != this.client.response[0])
-                {
-                    this.lastResponse = this.client.response;
-                    console.log(this.lastResponse);
-                    this.parseResponse(this.lastResponse[1]);
-                    this.state = 'WAIT_UNDO';
-                }
+                this.wait_HumanPlay_response();
                 break;
             case 'WAIT_PB_RESPONSE' :
-                if (this.lastResponse[0] != this.client.response[0])
-                {
-                    this.lastResponse = this.client.response;
-                    console.log(this.lastResponse);
-                    this.parseResponse(this.lastResponse[1]);
-                    this.state = 'CHANGE_PLAYER';
-                }
+                this.wait_BotPlay_response();
                 break;
             case 'WAIT_UNDO':
                 //wait 2s
