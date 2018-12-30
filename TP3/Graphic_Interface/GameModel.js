@@ -87,6 +87,7 @@ class GameModel  {
         this.addPlay(column, line, player, color);
         // console.log(this.playsCoords);
         // console.log(this.playsValues);
+        return [column,line,color];
     }
 
 

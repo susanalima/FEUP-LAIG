@@ -241,19 +241,18 @@ class GameController extends CGFobject {
         switch (this.state) {
             case 'START':
                 //buscar configuraçoes da cena e mandar request consoante as configuraçoes
-                this.model.updateConfigs();
+                //this.model.updateConfigs();
                 this.state = 'PROCESS_PIECE';
                 break;
             case 'PROCESS_PIECE':
                 //ve se o jogado e bot ou nao
-                this.requestCurrentPlayerBot();
+                this.client.requestCurrentPlayerBot();
                 if (this.currentPlayerBot == 0) {
                     if (this.selectedPiece != null) {
                         this.requestValidPlays(this.selectedPiece.color); //handle faz a animaçao das cores
                         this.state = 'SELECT_CELL';
                         break;
                     }
-
                 }
                 else {
                     this.state = 'REQUEST_PLAY_B';
@@ -309,7 +308,6 @@ class GameController extends CGFobject {
     }
 
     updateClientResponse() {
-
         if (this.lastResponse != this.client.response) {
             this.lastResponse = this.client.response;
             console.log(this.lastResponse);
@@ -317,13 +315,15 @@ class GameController extends CGFobject {
         }
     }
 
+   
+
     /*
     TODO fazer os que faltam...nao sei ate que ponto sao relevantes...will see
     */
     parseResponse(response){
         let responsearr = response.split(',');
         let code = parseFloat(responsearr[0].split('[')[1]);
-   
+        let reply;
         switch(code) {
             case 0:
             break;
@@ -332,10 +332,9 @@ class GameController extends CGFobject {
             this.model.getValidPlays(validPlays);
             //animaçao das valid plays TODO
             break;
-            case 2: case 7:
+            case 2 :
             this.model.parsePlayReply(response);
-            console.log(this.selectedPiece);
-            this.selectedPiece.createParabolicAnimation([ this.selectedPiece.x,  this.selectedPiece.y], 10, [this.view.board.selectedCell.x, this.view.board.selectedCell.z]);
+            this.selectedPiece.createParabolicAnimation([this.selectedPiece.x,  this.selectedPiece.y], 10, [this.view.board.selectedCell.x, this.view.board.selectedCell.z]);
             break;
             case 3:
             break;
@@ -344,6 +343,13 @@ class GameController extends CGFobject {
             case 5:
             break;
             case 6:
+            break;
+            case 7:
+            reply = this.model.parsePlayReply(response);
+            let piece = this.view.selectRandomPieceColor(reply[2]);
+            let cell = this.view.selectCell(parseFloat(reply[0]), parseFloat(reply[1]));
+            piece.createParabolicAnimation([piece.x,  piece.y], 10, [cell.x, cell.z]);
+            cell.hasRequestedPlay++;
             break;
             case 8:
             this.currentPlayerBot = parseFloat(responsearr[1].split(']')[0]);
@@ -384,11 +390,11 @@ class GameController extends CGFobject {
          this.scene.registerForPick(++this.scene.pickIndex, this.view.assertPlayer);
          this.view.assertPlayer.display();
          if (122 == this.scene.pickedIndex)
-             this.client.requestCurrentPlayerBot();  
+             this.client.requestCvC();  
          this.scene.registerForPick(++this.scene.pickIndex, this.view.assertPlayer);
          this.view.playBot.display();
          if (123 == this.scene.pickedIndex)
-             this.client.requestValidPlays('blackPiece');
+             this.client.requestBotPlay(2);
 
         this.scene.clearPickRegistration();
         this.scene.popMatrix();

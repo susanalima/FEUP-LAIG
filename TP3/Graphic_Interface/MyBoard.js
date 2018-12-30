@@ -21,7 +21,6 @@ class MyBoard extends CGFobject {
         this.boardTexture = boardTexture;
         this.cellTexture = cellTexture;
         this.selectedCell = null;
-
     };
 
     /**
@@ -52,6 +51,20 @@ class MyBoard extends CGFobject {
             }
         }
     }
+
+    selectCell(column,line)
+    {
+        for(let i = 0; i < this.cells.length; i++)
+        {
+            let cell = this.cells[i];
+            if(cell.column == column && cell.line == line )
+                return cell;
+        }
+        return null;
+    }
+
+
+
 //Needs to be changed/deleted
     checkSelectedCells(piece){
         let noSelected = true;

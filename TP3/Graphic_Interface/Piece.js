@@ -55,8 +55,6 @@ class Piece extends CGFobject {
 				cell.selected = false;
 				this.column = cell.line;
 				this.line = cell.column;
-				console.log(this.line);
-				console.log(this.column);
 			}
 			return ;
 		}

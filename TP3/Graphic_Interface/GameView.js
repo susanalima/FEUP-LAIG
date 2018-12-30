@@ -97,5 +97,33 @@ class GameView extends CGFobject {
         return piece;
     }
 
+    selectRandomPiece(pieces)
+    {
+        let availabelPieces = [];
+        for(let i = 0; i < pieces.length; i++)
+        {
+            if(pieces[i].hasRequestedPlay == 0)
+                availabelPieces.push(pieces[i]);
+        }
+        if(availabelPieces.length == 0)
+            return null;
+        let randomIndex =   Math.floor(Math.random() * availabelPieces.length); 
+        return availabelPieces[randomIndex];
+    }
+
+    selectRandomPieceColor(color) {
+        if(color == 'blackPiece')
+            return this.selectRandomPiece(this.thanosPieces);
+        if(color == 'whitePiece')
+            return this.selectRandomPiece(this.gamoraPieces);
+        return null;
+    }  
+
+
+    selectCell(column, line)
+    {
+        return this.board.selectCell(column,line);
+    }
+
 };
 
