@@ -18,8 +18,11 @@ class MyInterface extends CGFinterface {
         // init GUI. For more information on the methods, check:
         //  http://workshop.chromeexperiments.com/examples/gui
 
-        this.gui = new dat.GUI();
-
+        this.gui = new dat.GUI();    this.gui = new dat.GUI();
+        var group = this.gui.addFolder("Settings");
+        group.open();
+        group.add(this.scene, 'mode', { "Player vs Player": 1, "Player vs Bot": 2, "Bot vs Bot": 3}).name('Mode');
+        group.add(this.scene, 'level', {"Easy": 1,"Medium": 2, "Hard": 3}).name('Difficulty');
         // add a group of controls (and open/expand by defult)
         this.initKeys();
 

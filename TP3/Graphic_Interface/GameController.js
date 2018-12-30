@@ -15,7 +15,7 @@ class GameController extends CGFobject {
      */
     constructor(scene, boardTexture, cellTexture, pieceTexture1, pieceTexture2) {
         super(scene);
-        this.model = new GameModel();
+        this.model = new GameModel(scene);
         this.view = new GameView(scene, boardTexture, cellTexture, pieceTexture1, pieceTexture2);
         this.selectedPiece = null;
         this.state = 'START';
@@ -96,7 +96,6 @@ class GameController extends CGFobject {
 
 
     makePickingPiecesSide(pieces) {
-
         for (let i = 0; i < pieces.length; i++) {
             this.scene.registerForPick(++this.scene.pickIndex, pieces[i]);
             pieces[i].display(this.view.board.selectedCell, this.scene.currTime);
@@ -128,20 +127,17 @@ class GameController extends CGFobject {
         }
     }
 
- 
-    wait_CurrentPlayerBot_response()
-    {
-        if (this.lastResponse[0] != this.client.response[0])
-        {
+
+    wait_CurrentPlayerBot_response() {
+        if (this.lastResponse[0] != this.client.response[0]) {
             this.lastResponse = this.client.response;
             console.log(this.lastResponse);
             this.parseResponse(this.lastResponse[1]);
             this.state = 'REQUEST_VALID_CELLS';
-        }   
+        }
     }
 
-    request_validCells()
-    {
+    request_validCells() {
         if (this.currentPlayerBot == 0) {
             if (this.selectedPiece != null) {
                 this.client.requestValidPlays(this.selectedPiece.color); //handle faz a animaçao das cores
@@ -153,10 +149,8 @@ class GameController extends CGFobject {
         }
     }
 
-    wait_validCells_response()
-    {
-        if (this.lastResponse[0] != this.client.response[0])
-        {
+    wait_validCells_response() {
+        if (this.lastResponse[0] != this.client.response[0]) {
             this.lastResponse = this.client.response;
             console.log(this.lastResponse);
             this.parseResponse(this.lastResponse[1]);
@@ -164,8 +158,7 @@ class GameController extends CGFobject {
         }
     }
 
-    selectCell()
-    {
+    selectCell() {
         if (this.view.getCurrentSelectedPiece() != this.selectedPiece) {
             this.state = 'PROCESS_PIECE';
         }
@@ -176,25 +169,45 @@ class GameController extends CGFobject {
         }
     }
 
-    wait_HumanPlay_response()
-    {
-        if (this.lastResponse[0] != this.client.response[0])
-        {
+    wait_HumanPlay_response() {
+        if (this.lastResponse[0] != this.client.response[0]) {
             this.lastResponse = this.client.response;
             console.log(this.lastResponse);
             this.parseResponse(this.lastResponse[1]);
-            this.state = 'WAIT_UNDO';
+            this.check_GameOver();
         }
     }
 
-    wait_BotPlay_response()
-    {
-        if (this.lastResponse[0] != this.client.response[0])
-        {
+    wait_BotPlay_response() {
+        if (this.lastResponse[0] != this.client.response[0]) {
             this.lastResponse = this.client.response;
             console.log(this.lastResponse);
             this.parseResponse(this.lastResponse[1]);
             this.state = 'CHANGE_PLAYER';
+            this.check_GameOver();
+
+        }
+    }
+
+    check_GameOver() {
+        if (this.model.winner == 0)
+            this.state = 'WAIT_UNDO';
+        else
+            this.state = 'GAME_OVER';
+    }
+
+    start()
+    {
+        switch(this.model.mode) {
+            case 1:
+            this.client.requestPvP();
+            break;
+            case 2:
+            this.client.requestPvC();
+            break;
+            case 3: 
+            this.client.requestCvC();
+            break;
         }
     }
 
@@ -215,10 +228,10 @@ class GameController extends CGFobject {
                 //se peça selecionada passa proxima, se nao fica aqui
                 //se bot vai para REQUESTBOT
                 break;
-            case 'WAIT_CPB_RESPONSE' :
-                this.wait_CurrentPlayerBot_response();  
+            case 'WAIT_CPB_RESPONSE':
+                this.wait_CurrentPlayerBot_response();
                 break;
-            case 'REQUEST_VALID_CELLS' :
+            case 'REQUEST_VALID_CELLS':
                 this.request_validCells();
                 break;
             case 'WAIT_VP_RESPONSE':
@@ -235,23 +248,15 @@ class GameController extends CGFobject {
                 this.client.requestPlay([this.view.board.selectedCell.column, this.view.board.selectedCell.line, this.selectedPiece.color])
                 this.selectedPiece.hasRequestedPlay++;
                 this.state = 'WAIT_PP_RESPONSE';
-                //faz request do play e valida
-                //caso seja valido faz a animaçao e vai para o proximos
-                //caso seja invalida volta para o process piece i guess
-                // win condition se ganhou estado END GAME
                 break;
             case 'REQUEST_PLAY_B':
-                this.client.requestBotPlay(2);//animaçao feita no handler
+                this.client.requestBotPlay(this.model.level);//animaçao feita no handler
                 this.state = 'WAIT_PB_RESPONSE';
-                //faz request do play DO BOT 
-                // faz a animaçao e vai para o proximos
-                // win condition se ganhou estado END GAME
-                //CHANGE PLAYER BITCHESSSSS
                 break;
-            case 'WAIT_PP_RESPONSE' :
+            case 'WAIT_PP_RESPONSE':
                 this.wait_HumanPlay_response();
                 break;
-            case 'WAIT_PB_RESPONSE' :
+            case 'WAIT_PB_RESPONSE':
                 this.wait_BotPlay_response();
                 break;
             case 'WAIT_UNDO':
@@ -265,6 +270,11 @@ class GameController extends CGFobject {
                 //PROCESS PIECE
                 this.state = 'PROCESS_PIECE';
                 break;
+            case 'GAME_OVER':
+                //nao pode jogar mais
+                //espera pelo botao de start ou assim
+                //pode ser substituido pelo start se tiver uma funcao de restart
+                break;
         }
     }
 
@@ -276,50 +286,48 @@ class GameController extends CGFobject {
         }
     }
 
-   
-
     /*
     TODO fazer os que faltam...nao sei ate que ponto sao relevantes...will see
     */
-    parseResponse(response){
+    parseResponse(response) {
         let responsearr = response.split(',');
         let code = parseFloat(responsearr[0].split('[')[1]);
         let reply;
-        switch(code) {
+        switch (code) {
             case 0:
-            break;
+                break;
             case 1:
-            let validPlays = response.split('[')[2] + '[';
-            this.model.getValidPlays(validPlays);
-            //animaçao das valid plays TODO
-            this.makePickingValidCells(this.model.parsePlayReply(response));
-            break;
-            case 2 :
-            this.model.parsePlayReply(response);
-            this.selectedPiece.createParabolicAnimation([this.selectedPiece.x,  this.selectedPiece.y], 10, [this.view.board.selectedCell.x, this.view.board.selectedCell.z]);
-            break;
+                let validPlays = response.split('[')[2] + '[';
+                this.model.getValidPlays(validPlays);
+                //animaçao das valid plays TODO
+                this.makePickingValidCells(this.model.parsePlayReply(response));
+                break;
+            case 2:
+                this.model.parsePlayReply(response);
+                this.selectedPiece.createParabolicAnimation([this.selectedPiece.x, this.selectedPiece.y], 10, [this.view.board.selectedCell.x, this.view.board.selectedCell.z]);
+                break;
             case 3:
-            break;
+                break;
             case 4:
-            break;
+                break;
             case 5:
-            break;
+                break;
             case 6:
-            break;
+                break;
             case 7:
-            reply = this.model.parsePlayReply(response);
-            let piece = this.view.selectRandomPieceColor(reply[2]);
-            let cell = this.view.selectCell(parseFloat(reply[0]), parseFloat(reply[1]));
-            piece.createParabolicAnimation([piece.x,  piece.y], 10, [cell.x, cell.z]);
-            piece.hasRequestedPlay++;
-            break;
+                reply = this.model.parsePlayReply(response);
+                let piece = this.view.selectRandomPieceColor(reply[2]);
+                let cell = this.view.selectCell(parseFloat(reply[0]), parseFloat(reply[1]));
+                piece.createParabolicAnimation([piece.x, piece.y], 10, [cell.x, cell.z]);
+                piece.hasRequestedPlay++;
+                break;
             case 8:
-            this.currentPlayerBot = parseFloat(responsearr[1].split(']')[0]);
-            break;
+                this.currentPlayerBot = parseFloat(responsearr[1].split(']')[0]);
+                break;
         }
     }
 
- 
+
 
 
     display() {
@@ -342,8 +350,6 @@ class GameController extends CGFobject {
         this.makePickingCells();
 
         this.view.board.display();
-
-
         this.makePickingPieces();
 
 
@@ -351,22 +357,25 @@ class GameController extends CGFobject {
         //this.displayPieces(this.view.thanosPieces, currTime);
 
 
-         this.scene.registerForPick(++this.scene.pickIndex, this.view.assertPlayer);
-         this.view.assertPlayer.display();
-         if (122 == this.scene.pickedIndex)
-             //this.client.requestValidPlays('whitePiece');
-             this.client.requestPvC();  
-             //this.client.requestQuit();
-         this.scene.registerForPick(++this.scene.pickIndex, this.view.assertPlayer);
-         this.view.playBot.display();
-         if (123 == this.scene.pickedIndex)
-             this.client.requestBotPlay(2);
+        /*this.scene.registerForPick(++this.scene.pickIndex, this.view.assertPlayer);
+        this.view.assertPlayer.display();
+        if (122 == this.scene.pickedIndex)
+            //this.client.requestValidPlays('whitePiece');
+            this.client.requestPvC();  
+            //this.client.requestQuit();
+        this.scene.registerForPick(++this.scene.pickIndex, this.view.assertPlayer);
+        this.view.playBot.display();
+        if (123 == this.scene.pickedIndex)
+            this.client.requestBotPlay(2);*/
 
         this.scene.clearPickRegistration();
         this.scene.popMatrix();
 
     }
 };
+
+
+
 
 
 

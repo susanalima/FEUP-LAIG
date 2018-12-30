@@ -10,18 +10,19 @@ class GameModel  {
      * @param {Object} pieceTexture1
      * @param {Object} pieceTexture2
      */
-    constructor() { 
+    constructor(scene) { 
+        this.scene = scene;
         this.playsValues = [];
         this.playsCoords = [];
-        this.endGame = false;
-        this.level = 2;
-        this.type = "PvP";
+        this.winner = 0;  // -1 draw, 0 no winner yet, 1 player1, 2 player2
+        this.updateConfigs();
         //https://editor.p5js.org/Gonca007/sketches/ByHifcMoX
     };
 
     //updates the game configurations according to the chosen ones in te interface
     updateConfigs(){
-
+        this.level = this.scene.level;
+        this.mode = this.scene.mode;
     }
 
 
@@ -80,13 +81,12 @@ class GameModel  {
 
     parsePlayReply(reply){
         let replyarr = reply.split(',');
+        this.winner = parseFloat(replyarr[2]);
         let player = parseFloat(replyarr[1]);
         let column = parseFloat(replyarr[3].split('[')[1]);
         let line = parseFloat(replyarr[4]);
         let color = replyarr[5].split(']')[0];
         this.addPlay(column, line, player, color);
-        // console.log(this.playsCoords);
-        // console.log(this.playsValues);
         return [column,line,color];
     }
 
