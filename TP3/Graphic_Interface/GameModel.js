@@ -25,6 +25,10 @@ class GameModel  {
         this.mode = parseFloat(this.scene.mode);
     }
 
+    resetPlays(){
+        this.playsValues = [];
+        this.playsCoords = [];
+    }
 
     addPlay(x, y, player, color) {
         let play = this.createPlay(x, y, player, color);

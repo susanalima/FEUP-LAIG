@@ -63,6 +63,20 @@ class GameView extends CGFobject {
         }
     }
 
+    resetPieces(pieces){
+        for(let i = 0; i < pieces.length; i++){
+            pieces[i].x = pieces[i].center[0];
+            pieces[i].y = pieces[i].center[1];
+        }
+    }
+
+
+    resetAllPieces()
+    {
+        this.resetPieces(this.thanosPieces);
+        this.resetPieces(this.gamoraPieces);
+    }
+
     undoPlay(column,line,color){
         let piece = this.getPiece(line,column,color);
         console.log(piece);
@@ -120,7 +134,7 @@ class GameView extends CGFobject {
     }
 
     getCurrentSelectedPiece() {
-        for (let i = 0; this.thanosPieces.length; i++) {
+        for (let i = 0; i < this.thanosPieces.length; i++) {
             if (this.thanosPieces[i].selected)
                 return this.thanosPieces[i];
             if (this.gamoraPieces[i].selected)

@@ -82,11 +82,17 @@ class MyBoard extends CGFobject {
     }
 
     ignorePicks(){
-        for (let i = 0; i < this.cells.length; i++) {
+        for (let i = 0; i < this.cells.length; i++) 
             this.cells[i].selected = false;
-        }
         //this.selectedCell = null;
         this.cellTexture.unbind();
+    }
+
+    resetBoard(){
+        for (let i = 0; i < this.cells.length; i++) {
+            this.cells[i].selected = false;
+            this.cells[i].valid = false;
+        }
     }
 
     displayCells(){

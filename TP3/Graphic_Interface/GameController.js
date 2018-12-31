@@ -29,6 +29,15 @@ class GameController extends CGFobject {
     };
 
 
+
+    deselectCurrentPiece(){
+        if(this.selectedPiece != null){
+            this.selectedPiece.selected = false;
+            this.selectedPiece.swapText();
+            this.selectedPiece = null;
+        }
+    }
+
     showValidCells() {
         this.client.requestValidPlays(this.selectedPiece.color);
         this.parseResponse(this.client.response);
@@ -222,6 +231,7 @@ class GameController extends CGFobject {
     start()
     {
         this.scene.undo_play = false;
+        
         if(this.scene.startGame == true)
         {
             this.model.updateConfigs();
@@ -406,6 +416,14 @@ class GameController extends CGFobject {
     display() {
         //this.updateClientResponse();
         //this.view.board.checkSelectedCells();
+        if(this.scene.reset)
+        {
+            this.view.resetAllPieces();
+            this.scene.reset = false;
+            this.model.resetPlays();
+            this.view.board.resetBoard();
+            this.deselectCurrentPiece();
+        }
         this.view.board.checkSelectedCells(this.selectedPiece);
 
         //this.play();

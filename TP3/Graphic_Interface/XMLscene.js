@@ -17,6 +17,7 @@ class XMLscene extends CGFscene {
         this.mode = 1;
         this.level = 1;
         this.startGame = false;
+        this.reset = false;
         this.camera_rotation = 0;   
         this.undo_play = false;
     }
@@ -25,6 +26,7 @@ class XMLscene extends CGFscene {
     new_game()
     {
         this.startGame = true;
+        this.reset = true;
     }
 
     undo()
