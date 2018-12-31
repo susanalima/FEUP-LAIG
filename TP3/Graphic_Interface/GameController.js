@@ -23,6 +23,7 @@ class GameController extends CGFobject {
         //this.alreadyWaiting = false;
         this.client = new Client(this.model);
         this.lastResponse = [];
+        this.tmpPiece = null;
     };
 
 
@@ -193,7 +194,7 @@ class GameController extends CGFobject {
             this.lastResponse = this.client.response;
             console.log(this.lastResponse);
             this.parseResponse(this.lastResponse[1]);
-            this.check_GameOver();
+            this.state = 'WAIT_ANIMATION_END';
         }
     }
 
@@ -202,14 +203,18 @@ class GameController extends CGFobject {
             this.lastResponse = this.client.response;
             console.log(this.lastResponse);
             this.parseResponse(this.lastResponse[1]);
-            this.state = 'CHANGE_PLAYER';
-            this.check_GameOver();
+            this.state = 'WAIT_ANIMATION_END';
         }
     }
 
     check_GameOver() {
         if (this.model.winner == 0)
-            this.state = 'WAIT_UNDO';
+        {
+            if(this.currentPlayerBot == 0)
+                this.state = 'WAIT_UNDO';
+            else
+                this.state = 'CHANGE_PLAYER';
+        }    
         else
             this.state = 'GAME_OVER';
     }
@@ -276,7 +281,7 @@ class GameController extends CGFobject {
                 this.state = 'WAIT_PP_RESPONSE';
                 break;
             case 'REQUEST_PLAY_B':
-                this.client.requestBotPlay(this.model.level);//animaçao feita no handler
+                this.client.requestBotPlay(this.model.level);
                 this.state = 'WAIT_PB_RESPONSE';
                 break;
             case 'WAIT_PP_RESPONSE':
@@ -285,6 +290,10 @@ class GameController extends CGFobject {
             case 'WAIT_PB_RESPONSE':
                 this.wait_BotPlay_response();
                 break;
+            case 'WAIT_ANIMATION_END':
+                if(this.tmpPiece.parabolic.end == true)
+                    this.check_GameOver();
+                break;
             case 'WAIT_UNDO':
                 //wait 2s
                 // se undo flag faz undo volta para o process piece
@@ -292,8 +301,8 @@ class GameController extends CGFobject {
                 this.state = 'CHANGE_PLAYER';
                 break;
             case 'CHANGE_PLAYER':
+                this.scene.camera_rotation = 32;
                 //animaçao de camara e afins
-                //PROCESS PIECE
                 this.state = 'PROCESS_PIECE';
                 break;
             case 'GAME_OVER':
@@ -330,6 +339,7 @@ class GameController extends CGFobject {
                 this.model.parsePlayReply(response);
                 this.selectedPiece.createParabolicAnimation([this.selectedPiece.x, this.selectedPiece.y], 10, [this.view.board.selectedCell.x, this.view.board.selectedCell.z]);
                 this.selectedPiece.hasRequestedPlay++;
+                this.tmpPiece = this.selectedPiece;
                 break;
             case 3:
                 break;
@@ -345,6 +355,7 @@ class GameController extends CGFobject {
                 let cell = this.view.selectCell(parseFloat(reply[0]), parseFloat(reply[1]));
                 piece.createParabolicAnimation([piece.x, piece.y], 10, [cell.x, cell.z]);
                 piece.hasRequestedPlay++;
+                this.tmpPiece = piece;
                 break;
             case 8:
                 this.currentPlayerBot = parseFloat(responsearr[1].split(']')[0]);
