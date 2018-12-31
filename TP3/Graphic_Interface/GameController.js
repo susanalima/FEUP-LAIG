@@ -28,7 +28,9 @@ class GameController extends CGFobject {
 
 
     showValidCells() {
-        this.requestValidPlays();
+        this.client.requestValidPlays(this.selectedPiece.color);
+        this.makePickingValidCells(this.client.response);
+        
     }
 
     undoLastPlay() {
@@ -162,6 +164,7 @@ class GameController extends CGFobject {
     selectCell() {
         if (this.view.getCurrentSelectedPiece() != this.selectedPiece) {
             this.state = 'PROCESS_PIECE';
+            this.showValidCells();
         }
         else {
             if (this.view.board.selectedCell != null) {
