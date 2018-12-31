@@ -129,7 +129,7 @@ class Piece extends CGFobject {
 		this.scene.pushMatrix();
 		this.scene.rotate(-Math.PI / 2, 1, 0, 0);
 		if (this.scene.pickIndex == this.scene.pickedIndex){
-			this.selected = !this.selected;
+			this.selected = true;
 		
 		}
 		/*if (this.selected && cell != null && this.parabolic == null)
