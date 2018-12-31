@@ -18,13 +18,18 @@ class XMLscene extends CGFscene {
         this.level = 1;
         this.startGame = false;
         this.camera_rotation = 0;   
+        this.undo_play = false;
     }
 
 
     new_game()
     {
         this.startGame = true;
-        console.log(this.startGame);
+    }
+
+    undo()
+    {
+        this.undo_play = true;
     }
 
     /**

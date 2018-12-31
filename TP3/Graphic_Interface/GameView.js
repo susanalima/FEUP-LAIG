@@ -63,19 +63,12 @@ class GameView extends CGFobject {
         }
     }
 
-    undoPlay(x,y,color){
-        /*console.log(x);
-        console.log(y);*/
-        console.log(color);
-        let piece = this.getPiece(x,y,color);
+    undoPlay(column,line,color){
+        let piece = this.getPiece(line,column,color);
         console.log(piece);
         if (piece == null)
             return null;
-        piece.createParabolicAnimation([x,y],3,piece.center);
-        piece.line = null;
-        piece.column = null;
-        piece.locked = false;
-        piece.lastTime = null;
+        piece.createParabolicAnimation([piece.x,piece.y],10,piece.center);
     }
 
     searchPiece(line,column,color,pieces) {

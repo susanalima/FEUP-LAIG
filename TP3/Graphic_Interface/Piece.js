@@ -15,19 +15,24 @@ class Piece extends CGFobject {
 		this.selectedText = new CGFtexture(scene, "./scenes/images/selected_neon.jpg");
 		this.visible = true;
 		this.center = center;
-		this.x = center[0];
-		this.y = center[1];
+		this.color = color;
+		this.x = this.center[0];
+		this.y = this.center[1];
 		this.z = 0;
-		this.selected = false;
 		this.lastTime = null;
 		this.animationTime = 1 * 1000;
-		this.color = color;
 		this.parabolic = null;
+		this.restart();
+	};
+
+	restart()
+	{
+		this.selected = false;
 		this.locked = false //for when a piece is moved it cannot be moved anymore
 		this.line = null;
 		this.column = null;
 		this.hasRequestedPlay = 0;
-	};
+	}
 
 	update(currTime, cell) {
 		var deltaT;
@@ -37,7 +42,7 @@ class Piece extends CGFobject {
 		else {
 			deltaT = currTime - this.lastTime;
 		}
-		if(this.parabolic != null)
+		if(this.parabolic != null && this.parabolic.end == false)
 		{
 			this.selected = false;
 			
@@ -48,25 +53,14 @@ class Piece extends CGFobject {
 	}
 
 	parabolicAnimate(deltaT, cell){
-		if(this.parabolic.end)
-		{	
-			if(cell != null)
-			{
-				cell.selected = false;
-				this.column = cell.line;
-				this.line = cell.column;
-			}
-			return ;
-		}
+
 		if(this.parabolic.time > this.animationTime){
 			this.parabolic.end = true;
 			if(cell != null)
 			{
 				cell.selected = false;
-				this.column = cell.line;
-				this.line = cell.column;
-				console.log(this.line);
-				console.log(this.column);
+				this.line = cell.line;
+				this.column = cell.column;
 			}
 			return;
 		}
@@ -129,7 +123,7 @@ class Piece extends CGFobject {
 		this.scene.pushMatrix();
 		this.scene.rotate(-Math.PI / 2, 1, 0, 0);
 		if (this.scene.pickIndex == this.scene.pickedIndex){
-			this.selected = true;
+			this.selected = !this.selected;
 		
 		}
 		/*if (this.selected && cell != null && this.parabolic == null)

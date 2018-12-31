@@ -24,6 +24,8 @@ class GameController extends CGFobject {
         this.client = new Client(this.model);
         this.lastResponse = [];
         this.tmpPiece = null;
+        this.numberOfTries = 0;
+        this.maxNumberOfTries = 100;
     };
 
 
@@ -34,11 +36,11 @@ class GameController extends CGFobject {
     }
 
     undoLastPlay() {
-        this.requestSwitchPlayer();
+        this.client.requestSwitchPlayer();
         //animacao
-
         let play = this.model.undoLastPlay();
-        // this.view.undoPlay(play[0][0], play[0][1], play[1][1]);
+        console.log(play);
+        this.view.undoPlay(play[0][0], play[0][1], play[1][1]);
     }
 
 
@@ -101,9 +103,7 @@ class GameController extends CGFobject {
                 this.scene.registerForPick(++this.scene.pickIndex, this.view.board.cells[i]);
                 this.scene.clearPickRegistration();
                 this.view.board.cells[i].display();
-            }
-
-            
+            }  
         }
         this.scene.popMatrix();
 
@@ -129,7 +129,6 @@ class GameController extends CGFobject {
     }
 
 
-
     displayPieces(pieces, currTime) {
         for (let i = 0; i < pieces.length; i++) {
             if (pieces[i].selected && this.view.board.selectedCell != null && pieces[i].parabolic == null)
@@ -140,7 +139,6 @@ class GameController extends CGFobject {
 
     play() {
         if (this.selectedPiece != null && this.view.board.selectedCell != null && /*!this.alreadyWaiting &&*/ this.selectedPiece.hasRequestedPlay == 0) {
-            console.log('here')
             this.client.requestPlay([this.view.board.selectedCell.column, this.view.board.selectedCell.line, this.selectedPiece.color])
             //this.alreadyWaiting = true;
             this.selectedPiece.hasRequestedPlay++;
@@ -160,7 +158,7 @@ class GameController extends CGFobject {
     request_validCells() {
         if (this.currentPlayerBot == 0) {
             if (this.selectedPiece != null) {
-                this.client.requestValidPlays(this.selectedPiece.color); //handle faz a animaçao das cores
+                this.client.requestValidPlays(this.selectedPiece.color); 
                 this.state = 'WAIT_VP_RESPONSE';
             }
         }
@@ -221,6 +219,7 @@ class GameController extends CGFobject {
 
     start()
     {
+        this.scene.undo_play = false;
         if(this.scene.startGame == true)
         {
             this.model.updateConfigs();
@@ -250,7 +249,46 @@ class GameController extends CGFobject {
         }
     }
 
+    wait_SwitchPlayers_response()
+    {
+        if (this.lastResponse[0] != this.client.response[0]) {
+            this.lastResponse = this.client.response;
+            console.log(this.lastResponse);
+            this.parseResponse(this.lastResponse[1]);
+            this.state = 'PROCESS_PIECE';
+        }
+    }
 
+    wait_Undo()
+    {
+        if(this.numberOfTries <= this.maxNumberOfTries)
+        {
+            if(this.scene.undo_play == true)
+            {
+                this.scene.undo_play = false;
+                this.undoLastPlay();
+                this.numberOfTries = -1;
+                this.state = 'WAIT_SP_RESPONSE';
+            }
+        }
+        else
+        {
+            this.numberOfTries = -1;
+            this.state = 'CHANGE_PLAYER';           
+        }
+        this.numberOfTries++;
+    }
+
+    wait_AnimationEnd()
+    {
+        if(this.tmpPiece.parabolic.end == true)
+        {
+            this.unvalidateCells();
+            this.check_GameOver();
+        }
+    }
+
+    //make undo only possible in wait undo state
     stateMachine() {
         switch (this.state) {
             case 'START':
@@ -260,7 +298,6 @@ class GameController extends CGFobject {
                 this.wait_AssertPlayers_response();
                 break;
             case 'PROCESS_PIECE':
-                this.unvalidateCells();
                 this.client.requestCurrentPlayerBot();
                 this.state = 'WAIT_CPB_RESPONSE';
                 break;
@@ -291,14 +328,13 @@ class GameController extends CGFobject {
                 this.wait_BotPlay_response();
                 break;
             case 'WAIT_ANIMATION_END':
-                if(this.tmpPiece.parabolic.end == true)
-                    this.check_GameOver();
+                this.wait_AnimationEnd();
                 break;
             case 'WAIT_UNDO':
-                //wait 2s
-                // se undo flag faz undo volta para o process piece
-                //se nao vai para o proximo
-                this.state = 'CHANGE_PLAYER';
+                this.wait_Undo();
+                break;
+            case 'WAIT_SP_RESPONSE' :
+                this.wait_SwitchPlayers_response();
                 break;
             case 'CHANGE_PLAYER':
                 this.scene.camera_rotation = 32;
@@ -332,7 +368,6 @@ class GameController extends CGFobject {
             case 1:
                 let validPlays = response.split('[')[2] + '[';
                 let arrayValidPlays = this.model.getValidPlays(validPlays);
-                //animaçao das valid plays TODO
                 this.makePickingValidCells(arrayValidPlays);
                 break;
             case 2:
@@ -393,121 +428,9 @@ class GameController extends CGFobject {
         //this.displayPieces(this.view.thanosPieces, currTime);
 
 
-        /*this.scene.registerForPick(++this.scene.pickIndex, this.view.assertPlayer);
-        this.view.assertPlayer.display();
-        if (122 == this.scene.pickedIndex)
-            //this.client.requestValidPlays('whitePiece');
-            this.client.requestPvC();  
-            //this.client.requestQuit();
-        this.scene.registerForPick(++this.scene.pickIndex, this.view.assertPlayer);
-        this.view.playBot.display();
-        if (123 == this.scene.pickedIndex)
-            this.client.requestBotPlay(2);*/
-
         this.scene.clearPickRegistration();
         this.scene.popMatrix();
 
     }
 };
 
-
-
-
-
-
-
-    /*getPrologRequest(requestString, onSuccess, onError, port) {
-        var requestPort = port || 8081
-        var request = new XMLHttpRequest();
-        request.open('GET', 'http://localhost:' + requestPort + '/' + requestString, true);
-        request.onload = onSuccess || function (data) { console.log("Request successful. Reply: " + data.target.response); };
-        request.onerror = onError || function () { console.log("Error waiting for response"); };
-        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-        request.send();
-    }
-
-    requestCurrentPlayerBot() {
-        let cp = ['[08]'];
-        let handler = this.handleCurrentPlayerRequestBot.bind(this);
-        this.getPrologRequest(cp, handler);
-    }
-    requestQuit() {
-        var quit = ['[00]'];
-        let func = this.handleQuitReply.bind(this);
-        this.getPrologRequest(quit, func);
-    }
-
-    requestValidPlays(color) {
-        let board = this.model.getBoardState();
-        var getValidPlays = ['[01', board, color + ']'];
-        let handler = this.handleValidPlaysReply.bind(this);
-        this.getPrologRequest(getValidPlays, handler);
-    }
-
-    requestPlay(play) {
-        let board = this.model.getBoardState();
-        var move = ['[02', board, '[' + play + ']' + ']']; // '[0,0,whitePiece]'
-        let handler = this.handlePlayReply.bind(this);
-
-        this.getPrologRequest(move,handler);
-    }
-
-    requestBotPlay(level) {
-        let board = this.model.getBoardState();
-        var botplay = ['[07', board, level + ']'];
-        this.getPrologRequest(botplay, this.handlePlayReply);
-    }
-
-    requestSwitchPlayer() {
-        var switchPlayer = ['[03]'];
-        this.getPrologRequest(switchPlayer, this.handleSwitchPlayerReply);
-    }
-
-    requestPvP() {
-        var pvp = ['[04]'];
-        this.getPrologRequest(pvp, this.handlePRequest);
-    }
-
-    requestPvC() {
-        var pvc = ['[05]'];
-        this.getPrologRequest(pvc, this.handlePRequest);
-    }
-
-    requestCvC() {
-        var cvc = ['[06]'];
-        this.getPrologRequest(cvc, this.handlePRequest);
-    }
-
-    handleQuitReply(data) {
-        console.log(data.target.response);
-        console.log(this);
-    }
-
-    handleValidPlaysReply(data) {
-        //console.log(data.target.response);
-        //animation
-        console.log(this.model.parseValidPlays(data.target.response));
-        makePickingValidCells(this.model.parsePlayReply(data.target.response));
-    }
-
-    handlePlayReply(data) {
-        console.log(data.target.response);
-        if(this.selectedPiece != null)
-            this.selectedPiece.createParabolicAnimation([this.selectedPiece.x, this.selectedPiece.y], 10, [this.view.board.selectedCell.x, this.view.board.selectedCell.z]);
-      
-        this.model.parsePlayReply(data.target.response);
-
-    }
-
-    handleSwitchPlayerReply(data) {
-        console.log(data.target.response);
-    }
-
-    handlePRequest(data) {
-        console.log(data.target.response);
-    }
-
-    handleCurrentPlayerRequestBot(data) {
-        console.log(data.target.response);
-        this.currentPlayerBot = parseFloat(data.target.response);
-    }*/
