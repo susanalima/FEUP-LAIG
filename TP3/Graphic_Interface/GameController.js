@@ -91,6 +91,8 @@ class GameController extends CGFobject {
         this.scene.pushMatrix();
         this.scene.rotate(Math.PI, 1, 0, 0);
         for (let i = 0; i < this.view.board.cells.length; i++) {
+             if(validCells != null && index >= validCells.length)
+                    break;
             if (this.view.board.cells[i].valid || (validCells != null && validCells[index][0] == this.view.board.cells[i].line && validCells[index][1] == this.view.board.cells[i].column)) {
                 index++;
                 this.view.board.cells[i].valid = true;
@@ -301,7 +303,7 @@ class GameController extends CGFobject {
                 this.state = 'CHANGE_PLAYER';
                 break;
             case 'CHANGE_PLAYER':
-                this.scene.camera_rotation = 32;
+                //this.scene.camera_rotation = 32;
                 //animaçao de camara e afins
                 this.state = 'PROCESS_PIECE';
                 break;
