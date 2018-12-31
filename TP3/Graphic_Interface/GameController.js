@@ -28,7 +28,7 @@ class GameController extends CGFobject {
 
     showValidCells() {
         this.client.requestValidPlays(this.selectedPiece.color);
-        this.makePickingValidCells(this.client.response);
+        this.parseResponse(this.client.response);
         
     }
 
@@ -87,13 +87,30 @@ class GameController extends CGFobject {
 
     makePickingValidCells(validCells) {
         let index = 0;
+        this.scene.pushMatrix();
+        this.scene.rotate(Math.PI, 1, 0, 0);
         for (let i = 0; i < this.view.board.cells.length; i++) {
-            if (validCells[index][0] == this.view.board.cells[i].line && validCells[index][1] == this.view.board.cells[i].column) {
+            if (this.view.board.cells[i].valid || (validCells != null && validCells[index][0] == this.view.board.cells[i].line && validCells[index][1] == this.view.board.cells[i].column)) {
                 index++;
                 this.view.board.cells[i].valid = true;
                 this.scene.registerForPick(++this.scene.pickIndex, this.view.board.cells[i]);
+                this.view.board.cells[i].display();
             }
+            else{
+                this.scene.registerForPick(++this.scene.pickIndex, this.view.board.cells[i]);
+                this.scene.clearPickRegistration();
+                this.view.board.cells[i].display();
+            }
+
+            
         }
+        this.scene.popMatrix();
+
+    }
+    
+    unvalidateCells(){
+        for (let i = 0; i < this.view.board.cells.length; i++)
+            this.view.board.cells[i].valid = false;
     }
 
 
@@ -163,7 +180,6 @@ class GameController extends CGFobject {
     selectCell() {
         if (this.view.getCurrentSelectedPiece() != this.selectedPiece) {
             this.state = 'PROCESS_PIECE';
-            this.showValidCells();
         }
         else {
             if (this.view.board.selectedCell != null) {
@@ -239,6 +255,7 @@ class GameController extends CGFobject {
                 this.wait_AssertPlayers_response();
                 break;
             case 'PROCESS_PIECE':
+                this.unvalidateCells();
                 this.client.requestCurrentPlayerBot();
                 this.state = 'WAIT_CPB_RESPONSE';
                 break;
@@ -305,9 +322,9 @@ class GameController extends CGFobject {
                 break;
             case 1:
                 let validPlays = response.split('[')[2] + '[';
-                this.model.getValidPlays(validPlays);
+                let arrayValidPlays = this.model.getValidPlays(validPlays);
                 //animaçao das valid plays TODO
-                this.makePickingValidCells(this.model.parsePlayReply(response));
+                this.makePickingValidCells(arrayValidPlays);
                 break;
             case 2:
                 this.model.parsePlayReply(response);
@@ -355,7 +372,7 @@ class GameController extends CGFobject {
 
         let currTime = this.scene.currTime;
         this.scene.pushMatrix();
-        this.makePickingCells();
+        this.makePickingValidCells(null);
 
         this.view.board.display();
         this.makePickingPieces();
