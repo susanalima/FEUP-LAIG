@@ -188,6 +188,7 @@ class GameController extends CGFobject {
             this.parseResponse(this.lastResponse[1]);
             this.state = 'CHANGE_PLAYER';
             this.check_GameOver();
+
         }
     }
 
@@ -200,32 +201,16 @@ class GameController extends CGFobject {
 
     start()
     {
-        if(this.scene.startGame == true)
-        {
-            this.model.updateConfigs();
-            console.log(this.model.mode)
-            switch(this.model.mode) {
-                case 1:
-                this.client.requestPvP();
-                break;
-                case 2:
-                this.client.requestPvC();
-                break;
-                case 3: 
-                this.client.requestCvC();
-                break;
-            }
-            this.state = 'WAIT_AP_RESPONSE';
-        }     
-    }
-
-    wait_AssertPlayers_response()
-    {
-        if (this.lastResponse[0] != this.client.response[0]) {
-            this.lastResponse = this.client.response;
-            console.log(this.lastResponse);
-            this.parseResponse(this.lastResponse[1]);
-            this.state = 'PROCESS_PIECE';
+        switch(this.model.mode) {
+            case 1:
+            this.client.requestPvP();
+            break;
+            case 2:
+            this.client.requestPvC();
+            break;
+            case 3: 
+            this.client.requestCvC();
+            break;
         }
     }
 
@@ -233,14 +218,18 @@ class GameController extends CGFobject {
     stateMachine() {
         switch (this.state) {
             case 'START':
-                this.start();
-                break;
-            case 'WAIT_AP_RESPONSE' :
-                this.wait_AssertPlayers_response();
+                //buscar configuraçoes da cena e mandar request consoante as configuraçoes
+                //this.model.updateConfigs();
+                this.state = 'PROCESS_PIECE';
                 break;
             case 'PROCESS_PIECE':
+                //ve se o jogado e bot ou nao
                 this.client.requestCurrentPlayerBot();
                 this.state = 'WAIT_CPB_RESPONSE';
+                //se humano
+                //so as peças podem ser selecionadas, fica aqui ate se selecionada uma e faz request dos valid cells
+                //se peça selecionada passa proxima, se nao fica aqui
+                //se bot vai para REQUESTBOT
                 break;
             case 'WAIT_CPB_RESPONSE':
                 this.wait_CurrentPlayerBot_response();
@@ -253,9 +242,14 @@ class GameController extends CGFobject {
                 break;
             case 'SELECT_CELL':
                 this.selectCell();
+                //as casas sao selecionaveis e as peças tb
+                //se selecionar uma peça volta para o process piece
+                //se selecionar uma casa vai para o request play
+                //faz show das peças válidas selecionaveis
                 break;
             case 'REQUEST_PLAY_P':
                 this.client.requestPlay([this.view.board.selectedCell.column, this.view.board.selectedCell.line, this.selectedPiece.color])
+                this.selectedPiece.hasRequestedPlay++;
                 this.state = 'WAIT_PP_RESPONSE';
                 break;
             case 'REQUEST_PLAY_B':
@@ -280,7 +274,9 @@ class GameController extends CGFobject {
                 this.state = 'PROCESS_PIECE';
                 break;
             case 'GAME_OVER':
-                //reset game e volta para o start
+                //nao pode jogar mais
+                //espera pelo botao de start ou assim
+                //pode ser substituido pelo start se tiver uma funcao de restart
                 break;
         }
     }
@@ -312,7 +308,6 @@ class GameController extends CGFobject {
             case 2:
                 this.model.parsePlayReply(response);
                 this.selectedPiece.createParabolicAnimation([this.selectedPiece.x, this.selectedPiece.y], 10, [this.view.board.selectedCell.x, this.view.board.selectedCell.z]);
-                this.selectedPiece.hasRequestedPlay++;
                 break;
             case 3:
                 break;

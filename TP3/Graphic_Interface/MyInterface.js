@@ -23,7 +23,6 @@ class MyInterface extends CGFinterface {
         group.open();
         group.add(this.scene, 'mode', { "Player vs Player": 1, "Player vs Bot": 2, "Bot vs Bot": 3}).name('Mode');
         group.add(this.scene, 'level', {"Easy": 1,"Medium": 2, "Hard": 3}).name('Difficulty');
-        group.add(this.scene, 'new_game').name('New Game');
         // add a group of controls (and open/expand by defult)
         this.initKeys();
 
