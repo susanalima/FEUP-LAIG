@@ -201,4 +201,5 @@ validateMove(Board,[X,Y,Color]) :-
 
 validateLevel(1).
 validateLevel(2).
+validateLevel(3).
 

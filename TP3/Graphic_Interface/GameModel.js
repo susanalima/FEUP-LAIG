@@ -22,7 +22,7 @@ class GameModel  {
     //updates the game configurations according to the chosen ones in te interface
     updateConfigs(){
         this.level = this.scene.level;
-        this.mode = this.scene.mode;
+        this.mode = parseFloat(this.scene.mode);
     }
 
 

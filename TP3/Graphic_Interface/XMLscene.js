@@ -14,10 +14,16 @@ class XMLscene extends CGFscene {
         this.interface = myinterface;
         this.lightValues = {};
         this.currTime = 0;
-
         this.mode = 1;
         this.level = 1;
-        
+        this.startGame = false;   
+    }
+
+
+    new_game()
+    {
+        this.startGame = true;
+        console.log(this.startGame);
     }
 
     /**
