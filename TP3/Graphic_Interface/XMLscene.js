@@ -16,7 +16,8 @@ class XMLscene extends CGFscene {
         this.currTime = 0;
         this.mode = 1;
         this.level = 1;
-        this.startGame = false;   
+        this.startGame = false;
+        this.camera_rotation = 0;   
     }
 
 
@@ -157,6 +158,10 @@ class XMLscene extends CGFscene {
     update(currTime)
     {
         this.currTime = currTime;
+        if (this.camera_rotation > 0) {
+            this.camera.orbit([0, 1, 0], Math.PI / 32);
+            this.camera_rotation--;
+        }
     }
 
     logPicking(){
