@@ -240,6 +240,10 @@ choose_move(Board,2,X,Y,Color) :-
     choose_move_Lvl2(Board,X,Y,Color),
     print_move(Board, X,Y,Color).
 
+choose_move(Board,3,X,Y,Color) :-
+    choose_move_Lvl2(Board,X,Y,Color),
+    print_move(Board, X,Y,Color).
+
 % print_move(+Board,+X, +Y, +Color)
 % prints a move in a user friendly way
 print_move(Board, X,Y,Color) :-
