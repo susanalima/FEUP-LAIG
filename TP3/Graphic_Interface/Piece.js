@@ -13,28 +13,31 @@ class Piece extends CGFobject {
 		this.piece = new MyCylinder(scene, 30, 20, 1.5, 1.5, 0.8);
 		this.texture = texture;
 		this.selectedText = new CGFtexture(scene, "./scenes/images/selected_neon.jpg");
-		this.visible = true;
 		this.center = center;
 		this.color = color;
 		this.x = this.center[0];
 		this.y = this.center[1];
 		this.z = 0;
-		this.lastTime = null;
 		this.animationTime = 1 * 1000;
 		this.parabolic = null;
-		this.restart();
+		this.initialize_values();
 	};
 
-	restart()
+	initialize_values()
 	{
+		this.lastTime = null;
 		this.selected = false;
-		this.locked = false //for when a piece is moved it cannot be moved anymore
+		this.locked = false 
 		this.line = null;
 		this.column = null;
 		this.hasRequestedPlay = 0;
 	}
 
-	update(currTime, cell) {
+	restart(){
+		this.initialize_values();
+	}
+
+	update(currTime) {
 		var deltaT;
 		if (this.lastTime == null){
 			deltaT = 0;
@@ -45,22 +48,20 @@ class Piece extends CGFobject {
 		if(this.parabolic != null && this.parabolic.end == false)
 		{
 			this.selected = false;
-			
-			this.parabolicAnimate(deltaT, cell);
+			this.parabolicAnimate(deltaT);
 		}
 			
 		this.lastTime = currTime;
 	}
 
-	parabolicAnimate(deltaT, cell){
-
+	parabolicAnimate(deltaT){
 		if(this.parabolic.time > this.animationTime){
 			this.parabolic.end = true;
-			if(cell != null)
+			if(this.parabolic.cell != null)
 			{
-				cell.selected = false;
-				this.line = cell.line;
-				this.column = cell.column;
+				this.parabolic.cell.selected = false;
+				this.line = this.parabolic.cell.line;
+				this.column = this.parabolic.cell.column;
 			}
 			return;
 		}
@@ -85,7 +86,7 @@ class Piece extends CGFobject {
 		}
 	}
 
-	createParabolicAnimation(begin, height, end){
+	createParabolicAnimation(begin, height, end, cell){
 		this.parabolic = {
 			actualX: begin[0],
 			actualZ: 0,
@@ -96,7 +97,8 @@ class Piece extends CGFobject {
 			deltaX: end[0] - begin[0],
 			deltaY: end[1] - begin[1],
 			time: 0,
-			end: false
+			end: false,
+			cell: cell
 		};
 		
 
@@ -119,7 +121,7 @@ class Piece extends CGFobject {
 	/**
 	 * Displays the piece in member scene
 	 */
-	display(cell, currTime) {
+	display() {
 		this.scene.pushMatrix();
 		this.scene.rotate(-Math.PI / 2, 1, 0, 0);
 		if (this.scene.pickIndex == this.scene.pickedIndex){
@@ -132,7 +134,7 @@ class Piece extends CGFobject {
 		this.texture.bind();
 
 
-		this.update(currTime, cell);
+		this.update(this.scene.currTime);
 		this.scene.translate(this.x, this.y, this.z);
 		
 		this.piece.display();

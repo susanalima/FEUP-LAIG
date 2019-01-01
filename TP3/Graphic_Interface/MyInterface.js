@@ -25,6 +25,7 @@ class MyInterface extends CGFinterface {
         group.add(this.scene, 'level', {"Easy": 1,"Medium": 2, "Hard": 3}).name('Difficulty');
         group.add(this.scene, 'new_game').name('New Game');
         group.add(this.scene, 'undo').name('Undo');
+        group.add(this.scene, 'game_movie').name('Game Movie');
         // add a group of controls (and open/expand by defult)
         this.initKeys();
 

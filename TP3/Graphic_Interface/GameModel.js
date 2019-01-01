@@ -12,12 +12,20 @@ class GameModel  {
      */
     constructor(scene) { 
         this.scene = scene;
-        this.playsValues = [];
-        this.playsCoords = [];
-        this.winner = 0;  // -1 draw, 0 no winner yet, 1 player1, 2 player2
+        this.initialize_values();
         this.updateConfigs();
         //https://editor.p5js.org/Gonca007/sketches/ByHifcMoX
     };
+
+    initialize_values(){
+        this.playsValues = [];
+        this.playsCoords = [];
+        this.winner = 0;  // -1 draw, 0 no winner yet, 1 player1, 2 player2
+    }
+
+    restart(){
+        this.initialize_values();
+    }
 
     //updates the game configurations according to the chosen ones in te interface
     updateConfigs(){
@@ -93,8 +101,6 @@ class GameModel  {
         this.addPlay(column, line, player, color);
         return [column,line,color];
     }
-
-
 
     undoLastPlay(){
         let lastCoords = this.playsCoords[this.playsCoords.length -1];

@@ -17,21 +17,36 @@ class GameController extends CGFobject {
         super(scene);
         this.model = new GameModel(scene);
         this.view = new GameView(scene, boardTexture, cellTexture, pieceTexture1, pieceTexture2);
-        this.selectedPiece = null;
-        this.state = 'START';
-        this.currentPlayerBot = null;
         //this.alreadyWaiting = false;
         this.client = new Client(this.model);
+        this.maxNumberOfTries = 100;
+        this.gameCount = 0;
+        this.currentPlayerBot = null;
+        this.currentPlayer = null;
+        this.selectedPiece = null;
+        this.state = 'START';
+        this.initialize_values();
+    };
+
+    initialize_values() {
         this.lastResponse = [];
         this.tmpPiece = null;
         this.numberOfTries = 0;
-        this.maxNumberOfTries = 100;
-    };
+    }
+
+    restart_values() {
+        this.initialize_values();
+        this.model.restart();
+        this.view.restart();
+        this.client.restart();
+        this.deselectCurrentPiece();
+        this.scene.reset = false;
+    }
 
 
 
-    deselectCurrentPiece(){
-        if(this.selectedPiece != null){
+    deselectCurrentPiece() {
+        if (this.selectedPiece != null) {
             this.selectedPiece.selected = false;
             this.selectedPiece.swapText();
             this.selectedPiece = null;
@@ -41,14 +56,12 @@ class GameController extends CGFobject {
     showValidCells() {
         this.client.requestValidPlays(this.selectedPiece.color);
         this.parseResponse(this.client.response);
-        
+
     }
 
     undoLastPlay() {
         this.client.requestSwitchPlayer();
-        //animacao
         let play = this.model.undoLastPlay();
-        console.log(play);
         this.view.undoPlay(play[0][0], play[0][1], play[1][1]);
     }
 
@@ -83,7 +96,6 @@ class GameController extends CGFobject {
                 }
             }
         }
-
         return counter;
     }
 
@@ -102,25 +114,24 @@ class GameController extends CGFobject {
         this.scene.pushMatrix();
         this.scene.rotate(Math.PI, 1, 0, 0);
         for (let i = 0; i < this.view.board.cells.length; i++) {
-             if(validCells != null && index >= validCells.length)
-                    break;
+            if (validCells != null && index >= validCells.length)
+                break;
             if (this.view.board.cells[i].valid || (validCells != null && validCells[index][0] == this.view.board.cells[i].line && validCells[index][1] == this.view.board.cells[i].column)) {
                 index++;
                 this.view.board.cells[i].valid = true;
                 this.scene.registerForPick(++this.scene.pickIndex, this.view.board.cells[i]);
                 this.view.board.cells[i].display();
             }
-            else{
+            else {
                 this.scene.registerForPick(++this.scene.pickIndex, this.view.board.cells[i]);
                 this.scene.clearPickRegistration();
                 this.view.board.cells[i].display();
-            }  
+            }
         }
         this.scene.popMatrix();
-
     }
-    
-    unvalidateCells(){
+
+    unvalidateCells() {
         for (let i = 0; i < this.view.board.cells.length; i++)
             this.view.board.cells[i].valid = false;
     }
@@ -129,8 +140,7 @@ class GameController extends CGFobject {
     makePickingPiecesSide(pieces) {
         for (let i = 0; i < pieces.length; i++) {
             this.scene.registerForPick(++this.scene.pickIndex, pieces[i]);
-            pieces[i].display(this.view.board.selectedCell, this.scene.currTime);
-
+            pieces[i].display();
         }
     }
 
@@ -140,21 +150,13 @@ class GameController extends CGFobject {
     }
 
 
-    displayPieces(pieces, currTime) {
+    /*displayPieces(pieces, currTime) {
         for (let i = 0; i < pieces.length; i++) {
             if (pieces[i].selected && this.view.board.selectedCell != null && pieces[i].parabolic == null)
                 pieces[i].createParabolicAnimation([pieces[i].x, pieces[i].y], 10, [this.view.board.selectedCell.x, this.view.board.selectedCell.z]);
             pieces[i].display(this.view.board.selectedCell, currTime);
         }
-    }
-
-    play() {
-        if (this.selectedPiece != null && this.view.board.selectedCell != null && /*!this.alreadyWaiting &&*/ this.selectedPiece.hasRequestedPlay == 0) {
-            this.client.requestPlay([this.view.board.selectedCell.column, this.view.board.selectedCell.line, this.selectedPiece.color])
-            //this.alreadyWaiting = true;
-            this.selectedPiece.hasRequestedPlay++;
-        }
-    }
+    }*/
 
 
     wait_CurrentPlayerBot_response() {
@@ -169,7 +171,7 @@ class GameController extends CGFobject {
     request_validCells() {
         if (this.currentPlayerBot == 0) {
             if (this.selectedPiece != null) {
-                this.client.requestValidPlays(this.selectedPiece.color); 
+                this.client.requestValidPlays(this.selectedPiece.color);
                 this.state = 'WAIT_VP_RESPONSE';
             }
         }
@@ -217,42 +219,39 @@ class GameController extends CGFobject {
     }
 
     check_GameOver() {
-        if (this.model.winner == 0)
-        {
-            if(this.currentPlayerBot == 0)
+        console.log(this.model.winner);
+        if (this.model.winner == 0) {
+            if (this.currentPlayerBot == 0) {
+                this.scene.undo_play = false;
                 this.state = 'WAIT_UNDO';
+            }
             else
                 this.state = 'CHANGE_PLAYER';
-        }    
+        }
         else
             this.state = 'GAME_OVER';
     }
 
-    start()
-    {
-        this.scene.undo_play = false;
-        
-        if(this.scene.startGame == true)
-        {
+    start() {
+        if (this.scene.startGame == true) {
             this.model.updateConfigs();
             console.log(this.model.mode)
-            switch(this.model.mode) {
+            switch (this.model.mode) {
                 case 1:
-                this.client.requestPvP();
-                break;
+                    this.client.requestPvP();
+                    break;
                 case 2:
-                this.client.requestPvC();
-                break;
-                case 3: 
-                this.client.requestCvC();
-                break;
+                    this.client.requestPvC();
+                    break;
+                case 3:
+                    this.client.requestCvC();
+                    break;
             }
             this.state = 'WAIT_AP_RESPONSE';
-        }     
+        }
     }
 
-    wait_AssertPlayers_response()
-    {
+    wait_AssertPlayers_response() {
         if (this.lastResponse[0] != this.client.response[0]) {
             this.lastResponse = this.client.response;
             console.log(this.lastResponse);
@@ -261,8 +260,7 @@ class GameController extends CGFobject {
         }
     }
 
-    wait_SwitchPlayers_response()
-    {
+    wait_SwitchPlayers_response() {
         if (this.lastResponse[0] != this.client.response[0]) {
             this.lastResponse = this.client.response;
             console.log(this.lastResponse);
@@ -271,42 +269,69 @@ class GameController extends CGFobject {
         }
     }
 
-    wait_Undo()
-    {
-        if(this.numberOfTries <= this.maxNumberOfTries)
-        {
-            if(this.scene.undo_play == true)
-            {
+    wait_Undo() {
+        if (this.numberOfTries <= this.maxNumberOfTries) {
+            if (this.scene.undo_play == true) {
                 this.scene.undo_play = false;
                 this.undoLastPlay();
                 this.numberOfTries = -1;
                 this.state = 'WAIT_SP_RESPONSE';
             }
         }
-        else
-        {
+        else {
             this.numberOfTries = -1;
-            this.state = 'CHANGE_PLAYER';           
+            this.state = 'CHANGE_PLAYER';
         }
         this.numberOfTries++;
     }
 
-    wait_AnimationEnd()
-    {
-        if(this.tmpPiece.parabolic.end == true)
-        {
+    wait_AnimationEnd() {
+        console.log('wait_AnimationEnd')
+        if (this.tmpPiece.parabolic.end == true) {
             this.unvalidateCells();
             this.check_GameOver();
         }
     }
 
-    //make undo only possible in wait undo state
+
+    undoAllPlays() {
+        for (let i = this.model.playsCoords.length - 1; i >= 0; i--) {
+            let playCoords = this.model.playsCoords[i];
+            let playValues = this.model.playsValues[i];
+            this.view.undoPlay(playCoords[0], playCoords[1], playValues[1]);
+        }
+    }
+
+    restart_game(){
+        if (this.gameCount > 0 && this.model.playsCoords.length > 0) {
+            this.undoAllPlays();
+            this.state = 'SMALL_WAIT';
+        }
+        else
+            this.state = 'START';
+        this.restart_values();
+        this.gameCount++;
+    }
+
+    small_Wait(){
+        if (this.numberOfTries > this.maxNumberOfTries) {
+            if (this.currentPlayer == 2)
+                this.scene.camera_rotation = 32;
+
+            this.numberOfTries = -1;
+            this.state = 'START';
+        }
+        this.numberOfTries++;
+    }
+
+
+
     stateMachine() {
         switch (this.state) {
             case 'START':
                 this.start();
                 break;
-            case 'WAIT_AP_RESPONSE' :
+            case 'WAIT_AP_RESPONSE':
                 this.wait_AssertPlayers_response();
                 break;
             case 'PROCESS_PIECE':
@@ -345,16 +370,25 @@ class GameController extends CGFobject {
             case 'WAIT_UNDO':
                 this.wait_Undo();
                 break;
-            case 'WAIT_SP_RESPONSE' :
+            case 'WAIT_SP_RESPONSE':
                 this.wait_SwitchPlayers_response();
                 break;
             case 'CHANGE_PLAYER':
-                //this.scene.camera_rotation = 32;
+                this.scene.camera_rotation = 32;
                 //animaçao de camara e afins
                 this.state = 'PROCESS_PIECE';
                 break;
             case 'GAME_OVER':
+                //this.undoAllPlays();
                 //reset game e volta para o start
+                //  this.restart();
+                //this.state = 'WAIT';
+                break;
+            case 'RESTART':
+                this.restart_game();
+                break;
+            case 'SMALL_WAIT':
+                this.small_Wait();
                 break;
         }
     }
@@ -384,7 +418,7 @@ class GameController extends CGFobject {
                 break;
             case 2:
                 this.model.parsePlayReply(response);
-                this.selectedPiece.createParabolicAnimation([this.selectedPiece.x, this.selectedPiece.y], 10, [this.view.board.selectedCell.x, this.view.board.selectedCell.z]);
+                this.selectedPiece.createParabolicAnimation([this.selectedPiece.x, this.selectedPiece.y], 10, [this.view.board.selectedCell.x, this.view.board.selectedCell.z], this.view.board.selectedCell);
                 this.selectedPiece.hasRequestedPlay++;
                 this.tmpPiece = this.selectedPiece;
                 break;
@@ -400,12 +434,15 @@ class GameController extends CGFobject {
                 reply = this.model.parsePlayReply(response);
                 let piece = this.view.selectRandomPieceColor(reply[2]);
                 let cell = this.view.selectCell(parseFloat(reply[0]), parseFloat(reply[1]));
-                piece.createParabolicAnimation([piece.x, piece.y], 10, [cell.x, cell.z]);
+                console.log(cell)
+                piece.createParabolicAnimation([piece.x, piece.y], 10, [cell.x, cell.z], cell);
                 piece.hasRequestedPlay++;
                 this.tmpPiece = piece;
                 break;
             case 8:
-                this.currentPlayerBot = parseFloat(responsearr[1].split(']')[0]);
+                this.currentPlayer = parseFloat(responsearr[1]);
+                this.currentPlayerBot = parseFloat(responsearr[2].split(']')[0]);
+                console.log(this.currentPlayerBot);
                 break;
         }
     }
@@ -416,17 +453,18 @@ class GameController extends CGFobject {
     display() {
         //this.updateClientResponse();
         //this.view.board.checkSelectedCells();
-        if(this.scene.reset)
-        {
-            this.view.resetAllPieces();
-            this.scene.reset = false;
-            this.model.resetPlays();
-            this.view.board.resetBoard();
-            this.deselectCurrentPiece();
+        if (this.scene.reset) {
+            /*if(this.gameCount > 0 && this.model.playsCoords.length > 0)
+                this.undoAllPlays();
+            this.restart();
+            this.state = 'START';
+            this.gameCount++;*/
+
+            this.state = 'RESTART';
         }
         this.view.board.checkSelectedCells(this.selectedPiece);
 
-        //this.play();
+
         this.stateMachine();
         //console.log(this.state);
         /*if (this.selectedPiece != null && this.selectedPiece.parabolic != null)
@@ -436,7 +474,6 @@ class GameController extends CGFobject {
         if (this.checkSelected() == "OK")
             ignore = false;
 
-        let currTime = this.scene.currTime;
         this.scene.pushMatrix();
         this.makePickingValidCells(null);
 

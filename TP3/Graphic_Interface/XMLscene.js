@@ -20,6 +20,7 @@ class XMLscene extends CGFscene {
         this.reset = false;
         this.camera_rotation = 0;   
         this.undo_play = false;
+        this.showGameMovie = false;
     }
 
 
@@ -32,6 +33,11 @@ class XMLscene extends CGFscene {
     undo()
     {
         this.undo_play = true;
+    }
+
+    game_movie()
+    {
+        this.showGameMovie = true;
     }
 
     /**

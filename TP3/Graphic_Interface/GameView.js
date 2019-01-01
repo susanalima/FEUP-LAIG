@@ -23,8 +23,12 @@ class GameView extends CGFobject {
         this.createPieces(this.gamoraPieces, pieceTexture1, -18, -32, 'whitePiece');
         this.assertPlayer = new Piece(this.scene, [-30, 0], pieceTexture1, 'whitePiece');
         this.playBot = new Piece(this.scene, [-25,8], pieceTexture2, 'blackPiece');
-
     };
+
+   restart(){
+       this.board.restart();
+       this.resetAllPieces();
+   }
 
 
     /**
@@ -65,8 +69,9 @@ class GameView extends CGFobject {
 
     resetPieces(pieces){
         for(let i = 0; i < pieces.length; i++){
-            pieces[i].x = pieces[i].center[0];
-            pieces[i].y = pieces[i].center[1];
+           // pieces[i].x = pieces[i].center[0];
+            //pieces[i].y = pieces[i].center[1];
+            pieces[i].restart();
         }
     }
 
@@ -83,6 +88,7 @@ class GameView extends CGFobject {
         if (piece == null)
             return null;
         piece.createParabolicAnimation([piece.x,piece.y],10,piece.center);
+        piece.restart();
     }
 
     searchPiece(line,column,color,pieces) {

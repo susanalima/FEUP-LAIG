@@ -23,6 +23,11 @@ class MyBoard extends CGFobject {
         this.selectedCell = null;
     };
 
+    restart(){
+        this.selectedCell = null;
+        this.resetBoard();
+    }
+
     /**
      * Matrix multiplication between a hexagon orientation matrix and the vector [q,r]
      * @param {Object} q 

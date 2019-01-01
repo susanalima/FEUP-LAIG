@@ -151,9 +151,10 @@ execute_request([Code], [Code,Bot1, Bot2]) :-
 	getPlayer1Bot(Bot1),
 	getPlayer2Bot(Bot2).
 
-execute_request([Code], [Code,Reply]) :-
+execute_request([Code], [Code,Player,Bot]) :-
 	Code = 08,
-	getCurrentPlayerBot(Reply).
+	getCurrentPlayer(Player),
+	getCurrentPlayerBot(Bot).
 
 
 parse_input([Code,Board,Color]) :-

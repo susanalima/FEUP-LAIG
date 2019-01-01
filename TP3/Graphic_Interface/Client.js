@@ -2,8 +2,16 @@ class Client {
     constructor(model)
     {       
         this.model = model;
+        this.initialize_values();
+    }
+
+    initialize_values() {
         this.response = [];
         this.requestId = 0;
+    }
+    
+    restart(){
+        this.initialize_values();
     }
 
     getPrologRequest(requestString, onSuccess, onError, port) {
