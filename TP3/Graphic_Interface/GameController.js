@@ -165,10 +165,13 @@ class GameController extends CGFobject {
             console.log(this.lastResponse);
             this.parseResponse(this.lastResponse[1]);
             this.state = 'REQUEST_VALID_CELLS';
+            this.check_Reset();
         }
     }
 
     request_validCells() {
+        if(this.check_Reset())
+            return;
         if (this.currentPlayerBot == 0) {
             if (this.selectedPiece != null) {
                 this.client.requestValidPlays(this.selectedPiece.color);
@@ -186,10 +189,13 @@ class GameController extends CGFobject {
             console.log(this.lastResponse);
             this.parseResponse(this.lastResponse[1]);
             this.state = 'SELECT_CELL';
+            this.check_Reset();
         }
     }
 
     selectCell() {
+        if(this.check_Reset())
+            return;
         if (this.view.getCurrentSelectedPiece() != this.selectedPiece) {
             this.state = 'PROCESS_PIECE';
         }
@@ -232,23 +238,39 @@ class GameController extends CGFobject {
             this.state = 'GAME_OVER';
     }
 
-    start() {
-        if (this.scene.startGame == true) {
-            this.model.updateConfigs();
-            console.log(this.model.mode)
-            switch (this.model.mode) {
-                case 1:
-                    this.client.requestPvP();
-                    break;
-                case 2:
-                    this.client.requestPvC();
-                    break;
-                case 3:
-                    this.client.requestCvC();
-                    break;
+
+    start(){
+        if (this.scene.reset == true) {
+            if (this.gameCount > 0 && this.model.playsCoords.length > 0) {
+                this.undoAllPlays();
+                this.state = 'SMALL_WAIT';
             }
-            this.state = 'WAIT_AP_RESPONSE';
+            else {
+                this.state = 'UPDATE_CONFIGS';
+            }
+            this.restart_values();
+            this.gameCount++;
         }
+    }
+
+    update_Configs()
+    {
+        if(this.check_Reset())
+            return;
+        this.model.updateConfigs();
+        console.log(this.model.mode)
+        switch (this.model.mode) {
+            case 1:
+                this.client.requestPvP();
+                break;
+            case 2:
+                this.client.requestPvC();
+                break;
+            case 3:
+                this.client.requestCvC();
+                break;
+        }
+        this.state = 'WAIT_AP_RESPONSE';
     }
 
     wait_AssertPlayers_response() {
@@ -270,6 +292,8 @@ class GameController extends CGFobject {
     }
 
     wait_Undo() {
+        if(this.check_Reset())
+            return;
         if (this.numberOfTries <= this.maxNumberOfTries) {
             if (this.scene.undo_play == true) {
                 this.scene.undo_play = false;
@@ -286,10 +310,10 @@ class GameController extends CGFobject {
     }
 
     wait_AnimationEnd() {
-        console.log('wait_AnimationEnd')
         if (this.tmpPiece.parabolic.end == true) {
             this.unvalidateCells();
             this.check_GameOver();
+            this.check_Reset();
         }
     }
 
@@ -302,26 +326,26 @@ class GameController extends CGFobject {
         }
     }
 
-    restart_game(){
-        if (this.gameCount > 0 && this.model.playsCoords.length > 0) {
-            this.undoAllPlays();
-            this.state = 'SMALL_WAIT';
-        }
-        else
-            this.state = 'START';
-        this.restart_values();
-        this.gameCount++;
-    }
-
     small_Wait(){
+        if(this.check_Reset())
+            return;
         if (this.numberOfTries > this.maxNumberOfTries) {
             if (this.currentPlayer == 2)
                 this.scene.camera_rotation = 32;
 
             this.numberOfTries = -1;
-            this.state = 'START';
+            this.state = 'UPDATE_CONFIGS';
         }
         this.numberOfTries++;
+    }
+
+    
+    check_Reset(){
+        if (this.scene.reset) {
+            this.state = 'START';
+            return true;
+        }
+        return false;
     }
 
 
@@ -330,6 +354,9 @@ class GameController extends CGFobject {
         switch (this.state) {
             case 'START':
                 this.start();
+                break;
+            case 'UPDATE_CONFIGS':
+                this.update_Configs();
                 break;
             case 'WAIT_AP_RESPONSE':
                 this.wait_AssertPlayers_response();
@@ -377,28 +404,19 @@ class GameController extends CGFobject {
                 this.scene.camera_rotation = 32;
                 //animaçao de camara e afins
                 this.state = 'PROCESS_PIECE';
+                this.check_Reset();
                 break;
             case 'GAME_OVER':
-                //this.undoAllPlays();
                 //reset game e volta para o start
                 //  this.restart();
                 //this.state = 'WAIT';
-                break;
-            case 'RESTART':
-                this.restart_game();
+                this.check_Reset();
                 break;
             case 'SMALL_WAIT':
                 this.small_Wait();
                 break;
         }
-    }
 
-    updateClientResponse() {
-        if (this.lastResponse[0] != this.client.response[0]) {
-            this.lastResponse = this.client.response;
-            console.log(this.lastResponse);
-            this.parseResponse(this.lastResponse[1]);
-        }
     }
 
     /*
@@ -448,23 +466,10 @@ class GameController extends CGFobject {
     }
 
 
-
-
     display() {
-        //this.updateClientResponse();
         //this.view.board.checkSelectedCells();
-        if (this.scene.reset) {
-            /*if(this.gameCount > 0 && this.model.playsCoords.length > 0)
-                this.undoAllPlays();
-            this.restart();
-            this.state = 'START';
-            this.gameCount++;*/
 
-            this.state = 'RESTART';
-        }
         this.view.board.checkSelectedCells(this.selectedPiece);
-
-
         this.stateMachine();
         //console.log(this.state);
         /*if (this.selectedPiece != null && this.selectedPiece.parabolic != null)
