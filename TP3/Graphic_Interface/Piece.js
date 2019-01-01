@@ -12,7 +12,7 @@ class Piece extends CGFobject {
 		//(scene, slices, stacks, base, top, height)
 		this.piece = new MyCylinder(scene, 30, 20, 1.5, 1.5, 0.8);
 		this.texture = texture;
-		this.selectedText = new CGFtexture(scene, "./scenes/images/selected_neon.jpg");
+		this.selectedText = sText;
 		this.center = center;
 		this.color = color;
 		this.x = this.center[0];

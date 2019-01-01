@@ -19,8 +19,10 @@ class GameView extends CGFobject {
         this.cell_radius = 3;
         this.thanosPieces = [];
         this.gamoraPieces = [];
-        this.createPieces(this.thanosPieces, pieceTexture2, 18, 32, 'blackPiece');
-        this.createPieces(this.gamoraPieces, pieceTexture1, -18, -32, 'whitePiece');
+        let selectText1 =  new CGFtexture(scene, "./scenes/images/selected_neon.jpg");
+        let selectText2 =  new CGFtexture(scene, "./scenes/images/selected_neon.jpg");
+        this.createPieces(this.thanosPieces, pieceTexture2, 18, 32, 'blackPiece', selectText1);
+        this.createPieces(this.gamoraPieces, pieceTexture1, -18, -32, 'whitePiece', selectText2);
         this.assertPlayer = new Piece(this.scene, [-30, 0], pieceTexture1, 'whitePiece');
         this.playBot = new Piece(this.scene, [-25,8], pieceTexture2, 'blackPiece');
     };
