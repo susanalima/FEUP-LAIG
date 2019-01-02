@@ -20,6 +20,9 @@ class GameView extends CGFobject {
         this.thanosPieces = [];
         this.gamoraPieces = [];
 
+        this.player1Wins = 0;
+        this.player2Wins = 0;
+
         let selectText1 = new CGFtexture(scene, "./scenes/images/selected_neon.jpg");
         let selectText2 = new CGFtexture(scene, "./scenes/images/selected_neon.jpg");
         let pointerText1 = new CGFtexture(scene, "./scenes/images/pink.jpg");
@@ -36,19 +39,27 @@ class GameView extends CGFobject {
         this.playBot = new Piece(this.scene, [-25, 8], pieceTexture2, 'blackPiece');
 
         this.cronometer = new Cronometer(this.scene, [-20, 10, -20], this.playTimeMax, pointerText1, pointerText2);
+        this.marker = new Marker(this.scene, [-20, 30, -20]);
     };
 
     restart() {
         this.board.restart();
         this.resetAllPieces();
+        this.stopTimer();
+        this.resetTimer();
+        this.resetWins()
+        
+    }
+
+    resetWins(){
+        this.player1Wins = 0;
+        this.player2Wins = 0;
     }
 
     startTimer()
     {
         this.resetTimer();
         this.counting = true;
-      
-
     }
 
     resetTimer(){
@@ -76,6 +87,13 @@ class GameView extends CGFobject {
 
         this.lastTime = this.scene.currTime;
         }
+    }
+
+    incWinsPlayer(player){
+        if(player == 1)
+            this.player1Wins++;
+        else
+            this.player2Wins++;
     }
 
 

@@ -225,7 +225,7 @@ class GameController extends CGFobject {
     }
 
     check_GameOver() {
-        console.log(this.model.winner);
+        console.log("winner" + this.model.winner);
         if (this.model.winner == 0) {
             if (this.currentPlayerBot == 0) {
                 this.scene.undo_play = false;
@@ -234,8 +234,10 @@ class GameController extends CGFobject {
             else
                 this.state = 'CHANGE_PLAYER';
         }
-        else
+        else{
             this.state = 'GAME_OVER';
+            this.view.incWinsPlayer(this.model.winner);
+        }
     }
 
     checkOverTime(){
@@ -500,6 +502,7 @@ class GameController extends CGFobject {
         
         this.view.updateTimer();
         this.view.cronometer.display();
+        this.view.marker.display();
 
         this.scene.pushMatrix();
         this.makePickingValidCells(null);
