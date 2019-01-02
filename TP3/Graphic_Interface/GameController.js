@@ -247,6 +247,7 @@ class GameController extends CGFobject {
             this.selectedPiece.selected = false;
             this.selectedPiece.swapText();
             this.selectedPiece = null;
+            this.client.requestSwitchPlayer();
             }
         }
     }
@@ -422,7 +423,7 @@ class GameController extends CGFobject {
                 this.wait_SwitchPlayers_response();
                 break;
             case 'CHANGE_PLAYER':
-                  this.scene.camera_rotation = 32;
+                this.scene.camera_rotation = 32;
                 //animaçao de camara e afins
                 this.state = 'PROCESS_PIECE';
                 this.check_Reset();
