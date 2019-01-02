@@ -11,6 +11,7 @@ class Piece extends CGFobject {
 		super(scene);
 		//(scene, slices, stacks, base, top, height)
 		this.piece = new MyCylinder(scene, 30, 20, 1.5, 1.5, 0.8);
+		this.swaped = false;
 		this.texture = texture;
 		this.selectedText = sText;
 		this.center = center;
@@ -25,6 +26,8 @@ class Piece extends CGFobject {
 
 	initialize_values()
 	{
+		if(this.swaped)
+			this.swapText();
 		this.lastTime = null;
 		this.selected = false;
 		this.locked = false 
@@ -109,6 +112,7 @@ class Piece extends CGFobject {
 		let temp = this.selectedText;
 		this.selectedText = this.texture;
 		this.texture = temp;
+		this.swaped = !this.swaped;
 	}
 
 	animate(cellPosition, deltaT) {

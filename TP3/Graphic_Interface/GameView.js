@@ -92,11 +92,13 @@ class GameView extends CGFobject {
     incWinsPlayer(player){
         if(player == 1){
             this.player1Wins++;
-            this.marker.p1++;
+            if(this.player1Wins < 10)
+                this.marker.p1++;
         }
         else{
             this.player2Wins++;
-            this.marker.p2++;
+            if(this.player2Wins < 10)
+                this.marker.p2++;
         }
     }
 
