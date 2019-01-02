@@ -18,6 +18,7 @@ class GameModel  {
     };
 
     initialize_values(){
+        this.currentMoviePlay = 0;
         this.playsValues = [];
         this.playsCoords = [];
         this.winner = 0;  // -1 draw, 0 no winner yet, 1 player1, 2 player2
@@ -42,6 +43,7 @@ class GameModel  {
         let play = this.createPlay(x, y, player, color);
         this.playsCoords.push(play[0]);
         this.playsValues.push(play[1]);
+        this.inc_currentMoviePlay();
     }
 
     createPlay(x, y, player, color) {
@@ -107,8 +109,29 @@ class GameModel  {
         this.playsCoords.pop();
         let lastValues = this.playsValues[this.playsValues.length -1];
         this.playsValues.pop();
-        console.log([lastCoords, lastValues]);
+        this.dec_currentMoviePlay();
         return [lastCoords, lastValues];
+    }
+
+    getCurrentMoviePlayInfo(){
+        let playCoords = this.playsCoords[this.currentMoviePlay];
+        let playValues = this.playsValues[this.currentMoviePlay];
+        return [playCoords,playValues];
+    }
+
+    dec_currentMoviePlay(){
+        if(this.currentMoviePlay > 0)
+            this.currentMoviePlay--;
+    }
+
+    inc_currentMoviePlay(){
+        if(this.currentMoviePlay < this.playsCoords.length - 1)
+            this.currentMoviePlay++;
+    }
+
+    lastMoviePlay()
+    {
+        return (this.currentMoviePlay == 0);
     }
 
 };

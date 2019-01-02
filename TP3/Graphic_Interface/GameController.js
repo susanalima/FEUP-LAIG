@@ -236,6 +236,7 @@ class GameController extends CGFobject {
         }
         else{
             this.state = 'GAME_OVER';
+            this.scene.showGameMovie = false;
             this.view.incWinsPlayer(this.model.winner);
         }
     }
@@ -345,7 +346,7 @@ class GameController extends CGFobject {
             return;
         if (this.numberOfTries > this.maxNumberOfTries) {
             if (this.currentPlayer == 2)
-                this.scene.camera_rotation = 32;
+                this.scene.update_CameraRotation();
 
             this.numberOfTries = -1;
             this.state = 'UPDATE_CONFIGS';
@@ -364,6 +365,37 @@ class GameController extends CGFobject {
         return false;
     }
 
+    check_GameMovie(){
+        if(this.scene.showGameMovie){
+            this.state = 'GAME_MOVIE';
+        }
+    }
+
+
+
+
+    view_GameMovie(){
+       let currMoviePlayInfo = this.model.getCurrentMoviePlayInfo();
+       console.log(currMoviePlayInfo);
+       this.view.updateCurrentMoviePiece(currMoviePlayInfo[0][0], currMoviePlayInfo[0][1], currMoviePlayInfo[1][1]);
+       this.view.undoPlay(currMoviePlayInfo[0][0], currMoviePlayInfo[0][1], currMoviePlayInfo[1][1]);
+       this.state = 'WAIT_GM_ANIMATION_END';
+    }
+
+    wait_GM_AnimationEnd(){
+
+        if (this.view.currentMoviePiece.parabolic.end == true) {
+            if(this.model.lastMoviePlay() == true)
+            {
+                this.state = 'STOP';
+            }
+            else
+            {
+                this.model.dec_currentMoviePlay();
+                this.state = 'GAME_MOVIE';
+            }
+        }
+    }
 
 
     stateMachine() {
@@ -387,8 +419,7 @@ class GameController extends CGFobject {
                 this.wait_CurrentPlayerBot_response();
                 break;
             case 'REQUEST_VALID_CELLS':
-            this.checkOverTime();
-
+                this.checkOverTime();
                 this.request_validCells();
                 break;
             case 'WAIT_VP_RESPONSE':
@@ -423,7 +454,7 @@ class GameController extends CGFobject {
                 this.wait_SwitchPlayers_response();
                 break;
             case 'CHANGE_PLAYER':
-                this.scene.camera_rotation = 32;
+                  this.scene.update_CameraRotation();
                 //animaçao de camara e afins
                 this.state = 'PROCESS_PIECE';
                 this.check_Reset();
@@ -432,6 +463,18 @@ class GameController extends CGFobject {
                 //reset game e volta para o start
                 //  this.restart();
                 //this.state = 'WAIT';
+                //if (this.currentPlayer == 2)
+                  //  this.scene.camera_rotation = 32;
+               this.check_GameMovie();
+               this.check_Reset();
+                break;
+            case 'GAME_MOVIE' :
+                this.view_GameMovie();
+                break;
+            case 'WAIT_GM_ANIMATION_END' :
+                this.wait_GM_AnimationEnd();
+                break;
+            case 'STOP' :
                 this.check_Reset();
                 break;
             case 'SMALL_WAIT':
