@@ -43,7 +43,6 @@ class GameModel  {
         let play = this.createPlay(x, y, player, color);
         this.playsCoords.push(play[0]);
         this.playsValues.push(play[1]);
-        this.inc_currentMoviePlay();
     }
 
     createPlay(x, y, player, color) {
@@ -109,7 +108,6 @@ class GameModel  {
         this.playsCoords.pop();
         let lastValues = this.playsValues[this.playsValues.length -1];
         this.playsValues.pop();
-        this.dec_currentMoviePlay();
         return [lastCoords, lastValues];
     }
 
@@ -119,11 +117,6 @@ class GameModel  {
         return [playCoords,playValues];
     }
 
-    dec_currentMoviePlay(){
-        if(this.currentMoviePlay > 0)
-            this.currentMoviePlay--;
-    }
-
     inc_currentMoviePlay(){
         if(this.currentMoviePlay < this.playsCoords.length - 1)
             this.currentMoviePlay++;
@@ -131,7 +124,7 @@ class GameModel  {
 
     lastMoviePlay()
     {
-        return (this.currentMoviePlay == 0);
+        return (this.currentMoviePlay == this.playsCoords.length - 1);
     }
 
 };

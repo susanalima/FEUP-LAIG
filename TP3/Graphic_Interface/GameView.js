@@ -158,8 +158,28 @@ class GameView extends CGFobject {
         console.log(piece);
         if (piece == null)
             return null;
-        piece.createParabolicAnimation([piece.x, piece.y], 10, piece.center);
+        console.log('undoPlay playedCenter');
+        console.log(piece.playedCenter);
+        piece.createParabolicAnimation([piece.x, piece.y], 10, piece.center, null, true);
         piece.restart();
+        console.log('view-undoPlay')
+        console.log(piece.playedCenter);
+    }
+
+    redoPlay(column, line, color) {
+        let piece = this.getPiece(line, column, color);
+        if (piece == null)
+            return null;
+        console.log(piece.center);
+        console.log(piece.playedCenter);
+        piece.createParabolicAnimation(piece.center, 10,piece.playedCenter, null, false);
+    }
+
+    setPieceToStartPos(column, line , color) {
+        let piece = this.getPiece(line, column, color);
+        if (piece == null)
+            return null;
+        piece.createParabolicAnimation([piece.x, piece.y], 10, piece.center, null, true);
     }
 
     searchPiece(line, column, color, pieces) {
