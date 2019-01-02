@@ -40,6 +40,7 @@ class GameController extends CGFobject {
         this.view.restart();
         this.client.restart();
         this.deselectCurrentPiece();
+        this.view.marker.indicatorFlag = true;
         this.scene.reset = false;
     }
 
