@@ -62,15 +62,11 @@ class Piece extends CGFobject {
 		console.log('parabolicAnimate');
 		if(this.parabolic.time > this.animationTime){
 			this.parabolic.end = true;
-			this.locked = true;
-			console.log('played_center')
-			console.log(this.playedCenter);
 			if(this.parabolic.reverse == false)
 			{
 				this.playedCenter = [this.x,this.y];
-				console.log('entered if clause-parabolicAnimate')
+				this.locked = true;
 			}
-				
 			if(this.parabolic.cell != null)
 			{
 				this.parabolic.cell.selected = false;
@@ -145,8 +141,8 @@ class Piece extends CGFobject {
 			this.selected = true;
 		}
 		
-		/*if(this.locked)
-			this.selected =false;*/
+		if(this.locked)
+			this.selected =false;
 
 		/*if (this.selected && cell != null && this.parabolic == null)
 			this.createParabolicAnimation([this.x, this.y], 10, [cell.x,cell.z]);*/

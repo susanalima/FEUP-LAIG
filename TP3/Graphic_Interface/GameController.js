@@ -603,7 +603,7 @@ class GameController extends CGFobject {
 
         this.view.board.checkSelectedCells(this.selectedPiece);
         this.stateMachine();
-        console.log(this.state);
+        //console.log(this.state);
         /*if (this.selectedPiece != null && this.selectedPiece.parabolic != null)
             this.alreadyWaiting = false;*/
 
