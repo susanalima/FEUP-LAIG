@@ -306,10 +306,8 @@ class GameController extends CGFobject {
             console.log(this.lastResponse);
             this.parseResponse(this.lastResponse[1]);
             if (this.numberOfTries <= this.maxNumberOfTries) {
-
-                    this.numberOfTries = -1;
-                    this.state = 'PROCESS_PIECE';
-                    
+                this.numberOfTries = -1;
+                this.state = 'PROCESS_PIECE';
             }
             this.numberOfTries++;
         }
@@ -364,8 +362,7 @@ class GameController extends CGFobject {
             return;
         if (this.numberOfTries > this.maxNumberOfTries) {
             if (this.currentPlayer == 2)
-                this.scene.update_CameraRotation();
-
+                 this.scene.update_CameraRotation();
             this.numberOfTries = -1;
             this.state = 'UPDATE_CONFIGS';
         }
@@ -391,19 +388,20 @@ class GameController extends CGFobject {
                 this.view.setPieceToStartPos(playCoords[0], playCoords[1], playValues[1]);
             }
             this.state = 'WAIT_GM_1st_ANIMATION_END';
+   
         }
     }
 
     view_GameMovie(){
        let currMoviePlayInfo = this.model.getCurrentMoviePlayInfo();
-       console.log(currMoviePlayInfo);
        this.view.updateCurrentMoviePiece(currMoviePlayInfo[0][0], currMoviePlayInfo[0][1], currMoviePlayInfo[1][1]);
        this.view.redoPlay(currMoviePlayInfo[0][0], currMoviePlayInfo[0][1], currMoviePlayInfo[1][1]);
        this.state = 'WAIT_GM_ANIMATION_END';
     }
 
     wait_GM_AnimationEnd(){
-
+        if(this.check_Reset())
+            return;
         if (this.view.currentMoviePiece.parabolic.end == true) {
             if(this.model.lastMoviePlay() == true)
             {
@@ -415,8 +413,17 @@ class GameController extends CGFobject {
             else
             {
                 this.model.inc_currentMoviePlay();
-                this.state = 'GAME_MOVIE';
+                this.scene.update_CameraRotation();
+                this.state = 'WAIT_GM_CAMERA_ANIMATION_END';
             }
+        }
+    }
+
+    wait_GM_Camera_AnimationEnd(){
+        if(this.check_Reset())
+            return;
+        if (this.scene.camera_rotation == 0) {
+            this.state = 'GAME_MOVIE';
         }
     }
 
@@ -425,9 +432,26 @@ class GameController extends CGFobject {
             return;
         if (this.numberOfTries > this.maxNumberOfTries) {
             this.numberOfTries = -1;
+
+            if (this.currentPlayer == 2)
+            {
+                this.scene.update_CameraRotation();
+                this.state = 'WAIT_GM_1st_CAMERA_ANIMATION_END';
+            }
+            else
             this.state = 'GAME_MOVIE';
+
         }
         this.numberOfTries++;
+    }
+
+    
+    wait_GM_1st_Camera_AnimationEnd(){
+        if(this.check_Reset())
+            return;
+        if (this.scene.camera_rotation == 0) {
+            this.state = 'GAME_MOVIE';
+        }
     }
 
 
@@ -505,7 +529,6 @@ class GameController extends CGFobject {
                   //  this.scene.camera_rotation = 32;
                this.check_GameMovie();
                this.check_Reset();
-               console.log('GAME_OVER')
                 break;
             case 'GAME_MOVIE' :
                 this.view_GameMovie();
@@ -516,8 +539,11 @@ class GameController extends CGFobject {
             case 'WAIT_GM_ANIMATION_END' :
                 this.wait_GM_AnimationEnd();
                 break;
-            case 'STOP' :
-                this.check_Reset();
+            case 'WAIT_GM_CAMERA_ANIMATION_END' :
+                this.wait_GM_Camera_AnimationEnd();
+                break;
+            case 'WAIT_GM_1st_CAMERA_ANIMATION_END' :
+                this.wait_GM_1st_Camera_AnimationEnd();
                 break;
             case 'SMALL_WAIT':
                 this.small_Wait();
