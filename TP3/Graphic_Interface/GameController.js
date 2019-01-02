@@ -455,6 +455,7 @@ class GameController extends CGFobject {
                 this.wait_SwitchPlayers_response();
                 break;
             case 'CHANGE_PLAYER':
+                  this.view.marker.switchPlayer();
                   this.scene.update_CameraRotation();
                 //animaçao de camara e afins
                 this.state = 'PROCESS_PIECE';
