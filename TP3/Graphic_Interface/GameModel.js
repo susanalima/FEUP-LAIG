@@ -127,6 +127,11 @@ class GameModel  {
         return (this.currentMoviePlay == this.playsCoords.length - 1);
     }
 
+    getCurrentMoviePlayPlayer()
+    {
+        return this.playsValues[this.currentMoviePlay][0];
+    }
+
 };
 
 
