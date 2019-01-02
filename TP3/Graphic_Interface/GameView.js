@@ -33,10 +33,10 @@ class GameView extends CGFobject {
         this.counting = false;
         this.lastTime = null;
 
+        this.currentMoviePiece = null;
+
         this.createPieces(this.thanosPieces, pieceTexture2, 18, 32, 'blackPiece', selectText1);
         this.createPieces(this.gamoraPieces, pieceTexture1, -18, -32, 'whitePiece', selectText2);
-        this.assertPlayer = new Piece(this.scene, [-30, 0], pieceTexture1, 'whitePiece');
-        this.playBot = new Piece(this.scene, [-25, 8], pieceTexture2, 'blackPiece');
 
         this.cronometer = new Cronometer(this.scene, [-20, 10, -20], this.playTimeMax, pointerText1, pointerText2);
         this.marker = new Marker(this.scene, [-20, 30, -20]);
@@ -47,8 +47,8 @@ class GameView extends CGFobject {
         this.resetAllPieces();
         this.stopTimer();
         this.resetTimer();
-        this.resetWins()
-        
+        this.resetWins();
+        this.currentMoviePiece = null;
     }
 
     resetWins(){
@@ -172,11 +172,13 @@ class GameView extends CGFobject {
 
 
     getPiece(line, column, color) {
+        console.log('getPiece')
         let piece;
         if (color == 'blackPiece')
             piece = this.searchPiece(line, column, color, this.thanosPieces);
         if (color == 'whitePiece')
             piece = this.searchPiece(line, column, color, this.gamoraPieces);
+            console.log(piece)
         return piece;
     }
 
@@ -213,6 +215,11 @@ class GameView extends CGFobject {
             if (this.gamoraPieces[i].selected)
                 return this.gamoraPieces[i];
         }
+    }
+
+    updateCurrentMoviePiece(column, line, color)
+    {
+        this.currentMoviePiece = this.getPiece(line, column, color);
     }
 
 };
