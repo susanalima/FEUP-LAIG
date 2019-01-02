@@ -70,9 +70,7 @@ class GameView extends CGFobject {
         if (this.lastTime == null)
             deltaT = 0;
         else 
-            deltaT = this.scene.currTime - this.lastTime;
-
-       
+            deltaT = this.scene.currTime - this.lastTime; 
             this.actualPlayTime += deltaT;
             this.cronometer.updateTime(this.actualPlayTime);
 

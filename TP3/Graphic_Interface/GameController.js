@@ -238,6 +238,17 @@ class GameController extends CGFobject {
             this.state = 'GAME_OVER';
     }
 
+    checkOverTime(){
+        if(this.view.actualPlayTime >= this.view.playTimeMax){
+            this.state = 'CHANGE_PLAYER';
+            if(this.selectedPiece != null){
+            this.selectedPiece.selected = false;
+            this.selectedPiece.swapText();
+            this.selectedPiece = null;
+            }
+        }
+    }
+
 
     start(){
         if (this.scene.reset == true) {
@@ -343,6 +354,8 @@ class GameController extends CGFobject {
     check_Reset(){
         if (this.scene.reset) {
             this.state = 'START';
+            this.view.stopTimer();
+            this.view.resetTimer();
             return true;
         }
         return false;
@@ -367,15 +380,19 @@ class GameController extends CGFobject {
                 this.state = 'WAIT_CPB_RESPONSE';
                 break;
             case 'WAIT_CPB_RESPONSE':
+                this.checkOverTime();
                 this.wait_CurrentPlayerBot_response();
                 break;
             case 'REQUEST_VALID_CELLS':
+            this.checkOverTime();
+
                 this.request_validCells();
                 break;
             case 'WAIT_VP_RESPONSE':
                 this.wait_validCells_response();
                 break;
             case 'SELECT_CELL':
+                this.checkOverTime();
                 this.selectCell();
                 break;
             case 'REQUEST_PLAY_P':
@@ -403,7 +420,7 @@ class GameController extends CGFobject {
                 this.wait_SwitchPlayers_response();
                 break;
             case 'CHANGE_PLAYER':
-                //  this.scene.camera_rotation = 32;
+                  this.scene.camera_rotation = 32;
                 //animaçao de camara e afins
                 this.state = 'PROCESS_PIECE';
                 this.check_Reset();
