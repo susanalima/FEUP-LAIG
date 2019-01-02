@@ -303,7 +303,13 @@ class GameController extends CGFobject {
             this.lastResponse = this.client.response;
             console.log(this.lastResponse);
             this.parseResponse(this.lastResponse[1]);
-            this.state = 'PROCESS_PIECE';
+            if (this.numberOfTries <= this.maxNumberOfTries) {
+
+                    this.numberOfTries = -1;
+                    this.state = 'PROCESS_PIECE';
+                    console.log(444444444444444444444444444444444444)
+            }
+            this.numberOfTries++;
         }
     }
 
@@ -368,18 +374,20 @@ class GameController extends CGFobject {
 
     check_GameMovie(){
         if(this.scene.showGameMovie){
-            this.state = 'GAME_MOVIE';
+            for (let i = this.model.playsCoords.length - 1; i >= 0; i--) {
+                let playCoords = this.model.playsCoords[i];
+                let playValues = this.model.playsValues[i];
+                this.view.setPieceToStartPos(playCoords[0], playCoords[1], playValues[1]);
+            }
+            this.state = 'WAIT_GM_1st_ANIMATION_END';
         }
     }
-
-
-
 
     view_GameMovie(){
        let currMoviePlayInfo = this.model.getCurrentMoviePlayInfo();
        console.log(currMoviePlayInfo);
        this.view.updateCurrentMoviePiece(currMoviePlayInfo[0][0], currMoviePlayInfo[0][1], currMoviePlayInfo[1][1]);
-       this.view.undoPlay(currMoviePlayInfo[0][0], currMoviePlayInfo[0][1], currMoviePlayInfo[1][1]);
+       this.view.redoPlay(currMoviePlayInfo[0][0], currMoviePlayInfo[0][1], currMoviePlayInfo[1][1]);
        this.state = 'WAIT_GM_ANIMATION_END';
     }
 
@@ -388,14 +396,27 @@ class GameController extends CGFobject {
         if (this.view.currentMoviePiece.parabolic.end == true) {
             if(this.model.lastMoviePlay() == true)
             {
-                this.state = 'STOP';
+                this.scene.reset = false;
+                this.scene.showGameMovie = false;
+                this.model.currentMoviePlay = 0;
+                this.state = 'GAME_OVER';
             }
             else
             {
-                this.model.dec_currentMoviePlay();
+                this.model.inc_currentMoviePlay();
                 this.state = 'GAME_MOVIE';
             }
         }
+    }
+
+    wait_GM_1st_AnimationEnd(){
+        if(this.check_Reset())
+            return;
+        if (this.numberOfTries > this.maxNumberOfTries) {
+            this.numberOfTries = -1;
+            this.state = 'GAME_MOVIE';
+        }
+        this.numberOfTries++;
     }
 
 
@@ -469,9 +490,13 @@ class GameController extends CGFobject {
                   //  this.scene.camera_rotation = 32;
                this.check_GameMovie();
                this.check_Reset();
+               console.log('GAME_OVER')
                 break;
             case 'GAME_MOVIE' :
                 this.view_GameMovie();
+                break;
+            case 'WAIT_GM_1st_ANIMATION_END' :
+                this.wait_GM_1st_AnimationEnd();
                 break;
             case 'WAIT_GM_ANIMATION_END' :
                 this.wait_GM_AnimationEnd();
@@ -503,7 +528,7 @@ class GameController extends CGFobject {
                 break;
             case 2:
                 this.model.parsePlayReply(response);
-                this.selectedPiece.createParabolicAnimation([this.selectedPiece.x, this.selectedPiece.y], 10, [this.view.board.selectedCell.x, this.view.board.selectedCell.z], this.view.board.selectedCell);
+                this.selectedPiece.createParabolicAnimation([this.selectedPiece.x, this.selectedPiece.y], 10, [this.view.board.selectedCell.x, this.view.board.selectedCell.z], this.view.board.selectedCell, false);
                 this.selectedPiece.hasRequestedPlay++;
                 this.tmpPiece = this.selectedPiece;
                 break;
@@ -520,7 +545,7 @@ class GameController extends CGFobject {
                 let piece = this.view.selectRandomPieceColor(reply[2]);
                 let cell = this.view.selectCell(parseFloat(reply[0]), parseFloat(reply[1]));
                 console.log(cell)
-                piece.createParabolicAnimation([piece.x, piece.y], 10, [cell.x, cell.z], cell);
+                piece.createParabolicAnimation([piece.x, piece.y], 10, [cell.x, cell.z], cell, false);
                 piece.hasRequestedPlay++;
                 this.tmpPiece = piece;
                 break;
