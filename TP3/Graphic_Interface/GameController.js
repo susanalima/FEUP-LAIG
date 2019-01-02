@@ -362,6 +362,7 @@ class GameController extends CGFobject {
                 this.wait_AssertPlayers_response();
                 break;
             case 'PROCESS_PIECE':
+                this.view.startTimer();
                 this.client.requestCurrentPlayerBot();
                 this.state = 'WAIT_CPB_RESPONSE';
                 break;
@@ -392,6 +393,7 @@ class GameController extends CGFobject {
                 this.wait_BotPlay_response();
                 break;
             case 'WAIT_ANIMATION_END':
+                this.view.stopTimer();
                 this.wait_AnimationEnd();
                 break;
             case 'WAIT_UNDO':
@@ -478,7 +480,8 @@ class GameController extends CGFobject {
         let ignore = true;
         if (this.checkSelected() == "OK")
             ignore = false;
-
+        
+        this.view.updateTimer();
         this.view.cronometer.display();
 
         this.scene.pushMatrix();

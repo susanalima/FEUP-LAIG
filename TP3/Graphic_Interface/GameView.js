@@ -28,6 +28,7 @@ class GameView extends CGFobject {
         this.playTimeMax = 7500;
         this.actualPlayTime = 0;
         this.counting = false;
+        this.lastTime = null;
 
         this.createPieces(this.thanosPieces, pieceTexture2, 18, 32, 'blackPiece', selectText1);
         this.createPieces(this.gamoraPieces, pieceTexture1, -18, -32, 'whitePiece', selectText2);
@@ -44,12 +45,39 @@ class GameView extends CGFobject {
 
     startTimer()
     {
-        this.actualPlayTime = 0;
+        this.resetTimer();
         this.counting = true;
+      
+
     }
 
     resetTimer(){
-        
+        this.actualPlayTime = 0;
+        this.cronometer.resetTimer();
+        this.lastTime = null;
+    }
+
+    stopTimer(){
+        this.counting = false;
+    }
+
+   
+
+    updateTimer(){
+        let deltaT;
+        if(this.counting){
+
+        if (this.lastTime == null)
+            deltaT = 0;
+        else 
+            deltaT = this.scene.currTime - this.lastTime;
+
+       
+            this.actualPlayTime += deltaT;
+            this.cronometer.updateTime(this.actualPlayTime);
+
+        this.lastTime = this.scene.currTime;
+        }
     }
 
 

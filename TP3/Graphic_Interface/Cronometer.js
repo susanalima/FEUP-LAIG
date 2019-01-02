@@ -17,11 +17,13 @@ class Cronometer extends CGFobject{
         this.clock = new MyCylinderBase(this.scene, 20, 10);
     }
 
-    updateTime(deltaT){
-        this.actualTime += deltaT;
+    updateTime(newT){
+        if(newT != null){
+        this.actualTime = newT;
         if(this.actualTime > this.fullTime)
             this.actualTime = this.fullTime;
         this.angle = this.actualTime * 2 * Math.PI / this.fullTime;
+        }
     }
 
     resetTimer()
@@ -40,13 +42,17 @@ class Cronometer extends CGFobject{
         this.clock.display();
         this.scene.popMatrix();
         this.scene.pushMatrix();
+        this.scene.rotate(this.angle, 0,0,1);
+
         this.scene.translate(-0.01,3.8,-0.01);
-        this.scene.rotate(this.angle, 1,0,0);
+
         this.text1.bind();
         this.clockPointer.display();
         this.scene.popMatrix();
-
         this.scene.popMatrix();
+
+
+       
 
 
     }
