@@ -57,6 +57,7 @@ class Piece extends CGFobject {
 	parabolicAnimate(deltaT){
 		if(this.parabolic.time > this.animationTime){
 			this.parabolic.end = true;
+			this.locked = true;
 			if(this.parabolic.cell != null)
 			{
 				this.parabolic.cell.selected = false;
@@ -126,8 +127,11 @@ class Piece extends CGFobject {
 		this.scene.rotate(-Math.PI / 2, 1, 0, 0);
 		if (this.scene.pickIndex == this.scene.pickedIndex){
 			this.selected = true;
-		
 		}
+		
+		/*if(this.locked)
+			this.selected =false;*/
+
 		/*if (this.selected && cell != null && this.parabolic == null)
 			this.createParabolicAnimation([this.x, this.y], 10, [cell.x,cell.z]);*/
 	

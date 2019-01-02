@@ -19,18 +19,38 @@ class GameView extends CGFobject {
         this.cell_radius = 3;
         this.thanosPieces = [];
         this.gamoraPieces = [];
-        let selectText1 =  new CGFtexture(scene, "./scenes/images/selected_neon.jpg");
-        let selectText2 =  new CGFtexture(scene, "./scenes/images/selected_neon.jpg");
+
+        let selectText1 = new CGFtexture(scene, "./scenes/images/selected_neon.jpg");
+        let selectText2 = new CGFtexture(scene, "./scenes/images/selected_neon.jpg");
+        let pointerText1 = new CGFtexture(scene, "./scenes/images/pink.jpg");
+        let pointerText2 = new CGFtexture(scene, "./scenes/images/white.png");
+
+        this.playTimeMax = 7500;
+        this.actualPlayTime = 0;
+        this.counting = false;
+
         this.createPieces(this.thanosPieces, pieceTexture2, 18, 32, 'blackPiece', selectText1);
         this.createPieces(this.gamoraPieces, pieceTexture1, -18, -32, 'whitePiece', selectText2);
         this.assertPlayer = new Piece(this.scene, [-30, 0], pieceTexture1, 'whitePiece');
-        this.playBot = new Piece(this.scene, [-25,8], pieceTexture2, 'blackPiece');
+        this.playBot = new Piece(this.scene, [-25, 8], pieceTexture2, 'blackPiece');
+
+        this.cronometer = new Cronometer(this.scene, [-20, 10, -20], this.playTimeMax, pointerText1, pointerText2);
     };
 
-   restart(){
-       this.board.restart();
-       this.resetAllPieces();
-   }
+    restart() {
+        this.board.restart();
+        this.resetAllPieces();
+    }
+
+    startTimer()
+    {
+        this.actualPlayTime = 0;
+        this.counting = true;
+    }
+
+    resetTimer(){
+        
+    }
 
 
     /**
@@ -47,7 +67,7 @@ class GameView extends CGFobject {
     /**
      * Creates the boards cells
      */
-    createPieces(pieces, texture, translateValueX, translateValueY, color) {
+    createPieces(pieces, texture, translateValueX, translateValueY, color, sText) {
         let index = 0;
         for (var q = -this.map_radius; q <= this.map_radius; q++) {
             var r1 = Math.max(-this.map_radius, -q - this.map_radius);
@@ -57,11 +77,11 @@ class GameView extends CGFobject {
                 center[1] += translateValueY;
                 center[0] += translateValueX;
                 if (index < 15) {
-                    let piece = new Piece(this.scene, center, texture, color);
+                    let piece = new Piece(this.scene, center, texture, color, sText);
                     pieces.push(piece);
                 }
                 if (index >= 22) {
-                    let piece = new Piece(this.scene, center, texture, color);
+                    let piece = new Piece(this.scene, center, texture, color, sText);
                     pieces.push(piece);
                 }
                 index++;
@@ -69,76 +89,71 @@ class GameView extends CGFobject {
         }
     }
 
-    resetPieces(pieces){
-        for(let i = 0; i < pieces.length; i++){
-           // pieces[i].x = pieces[i].center[0];
+    resetPieces(pieces) {
+        for (let i = 0; i < pieces.length; i++) {
+            // pieces[i].x = pieces[i].center[0];
             //pieces[i].y = pieces[i].center[1];
             pieces[i].restart();
         }
     }
 
 
-    resetAllPieces()
-    {
+    resetAllPieces() {
         this.resetPieces(this.thanosPieces);
         this.resetPieces(this.gamoraPieces);
     }
 
-    undoPlay(column,line,color){
-        let piece = this.getPiece(line,column,color);
+    undoPlay(column, line, color) {
+        let piece = this.getPiece(line, column, color);
         console.log(piece);
         if (piece == null)
             return null;
-        piece.createParabolicAnimation([piece.x,piece.y],10,piece.center);
+        piece.createParabolicAnimation([piece.x, piece.y], 10, piece.center);
         piece.restart();
     }
 
-    searchPiece(line,column,color,pieces) {
-        for (let i = 0; i < pieces.length; i++)
-        {
-            if(pieces[i].line == line && pieces[i].column == column && pieces[i].color == color)
-            return pieces[i];
+    searchPiece(line, column, color, pieces) {
+        for (let i = 0; i < pieces.length; i++) {
+            if (pieces[i].line == line && pieces[i].column == column && pieces[i].color == color)
+                return pieces[i];
         }
         return null;
     }
 
 
-    getPiece(line,column,color) {
+    getPiece(line, column, color) {
         let piece;
-        if(color == 'blackPiece')
-            piece = this.searchPiece(line, column,color, this.thanosPieces);
-        if(color == 'whitePiece')
-            piece = this.searchPiece(line, column,color, this.gamoraPieces);
+        if (color == 'blackPiece')
+            piece = this.searchPiece(line, column, color, this.thanosPieces);
+        if (color == 'whitePiece')
+            piece = this.searchPiece(line, column, color, this.gamoraPieces);
         return piece;
     }
 
-    selectRandomPiece(pieces)
-    {
+    selectRandomPiece(pieces) {
         let availabelPieces = [];
-        for(let i = 0; i < pieces.length; i++)
-        {
-            if(pieces[i].hasRequestedPlay == 0)
+        for (let i = 0; i < pieces.length; i++) {
+            if (pieces[i].hasRequestedPlay == 0)
                 availabelPieces.push(pieces[i]);
         }
-        if(availabelPieces.length == 0)
+        if (availabelPieces.length == 0)
             return null;
-        let randomIndex = Math.floor(Math.random() * availabelPieces.length); 
+        let randomIndex = Math.floor(Math.random() * availabelPieces.length);
         console.log(availabelPieces.length);
         return availabelPieces[randomIndex];
     }
 
     selectRandomPieceColor(color) {
-        if(color == 'blackPiece')
+        if (color == 'blackPiece')
             return this.selectRandomPiece(this.thanosPieces);
-        if(color == 'whitePiece')
+        if (color == 'whitePiece')
             return this.selectRandomPiece(this.gamoraPieces);
         return null;
-    }  
+    }
 
 
-    selectCell(column, line)
-    {
-        return this.board.selectCell(column,line);
+    selectCell(column, line) {
+        return this.board.selectCell(column, line);
     }
 
     getCurrentSelectedPiece() {
