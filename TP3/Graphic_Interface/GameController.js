@@ -475,6 +475,7 @@ class GameController extends CGFobject {
                 break;
             case 'WAIT_PB_RESPONSE':
                 this.wait_BotPlay_response();
+                this.checkOverTime();
                 break;
             case 'WAIT_ANIMATION_END':
                 this.view.stopTimer();
