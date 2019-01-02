@@ -40,6 +40,7 @@ class GameController extends CGFobject {
         this.view.restart();
         this.client.restart();
         this.deselectCurrentPiece();
+        this.view.marker.indicatorFlag = true;
         this.scene.reset = false;
     }
 
@@ -243,12 +244,14 @@ class GameController extends CGFobject {
 
     checkOverTime(){
         if(this.view.actualPlayTime >= this.view.playTimeMax){
-            this.state = 'CHANGE_PLAYER';
-            if(this.selectedPiece != null){
-            this.selectedPiece.selected = false;
-            this.selectedPiece.swapText();
-            this.selectedPiece = null;
+            this.state = 'WAIT_SP_TIMER';
+            this.view.stopTimer();
             this.client.requestSwitchPlayer();
+
+            if(this.selectedPiece != null){
+                this.selectedPiece.selected = false;
+                this.selectedPiece.swapText();
+                this.selectedPiece = null;
             }
         }
     }
@@ -307,6 +310,15 @@ class GameController extends CGFobject {
                 this.state = 'PROCESS_PIECE';
             }
             this.numberOfTries++;
+        }
+    }
+
+    wait_SwitchPlayers_timer(){
+        if (this.lastResponse[0] != this.client.response[0]) {
+            this.lastResponse = this.client.response;
+            console.log(this.lastResponse);
+            this.parseResponse(this.lastResponse[1]);
+            this.state = 'CHANGE_PLAYER';
         }
     }
 
@@ -464,8 +476,8 @@ class GameController extends CGFobject {
                 this.wait_CurrentPlayerBot_response();
                 break;
             case 'REQUEST_VALID_CELLS':
-                this.checkOverTime();
                 this.request_validCells();
+                this.checkOverTime();
                 break;
             case 'WAIT_VP_RESPONSE':
                 this.wait_validCells_response();
@@ -498,8 +510,12 @@ class GameController extends CGFobject {
             case 'WAIT_SP_RESPONSE':
                 this.wait_SwitchPlayers_response();
                 break;
+            case 'WAIT_SP_TIMER':
+                this.wait_SwitchPlayers_timer();
+                break;
             case 'CHANGE_PLAYER':
-                  this.scene.update_CameraRotation();
+                this.view.marker.switchPlayer();
+                this.scene.update_CameraRotation();
                 //animaçao de camara e afins
                 this.state = 'PROCESS_PIECE';
                 this.check_Reset();

@@ -6,10 +6,15 @@ class Marker extends CGFobject{
         this.y = center[1];
         this.z = center[2];
         
-        this.p1 = 0;
-        this.p2 = 0;
+        this.pUnits1 = 0;
+        this.pUnits2 = 0;
+        this.pDozens1 = 0;
+        this.pDozens2 = 0;
+
+        this.indicatorFlag = true;
 
         this.bodyText = new CGFtexture(this.scene, "./scenes/images/blue.png");
+        this.indicatorText = new CGFtexture(this.scene, "./scenes/images/red.png");
 
         let tex0 = new CGFtexture(this.scene, "./scenes/images/marker0.png");
         let tex1 = new CGFtexture(this.scene, "./scenes/images/marker1.png");
@@ -24,18 +29,39 @@ class Marker extends CGFobject{
 
         this.textures = [tex0,tex1,tex2,tex3,tex4,tex5,tex6,tex7,tex8,tex9];
 
-        this.body = new MyRectangle(this.scene, -10,-8,10,8);
+        this.body = new MyRectangle(this.scene, -15,-8,15,8);
+        this.indicator1 = new MyTriangle(this.scene,  -1,0,0,0,1,0,1,0,0);
+        this.indicator2 = new MyTriangle(this.scene,  -1,0,0,0,1,0,1,0,0);
 
-        this.marker1 = new MyRectangle(this.scene, -4,-3,4,3);
-        this.marker2 = new MyRectangle(this.scene, -4,-3,4,3);
+        this.markerUnits1 = new MyRectangle(this.scene, -3,-4.5,3,4.5);
+        this.markerUnits2 = new MyRectangle(this.scene, -3,-4.5,3,4.5);
+        this.markerDozens1 = new MyRectangle(this.scene, -3,-4.5,3,4.5);
+        this.markerDozens2 = new MyRectangle(this.scene, -3,-4.5,3,4.5);
     }
 
     resetWins(){
-        this.p1 = 0;
-        this.p2 = 0;
+        this.pUnits1 = 0;
+        this.pUnits2 = 0;
+        this.pDozens1 = 0;
+        this.pDozens2 = 0;
+    }
+
+    checkDozens(units, dozens){
+        if(units >= 10)
+        {
+            dozens++;
+            units = 0;
+        }
+    }
+
+    switchPlayer(){
+        this.indicatorFlag = !this.indicatorFlag;
     }
 
     display(){
+        this.checkDozens(this.pUnits1, this.pDozens1);
+        this.checkDozens(this.pUnits2, this.pDozens2);
+
         this.scene.pushMatrix();
         this.scene.translate(this.x, this.y,this.z);
         this.scene.rotate( Math.PI/4, 0,1,0);
@@ -45,14 +71,35 @@ class Marker extends CGFobject{
        
         this.scene.pushMatrix();
         this.scene.translate(-5,0,0.01);
-        this.textures[this.p1].bind();
-        this.marker1.display();
+        this.textures[this.pUnits1].bind();
+        this.markerUnits1.display();
+        this.scene.translate(-6.1,0,0.01);
+        this.textures[this.pDozens1].bind();
+        this.markerDozens1.display();
         this.scene.popMatrix();
 
         this.scene.pushMatrix();
         this.scene.translate(5,0,0.01);
-        this.textures[this.p2].bind();
-        this.marker2.display();
+        this.textures[this.pDozens2].bind();
+        this.markerDozens2.display();
+        this.scene.translate(6.1,0,0.01);
+        this.textures[this.pUnits2].bind();
+        this.markerUnits2.display();
+        this.scene.popMatrix();
+
+        this.scene.pushMatrix();
+
+        this.scene.translate(-8,0,0.01);
+        this.scene.translate(0,6,0);
+        this.scene.rotate(Math.PI, 1,0,0);
+
+        this.indicatorText.bind();
+        if(this.indicatorFlag)
+            this.indicator1.display();
+        else{
+            this.scene.translate(16,0,0);
+            this.indicator2.display();
+        }
         this.scene.popMatrix();
 
         this.scene.popMatrix();
