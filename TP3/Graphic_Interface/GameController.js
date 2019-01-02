@@ -249,6 +249,7 @@ class GameController extends CGFobject {
             this.selectedPiece.swapText();
             this.selectedPiece = null;
             this.client.requestSwitchPlayer();
+            this.wait_SwitchPlayers_response() 
             }
         }
     }
