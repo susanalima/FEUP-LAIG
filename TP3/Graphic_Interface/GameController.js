@@ -1,17 +1,17 @@
 
 /**
- * Class TheGame represents a board
+ * Class GameController represents the game Manalath, controls all the required actions 
  */
 class GameController extends CGFobject {
 
 
     /**
- 	 * Constructs an object of class TheGame
+ 	 * Constructs an object of class GameController
 	 * @param {Object} scene Scene in which the game is represented
-     * @param {Object} boardTexture 
-     * @param {Object} cellTexture 
-     * @param {Object} pieceTexture1
-     * @param {Object} pieceTexture2
+     * @param {Object} boardTexture Texture of the board for the game
+     * @param {Object} cellTexture Texture of the board cells
+     * @param {Object} pieceTexture1 Texture of the games's 'blackPiece' 
+     * @param {Object} pieceTexture2 Texture of the game's 'whitePiece'
      */
     constructor(scene, boardTexture, cellTexture, pieceTexture1, pieceTexture2) {
         super(scene);
@@ -27,12 +27,21 @@ class GameController extends CGFobject {
         this.initialize_values();
     };
 
+    /**
+     * Initializes some of this GameController values
+     * lastResponse corresponding to the last response given by the client
+     * tmpPiece holds the last selected piece
+     * numberOfTries represents a counter for a number of tries
+     */
     initialize_values() {
         this.lastResponse = [];
         this.tmpPiece = null;
         this.numberOfTries = 0;
     }
 
+    /**
+     * Restarts this GameController and its components
+     */
     restart_values() {
         this.initialize_values();
         this.model.restart();
@@ -44,7 +53,9 @@ class GameController extends CGFobject {
     }
 
 
-
+    /**
+     * Deselects the current selected Piece
+     */
     deselectCurrentPiece() {
         if (this.selectedPiece != null) {
             this.selectedPiece.selected = false;
@@ -53,19 +64,27 @@ class GameController extends CGFobject {
         }
     }
 
-    showValidCells() {
-        this.client.requestValidPlays(this.selectedPiece.color);
-        this.parseResponse(this.client.response);
-
-    }
-
+    /**
+     * Undos the last play
+     */
     undoLastPlay() {
         this.client.requestSwitchPlayer();
         let play = this.model.undoLastPlay();
         this.view.undoPlay(play[0][0], play[0][1], play[1][1]);
     }
 
+    /**
+     * Undos all the plays
+     */
+    undoAllPlays() {
+        for (let i = this.model.playsCoords.length - 1; i >= 0; i--) {
+            let playCoords = this.model.playsCoords[i];
+            let playValues = this.model.playsValues[i];
+            this.view.undoPlay(playCoords[0], playCoords[1], playValues[1]);
+        }
+    }
 
+    //TODO
     checkSelected() {
         let counter = 0;
         counter = this.setSelected(this.view.thanosPieces, counter);
@@ -81,6 +100,7 @@ class GameController extends CGFobject {
             }
     }
 
+    //TODO
     setSelected(pieces, counter) {
         for (let i = 0; i < pieces.length; i++) {
             if (pieces[i].selected) {
@@ -99,6 +119,7 @@ class GameController extends CGFobject {
         return counter;
     }
 
+    //TODO
     makePickingCells() {
         this.scene.pushMatrix();
         this.scene.rotate(Math.PI, 1, 0, 0);
@@ -109,6 +130,7 @@ class GameController extends CGFobject {
         this.scene.popMatrix();
     }
 
+    //TODO
     makePickingValidCells(validCells) {
         let index = 0;
         this.scene.pushMatrix();
@@ -131,12 +153,14 @@ class GameController extends CGFobject {
         this.scene.popMatrix();
     }
 
+    //TODO
     unvalidateCells() {
         for (let i = 0; i < this.view.board.cells.length; i++)
             this.view.board.cells[i].valid = false;
     }
 
 
+    //TODO
     makePickingPiecesSide(pieces) {
         for (let i = 0; i < pieces.length; i++) {
             this.scene.registerForPick(++this.scene.pickIndex, pieces[i]);
@@ -144,32 +168,34 @@ class GameController extends CGFobject {
         }
     }
 
+    //TODO
     makePickingPieces() {
         this.makePickingPiecesSide(this.view.gamoraPieces);
         this.makePickingPiecesSide(this.view.thanosPieces);
     }
 
+    /**
+     * Displays the received pieces
+     * @param {Object} pieces array containing the pieces to be displayed
+     */
     showPiecesSide(pieces){
         for (let i = 0; i < pieces.length; i++)
             pieces[i].display();
     }
 
+    /**
+     * Displays this GameController's view gamora and thanos pieces
+     */
     showPieces(){
         this.showPiecesSide(this.view.gamoraPieces);
         this.showPiecesSide(this.view.thanosPieces);
 
     }
 
-
-    /*displayPieces(pieces, currTime) {
-        for (let i = 0; i < pieces.length; i++) {
-            if (pieces[i].selected && this.view.board.selectedCell != null && pieces[i].parabolic == null)
-                pieces[i].createParabolicAnimation([pieces[i].x, pieces[i].y], 10, [this.view.board.selectedCell.x, this.view.board.selectedCell.z]);
-            pieces[i].display(this.view.board.selectedCell, currTime);
-        }
-    }*/
-
-
+    /**
+     * Represents the state 'WAIT_CPB_RESPONSE' of the GameController's state machine
+     * Waits for a response to the current player bot request then parses the response and updates the state to 'REQUEST_VALID_CELLS'
+     */
     wait_CurrentPlayerBot_response() {
         if (this.lastResponse[0] != this.client.response[0]) {
             this.lastResponse = this.client.response;
@@ -180,6 +206,11 @@ class GameController extends CGFobject {
         }
     }
 
+    /**
+     * Represents the state 'REQUEST_VALID_CELLS' of the GameController's state machine
+     * If the current player is not a bot, requests the cells where the player can play and updates the state to 'WAIT_VP_RESPONSE'
+     * Otherwise, if the player is a bot the valid cells are not necessary, updating the state to 'REQUEST_PLAY_B'
+     */
     request_validCells() {
         if(this.check_Reset())
             return;
@@ -194,16 +225,24 @@ class GameController extends CGFobject {
         }
     }
 
+    /**
+     * Represents the state 'WAIT_VP_RESPONSE' of the GameController's state machine
+     * Waits for a response to a valid cells request then parses the response and updates the state to 'SELECT_CELL'
+     */
     wait_validCells_response() {
         if (this.lastResponse[0] != this.client.response[0]) {
             this.lastResponse = this.client.response;
-            console.log(this.lastResponse);
             this.parseResponse(this.lastResponse[1]);
             this.state = 'SELECT_CELL';
             this.check_Reset();
         }
     }
 
+    /**
+     * Represents the state 'SELECT_CELL' of the GameController's state machine
+     * If a new piece is selected while in this state the state is updated to 'PROCESS_PIECE'
+     * Otherwise waits for the selection of a cell, updating the state to 'REQUEST_PLAY_P'
+     */
     selectCell() {
         if(this.check_Reset())
             return;
@@ -217,26 +256,37 @@ class GameController extends CGFobject {
         }
     }
 
+    /**
+     * Represents the state 'WAIT_PP_RESPONSE' of the GameController's state machine
+     * Waits for a response to a human play request then parses the response and updates the state to 'WAIT_ANIMATION_END'
+     */
     wait_HumanPlay_response() {
         if (this.lastResponse[0] != this.client.response[0]) {
             this.lastResponse = this.client.response;
-            console.log(this.lastResponse);
             this.parseResponse(this.lastResponse[1]);
             this.state = 'WAIT_ANIMATION_END';
         }
     }
 
+    /**
+     * Represents the state 'WAIT_PB_RESPONSE' of the GameController's state machine
+     * Waits for a response to a bot play request then parses the response and updates the state to 'WAIT_ANIMATION_END'
+     */
     wait_BotPlay_response() {
         if (this.lastResponse[0] != this.client.response[0]) {
             this.lastResponse = this.client.response;
-            console.log(this.lastResponse);
             this.parseResponse(this.lastResponse[1]);
             this.state = 'WAIT_ANIMATION_END';
         }
     }
 
+    /**
+     * Checks is the game has ended
+     * If the game has ended the state is updated to 'GAME_OVER'
+     * Otherwise, if the current player is a bot the state is updated to 'CHANGE_PLAYER' 
+     * If it is a human player the state is updated to 'WAIT_UNDO'
+     */
     check_GameOver() {
-        console.log("winner" + this.model.winner);
         if (this.model.winner == 0) {
             if (this.currentPlayerBot == 0) {
                 this.scene.undo_play = false;
@@ -252,6 +302,7 @@ class GameController extends CGFobject {
         }
     }
 
+   //TODO
     checkOverTime(){
         if(this.view.actualPlayTime >= this.view.playTimeMax){
             this.state = 'WAIT_SP_TIMER';
@@ -267,6 +318,13 @@ class GameController extends CGFobject {
     }
 
 
+
+    /**
+     * Represents the state 'START' of the GameController's state machine
+     * If the scene's reset flag is true the game is set to start
+     * If the pieces are not in their original places they are repositioned and the state is updated to 'SMALL_WAIT'
+     * Otherwise the state is updated ti 'UPDATE_CONFIGS'
+     */
     start(){
         if (this.scene.reset == true) {
             if (this.gameCount > 0 && this.model.playsCoords.length > 0) {
@@ -281,12 +339,16 @@ class GameController extends CGFobject {
         }
     }
 
+    /**
+     * Represents the state 'UPDATE_CONFIGS' of the GameController's state machine
+     * Updates this model's configurations and requests the game mode accordingly
+     * The state is updated to 'WAIT_AP_RESPONSE'
+     */
     update_Configs()
     {
         if(this.check_Reset())
             return;
         this.model.updateConfigs();
-        console.log(this.model.mode)
         switch (this.model.mode) {
             case 1:
                 this.client.requestPvP();
@@ -301,6 +363,10 @@ class GameController extends CGFobject {
         this.state = 'WAIT_AP_RESPONSE';
     }
 
+    /**
+     * Represents the state 'WAIT_AP_RESPONSE' of the GameController's state machine
+     * Waits for a response to an assert players request then parses the response and updates the state to 'PROCESS_PIECE'
+     */
     wait_AssertPlayers_response() {
         if (this.lastResponse[0] != this.client.response[0]) {
             this.lastResponse = this.client.response;
@@ -310,6 +376,10 @@ class GameController extends CGFobject {
         }
     }
 
+    /**
+     * Represents the state 'WAIT_SP_RESPONSE' of the GameController's state machine
+     * Waits for a response to a switch players request then parses the response and updates the state to 'PROCESS_PIECE'
+     */
     wait_SwitchPlayers_response() {
         if (this.lastResponse[0] != this.client.response[0]) {
             this.lastResponse = this.client.response;
@@ -323,6 +393,10 @@ class GameController extends CGFobject {
         }
     }
 
+    /**
+     * Represents the state 'WAIT_SP_TIMER' of the GameController's state machine
+     * Waits for a response to a switch players request then parses the response and updates the state to 'PROCESS_PIECE'
+     */
     wait_SwitchPlayers_timer(){
         if (this.lastResponse[0] != this.client.response[0]) {
             this.lastResponse = this.client.response;
@@ -332,6 +406,12 @@ class GameController extends CGFobject {
         }
     }
 
+    /**
+     * Represents the state 'WAIT_UNDO' of the GameController's state machine
+     * Waits maxNumberOfTries tries for a undo request 
+     * If an undo is requested executes the undo of the last play and updates the state to 'WAIT_SP_RESPONSE'
+     * If not updated the state to 'CHANGE_PLAYER'
+     */
     wait_Undo() {
         if(this.check_Reset())
             return;
@@ -350,6 +430,10 @@ class GameController extends CGFobject {
         this.numberOfTries++;
     }
 
+    /**
+     * Represents the state 'WAIT_ANIMATION_END' of the GameController's state machine
+     * Waits for this tmpPiece animation to end
+     */
     wait_AnimationEnd() {
         if (this.tmpPiece.parabolic.end == true) {
             this.unvalidateCells();
@@ -358,15 +442,12 @@ class GameController extends CGFobject {
         }
     }
 
-
-    undoAllPlays() {
-        for (let i = this.model.playsCoords.length - 1; i >= 0; i--) {
-            let playCoords = this.model.playsCoords[i];
-            let playValues = this.model.playsValues[i];
-            this.view.undoPlay(playCoords[0], playCoords[1], playValues[1]);
-        }
-    }
-
+ 
+    /**
+     * Represents the state 'SMALL_WAIT' of the GameController's state machine
+     * Waits maxNumberOfTries tries
+     * Updates the state to 'UPDATE_CONFIGS'
+     */
     small_Wait(){
         if(this.check_Reset())
             return;
@@ -379,7 +460,11 @@ class GameController extends CGFobject {
         this.numberOfTries++;
     }
 
-    
+    /**
+     * Checks if the scene's reset flag is true
+     * If so updates the state to 'START'
+     * @returns true if the flag is true and false otherwise 
+     */
     check_Reset(){
         if (this.scene.reset) {
             this.state = 'START';
@@ -390,6 +475,10 @@ class GameController extends CGFobject {
         return false;
     }
 
+    /**
+     * Checks of the scene's showGameMovie is set to true
+     * If so the pieces are set to their original position and the state is updated to 'WAIT_GM_1st_ANIMATION_END'
+     */
     check_GameMovie(){
         if(this.scene.showGameMovie){
             for (let i = this.model.playsCoords.length - 1; i >= 0; i--) {
@@ -402,13 +491,24 @@ class GameController extends CGFobject {
         }
     }
 
-    view_GameMovie(){
+    /**
+     * Represents the state 'GAME_MOVIE' of the GameController's state machine
+     * Remakes this model's currentMoviePlay play 
+     * Updates the state to 'WAIT_GM_ANIMATION_END'
+     */
+     view_GameMovie(){
        let currMoviePlayInfo = this.model.getCurrentMoviePlayInfo();
        this.view.updateCurrentMoviePiece(currMoviePlayInfo[0][0], currMoviePlayInfo[0][1], currMoviePlayInfo[1][1]);
        this.view.redoPlay(currMoviePlayInfo[0][0], currMoviePlayInfo[0][1], currMoviePlayInfo[1][1]);
        this.state = 'WAIT_GM_ANIMATION_END';
     }
 
+    /**
+     * Represents the state 'WAIT_GM_ANIMATION_END' of the GameController's state machine
+     * Waits for the end of this view's currentMoviePiece animation
+     * If this model's currentMoviePlay is the last play the state is updated to 'GAME_OVER'
+     * If not the state is updated to 'WAIT_GM_CAMERA_ANIMATION_END'
+     */
     wait_GM_AnimationEnd(){
         if(this.check_Reset())
             return;
@@ -429,6 +529,10 @@ class GameController extends CGFobject {
         }
     }
 
+    /**
+     * Represents the state 'WAIT_GM_CAMERA_ANIMATION_END' of the GameController's state machine
+     * Waits for the end of the scene's camera rotation and updates the state to 'GAME_MOVIE'
+     */
     wait_GM_Camera_AnimationEnd(){
         if(this.check_Reset())
             return;
@@ -437,6 +541,11 @@ class GameController extends CGFobject {
         }
     }
 
+     /**
+     * Represents the state 'WAIT_GM_1st_ANIMATION_END' of the GameController's state machine
+     * Waits maxNumberOfTries tries and updates the state to 'WAIT_GM_CAMERA_ANIMATION_END' if the current player is 2 or
+     * to 'GAME_MOVIE' if the current player is 1
+     */
     wait_GM_1st_AnimationEnd(){
         if(this.check_Reset())
             return;
@@ -446,7 +555,7 @@ class GameController extends CGFobject {
             if (this.currentPlayer == 2)
             {
                 this.scene.update_CameraRotation();
-                this.state = 'WAIT_GM_1st_CAMERA_ANIMATION_END';
+                this.state = 'WAIT_GM_CAMERA_ANIMATION_END';
             }
             else
             this.state = 'GAME_MOVIE';
@@ -455,16 +564,10 @@ class GameController extends CGFobject {
         this.numberOfTries++;
     }
 
-    
-    wait_GM_1st_Camera_AnimationEnd(){
-        if(this.check_Reset())
-            return;
-        if (this.scene.camera_rotation == 0) {
-            this.state = 'GAME_MOVIE';
-        }
-    }
 
-
+    /**
+     * Implements the game's state machine
+     */
     stateMachine() {
         switch (this.state) {
             case 'START':
@@ -527,7 +630,6 @@ class GameController extends CGFobject {
             case 'CHANGE_PLAYER':
                 this.view.marker.switchPlayer();
                 this.scene.update_CameraRotation();
-                //animaçao de camara e afins
                 this.state = 'PROCESS_PIECE';
                 this.check_Reset();
                 break;
@@ -547,9 +649,6 @@ class GameController extends CGFobject {
             case 'WAIT_GM_CAMERA_ANIMATION_END' :
                 this.wait_GM_Camera_AnimationEnd();
                 break;
-            case 'WAIT_GM_1st_CAMERA_ANIMATION_END' :
-                this.wait_GM_1st_Camera_AnimationEnd();
-                break;
             case 'SMALL_WAIT':
                 this.small_Wait();
                 break;
@@ -557,9 +656,10 @@ class GameController extends CGFobject {
 
     }
 
-    /*
-    TODO fazer os que faltam...nao sei ate que ponto sao relevantes...will see
-    */
+    /**
+     * Parses a response from a request according to its code
+     * @param {Object} response to be parsed
+     */
     parseResponse(response) {
         let responsearr = response.split(',');
         let code = parseFloat(responsearr[0].split('[')[1]);
@@ -578,19 +678,12 @@ class GameController extends CGFobject {
                 this.selectedPiece.hasRequestedPlay++;
                 this.tmpPiece = this.selectedPiece;
                 break;
-            case 3:
-                break;
-            case 4:
-                break;
-            case 5:
-                break;
-            case 6:
+            case 3:   case 4:   case 5:    case 6:
                 break;
             case 7:
                 reply = this.model.parsePlayReply(response);
                 let piece = this.view.selectRandomPieceColor(reply[2]);
                 let cell = this.view.selectCell(parseFloat(reply[0]), parseFloat(reply[1]));
-                console.log(cell)
                 piece.createParabolicAnimation([piece.x, piece.y], 10, [cell.x, cell.z], cell, false);
                 piece.hasRequestedPlay++;
                 this.tmpPiece = piece;
@@ -598,20 +691,18 @@ class GameController extends CGFobject {
             case 8:
                 this.currentPlayer = parseFloat(responsearr[1]);
                 this.currentPlayerBot = parseFloat(responsearr[2].split(']')[0]);
-                console.log(this.currentPlayerBot);
                 break;
         }
     }
 
 
+    /**
+	 * Displays the GameController's components in member scene
+	 */
     display() {
-        //this.view.board.checkSelectedCells();
 
-        this.view.board.checkSelectedCells(this.selectedPiece);
         this.stateMachine();
-        /*if (this.selectedPiece != null && this.selectedPiece.parabolic != null)
-            this.alreadyWaiting = false;*/
-
+ 
         let ignore = true;
         if (this.checkSelected() == "OK")
             ignore = false;
@@ -629,11 +720,6 @@ class GameController extends CGFobject {
             this.makePickingPieces();
         else
             this.showPieces();
-
-
-
-        //this.displayPieces(this.view.gamoraPieces, currTime);
-        //this.displayPieces(this.view.thanosPieces, currTime);
 
 
         this.scene.clearPickRegistration();
