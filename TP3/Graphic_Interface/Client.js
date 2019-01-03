@@ -92,8 +92,6 @@ class Client {
     }
 
     handleRequest(data) {
-        //console.log(data.target.response);
         this.response = [this.requestId,data.target.response];
-       // console.log(this.response);
     }
 }
