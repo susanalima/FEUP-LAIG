@@ -521,11 +521,6 @@ class GameController extends CGFobject {
                 this.check_Reset();
                 break;
             case 'GAME_OVER':
-                //reset game e volta para o start
-                //  this.restart();
-                //this.state = 'WAIT';
-                //if (this.currentPlayer == 2)
-                  //  this.scene.camera_rotation = 32;
                this.check_GameMovie();
                this.check_Reset();
                 break;

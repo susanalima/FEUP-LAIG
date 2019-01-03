@@ -110,10 +110,9 @@ class MyBoard extends CGFobject {
 	 * Displays the board in member scene
 	 */
     display() {
-        this.scene.pushMatrix();
 
         this.scene.pushMatrix();
-        this.scene.translate(0, -0.5, 0);
+        this.scene.translate(0, 0.3, 0);
         this.scene.rotate(Math.PI, 1,0,0);
         this.scene.rotate(Math.PI/2, 0,1,0);
 
@@ -121,16 +120,5 @@ class MyBoard extends CGFobject {
         this.base.display();
         this.scene.popMatrix();
 
-        
-        this.scene.pushMatrix();
-        this.scene.rotate(Math.PI, 1,0,0);
-       
-        this.cellTexture.bind();
-        //this.displayCells();
-       
-        //this.checkSelectedCells();
-        
-        this.scene.popMatrix();
-        this.scene.popMatrix();
     }
 };
