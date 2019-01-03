@@ -17,7 +17,6 @@ class GameController extends CGFobject {
         super(scene);
         this.model = new GameModel(scene);
         this.view = new GameView(scene, boardTexture, cellTexture, pieceTexture1, pieceTexture2);
-        //this.alreadyWaiting = false;
         this.client = new Client(this.model);
         this.maxNumberOfTries = 100;
         this.gameCount = 0;

@@ -27,45 +27,50 @@
 
  <lights>
 
-	<omni id="omni1" enabled="1" >                                                     	      
-        <location x="-5" y="10" z="5.0" w="1.0" />       	   
-        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
-        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
-        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
-    </omni>
     <omni id="omni2" enabled="1" >                                                     	      
-        <location x="4" y="10" z="-8" w="1.0" />       	   
+        <location x="4" y="100" z="-8" w="1.0" />       	   
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
         <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
         <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
     </omni>
 	<omni id="omni3" enabled="1" >                                                     	      
-        <location x="-25" y="10" z="-25" w="1.0" />       	   
+        <location x="-25" y="100" z="-25" w="1.0" />       	   
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
         <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
         <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
     </omni>
+
+
+    <omni id="random_light" enabled="1" >                                                     	      
+        <location x="13" y="100" z="-4" w="1.0" />       	   
+      <ambient r="0.1" g="0.3" b="0.4" a="0.4" />
+		 <diffuse r="0.3" g="0.2" b="0.5" a="0.8" />
+		 <specular r="0.4" g="0.7" b="0.8" a="1.0" />     
+    </omni>
+
  </lights>
 
     <textures>
 		<texture id="metal" file="./scenes/images/metal2.jpg" />
 		<texture id="ship" file="./scenes/images/ship1.jpg" />
-		<texture id="moon" file= "./scenes/images/lua.jpg" />
+		<texture id="board" file= "./scenes/images/boardT.jpg" />
 		<texture id="green" file= "./scenes/images/neon.jpg" />
 		<texture id="roxo" file= "./scenes/images/roxo.png" />
 		<texture id="space" file= "./scenes/images/forest.jpg" />
 		<texture id="table" file="./scenes/images/marmore.jpg" />
+		<texture id="floor" file="./scenes/images/soalho.jpg" />
+        <texture id="wall" file="./scenes/images/wall.jpg" />
+
     </textures>
   
   <materials>
  	<material id="mat0" shininess = "8" >
-		 <emission r="0.1" g="0.1" b="0.1" a="0.8" />
+		 <emission r="0.1" g="0.1" b="0.1" a="0.1" />
 		 <ambient r="0" g="0" b="0" a="1" />
 		 <diffuse r="0.4" g="0.4" b="0.4" a="1" />
 		 <specular r="0.1" g="0.1" b="0.1" a="1" />
 	 </material>
 
-        <!--material do tampo-->
  	<material id="mat1" shininess = "8" >
 		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
 		 <ambient r="0.39" g="0.2" b="0.1" a="1" />
@@ -73,41 +78,50 @@
 		 <specular r="0.1" g="0.1" b="0.1" a="1" />
 	 </material>
 
+    
+ 	<material id="mat2" shininess = "120" >
+		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
+		 <ambient r="0.6" g="0.6" b="0.6" a="1" />
+		 <diffuse r="0.6" g="0.6" b="0.6" a="1" />
+		 <specular r="1" g="1" b="1" a="1" />
+	 </material>
 
+
+ 	<material id="mat3" shininess = "4" >
+		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
+		 <ambient r="0.9" g="0.8" b="0.6" a="1" />
+		 <diffuse r="0.9" g="0.8" b="0.6" a="1" />
+		 <specular r="0.1" g="0.1" b="0.1" a="1" />
+	 </material>
+
+
+ 	<material id="mat4" shininess = "20" >
+		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
+		 <ambient r="0.3" g="0.5" b="0.4" a="1" />
+		 <diffuse r="0.3" g="1" b="0.4" a="1" />
+		 <specular r="0.3" g="0.3" b="0.3" a="1" />
+	 </material>
 
  </materials>
   
   <transformations>
-
     <transformation id= "table_transformation">
-    <scale x="200" y="5" z="160" />
-
-     <rotate axis="x" angle="-90" />
-     <rotate axis="z" angle="-45" />
-       </transformation>
-
-    
-    <transformation id="tf3">
-      <scale x="20" y="500" z="20" />
-		<rotate axis="x" angle="-90" />
-        <translate x="2" y="-3" z="0" />
-	 </transformation>
-
-    <transformation id="tf4">
-        <translate x="4" y="0" z="0" />
-	 </transformation>
-
-    <transformation id="tf5">
-        <translate x="0" y="0" z="3" />
+    	<scale x="200" y="5" z="160" />
+     	<rotate axis="x" angle="-90" />
+     	<rotate axis="z" angle="-45" />
     </transformation>
-
-    <transformation id="tf6">
-        <translate x="-4" y="0" z="0" />
+		<transformation id="floor_transformation">
+		 <rotate axis="x" angle= "-90" />
+         <translate x="-200" y="-200" z="-60" />
+	 </transformation>
+	 
+	 <transformation id="rightWall_transformation">
+		<rotate axis="y" angle="90" />
+        <translate x="-200" y="-60" z="-200" />
 	 </transformation>
  </transformations>
 
  <animations>
-
  </animations>
 
  <primitives>
@@ -117,7 +131,7 @@
     </primitive>
 
 	<primitive id="game">
-		<game boardTextureId="moon" cellTextureId="metal"  idpieceTexture1="green" idpieceTexture2="roxo"/>
+		<game boardTextureId="board" cellTextureId="metal"  idpieceTexture1="green" idpieceTexture2="roxo"/>
 	</primitive>
 
     <primitive id="quad">
@@ -131,6 +145,21 @@
     	<primitive id="table_leg">
 		<cylinder base="0.5" top="0.5" height="1" slices="4" stacks="5" />
     </primitive >
+
+	 	<primitive id="wall">
+ 		<rectangle x1="0" y1="0" x2="400" y2="200" />
+    </primitive >
+
+	<primitive id="floor">
+ 		<rectangle x1="0" y1="0" x2="400" y2="400" />
+    </primitive >
+
+
+	<primitive id="window">
+ 		<rectangle x1="-120" y1="-40" x2="120" y2="40" />
+    </primitive >
+
+
 
  </primitives >
 
@@ -146,7 +175,7 @@
 			<componentref id="table"/>
 			<componentref id="game"/>
             <componentref id="table_legs"/>
-
+			<componentref id="room"/>
 		</children>
  	</component>
 
@@ -281,8 +310,111 @@
 	 </component>
 
 
+     <component id="floor">
+ 		<transformation>
+ 			<transformationref id="floor_transformation" />
+		</transformation>
+		<materials>
 
-     
-	
+		     <material id="mat0" />
+		</materials>
+			<texture id="floor" length_s="400" length_t="400" />
+
+		<children>
+			<primitiveref id="floor" />
+		</children>
+	 </component>
+
+     <component id="rightWall">
+ 		<transformation>
+ 			<transformationref id="rightWall_transformation" />
+		</transformation>
+		<materials>
+			 <material id="mat3" />
+		</materials>
+		<texture id="wall" length_s="400" length_t="200" />
+		<children>
+			<primitiveref id="wall" />
+		</children>
+	 </component>
+
+	 <component id="leftWall">
+ 		<transformation>
+
+			<rotate axis='z' angle='-180'/>
+				<translate x='0' y='-80' z='0'/>
+		</transformation> 
+		<materials>
+			 <material id="mat2" />
+		</materials>
+		<texture id="wall" length_s="400" length_t="200" />
+		<children>
+			<componentref id="rightWall" />
+		</children>
+	 </component>
+
+	  	<component id="backWall">
+ 		<transformation>
+		 	
+ 			<translate x="-200" y="-60" z="-200"/>
+		</transformation>
+		<materials>
+			 <material id="mat0" />
+		</materials>
+		<texture id="wall" length_s="400" length_t="200" />
+		<children>
+			<primitiveref id="wall" />
+		</children>
+	 </component>
+
+
+	 <component id="frontWall">
+ 		<transformation>
+			<rotate axis='x' angle='-180'/>
+			<translate x='0' y='-80' z='0'/>
+		</transformation> 
+		<materials>
+			 <material id="mat4" />
+		</materials>
+		<texture id="wall" length_s="400" length_t="200" />
+		<children>
+			<componentref id="backWall" />
+		</children>
+	 </component>
+
+	<component id="window">
+ 		<transformation>
+		 	<translate x='0' y='50' z='0.2'/>
+ 			<translate x="0" y="0" z="-200"/>
+		</transformation>
+		<materials>
+			 <material id="inherit" />
+		</materials>
+		<texture id="none" length_s="140" length_t="80" />
+		<children>
+			<primitiveref id="window" />
+		</children>
+	 </component>
+
+
+
+	 	<component id="room">
+ 		<transformation>
+		</transformation>
+		<materials>
+			 <material id="mat0" />
+		</materials>
+		<texture id="none" length_s="2" length_t="1" />
+		<children>
+			<componentref id="floor"/>
+			<componentref id="rightWall"/>
+			<componentref id="leftWall"/>
+			<componentref id="frontWall"/>
+			<componentref id="backWall"/>
+			<componentref id="window"/>
+		</children>
+	 </component>
+
+
  </components>
 </yas>

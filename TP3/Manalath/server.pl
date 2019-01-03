@@ -115,15 +115,13 @@ execute_request([Code,Board,Move], [Code,Player,NewWinner,Move]) :-
 	read_move(Move, X, Y, Color),
 	getCurrentPlayer(Player),
 	getCurrentPlayerBot(0),
-	play(Board,X,Y,Color,NewBoard,NewWinner), nl,nl,nl,
-	display_game(NewBoard,Player), !.
+	play(Board,X,Y,Color,NewBoard,NewWinner).
 
 execute_request([Code,Board, Lvl], [Code,Player,NewWinner,[X,Y,Color]]) :-
 	Code = 07,
 	getBotInfo(Board,Lvl,X,Y,Color),
 	getCurrentPlayer(Player),
-	play(Board,X,Y,Color,NewBoard,NewWinner), nl,nl,nl,
-	display_game(NewBoard,Player), !.
+	play(Board,X,Y,Color,NewBoard,NewWinner).
 
 execute_request([Code], [Code,Reply]) :-
     Code = 03,
