@@ -25,8 +25,8 @@ class GameView extends CGFobject {
 
         let selectText1 = new CGFtexture(scene, "./scenes/images/selected_neon.jpg");
         let selectText2 = new CGFtexture(scene, "./scenes/images/selected_neon.jpg");
-        let pointerText1 = new CGFtexture(scene, "./scenes/images/pink.jpg");
-        let pointerText2 = new CGFtexture(scene, "./scenes/images/white.png");
+        let pointerText1 = new CGFtexture(scene, "./scenes/images/red.png");
+        let pointerText2 = new CGFtexture(scene, "./scenes/images/clock.png");
 
         this.playTimeMax = 7500;
         this.actualPlayTime = 0;
