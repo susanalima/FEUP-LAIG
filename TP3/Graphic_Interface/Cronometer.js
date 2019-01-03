@@ -31,7 +31,8 @@ class Cronometer extends CGFobject{
         this.actualTime = 0;
     }
 
-    display(){
+    displayElements()
+    {
         this.scene.pushMatrix();
         this.scene.translate(this.x, this.y,this.z);
         this.scene.rotate(-3 * Math.PI/4, 0,1,0);
@@ -52,8 +53,13 @@ class Cronometer extends CGFobject{
         this.scene.popMatrix();
 
 
-       
-
+    }
+    display(){
+        this.scene.pushMatrix();
+        this.displayElements();
+        this.scene.rotate(Math.PI,0,1,0);
+        this.displayElements();
+        this.scene.popMatrix();
 
     }
 }
