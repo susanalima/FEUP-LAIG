@@ -1,0 +1,411 @@
+<yas>
+<scene root="root" axis_length="50.0" />
+
+<views default="normal_view" >
+	<perspective id="normal_view" near="0.1" far="1000" angle="60">
+		 <from x="0.0" y="50.0" z="50.0" />
+		 <to x="0.0" y="0.0" z="0.0" />
+	</perspective>
+	<perspective id="side_view" near="0.1" far="1000" angle="30">
+		 <from x="15.0" y="10.0" z="100.0" />
+		 <to x="0.0" y="0.0" z="0.0" />
+	</perspective>
+	<perspective id="up_view" near="0.1" far="1000" angle="30">
+		 <from x="15.0" y="100.0" z="10.0" />
+		 <to x="0.0" y="0.0" z="0.0" />
+	</perspective>
+	<ortho id="ortho" near="0.1" far="1000" left="-15" right="15" top="15" bottom="-15" >
+ 		<from x="15.0" y="15.0" z="15.0" />
+ 		<to x="0.0" y="0.0" z="0.0" />
+ 	</ortho>
+ </views>
+
+ <ambient>
+ 	<ambient r="0" g="0" b="0" a="1" />
+ 	<background r="0.53" g="0.8" b="0.92" a="1" />
+ </ambient>
+
+ <lights>
+
+	<omni id="omni1" enabled="1" >                                                     	      
+        <location x="-5" y="10" z="5.0" w="1.0" />       	   
+        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
+        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
+    </omni>
+    <omni id="omni2" enabled="1" >                                                     	      
+        <location x="4" y="10" z="-8" w="1.0" />       	   
+        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
+        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
+    </omni>
+	<omni id="omni3" enabled="1" >                                                     	      
+        <location x="-25" y="10" z="-25" w="1.0" />       	   
+        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
+        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
+    </omni>
+ </lights>
+
+    <textures>
+		<texture id="metal" file="./scenes/images/metal2.jpg" />
+		<texture id="ship" file="./scenes/images/ship1.jpg" />
+		<texture id="moon" file= "./scenes/images/lua.jpg" />
+		<texture id="green" file= "./scenes/images/neon.jpg" />
+		<texture id="roxo" file= "./scenes/images/roxo.png" />
+		<texture id="space" file= "./scenes/images/space.png" />
+		<texture id="table" file="./scenes/images/table.png" />
+    </textures>
+  
+  <materials>
+ 	<material id="mat0" shininess = "8" >
+		 <emission r="0.1" g="0.1" b="0.1" a="0.8" />
+		 <ambient r="0" g="0" b="0" a="1" />
+		 <diffuse r="0.4" g="0.4" b="0.4" a="1" />
+		 <specular r="0.1" g="0.1" b="0.1" a="1" />
+	 </material>
+
+        <!--material do tampo-->
+ 	<material id="mat1" shininess = "8" >
+		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
+		 <ambient r="0.39" g="0.2" b="0.1" a="1" />
+		 <diffuse r="0.39" g="0.2" b="0.1" a="1" />
+		 <specular r="0.1" g="0.1" b="0.1" a="1" />
+	 </material>
+
+      <!--material das pernas-->
+ 	<material id="mat2" shininess = "120" >
+		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
+		 <ambient r="0.6" g="0.6" b="0.6" a="1" />
+		 <diffuse r="0.6" g="0.6" b="0.6" a="1" />
+		 <specular r="1" g="1" b="1" a="1" />
+	 </material>
+
+
+      <!--material das paredes-->
+ 	<material id="mat3" shininess = "4" >
+		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
+		 <ambient r="0.9" g="0.8" b="0.6" a="1" />
+		 <diffuse r="0.9" g="0.8" b="0.6" a="1" />
+		 <specular r="0.1" g="0.1" b="0.1" a="1" />
+	 </material>
+
+      <!--material do chao-->
+ 	<material id="mat4" shininess = "20" >
+		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
+		 <ambient r="0.3" g="0.5" b="0.4" a="1" />
+		 <diffuse r="0.3" g="0.5" b="0.4" a="1" />
+		 <specular r="0.3" g="0.3" b="0.3" a="1" />
+	 </material>
+
+ </materials>
+  
+  <transformations>
+
+
+    <transformation id="tf3">
+		<rotate axis="x" angle="-90" />
+        <translate x="2" y="-3" z="0" />
+	 </transformation>
+
+    <transformation id="tf4">
+        <translate x="4" y="0" z="0" />
+	 </transformation>
+
+    <transformation id="tf5">
+        <translate x="0" y="0" z="3" />
+    </transformation>
+
+    <transformation id="tf6">
+        <translate x="-4" y="0" z="0" />
+	 </transformation>
+
+     <transformation id="tf7">
+       <translate x="0" y="0" z="0" />
+
+	 </transformation>
+
+     <transformation id="tf8">
+        <rotate axis="x" angle="-90" />
+        <translate x="0" y="0" z="1" />
+	 </transformation>
+
+      <transformation id="tf9">
+        <rotate axis="x" angle="-90" />
+        <translate x="0" y="0" z="1" />
+	 </transformation>
+
+    <transformation id="tf10">
+        <rotate axis="y" angle="-90" />
+        <translate x="-1" y="0" z="0" />
+	 </transformation>
+
+    <transformation id="tf11">
+        <rotate axis="z" angle="-90" />
+        <translate x="-1" y="0" z="0" />
+	 </transformation>
+
+     <transformation id="tf12">
+        <rotate axis="z" angle="-90" />
+        <translate x="-1" y="0" z="0" />
+	 </transformation>
+
+    <transformation id= "tf13">
+        <scale x="120" y="5" z="70" />
+          <translate x="-0.5" y="0" z="0.5" />
+       </transformation>
+ </transformations>
+
+ <animations>
+
+ </animations>
+
+ <primitives>
+
+	<primitive id="world">
+        <sphere radius="100" slices="200" stacks="10" />
+    </primitive>
+
+	<primitive id="game">
+		<game boardTextureId="moon" cellTextureId="metal"  idpieceTexture1="green" idpieceTexture2="roxo"/>
+	</primitive>
+
+    <primitive id="quad">
+ 		<rectangle x1="0" y1="0" x2="1" y2="1" />
+    </primitive >
+
+	<primitive id="table_leg">
+		<cylinder base="0.2" top="0.2" height="3" slices="20" stacks="5" />
+    </primitive >
+
+ </primitives >
+
+ <components>
+ 	<component id="root">
+		<transformation>
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="none" />
+		<children>
+			<!--<componentref id="space"/>-->
+			<componentref id="game"/>
+     
+			<!--<componentref id="table_top"/>-->
+		</children>
+ 	</component>
+
+
+	<component id="game">
+		<transformation>
+                <rotate axis="y" angle="-60" />
+                  <translate x="0" y="5.5" z="0" />
+		</transformation>
+		<materials>
+			 <material id="mat0" />
+		</materials>
+		<texture id="none" />
+		<children>
+			<primitiveref id="game"/>
+		</children>
+ 	</component>
+
+	<component id="space">
+		<transformation>
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="space" length_s="2" length_t="1" />
+		<children>
+			<primitiveref id="world"/>
+		</children>
+ 	</component>
+
+     
+    <component id="table_leg1">
+ 		<transformation>
+ 			<transformationref id="tf3" />
+		</transformation>
+		<materials>
+			 <material id="mat2" />	
+			 <material id="mat4" />
+		</materials>
+		<texture id="inherit" />
+		<children>
+			<primitiveref id="table_leg" />
+		</children>
+	 </component>
+
+    <component id="table_leg2">
+ 		<transformation>
+ 			<transformationref id="tf4" />
+		</transformation>
+		<materials>
+			 <material id="mat2" />
+			 <material id="mat4" />
+		</materials>
+		<texture id="inherit" />
+		<children>
+			<componentref id="table_leg1" />
+		</children>
+	 </component>
+
+     <component id="table_leg3">
+ 		<transformation>
+ 			<transformationref id="tf5" />
+		</transformation>
+		<materials>
+			<material id="mat2" />
+			<material id="mat4" />
+		</materials>
+        <texture id="inherit" />		
+		<children>
+			<componentref id="table_leg2" />
+		</children>
+	 </component>
+
+     <component id="table_leg4">
+ 		<transformation>
+ 			<transformationref id="tf6" />
+		</transformation>
+		<materials>
+			 	 <material id="mat2" />
+			
+			 <material id="mat4" />
+		</materials>
+	<texture id="inherit" />
+		<children>
+			<componentref id="table_leg3" />
+		</children>
+	 </component>
+
+	 <component id="table_legs">
+ 		<transformation>
+		</transformation>
+		<materials>
+			 <material id="mat2" />
+		</materials>
+		<texture id="table" length_s="2" length_t="1" />
+		<children>
+			<componentref id="table_leg1" />
+			<componentref id="table_leg2" />
+			<componentref id="table_leg3" />
+			<componentref id="table_leg4" />
+		</children>
+	 </component>
+	
+     <component id="cube_f1">
+ 		<transformation>
+ 			<transformationref id="tf7" />
+		</transformation>
+		<materials>
+			 <material id="inherit" />
+		</materials>
+		<texture id="inherit"  />
+		<children>
+			<primitiveref id="quad" />
+		</children>
+	 </component>
+
+     <component id="cube_f2">
+ 		<transformation>
+ 			<transformationref id="tf8" />
+		</transformation>
+		<materials>
+			 <material id="inherit" />
+		</materials>
+		<texture id="inherit"  />
+		<children>
+			<componentref id="cube_f1" />
+		</children>
+	 </component>
+
+	  <component id="cube_f3">
+ 		<transformation>
+ 			<transformationref id="tf9" />
+		</transformation>
+		<materials>
+			 <material id="inherit" />
+		</materials>
+		<texture id="inherit"  />
+		<children>
+			<componentref id="cube_f2" />
+		</children>
+	 </component>
+
+	   <component id="cube_f4">
+ 		<transformation>
+ 			<transformationref id="tf10" />
+		</transformation>
+		<materials>
+			 <material id="inherit" />
+		</materials>
+		<texture id="inherit"  />
+		<children>
+			<componentref id="cube_f3" />
+		</children>
+	 </component>
+
+
+      <component id="cube_f5">
+ 		<transformation>
+ 			<transformationref id="tf11" />
+		</transformation>
+		<materials>
+			 <material id="inherit" />
+		</materials>
+		<texture id="inherit"  />
+		<children>
+			<componentref id="cube_f4" />
+		</children>
+	 </component>
+
+	    <component id="cube_f6">
+ 		<transformation>
+ 			<transformationref id="tf12" />
+		</transformation>
+		<materials>
+			 <material id="inherit" />
+		</materials>
+		<texture id="inherit"  />
+		<children>
+			<componentref id="cube_f5" />
+		</children>
+	 </component>
+
+	 <component id="cube">
+ 		<transformation>
+		</transformation>
+		<materials>
+			 <material id="inherit" />
+		</materials>
+		<texture id="inherit"  />
+		<children>
+			<componentref id="cube_f1" />
+			<componentref id="cube_f2" />
+			<componentref id="cube_f3" />
+			<componentref id="cube_f4" />
+			<componentref id="cube_f5" />
+			<componentref id="cube_f6" />
+		</children>
+	 </component>
+
+	  <component id="table_top">
+ 		<transformation>
+ 			<transformationref id="tf13" />
+		</transformation>
+		<materials>
+			 <material id="mat1" />
+		</materials>
+		<texture id="table" length_s="2" length_t="1"/>
+		<children>
+			<componentref id="cube" />
+		</children>
+	 </component>
+
+
+	
+ </components>
+</yas>
