@@ -621,7 +621,7 @@ class GameController extends CGFobject {
         this.view.updateTimer();
         this.view.cronometer.display();
         this.view.marker.display();
-        //this.view.sphere.display();
+        this.view.sphere.display();
 
         this.scene.pushMatrix();
         this.makePickingValidCells(null);
