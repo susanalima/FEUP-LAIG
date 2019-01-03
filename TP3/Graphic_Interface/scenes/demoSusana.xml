@@ -62,7 +62,7 @@
 		<texture id="board" file= "./scenes/images/boardT.jpg" />
 		<texture id="green" file= "./scenes/images/neon.jpg" />
 		<texture id="roxo" file= "./scenes/images/roxo.png" />
-		<texture id="space" file= "./scenes/images/forest.jpg" />
+		<texture id="space" file= "./scenes/images/forest1.jpg" />
 		<texture id="table" file="./scenes/images/marmore.jpg" />
 		<texture id="floor" file="./scenes/images/soalho.jpg" />
         <texture id="wall" file="./scenes/images/wall.jpg" />
