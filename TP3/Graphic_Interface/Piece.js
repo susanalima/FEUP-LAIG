@@ -18,7 +18,7 @@ class Piece extends CGFobject {
 		this.color = color;
 		this.x = this.center[0];
 		this.y = this.center[1];
-		this.z = 0;
+		this.z = 0.5;
 		this.animationTime = 1 * 1000;
 		this.parabolic = null;
 		this.playedCenter = [];
@@ -92,7 +92,7 @@ class Piece extends CGFobject {
 		if(this.parabolic.time > this.animationTime){
 			this.x = this.parabolic.endX;
 			this.y = this.parabolic.endY;
-			this.z = 0;
+			this.z = 0.5;
 		}
 	}
 

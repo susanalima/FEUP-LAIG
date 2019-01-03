@@ -41,7 +41,7 @@ class BoardCell extends CGFobject {
 			if(this.valid)
 				this.validText.bind();
 			else
-				this.texture.unbind();
+				this.texture.bind();
 		}
 		this.cell.display();
 		this.texture.unbind();

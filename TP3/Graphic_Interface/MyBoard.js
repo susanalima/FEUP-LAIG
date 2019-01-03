@@ -16,11 +16,11 @@ class MyBoard extends CGFobject {
         this.map_radius = 4;
         this.cell_space_radius = 3;
         this.cell_radius = 2.5;
-        this.createCells();
         this.base = new MyPrism(scene, 6, 1, 0.5, 25);
         this.boardTexture = boardTexture;
         this.cellTexture = cellTexture;
         this.selectedCell = null;
+        this.createCells();
     };
 
     restart(){
@@ -44,7 +44,6 @@ class MyBoard extends CGFobject {
      */
     createCells() {
         let validText =  new CGFtexture(this.scene, "./scenes/images/red.png");
-        let text = new CGFtexture(this.scene, "scenes/images/batman.jpg");
         for (var q = -this.map_radius; q <= this.map_radius; q++) {
             var r1 = Math.max(-this.map_radius, -q - this.map_radius);
             var r2 = Math.min(this.map_radius, -q + this.map_radius);
@@ -52,7 +51,7 @@ class MyBoard extends CGFobject {
                 let center = this.hex_to_pixel(q, r);
                 let line = q + 4;
                 let column = (q + r + 4) * 2;
-                let cell = new BoardCell(this.scene, this.cell_radius, center, column, line, text, validText);
+                let cell = new BoardCell(this.scene, this.cell_radius, center, column, line, this.cellTexture, validText);
                 this.cells.push(cell);
             }
         }
