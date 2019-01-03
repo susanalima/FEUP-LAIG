@@ -61,7 +61,17 @@ class Marker extends CGFobject{
     display(){
         this.checkDozens(this.pUnits1, this.pDozens1);
         this.checkDozens(this.pUnits2, this.pDozens2);
+        
+        this.scene.pushMatrix();
+        this.displayElements();
+        this.scene.rotate(Math.PI, 0,1,0);
+        this.displayElements();
+        this.scene.popMatrix();
 
+
+    }
+
+    displayElements(){
         this.scene.pushMatrix();
         this.scene.translate(this.x, this.y,this.z);
         this.scene.rotate( Math.PI/4, 0,1,0);
@@ -103,7 +113,5 @@ class Marker extends CGFobject{
         this.scene.popMatrix();
 
         this.scene.popMatrix();
-
-
     }
 }

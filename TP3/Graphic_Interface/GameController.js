@@ -149,6 +149,17 @@ class GameController extends CGFobject {
         this.makePickingPiecesSide(this.view.thanosPieces);
     }
 
+    showPiecesSide(pieces){
+        for (let i = 0; i < pieces.length; i++)
+            pieces[i].display();
+    }
+
+    showPieces(){
+        this.showPiecesSide(this.view.gamoraPieces);
+        this.showPiecesSide(this.view.thanosPieces);
+
+    }
+
 
     /*displayPieces(pieces, currTime) {
         for (let i = 0; i < pieces.length; i++) {
@@ -498,6 +509,7 @@ class GameController extends CGFobject {
                 break;
             case 'WAIT_PB_RESPONSE':
                 this.wait_BotPlay_response();
+                this.checkOverTime();
                 break;
             case 'WAIT_ANIMATION_END':
                 this.view.stopTimer();
@@ -608,12 +620,17 @@ class GameController extends CGFobject {
         this.view.updateTimer();
         this.view.cronometer.display();
         this.view.marker.display();
+        this.view.sphere.display();
 
         this.scene.pushMatrix();
         this.makePickingValidCells(null);
 
         this.view.board.display();
-        this.makePickingPieces();
+        if(this.state != 'START')
+            this.makePickingPieces();
+        else
+            this.showPieces();
+
 
 
         //this.displayPieces(this.view.gamoraPieces, currTime);

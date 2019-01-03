@@ -13,7 +13,7 @@ class Cronometer extends CGFobject{
         this.text1 = text1;
         this.text2 = text2;
 
-        this.clockPointer = new MyTriangle(this.scene, -3,0,0,0,6,0,3,0,0);
+        this.clockPointer = new MyTriangle(this.scene, -0.5,-6,0,0,6,0,0.5,-6,0);
         this.clock = new MyCylinderBase(this.scene, 20, 10);
     }
 
@@ -31,13 +31,17 @@ class Cronometer extends CGFobject{
         this.actualTime = 0;
     }
 
-    display(){
+    displayElements()
+    {
         this.scene.pushMatrix();
         this.scene.translate(this.x, this.y,this.z);
         this.scene.rotate(-3 * Math.PI/4, 0,1,0);
 
-        this.scene.pushMatrix();
+        this.scene.pushMatrix();   
+
         this.scene.rotate(Math.PI/4, 0,0,1);
+        this.scene.rotate(Math.PI/4, 0,0,1);
+
         this.text2.bind();
         this.clock.display();
         this.scene.popMatrix();
@@ -52,8 +56,13 @@ class Cronometer extends CGFobject{
         this.scene.popMatrix();
 
 
-       
-
+    }
+    display(){
+        this.scene.pushMatrix();
+        this.displayElements();
+        this.scene.rotate(Math.PI,0,1,0);
+        this.displayElements();
+        this.scene.popMatrix();
 
     }
 }

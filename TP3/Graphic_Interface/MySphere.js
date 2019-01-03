@@ -44,8 +44,8 @@ class MySphere extends CGFobject
 		];
 
 
-		var angle = Math.PI*4/(this.slices);
-		var delta = Math.PI*4/(this.stacks);
+		var angle = 2*Math.PI/(this.slices);
+		var delta = Math.PI/(this.stacks);
 		var alpha = 0;
 		var radius = 0;
 		var newangle = 0;
@@ -72,7 +72,7 @@ class MySphere extends CGFobject
 				this.vertices.push(y);
 				this.vertices.push(z);
 
-				newangle = newangle + delta/2;
+				newangle = newangle + delta;
 			}
 	
 			newangle = 0;
@@ -85,7 +85,7 @@ class MySphere extends CGFobject
 				this.normals.push(x);
 				this.normals.push(y);
 				this.normals.push(0);
-				newangle = newangle + delta/2;
+				newangle = newangle + delta;
 
 			}
 

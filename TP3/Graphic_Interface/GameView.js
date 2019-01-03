@@ -25,8 +25,8 @@ class GameView extends CGFobject {
 
         let selectText1 = new CGFtexture(scene, "./scenes/images/selected_neon.jpg");
         let selectText2 = new CGFtexture(scene, "./scenes/images/selected_neon.jpg");
-        let pointerText1 = new CGFtexture(scene, "./scenes/images/pink.jpg");
-        let pointerText2 = new CGFtexture(scene, "./scenes/images/white.png");
+        let pointerText1 = new CGFtexture(scene, "./scenes/images/red.png");
+        let pointerText2 = new CGFtexture(scene, "./scenes/images/clock.png");
 
         this.playTimeMax = 7500;
         this.actualPlayTime = 0;
@@ -40,6 +40,7 @@ class GameView extends CGFobject {
 
         this.cronometer = new Cronometer(this.scene, [-20, 10, -20], this.playTimeMax, pointerText1, pointerText2);
         this.marker = new Marker(this.scene, [-20, 30, -20]);
+        this.sphere = new MySphere2(this.scene,3,3,10);
     };
 
     restart() {
