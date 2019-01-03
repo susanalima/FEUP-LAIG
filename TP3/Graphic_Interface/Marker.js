@@ -73,9 +73,13 @@ class Marker extends CGFobject{
 
     displayElements(){
         this.scene.pushMatrix();
+    
         this.scene.translate(this.x, this.y,this.z);
-        this.scene.rotate( Math.PI/4, 0,1,0);
-
+        this.scene.rotate( Math.PI/3, 0,1,0);
+        this.scene.rotate( -Math.PI/4, 1,0,0);
+        this.scene.scale(0.5,0.5,0.5);
+       // this.scene.rotate( Math.PI/4, 0,1,0);
+       this.scene.translate(30,0,0);
         this.bodyText.bind();
         this.body.display();
        
