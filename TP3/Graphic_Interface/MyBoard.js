@@ -23,6 +23,9 @@ class MyBoard extends CGFobject {
         this.createCells();
     };
 
+    /**
+     * Resets the board info
+     */
     restart(){
         this.selectedCell = null;
         this.resetBoard();
@@ -57,6 +60,11 @@ class MyBoard extends CGFobject {
         }
     }
 
+    /**
+     * Returns a cell with the column and line given as arguments, returns null if no cell with such parameters is found
+     * @param {int} column Column of the cell
+     * @param {int} line Line of the cell
+     */
     selectCell(column,line)
     {
         for(let i = 0; i < this.cells.length; i++)
@@ -70,7 +78,10 @@ class MyBoard extends CGFobject {
 
 
 
-//Needs to be changed/deleted
+    /**
+     * Checks if a new cell has been selected
+     * @param {Piece} piece Selected piece
+     */
     checkSelectedCells(piece){
         let noSelected = true;
         for (let i = 0; i < this.cells.length; i++) {
@@ -86,6 +97,9 @@ class MyBoard extends CGFobject {
         }
     }
 
+    /**
+     * Function not used(TODO)
+     */
     ignorePicks(){
         for (let i = 0; i < this.cells.length; i++) 
             this.cells[i].selected = false;
@@ -93,6 +107,9 @@ class MyBoard extends CGFobject {
         this.cellTexture.unbind();
     }
 
+    /**
+     * Resets all cells information
+     */
     resetBoard(){
         for (let i = 0; i < this.cells.length; i++) {
             this.cells[i].selected = false;
@@ -100,6 +117,9 @@ class MyBoard extends CGFobject {
         }
     }
 
+    /**
+     * Displays all board cells
+     */
     displayCells(){
         for(let i = 0; i < this.cells.length ; i++)
             this.cells[i].display();
