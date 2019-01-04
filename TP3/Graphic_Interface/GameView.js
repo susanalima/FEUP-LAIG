@@ -23,8 +23,8 @@ class GameView extends CGFobject {
         this.player1Wins = 0;
         this.player2Wins = 0;
 
-        let selectText1 = new CGFtexture(scene, "./scenes/images/selected_roxo.png");
-        let selectText2 = new CGFtexture(scene, "./scenes/images/selected_neon.png");
+        let selectText1 = new CGFtexture(scene, "./scenes/images/yellow2.png");
+        let selectText2 = new CGFtexture(scene, "./scenes/images/yellow2.png");
         let pointerText1 = new CGFtexture(scene, "./scenes/images/red.png");
         let pointerText2 = new CGFtexture(scene, "./scenes/images/clock.png");
 

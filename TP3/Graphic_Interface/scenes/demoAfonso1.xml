@@ -1,0 +1,464 @@
+<yas>
+<scene root="root" axis_length="50.0" />
+
+<views default="normal_view" >
+	<perspective id="normal_view" near="0.1" far="1000" angle="60">
+		 <from x="0.0" y="50.0" z="50.0" />
+		 <to x="0.0" y="0.0" z="0.0" />
+	</perspective>
+	<perspective id="side_view" near="0.1" far="1000" angle="30">
+		 <from x="15.0" y="10.0" z="100.0" />
+		 <to x="0.0" y="0.0" z="0.0" />
+	</perspective>
+	<perspective id="up_view" near="0.1" far="1000" angle="30">
+		 <from x="15.0" y="100.0" z="10.0" />
+		 <to x="0.0" y="0.0" z="0.0" />
+	</perspective>
+	<ortho id="ortho" near="0.1" far="1000" left="-15" right="15" top="15" bottom="-15" >
+ 		<from x="15.0" y="15.0" z="15.0" />
+ 		<to x="0.0" y="0.0" z="0.0" />
+ 	</ortho>
+ </views>
+
+ <ambient>
+ 	<ambient r="0" g="0" b="0" a="1" />
+ 	<background r="0.53" g="0.8" b="0.92" a="1" />
+ </ambient>
+
+ <lights>
+
+	<omni id="omni1" enabled="1" >                                                     	      
+        <location x="-5" y="10" z="5.0" w="1.0" />       	   
+        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
+        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
+    </omni>
+    <omni id="omni2" enabled="1" >                                                     	      
+        <location x="4" y="10" z="-8" w="1.0" />       	   
+        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
+        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
+    </omni>
+	<omni id="omni3" enabled="1" >                                                     	      
+        <location x="0" y="15" z="-40" w="1.0" />       	   
+        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
+        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
+    </omni>
+		<omni id="omni4" enabled="1" >                                                     	      
+        <location x="0" y="15" z="40" w="1.0" />       	   
+        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
+        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
+    </omni>
+
+	 
+	<omni id="piece1" enabled="1" >                                                     	      
+        <location x="-40" y="20" z="0" w="1.0" />       	   
+        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
+        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
+    </omni>
+
+	<omni id="piece2" enabled="1" >                                                     	      
+        <location x="40" y="20" z="0" w="1.0" />       	   
+        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
+        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
+    </omni>
+ </lights>
+
+    <textures>
+		<texture id="metal" file="./scenes/images/metal2.jpg" />
+		<texture id="ship" file="./scenes/images/ship1.jpg" />
+		<texture id="moon" file= "./scenes/images/lua.jpg" />
+		<texture id="green" file= "./scenes/images/neon.jpg" />
+		<texture id="roxo" file= "./scenes/images/roxo.png" />
+		<texture id="table" file="./scenes/images/marmore.jpg" />
+		<texture id="garden_table" file="./scenes/images/garden.jpg" />
+		<texture id="support" file="./scenes/images/rock_support.jpg" />
+		<texture id="stool" file="./scenes/images/toalha.jpg" />
+		<texture id="stool_support" file="./scenes/images/stool.jpg" />
+		<texture id="floor" file="./scenes/images/grass_floor.jpg" />
+		<texture id="fence_grass" file="./scenes/images/fence.jpg"/>
+		<texture id="fence" file="./scenes/images/fence2.jpg"/>
+
+    </textures>
+  
+  <materials>
+ 	<material id="mat0" shininess = "8" >
+		 <emission r="0.1" g="0.1" b="0.1" a="0.8" />
+		 <ambient r="0" g="0" b="0" a="1" />
+		 <diffuse r="0.4" g="0.4" b="0.4" a="1" />
+		 <specular r="0.1" g="0.1" b="0.1" a="1" />
+	 </material>
+
+        <!--material do tampo-->
+ 	<material id="mat1" shininess = "8" >
+		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
+		 <ambient r="0.39" g="0.2" b="0.1" a="1" />
+		 <diffuse r="0.39" g="0.2" b="0.1" a="1" />
+		 <specular r="0.1" g="0.1" b="0.1" a="1" />
+	 </material>
+
+	 <material id="mat2" shininess = "120" >
+		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
+		 <ambient r="0.6" g="0.6" b="0.6" a="1" />
+		 <diffuse r="0.6" g="0.6" b="0.6" a="1" />
+		 <specular r="1" g="1" b="1" a="1" />
+	 </material>
+
+
+ 	<material id="mat3" shininess = "4" >
+		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
+		 <ambient r="0.9" g="0.8" b="0.6" a="1" />
+		 <diffuse r="0.9" g="0.8" b="0.6" a="1" />
+		 <specular r="0.1" g="0.1" b="0.1" a="1" />
+	 </material>
+
+
+	<material id="mat4" shininess = "20" >
+		 <emission r="0.2" g="0.2" b="0.2" a="0.8" />
+		 <ambient r="0.3" g="0.5" b="0.4" a="1" />
+		 <diffuse r="0.3" g="1" b="0.4" a="1" />
+		 <specular r="0.3" g="0.3" b="0.3" a="1" />
+	 </material>
+
+ </materials>
+  
+  <transformations>
+
+    <transformation id= "table_transformation">
+    <scale x="200" y="5" z="160" />
+
+     <rotate axis="x" angle="-90" />
+     <rotate axis="z" angle="-45" />
+       </transformation>
+
+	   	<transformation id="floor_transformation">
+		 <rotate axis="x" angle= "-90" />
+         <translate x="-200" y="-200" z="-60" />
+	 </transformation>
+
+	   <transformation id= "table_transformation2">
+    <scale x="150" y="5" z="100" />
+
+     <rotate axis="x" angle="-90" />
+     <rotate axis="z" angle="-45" />
+       </transformation>
+
+    
+    <transformation id="tf3">
+      <scale x="20" y="500" z="20" />
+		<rotate axis="x" angle="-90" />
+        <translate x="2" y="-3" z="0" />
+	 </transformation>
+
+    <transformation id="tf4">
+        <translate x="4" y="0" z="0" />
+	 </transformation>
+
+    <transformation id="tf5">
+        <translate x="0" y="0" z="3" />
+    </transformation>
+
+    <transformation id="tf6">
+        <translate x="-4" y="0" z="0" />
+	 </transformation>
+
+	  <transformation id="rightWall_transformation">
+		<rotate axis="y" angle="90" />
+        <translate x="-200" y="-60" z="-200" />
+	 </transformation>
+ </transformations>
+
+ <animations>
+
+ </animations>
+
+ <primitives>
+
+	<primitive id="world">
+        <sphere radius="5" slices="500" stacks="100" />
+    </primitive>
+
+	<primitive id="game">
+		<game boardTextureId="moon" cellTextureId="metal"  idpieceTexture1="green" idpieceTexture2="roxo"/>
+	</primitive>
+
+    <primitive id="quad">
+ 		<rectangle x1="0" y1="0" x2="1" y2="1" />
+    </primitive >
+
+	<primitive id="table">
+		<cylinder base="0.5" top="0.5" height="1" slices="12" stacks="2" />
+    </primitive >
+
+    <primitive id="table_leg">
+		<cylinder base="0.5" top="0.5" height="1" slices="4" stacks="5" />
+    </primitive >
+
+	<primitive id="floor">
+ 		<rectangle x1="0" y1="0" x2="400" y2="400" />
+    </primitive >
+
+		<primitive id="wall">
+ 		<rectangle x1="0" y1="0" x2="400" y2="200" />
+    </primitive >
+
+ </primitives >
+
+ <components>
+ 	<component id="root">
+		<transformation>
+		</transformation>
+		<materials>
+			 <material id="mat0" />
+		</materials>
+		<texture id="none" />
+		<children>
+			<componentref id="full_table"/>
+			<componentref id="full_stool1"/>
+			<componentref id="full_stool2"/>
+			<componentref id="game"/>
+			<componentref id="room"/>
+
+		</children>
+ 	</component>
+
+
+	<component id="game">
+		<transformation>
+                <rotate axis="y" angle="-60" />
+                <translate x="0" y="5.5" z="0" />
+		</transformation>
+		<materials>
+			 <material id="mat0" />
+		</materials>
+		<texture id="none" />
+		<children>
+			<primitiveref id="game"/>
+		</children>
+ 	</component>
+
+	
+
+	   <component id="floor">
+ 		<transformation>
+ 			<transformationref id="floor_transformation" />
+		</transformation>
+		<materials>
+
+		     <material id="mat0" />
+		</materials>
+			<texture id="floor" length_s="5" length_t="5" />
+
+		<children>
+			<primitiveref id="floor" />
+		</children>
+	 </component>
+
+     <component id="full_table">
+	 <transformation>
+	 </transformation>
+	 <materials>
+			 <material id="mat0" />
+	</materials>
+	<texture id="none" length_s="0.1" length_t="0.2"/>
+		<children>
+			<componentref id="table" />
+			<componentref id="table_leg" />
+			<componentref id="table_foot" />
+
+		</children>
+	 </component>
+
+
+	
+	  <component id="table">
+ 		<transformation>
+        <transformationref id="table_transformation2" />
+		</transformation>
+		<materials>
+			 <material id="mat0" />
+		</materials>
+		<texture id="garden_table" length_s="0.1" length_t="0.2"/>
+		<children>
+			<primitiveref id="table" />
+		</children>
+	 </component>
+
+	  <component id="table_foot">
+ 		<transformation>
+		  
+		<scale x="50" y="1" z="50"/>
+		<translate x="0" y="-60" z="0" />
+				  <rotate axis="x" angle="-90" />
+		     	<rotate axis="z" angle="-45" />
+		</transformation>
+		<materials>
+			 <material id="mat0" />
+		</materials>
+		<texture id="support" length_s="2" length_t="1"/>
+		<children>
+			<primitiveref id="table"/>
+		</children>
+	 </component>
+
+
+
+       <component id="table_leg">
+ 		<transformation>
+             <scale x="10" y="60" z="10" />
+            <translate x="0" y="-0.99" z="0" />
+ 		    <rotate axis="x" angle="-90" />
+            <rotate axis="z" angle="-45" />
+		</transformation>
+		<materials>
+			 <material id="mat0" />
+		</materials>
+		<texture id="metal"  length_s="1" length_t="1"/>
+		<children>
+			<primitiveref id="table_leg" />
+		</children>
+	 </component>
+
+	<component id="full_stool1">
+	 <transformation>
+	 </transformation>
+	 <materials>
+			 <material id="mat0" />
+	</materials>
+	<texture id="none" length_s="0.1" length_t="0.2"/>
+		<children>
+			<componentref id="stool" />
+			<componentref id="stool_leg1" />
+		</children>
+	 </component>
+
+	 <component id="full_stool2">
+	 <transformation>
+	 <translate x="0" y="0" z="160" />
+	 </transformation>
+	 <materials>
+			 <material id="mat0" />
+	</materials>
+	<texture id="none" length_s="0.1" length_t="0.2"/>
+		<children>
+			<componentref id="stool" />
+			<componentref id="stool_leg1" />
+		</children>
+	 </component>
+
+	 <component id="stool">
+ 		<transformation>
+
+        	<scale x="50" y="5" z="50" />
+			<translate x="0" y="-6" z="-1.6" />
+
+     		<rotate axis="x" angle="-90" />
+     		<rotate axis="z" angle="-45" />
+		</transformation>
+		<materials>
+			 <material id="mat0" />
+		</materials>
+		<texture id="stool" length_s="1" length_t="1"/>
+		<children>
+			<primitiveref id="table" />
+		</children>
+	 </component>
+
+	 <component id="stool_leg1">
+	 <transformation>
+             <scale x="8" y="30" z="8" />
+            <translate x="0" y="-1.99" z="-10" />
+ 		    <rotate axis="x" angle="-90" />
+            <rotate axis="z" angle="-45" />
+		</transformation>
+		<materials>
+			 <material id="mat0" />
+		</materials>
+		<texture id="stool_support"  length_s="1" length_t="1"/>
+		<children>
+			<primitiveref id="table_leg" />
+		</children>
+	 </component>
+
+	   <component id="rightWall">
+ 		<transformation>
+ 			<transformationref id="rightWall_transformation" />
+		</transformation>
+		<materials>
+			 <material id="mat3" />
+		</materials>
+		<texture id="fence_grass" length_s="1" length_t="1" />
+		<children>
+			<primitiveref id="wall" />
+		</children>
+	 </component>
+
+	 <component id="leftWall">
+ 		<transformation>
+
+			<rotate axis='z' angle='-180'/>
+			<rotate axis='x' angle='-180'/>
+		</transformation> 
+		<materials>
+			 <material id="mat2" />
+		</materials>
+		<texture id="fence_grass" length_s="1" length_t="1" />
+		<children>
+			<componentref id="rightWall" />
+		</children>
+	 </component>
+
+	  	<component id="backWall">
+ 		<transformation>
+		 	
+ 			<translate x="-200" y="-60" z="-200"/>
+		</transformation>
+		<materials>
+			 <material id="mat0" />
+		</materials>
+		<texture id="fence_grass" length_s="1" length_t="1" />
+		<children>
+			<primitiveref id="wall" />
+		</children>
+	 </component>
+
+
+	 <component id="frontWall">
+ 		<transformation>
+			<rotate axis='x' angle='-180'/>
+			<rotate axis='z' angle='-180'/>
+			
+		</transformation> 
+		<materials>
+			 <material id="mat4" />
+		</materials>
+		<texture id="fence_grass" length_s="1" length_t="1" />
+		<children>
+			<componentref id="backWall" />
+		</children>
+	 </component>
+
+	 	<component id="room">
+ 		<transformation>
+		</transformation>
+		<materials>
+			 <material id="mat0" />
+		</materials>
+		<texture id="none" length_s="2" length_t="1" />
+		<children>
+			<componentref id="floor"/>
+			<componentref id="rightWall"/>
+			<componentref id="leftWall"/>
+			<componentref id="frontWall"/>
+			<componentref id="backWall"/>
+		</children>
+	 </component>
+
+	 
+
+ </components>
+</yas>
