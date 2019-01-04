@@ -97,16 +97,7 @@ class MyBoard extends CGFobject {
         }
     }
 
-    /**
-     * Function not used(TODO)
-     */
-    ignorePicks(){
-        for (let i = 0; i < this.cells.length; i++) 
-            this.cells[i].selected = false;
-        //this.selectedCell = null;
-        this.cellTexture.unbind();
-    }
-
+ 
     /**
      * Resets all cells information
      */

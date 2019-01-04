@@ -146,16 +146,6 @@ class Piece extends CGFobject {
 		this.swaped = !this.swaped;
 	}
 
-	/**
-	 *  Function not used (TODO)
-	 */
-	animate(cellPosition, deltaT) {
-		let deltaX = cellPosition[0] - this.x;
-		let deltaY = cellPosition[1] - this.y;
-		//console.log("position:" + cellPosition[0] + ":" + cellPosition[1]);
-		this.x += deltaX * deltaT / this.animationTime;
-		this.y += deltaY * deltaT / this.animationTime;
-	}
 
 	/**
 	 * Displays the piece in member scene
