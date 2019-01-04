@@ -55,33 +55,43 @@ class GameView extends CGFobject {
         this.currentMoviePiece = null;
     }
 
-    //TODO
+    /**
+     * Resets the number of wins for both players
+     */
     resetWins(){
         this.player1Wins = 0;
         this.player2Wins = 0;
     }
 
-    //TODO
+    /**
+     * Starts the play timer
+     */
     startTimer()
     {
         this.resetTimer();
         this.counting = true;
     }
 
-    //TODO
+    /**
+     * Resets the play timer
+     */
     resetTimer(){
         this.actualPlayTime = 0;
         this.cronometer.resetTimer();
         this.lastTime = null;
     }
 
-    //TODO
+    /**
+     * Stops the play timer
+     */
     stopTimer(){
         this.counting = false;
     }
 
    
-    //TODO
+    /**
+     * Update the play timer has passes that information to the stopwatch
+     */
     updateTimer(){
         let deltaT;
         if(this.counting){
@@ -96,7 +106,11 @@ class GameView extends CGFobject {
         this.lastTime = this.scene.currTime;
         }
     }
-    //TODO
+
+    /**
+     * Increments by 1 the number of wins of the player passed as argument
+     * @param {int} player Player whose wins will be incremented by 1
+     */
     incWinsPlayer(player){
         if(player == 1){
             this.player1Wins++;

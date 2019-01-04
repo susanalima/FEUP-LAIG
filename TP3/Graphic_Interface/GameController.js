@@ -84,7 +84,9 @@ class GameController extends CGFobject {
         }
     }
 
-    //TODO
+    /**
+     * Check which piece is selected returns OK if a piece is selected NOTOK if there are no pieces selected
+     */
     checkSelected() {
         let counter = 0;
         counter = this.setSelected(this.view.thanosPieces, counter);
@@ -100,7 +102,12 @@ class GameController extends CGFobject {
             }
     }
 
-    //TODO
+    /**
+     * Checks in the pieces array if the selected piece is diferent from the one previously selected, in other words if a new piece has been selected.
+     * @param {Array} pieces Array with pieces
+     * @param {int} counter Counter which holds the number of selected pieces
+     * @returns the number of selected pieces 1 or 0
+     */
     setSelected(pieces, counter) {
         for (let i = 0; i < pieces.length; i++) {
             if (pieces[i].selected) {
@@ -119,7 +126,9 @@ class GameController extends CGFobject {
         return counter;
     }
 
-    //TODO
+    /**
+     * Registers all cells for picking and displays them
+     */
     makePickingCells() {
         this.scene.pushMatrix();
         this.scene.rotate(Math.PI, 1, 0, 0);
@@ -130,7 +139,10 @@ class GameController extends CGFobject {
         this.scene.popMatrix();
     }
 
-    //TODO
+    /**
+     * Displays all cells and registers for picking only the cells present in validCells
+     * @param {Array} validCells cells which will be registered for picking
+     */
     makePickingValidCells(validCells) {
         let index = 0;
         this.scene.pushMatrix();
@@ -153,14 +165,19 @@ class GameController extends CGFobject {
         this.scene.popMatrix();
     }
 
-    //TODO
+    /**
+     * Unvalidates all cells, these cells are not valid play destinations
+     */
     unvalidateCells() {
         for (let i = 0; i < this.view.board.cells.length; i++)
             this.view.board.cells[i].valid = false;
     }
 
 
-    //TODO
+    /**
+     * Displays and registers for picking the elements of pieces
+     * @param {Array} pieces Array with pieces
+     */
     makePickingPiecesSide(pieces) {
         for (let i = 0; i < pieces.length; i++) {
             this.scene.registerForPick(++this.scene.pickIndex, pieces[i]);
@@ -168,7 +185,9 @@ class GameController extends CGFobject {
         }
     }
 
-    //TODO
+    /**
+     * Displays and registers fo picking all pieces
+     */
     makePickingPieces() {
         this.makePickingPiecesSide(this.view.gamoraPieces);
         this.makePickingPiecesSide(this.view.thanosPieces);
@@ -302,7 +321,9 @@ class GameController extends CGFobject {
         }
     }
 
-   //TODO
+    /**
+     * Checks if the time of the current play has been exceeded
+     */
     checkOverTime(){
         if(this.view.actualPlayTime >= this.view.playTimeMax){
             this.state = 'WAIT_SP_TIMER';
