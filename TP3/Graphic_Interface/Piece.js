@@ -25,6 +25,9 @@ class Piece extends CGFobject {
 		this.initialize_values();
 	};
 
+	/**
+	 * Initializes the values of the class members
+	 */
 	initialize_values()
 	{
 		if(this.swaped)
@@ -37,10 +40,16 @@ class Piece extends CGFobject {
 		this.hasRequestedPlay = 0;
 	}
 
+	/**
+	 * Restarts the values of the class members
+	 */
 	restart(){
 		this.initialize_values();
 	}
 
+	/**
+	 * Updates the parabolic animation of the piece
+	 */
 	update(currTime) {
 		var deltaT;
 		if (this.lastTime == null){
@@ -58,6 +67,10 @@ class Piece extends CGFobject {
 		this.lastTime = currTime;
 	}
 
+	/**
+	 * Executes the parabolic animation of the piece
+	 * @param {int} deltaT Amount of time passed (ms) since the last call of this function
+	 */
 	parabolicAnimate(deltaT){
 		console.log('parabolicAnimate');
 		if(this.parabolic.time > this.animationTime){
@@ -95,7 +108,14 @@ class Piece extends CGFobject {
 			this.z = 0.5;
 		}
 	}
-
+	/**
+	 * Creates a parabolic animation for the piece
+	 * @param {Array} begin Starting place of the piece
+	 * @param {int} height Height of the arch of the parabola
+	 * @param {Array} end Destination of the piece 
+	 * @param {BoardCell} cell Destination cell
+	 * @param {Element} reverse Flag for reverse animation
+	 */
 	createParabolicAnimation(begin, height, end, cell, reverse){
 		console.log('createParabolicAnimation')
 		this.parabolic = {
@@ -116,6 +136,9 @@ class Piece extends CGFobject {
 
 	}
 
+	/**
+	 * Swaps the texture of the piece
+	 */
 	swapText(){
 		let temp = this.selectedText;
 		this.selectedText = this.texture;
@@ -123,13 +146,7 @@ class Piece extends CGFobject {
 		this.swaped = !this.swaped;
 	}
 
-	animate(cellPosition, deltaT) {
-		let deltaX = cellPosition[0] - this.x;
-		let deltaY = cellPosition[1] - this.y;
-		//console.log("position:" + cellPosition[0] + ":" + cellPosition[1]);
-		this.x += deltaX * deltaT / this.animationTime;
-		this.y += deltaY * deltaT / this.animationTime;
-	}
+
 
 	/**
 	 * Displays the piece in member scene
