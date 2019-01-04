@@ -512,6 +512,7 @@ class GameController extends CGFobject {
         }
     }
 
+
     /**
      * Represents the state 'GAME_MOVIE' of the GameController's state machine
      * Remakes this model's currentMoviePlay play 
@@ -721,7 +722,7 @@ class GameController extends CGFobject {
 	 * Displays the GameController's components in member scene
 	 */
     display() {
-
+        this.view.board.checkSelectedCells(this.selectedPiece);
         this.stateMachine();
  
         let ignore = true;
