@@ -38,7 +38,7 @@ class GameView extends CGFobject {
         this.createPieces(this.thanosPieces, pieceTexture2, 18, 32, 'blackPiece', selectText1);
         this.createPieces(this.gamoraPieces, pieceTexture1, -18, -32, 'whitePiece', selectText2);
 
-        this.cronometer = new Cronometer(this.scene, [-25, 4, -20], this.playTimeMax, pointerText1, pointerText2);
+        this.chronometer = new Chronometer(this.scene, [-25, 4, -20], this.playTimeMax, pointerText1, pointerText2);
         this.marker = new Marker(this.scene, [25, 4, 20]);
         this.sphere = new MySphere2(this.scene,3,3,10);
     };
@@ -77,7 +77,7 @@ class GameView extends CGFobject {
      */
     resetTimer(){
         this.actualPlayTime = 0;
-        this.cronometer.resetTimer();
+        this.chronometer.resetTimer();
         this.lastTime = null;
     }
 
@@ -101,7 +101,7 @@ class GameView extends CGFobject {
         else 
             deltaT = this.scene.currTime - this.lastTime; 
             this.actualPlayTime += deltaT;
-            this.cronometer.updateTime(this.actualPlayTime);
+            this.chronometer.updateTime(this.actualPlayTime);
 
         this.lastTime = this.scene.currTime;
         }

@@ -730,7 +730,7 @@ class GameController extends CGFobject {
             ignore = false;
         
         this.view.updateTimer();
-        this.view.cronometer.display();
+        this.view.chronometer.display();
         this.view.marker.display();
         
 

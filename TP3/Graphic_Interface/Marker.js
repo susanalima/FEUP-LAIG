@@ -1,3 +1,7 @@
+
+/**
+ * Class marker is responsible for showing whose turn is it and the game score
+ */
 class Marker extends CGFobject{
     constructor(scene, center)
     {
@@ -39,6 +43,9 @@ class Marker extends CGFobject{
         this.markerDozens2 = new MyRectangle(this.scene, -3,-4.5,3,4.5);
     }
 
+    /**
+     * Resets the number of wins of both players
+     */
     resetWins(){
         this.pUnits1 = 0;
         this.pUnits2 = 0;
@@ -46,6 +53,11 @@ class Marker extends CGFobject{
         this.pDozens2 = 0;
     }
 
+    /**
+     * Checks if the number of wins of each player surpasses 10 updates the class info accordingly
+     * @param {int} units class member representing units of one of the players score
+     * @param {int} dozens class member representing dozens of one of the players score
+     */
     checkDozens(units, dozens){
         if(units >= 10)
         {
@@ -54,10 +66,16 @@ class Marker extends CGFobject{
         }
     }
 
+    /**
+     * Switchs the turn
+     */
     switchPlayer(){
         this.indicatorFlag = !this.indicatorFlag;
     }
 
+    /**
+     * Displays both markers needed for the game
+     */
     display(){
         this.checkDozens(this.pUnits1, this.pDozens1);
         this.checkDozens(this.pUnits2, this.pDozens2);
@@ -71,6 +89,9 @@ class Marker extends CGFobject{
 
     }
 
+    /**
+     * Displays the elements of one of the markers
+     */
     displayElements(){
         this.scene.pushMatrix();
     

@@ -1,6 +1,8 @@
 
-
-class Cronometer extends CGFobject{
+/**
+ * Class chronometer responsible for showing how much time a player has to make a play
+ */
+class Chronometer extends CGFobject{
     constructor(scene, center, fullTime, text1, text2)
     {
         super(scene);
@@ -17,6 +19,10 @@ class Cronometer extends CGFobject{
         this.clock = new MyCylinderBase(this.scene, 40, 10);
     }
 
+    /**
+     * Updates the time of the chronometer with newT
+     * @param {int} newT New time of the chronometer
+     */
     updateTime(newT){
         if(newT != null){
         this.actualTime = newT;
@@ -26,11 +32,17 @@ class Cronometer extends CGFobject{
         }
     }
 
+    /**
+     * Resets the chronometer
+     */
     resetTimer()
     {
         this.actualTime = 0;
     }
 
+    /**
+     * Displays the elements of one chronometer
+     */
     displayElements()
     {
         this.scene.pushMatrix();
@@ -61,6 +73,10 @@ class Cronometer extends CGFobject{
 
 
     }
+
+    /**
+     * Displays both chronometers of the game
+     */
     display(){
         this.scene.pushMatrix();
         this.displayElements();

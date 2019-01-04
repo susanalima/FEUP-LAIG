@@ -18,6 +18,10 @@ class MyPrismBody extends CGFobject
 		this.initBuffers();
 	};
 
+
+/**
+ * Initializes vertices, normals and indices of the object
+ */
 	initBuffers()
 	{
 		this.vertices = [
