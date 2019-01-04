@@ -71,7 +71,7 @@
     <textures>
 		<texture id="metal" file="./scenes/images/metal2.jpg" />
 		<texture id="ship" file="./scenes/images/ship1.jpg" />
-		<texture id="moon" file= "./scenes/images/lua.jpg" />
+		<texture id="board" file= "./scenes/images/board2.jpg" />
 		<texture id="green" file= "./scenes/images/neon.jpg" />
 		<texture id="roxo" file= "./scenes/images/roxo.png" />
 		<texture id="table" file="./scenes/images/marmore.jpg" />
@@ -183,7 +183,7 @@
     </primitive>
 
 	<primitive id="game">
-		<game boardTextureId="moon" cellTextureId="metal"  idpieceTexture1="green" idpieceTexture2="roxo"/>
+		<game boardTextureId="board" cellTextureId="metal"  idpieceTexture1="green" idpieceTexture2="roxo"/>
 	</primitive>
 
     <primitive id="quad">
