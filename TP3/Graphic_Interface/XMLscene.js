@@ -42,7 +42,7 @@ class XMLscene extends CGFscene {
 
     update_CameraRotation()
     {
-        //this.camera_rotation = 32;
+        this.camera_rotation = 32;
     }
     /**
      * Initializes the scene, setting some WebGL defaults, initializing the camera and the axis.
