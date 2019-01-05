@@ -17,6 +17,7 @@ class Marker extends CGFobject{
         this.p1banner = new MyRectangle(this.scene, -6.8,-1.5,6.8,1.5);
         this.p2banner = new MyRectangle(this.scene, -6.8,-1.5,6.8,1.5);
 
+
         this.indicatorFlag = true;
 
         this.bodyText = new CGFtexture(this.scene, "./scenes/images/blue.png");
@@ -40,6 +41,8 @@ class Marker extends CGFobject{
         this.textures = [tex0,tex1,tex2,tex3,tex4,tex5,tex6,tex7,tex8,tex9];
 
         this.body = new MyRectangle(this.scene, -15,-8,15,8);
+        this.back_body = new MyCylinder(this.scene, 4, 1, 11, 11, 3);
+        this.support_body = new MyCylinder(this.scene, 4, 1,3.5,3.5, 3);
         this.indicator1 = new MyTriangle(this.scene,  -1,0,0,0,1,0,1,0,0);
         this.indicator2 = new MyTriangle(this.scene,  -1,0,0,0,1,0,1,0,0);
 
@@ -105,10 +108,21 @@ class Marker extends CGFobject{
         this.scene.rotate( Math.PI/3, 0,1,0);
         this.scene.rotate( -Math.PI/4, 1,0,0);
         this.scene.scale(0.5,0.5,0.5);
-       // this.scene.rotate( Math.PI/4, 0,1,0);
-       this.scene.translate(30,0,0);
+        //this.scene.rotate( Math.PI/4, 0,1,0);
+        this.scene.translate(30,0,0);
         this.bodyText.bind();
         this.body.display();
+
+        this.scene.pushMatrix();
+        this.scene.scale(2,1,1);
+        this.scene.rotate(Math.PI/4,0,0,1);
+        this.scene.translate(0,0,-3);
+        this.back_body.display();
+        this.scene.rotate(-Math.PI/4,0,0,1);
+        this.scene.rotate(Math.PI/2,1,0,0);
+        this.scene.translate(0,-2,0);
+        this.support_body.display();
+        this.scene.popMatrix();
        
         this.scene.pushMatrix();
         this.scene.translate(-5,0,0.01);

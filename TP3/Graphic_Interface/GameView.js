@@ -38,7 +38,7 @@ class GameView extends CGFobject {
         this.createPieces(this.thanosPieces, pieceTexture2, 18, 32, 'blackPiece', selectText1);
         this.createPieces(this.gamoraPieces, pieceTexture1, -18, -32, 'whitePiece', selectText2);
 
-        this.chronometer = new Chronometer(this.scene, [-25, 4, -20], this.playTimeMax, pointerText1, pointerText2);
+        this.chronometer = new Chronometer(this.scene, [-25, 5, -20], this.playTimeMax, pointerText1, pointerText2);
         this.marker = new Marker(this.scene, [25, 4, 20]);
         this.sphere = new MySphere2(this.scene,3,3,10);
     };
