@@ -24,6 +24,7 @@ class GameController extends CGFobject {
         this.currentPlayer = null;
         this.selectedPiece = null;
         this.state = 'START';
+        this.newTimer = true;
         this.initialize_values();
     };
 
@@ -64,6 +65,16 @@ class GameController extends CGFobject {
         }
     }
 
+    deselectAllPiecesAux(pieces){
+        for(let i = 0; i < pieces.length; i++)
+            pieces[i].selected =false;
+    }
+
+    deselectAllPieces(){
+        this.deselectAllPiecesAux(this.view.gamoraPieces);
+        this.deselectAllPiecesAux(this.view.thanosPieces);
+    }
+
     /**
      * Undos the last play
      */
@@ -84,11 +95,26 @@ class GameController extends CGFobject {
         }
     }
 
+    checkMidAnimationSide(pieces){
+        for(let i = 0; i < pieces.length; i++)
+        {
+            if(pieces[i].midAnimation)
+                return true;
+        }
+        return false;
+    }
+
+    checkMidAnimation(){
+        return this.checkMidAnimationSide(this.view.thanosPieces) || this.checkMidAnimationSide(this.view.gamoraPieces);
+    }
+
     /**
      * Check which piece is selected returns OK if a piece is selected NOTOK if there are no pieces selected
      */
     checkSelected() {
         let counter = 0;
+        let midAnimation = this.checkMidAnimation();
+        if(!midAnimation){
         counter = this.setSelected(this.view.thanosPieces, counter);
         counter = this.setSelected(this.view.gamoraPieces, counter);
         if (this.selectedPiece != null)
@@ -100,6 +126,10 @@ class GameController extends CGFobject {
                 this.selectedPiece = null;
                 return "NOTOK"; // No pieces selected
             }
+        }
+        else{
+            this.deselectAllPieces();
+        }
     }
 
     /**
@@ -330,7 +360,9 @@ class GameController extends CGFobject {
             this.view.stopTimer();
             this.client.requestSwitchPlayer();
 
+
             if(this.selectedPiece != null){
+                this.unvalidateCells();
                 this.selectedPiece.selected = false;
                 this.selectedPiece.swapText();
                 this.selectedPiece = null;
@@ -491,6 +523,7 @@ class GameController extends CGFobject {
             this.state = 'START';
             this.view.stopTimer();
             this.view.resetTimer();
+            this.newTimer =true;
             return true;
         }
         return false;
@@ -602,8 +635,11 @@ class GameController extends CGFobject {
                 this.wait_AssertPlayers_response();
                 break;
             case 'PROCESS_PIECE':
-                this.view.startTimer();
                 this.client.requestCurrentPlayerBot();
+                if(this.newTimer){
+                    this.newTimer = false;
+                    this.view.startTimer();
+                }
                 this.state = 'WAIT_CPB_RESPONSE';
                 break;
             case 'WAIT_CPB_RESPONSE':
@@ -652,6 +688,7 @@ class GameController extends CGFobject {
             case 'CHANGE_PLAYER':
                 this.view.marker.switchPlayer();
                 this.scene.update_CameraRotation();
+                this.newTimer = true;
                 this.state = 'PROCESS_PIECE';
                 this.check_Reset();
                 break;

@@ -22,6 +22,7 @@ class Piece extends CGFobject {
 		this.animationTime = 1 * 1000;
 		this.parabolic = null;
 		this.playedCenter = [];
+		this.midAnimation;
 		this.initialize_values();
 	};
 
@@ -38,6 +39,7 @@ class Piece extends CGFobject {
 		this.line = null;
 		this.column = null;
 		this.hasRequestedPlay = 0;
+		this.midAnimation = false;
 	}
 
 	/**
@@ -75,6 +77,7 @@ class Piece extends CGFobject {
 		console.log('parabolicAnimate');
 		if(this.parabolic.time > this.animationTime){
 			this.parabolic.end = true;
+			this.midAnimation = false;
 			if(this.parabolic.reverse == false)
 			{
 				this.playedCenter = [this.x,this.y];
@@ -118,6 +121,7 @@ class Piece extends CGFobject {
 	 */
 	createParabolicAnimation(begin, height, end, cell, reverse){
 		console.log('createParabolicAnimation')
+		this.midAnimation = true;
 		this.parabolic = {
 			actualX: begin[0],
 			actualZ: 0,
