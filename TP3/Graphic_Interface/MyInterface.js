@@ -17,6 +17,7 @@ class MyInterface extends CGFinterface {
         super.init(application);
         // init GUI. For more information on the methods, check:
         //  http://workshop.chromeexperiments.com/examples/gui
+        var lock_camera
 
         this.gui = new dat.GUI();    this.gui = new dat.GUI();
         var group = this.gui.addFolder("Settings");
@@ -27,6 +28,7 @@ class MyInterface extends CGFinterface {
         group.add(this.scene, 'new_game').name('New Game');
         group.add(this.scene, 'undo').name('Undo');
         group.add(this.scene, 'game_movie').name('Game Movie');
+        group.add(this.scene, 'lock_camera');
         // add a group of controls (and open/expand by defult)
         this.initKeys();
 
@@ -82,6 +84,11 @@ class MyInterface extends CGFinterface {
 	processKeyUp(event) {
 		//this.activeKeys[event.code]=false;
     };
+
+    processMouse(){
+        if(!this.scene.lock_camera)
+        super.processMouse();
+    }
     
      /**
      * Processes the event of releasing a pressed keyboard key
