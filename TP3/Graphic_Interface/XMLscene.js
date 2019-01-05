@@ -21,6 +21,42 @@ class XMLscene extends CGFscene {
         this.camera_rotation = 0;   
         this.undo_play = false;
         this.showGameMovie = false;
+        this.get_current_background();
+    }
+
+    get_current_background() {
+        let url_split_arr = window.location.href.split('?');
+        if(url_split_arr.length == 1)
+        {
+            this.background_scene = 1;
+        }   
+        else
+        {
+            let filename = url_split_arr[1].split('=')[1];
+            console.log(filename);
+            if(filename == 'demoAfonso1.xml')
+                this.background_scene = 1;
+            else
+                this.background_scene = 2;
+        }
+        this.previous_background_scene =  this.background_scene;
+    }
+
+    check_scene_background()
+    {
+        if(this.background_scene != this.previous_background_scene)
+        {
+            let url_split = window.location.href.split('?')[0];
+            console.log(url_split);
+            let file = '?file=';
+            if(this.background_scene == 1)
+                file += 'demoAfonso1.xml';
+            else
+                file += 'demoSusana.xml';
+                
+            window.history.replaceState(history.state, 'CGFexample', url_split + file);
+            location.reload();
+        }
     }
 
 
@@ -179,6 +215,7 @@ class XMLscene extends CGFscene {
             this.camera.orbit([0, 1, 0], Math.PI / 30);
             this.camera_rotation--;
         }
+        this.check_scene_background();
     }
 
     logPicking(){
