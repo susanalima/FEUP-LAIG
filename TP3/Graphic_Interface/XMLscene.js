@@ -42,7 +42,7 @@ class XMLscene extends CGFscene {
 
     update_CameraRotation()
     {
-        //this.camera_rotation = 32;
+        this.camera_rotation = 30;
     }
     /**
      * Initializes the scene, setting some WebGL defaults, initializing the camera and the axis.
@@ -176,7 +176,7 @@ class XMLscene extends CGFscene {
     {
         this.currTime = currTime;
         if (this.camera_rotation > 0) {
-            this.camera.orbit([0, 1, 0], Math.PI / 32);
+            this.camera.orbit([0, 1, 0], Math.PI / 30);
             this.camera_rotation--;
         }
     }

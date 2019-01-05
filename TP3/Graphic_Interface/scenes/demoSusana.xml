@@ -3,8 +3,8 @@
 
 <views default="normal_view" >
 	<perspective id="normal_view" near="0.1" far="1000" angle="60">
-		 <from x="0.0" y="50.0" z="50.0" />
-		 <to x="0.0" y="0.0" z="0.0" />
+		 <from x="0.0" y="50.0" z="60.0" />
+		 <to x="0.0" y="15.0" z="0.0" />
 	</perspective>
 	<perspective id="side_view" near="0.1" far="1000" angle="30">
 		 <from x="15.0" y="10.0" z="100.0" />
@@ -62,10 +62,11 @@
 		<texture id="board" file= "./scenes/images/boardT.jpg" />
 		<texture id="green" file= "./scenes/images/neon.jpg" />
 		<texture id="roxo" file= "./scenes/images/roxo.png" />
-		<texture id="space" file= "./scenes/images/forest1.jpg" />
+		<texture id="alien1" file= "./scenes/images/alien1.jpg" />
+		<texture id="alien2" file= "./scenes/images/alien2.jpg" />
 		<texture id="table" file="./scenes/images/marmore.jpg" />
-		<texture id="floor" file="./scenes/images/soalho.jpg" />
-        <texture id="wall" file="./scenes/images/wall.jpg" />
+		<texture id="floor" file="./scenes/images/lua.jpg" />
+        <texture id="wall" file="./scenes/images/space.png" />
 
     </textures>
   
@@ -162,7 +163,7 @@
 
 
 	<primitive id="window">
- 		<rectangle x1="-120" y1="-40" x2="120" y2="40" />
+ 		<rectangle x1="-80" y1="-100" x2="80" y2="-10" />
     </primitive >
 
 
@@ -200,17 +201,6 @@
 		</children>
  	</component>
 
-	<component id="space">
-		<transformation>
-		</transformation>
-		<materials>
-			 <material id="mat0" />
-		</materials>
-		<texture id="space" length_s="1" length_t="1" />
-		<children>
-			<primitiveref id="world"/>
-		</children>
- 	</component>
 
      
 	  <component id="table">
@@ -230,7 +220,7 @@
 
        <component id="table_leg1">
  		<transformation>
-             <scale x="10" y="60" z="10" />
+             <scale x="10" y="50" z="10" />
             <translate x="0" y="-1" z="0" />
               <translate x="6" y="0" z="-4.5" />
  		    <rotate axis="x" angle="-90" />
@@ -249,7 +239,7 @@
      
        <component id="table_leg2">
  		<transformation>
-             <scale x="10" y="60" z="10" />
+             <scale x="10" y="50" z="10" />
             <translate x="0" y="-1" z="0" />
               <translate x="6" y="0" z="4.5" />
  		    <rotate axis="x" angle="-90" />
@@ -266,7 +256,7 @@
 
       <component id="table_leg3">
  		<transformation>
-             <scale x="10" y="60" z="10" />
+             <scale x="10" y="50" z="10" />
             <translate x="0" y="-1" z="0" />
               <translate x="-6" y="0" z="4.5" />
  		    <rotate axis="x" angle="-90" />
@@ -284,7 +274,7 @@
 
       <component id="table_leg4">
  		<transformation>
-             <scale x="10" y="60" z="10" />
+             <scale x="10" y="50" z="10" />
             <translate x="0" y="-1" z="0" />
               <translate x="-6" y="0" z="-4.5" />
  		    <rotate axis="x" angle="-90" />
@@ -316,6 +306,7 @@
 	 </component>
 
 
+
      <component id="floor">
  		<transformation>
  			<transformationref id="floor_transformation" />
@@ -324,8 +315,25 @@
 
 		     <material id="mat0" />
 		</materials>
-			<texture id="floor" length_s="400" length_t="400" />
+			<texture id="floor" length_s="1" length_t="1" />
 
+		<children>
+			<primitiveref id="floor" />
+		</children>
+	 </component>
+
+	<component id="celling">
+ 		<transformation>
+		 
+ 			<rotate axis='z' angle='-180'/>
+				<translate x='0' y='-80' z='0'/>
+					 <rotate axis="x" angle= "-90" />
+         <translate x="-200" y="-200" z="-60" />
+		</transformation>
+		<materials>
+		     <material id="mat0" />
+		</materials>
+			<texture id="wall" length_s="1" length_t="1" />
 		<children>
 			<primitiveref id="floor" />
 		</children>
@@ -338,7 +346,7 @@
 		<materials>
 			 <material id="mat3" />
 		</materials>
-		<texture id="wall" length_s="400" length_t="200" />
+		<texture id="wall" length_s="1" length_t="1" />
 		<children>
 			<primitiveref id="wall" />
 		</children>
@@ -346,14 +354,13 @@
 
 	 <component id="leftWall">
  		<transformation>
-
 			<rotate axis='z' angle='-180'/>
 				<translate x='0' y='-80' z='0'/>
 		</transformation> 
 		<materials>
 			 <material id="mat2" />
 		</materials>
-		<texture id="wall" length_s="400" length_t="200" />
+		<texture id="wall" length_s="1" length_t="1" />
 		<children>
 			<componentref id="rightWall" />
 		</children>
@@ -367,7 +374,7 @@
 		<materials>
 			 <material id="mat0" />
 		</materials>
-		<texture id="wall" length_s="400" length_t="200" />
+		<texture id="wall" length_s="1" length_t="1" />
 		<children>
 			<primitiveref id="wall" />
 		</children>
@@ -382,13 +389,13 @@
 		<materials>
 			 <material id="mat4" />
 		</materials>
-		<texture id="wall" length_s="400" length_t="200" />
+		<texture id="wall" length_s="1" length_t="1" />
 		<children>
 			<componentref id="backWall" />
 		</children>
 	 </component>
 
-	<component id="window">
+	<component id="alien1">
  		<transformation>
 		 	<translate x='0' y='50' z='0.2'/>
  			<translate x="0" y="0" z="-200"/>
@@ -396,7 +403,23 @@
 		<materials>
 			 <material id="inherit" />
 		</materials>
-		<texture id="space" length_s="1" length_t="1" />
+		<texture id="alien1" length_s="1" length_t="1" />
+		<children>
+			<primitiveref id="window" />
+		</children>
+	 </component>
+
+	 <component id="alien2">
+ 		<transformation>
+		 	<rotate axis='y' angle='180'/>
+		 	<translate x='0' y='50' z='0.2'/>
+ 			<translate x="0" y="0" z="-200"/>
+
+		</transformation>
+		<materials>
+			 <material id="inherit" />
+		</materials>
+		<texture id="alien2" length_s="1" length_t="1" />
 		<children>
 			<primitiveref id="window" />
 		</children>
@@ -413,11 +436,13 @@
 		<texture id="none" length_s="2" length_t="1" />
 		<children>
 			<componentref id="floor"/>
+			<componentref id="celling"/>
 			<componentref id="rightWall"/>
 			<componentref id="leftWall"/>
 			<componentref id="frontWall"/>
 			<componentref id="backWall"/>
-			<componentref id="window"/>
+			<componentref id="alien1"/>
+			<componentref id="alien2"/>
 		</children>
 	 </component>
 
