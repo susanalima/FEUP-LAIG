@@ -24,6 +24,7 @@ class GameController extends CGFobject {
         this.currentPlayer = null;
         this.selectedPiece = null;
         this.state = 'START';
+        this.newTimer = true;
         this.initialize_values();
     };
 
@@ -358,10 +359,10 @@ class GameController extends CGFobject {
             this.state = 'WAIT_SP_TIMER';
             this.view.stopTimer();
             this.client.requestSwitchPlayer();
-            this.unvalidateCells();
 
 
             if(this.selectedPiece != null){
+                this.unvalidateCells();
                 this.selectedPiece.selected = false;
                 this.selectedPiece.swapText();
                 this.selectedPiece = null;
@@ -522,6 +523,7 @@ class GameController extends CGFobject {
             this.state = 'START';
             this.view.stopTimer();
             this.view.resetTimer();
+            this.newTimer =true;
             return true;
         }
         return false;
@@ -633,8 +635,11 @@ class GameController extends CGFobject {
                 this.wait_AssertPlayers_response();
                 break;
             case 'PROCESS_PIECE':
-                this.view.startTimer();
                 this.client.requestCurrentPlayerBot();
+                if(this.newTimer){
+                    this.newTimer = false;
+                    this.view.startTimer();
+                }
                 this.state = 'WAIT_CPB_RESPONSE';
                 break;
             case 'WAIT_CPB_RESPONSE':
@@ -683,6 +688,7 @@ class GameController extends CGFobject {
             case 'CHANGE_PLAYER':
                 this.view.marker.switchPlayer();
                 this.scene.update_CameraRotation();
+                this.newTimer = true;
                 this.state = 'PROCESS_PIECE';
                 this.check_Reset();
                 break;
