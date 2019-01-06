@@ -67,11 +67,13 @@ class GameController extends CGFobject {
     }
 
     deselectAllPiecesAux(pieces){
-        for(let i = 0; i < pieces.length; i++)
+        for(let i = 0; i < pieces.length; i++){
             pieces[i].selected =false;
+        }
     }
 
     deselectAllPieces(){
+        this.deselectCurrentPiece();
         this.deselectAllPiecesAux(this.view.gamoraPieces);
         this.deselectAllPiecesAux(this.view.thanosPieces);
     }
@@ -532,6 +534,7 @@ class GameController extends CGFobject {
             this.state = 'START';
             this.view.stopTimer();
             this.view.resetTimer();
+            this.deselectAllPieces();
             this.newTimer =true;
             this.locked = false;
             return true;
