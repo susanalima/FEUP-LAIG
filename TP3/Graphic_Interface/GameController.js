@@ -24,6 +24,7 @@ class GameController extends CGFobject {
         this.currentPlayer = null;
         this.selectedPiece = null;
         this.state = 'START';
+        this.locked = false;
         this.newTimer = true;
         this.initialize_values();
     };
@@ -79,6 +80,7 @@ class GameController extends CGFobject {
      * Undos the last play
      */
     undoLastPlay() {
+        this.deselectCurrentPiece();
         this.client.requestSwitchPlayer();
         let play = this.model.undoLastPlay();
         this.view.undoPlay(play[0][0], play[0][1], play[1][1]);
@@ -115,7 +117,7 @@ class GameController extends CGFobject {
     checkSelected() {
         let counter = 0;
         let midAnimation = this.checkMidAnimation();
-        if(!midAnimation){
+        if(!midAnimation && !this.locked){
         counter = this.setSelected(this.view.thanosPieces, counter);
         counter = this.setSelected(this.view.gamoraPieces, counter);
         if (this.selectedPiece != null)
@@ -475,12 +477,15 @@ class GameController extends CGFobject {
                 this.undoLastPlay();
                 this.numberOfTries = -1;
                 this.state = 'WAIT_SP_RESPONSE';
+                this.locked = false;
             }
         }
         else {
             this.numberOfTries = -1;
             this.state = 'CHANGE_PLAYER';
+            this.locked = false;
         }
+        
         this.numberOfTries++;
     }
 
@@ -493,6 +498,7 @@ class GameController extends CGFobject {
             this.unvalidateCells();
             this.check_GameOver();
             this.check_Reset();
+            this.locked = true;
         }
     }
 
