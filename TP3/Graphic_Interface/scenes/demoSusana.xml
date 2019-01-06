@@ -65,7 +65,7 @@
 		<texture id="table" file="./scenes/images/marmore.jpg" />
 		<texture id="floor" file="./scenes/images/lua.jpg" />
         <texture id="wall" file="./scenes/images/space.png" />
-
+		<texture id="american_flag" file="./scenes/images/american_flag2.jpg" />
     </textures>
   
   <materials>
@@ -147,11 +147,11 @@
 		<cylinder base="0.5" top="0.5" height="1" slices="4" stacks="5" />
     </primitive >
 
-    	<primitive id="table_leg">
+    <primitive id="table_leg">
 		<cylinder base="0.5" top="0.5" height="1" slices="4" stacks="5" />
     </primitive >
 
-	 	<primitive id="wall">
+	<primitive id="wall">
  		<rectangle x1="0" y1="0" x2="400" y2="200" />
     </primitive >
 
@@ -164,7 +164,19 @@
  		<rectangle x1="-80" y1="-100" x2="80" y2="-10" />
     </primitive >
 
+	<primitive id="flag_bottom">
+		<cylinder base="1.2" top="1.2" height="100" slices="10" stacks="5" />
+    </primitive >
 
+	
+
+	<primitive id="flag_top">
+ 		<rectangle x1="0" y1="0" x2="35" y2="20" />
+    </primitive >
+
+	<primitive id="vehicle">
+			<vehicle />
+		</primitive >
 
  </primitives >
 
@@ -180,7 +192,11 @@
 			<componentref id="table"/>
 			<componentref id="game"/>
             <componentref id="table_legs"/>
+			<componentref id="full_stool1"/>
+			<componentref id="full_stool2"/>
 			<componentref id="room"/>
+			<componentref id="flag"/>
+			<componentref id="ship"/>
 		</children>
  	</component>
 
@@ -218,7 +234,7 @@
 
        <component id="table_leg1">
  		<transformation>
-             <scale x="10" y="50" z="10" />
+             <scale x="10" y="60" z="10" />
             <translate x="0" y="-1" z="0" />
               <translate x="6" y="0" z="-4.5" />
  		    <rotate axis="x" angle="-90" />
@@ -237,7 +253,7 @@
      
        <component id="table_leg2">
  		<transformation>
-             <scale x="10" y="50" z="10" />
+             <scale x="10" y="60" z="10" />
             <translate x="0" y="-1" z="0" />
               <translate x="6" y="0" z="4.5" />
  		    <rotate axis="x" angle="-90" />
@@ -254,7 +270,7 @@
 
       <component id="table_leg3">
  		<transformation>
-             <scale x="10" y="50" z="10" />
+             <scale x="10" y="60" z="10" />
             <translate x="0" y="-1" z="0" />
               <translate x="-6" y="0" z="4.5" />
  		    <rotate axis="x" angle="-90" />
@@ -272,7 +288,7 @@
 
       <component id="table_leg4">
  		<transformation>
-             <scale x="10" y="50" z="10" />
+             <scale x="10" y="60" z="10" />
             <translate x="0" y="-1" z="0" />
               <translate x="-6" y="0" z="-4.5" />
  		    <rotate axis="x" angle="-90" />
@@ -300,6 +316,67 @@
 			<componentref id="table_leg2" />
 			<componentref id="table_leg3" />
 			<componentref id="table_leg4" />
+		</children>
+	 </component>
+
+	 	<component id="full_stool1">
+	 <transformation>
+	 </transformation>
+	 <materials>
+			 <material id="mat0" />
+	</materials>
+	<texture id="table"  length_s="1" length_t="1"  />
+		<children>
+			<componentref id="stool" />
+			<componentref id="stool_leg1" />
+		</children>
+	 </component>
+
+	 <component id="full_stool2">
+	 <transformation>
+	 <translate x="0" y="0" z="160" />
+	 </transformation>
+	 <materials>
+			 <material id="mat0" />
+	</materials>
+	<texture id="table"  length_s="1" length_t="1"/>
+		<children>
+			<componentref id="stool" />
+			<componentref id="stool_leg1" />
+		</children>
+	 </component>
+
+	 <component id="stool">
+ 		<transformation>
+
+        	<scale x="50" y="5" z="50" />
+			<translate x="0" y="-6" z="-1.6" />
+
+     		<rotate axis="x" angle="-90" />
+     		<rotate axis="z" angle="-45" />
+		</transformation>
+		<materials>
+			 <material id="mat0" />
+		</materials>
+		<texture id="inherit"/>
+		<children>
+			<primitiveref id="table" />
+		</children>
+	 </component>
+
+	 <component id="stool_leg1">
+	 <transformation>
+             <scale x="8" y="30" z="8" />
+            <translate x="0" y="-1.99" z="-10" />
+ 		    <rotate axis="x" angle="-90" />
+            <rotate axis="z" angle="-45" />
+		</transformation>
+		<materials>
+			 <material id="inherit" />
+		</materials>
+		<texture id="inherit" />
+		<children>
+			<primitiveref id="table_leg" />
 		</children>
 	 </component>
 
@@ -412,7 +489,6 @@
 		 	<rotate axis='y' angle='180'/>
 		 	<translate x='0' y='50' z='0.2'/>
  			<translate x="0" y="0" z="-200"/>
-
 		</transformation>
 		<materials>
 			 <material id="inherit" />
@@ -423,6 +499,64 @@
 		</children>
 	 </component>
 
+	 <component id="flag_bottom">
+ 		<transformation>
+			<translate x="-180" y="-60" z="-160" />
+	   		<rotate axis="x" angle="-90" />
+            <rotate axis="z" angle="-45"/>
+		</transformation>
+		<materials>
+			 <material id="inherit" />
+		</materials>
+		<texture id="metal" length_s="1" length_t="1" />
+		<children>
+			<primitiveref id="flag_bottom" />
+		</children>
+	 </component>
+
+	  <component id="flag_top1">
+ 		<transformation>
+			<translate x="-180" y="20" z="-160" />
+		</transformation>
+		<materials>
+			 <material id="inherit" />
+		</materials>
+		<texture id="american_flag" length_s="1" length_t="1" />
+		<children>
+			<primitiveref id="flag_top" />
+		</children>
+	 </component>
+
+
+	<component id="flag">
+ 		<transformation>
+		</transformation>
+		<materials>
+			 <material id="mat0" />
+		</materials>
+		<texture id="none" length_s="2" length_t="1" />
+		<children>
+			<componentref id="flag_bottom"/>
+			<componentref id="flag_top1"/>
+		</children>
+	 </component>
+
+	  <component id="ship">
+	 	<transformation>
+		 	<translate x="100" y="10" z="100"/>
+			<scale x="15" y="15" z="15"/>
+			<rotate axis="y" angle="-130"/>
+		</transformation>
+		<animations>
+		</animations>
+		<materials>
+			 <material id="inherit" />
+		</materials>
+		<texture id="ship" length_s="2" length_t="1" />
+		<children>
+			<primitiveref id="vehicle"/>
+		</children>
+	 </component>
 
 
 	 	<component id="room">
@@ -443,6 +577,10 @@
 			<componentref id="alien2"/>
 		</children>
 	 </component>
+
+	 
+
+
 
 
  </components>

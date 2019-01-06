@@ -28,7 +28,6 @@ class MyInterface extends CGFinterface {
         group.add(this.scene, 'new_game').name('New Game');
         group.add(this.scene, 'undo').name('Undo');
         group.add(this.scene, 'game_movie').name('Game Movie');
-        group.add(this.scene, 'lock_camera');
         // add a group of controls (and open/expand by defult)
         this.initKeys();
 
@@ -60,6 +59,7 @@ class MyInterface extends CGFinterface {
 
     addViewsGroup()
     {
+        this.gui.add(this.scene, 'lock_camera');
         this.gui.add(this.scene,'currentview',this.scene.v);
     }
 
