@@ -21,7 +21,7 @@ class XMLscene extends CGFscene {
         this.camera_rotation = 0;   
         this.undo_play = false;
         this.showGameMovie = false;
-        this.lock_camera = false;
+        this.lock_camera = true;
         this.get_current_background();
     }
 

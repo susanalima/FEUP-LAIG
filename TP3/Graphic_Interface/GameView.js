@@ -28,7 +28,7 @@ class GameView extends CGFobject {
         let pointerText1 = new CGFtexture(scene, "./scenes/images/red.png");
         let pointerText2 = new CGFtexture(scene, "./scenes/images/clock.png");
 
-        this.playTimeMax = 7500;
+        this.playTimeMax = 10000;
         this.actualPlayTime = 0;
         this.counting = false;
         this.lastTime = null;
@@ -87,7 +87,7 @@ class GameView extends CGFobject {
     stopTimer(){
         this.counting = false;
     }
-    
+
     updateLastTime(){
         this.lastTime = this.scene.currTime;
     }

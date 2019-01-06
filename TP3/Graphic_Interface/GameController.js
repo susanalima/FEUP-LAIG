@@ -499,6 +499,7 @@ class GameController extends CGFobject {
             this.unvalidateCells();
             this.check_GameOver();
             this.check_Reset();
+            this.checkSelected();
             this.locked = true;
         }
     }
@@ -532,6 +533,7 @@ class GameController extends CGFobject {
             this.view.stopTimer();
             this.view.resetTimer();
             this.newTimer =true;
+            this.locked = false;
             return true;
         }
         return false;
