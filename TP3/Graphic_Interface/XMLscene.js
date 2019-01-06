@@ -35,7 +35,7 @@ class XMLscene extends CGFscene {
         {
             let filename = url_split_arr[1].split('=')[1];
             console.log(filename);
-            if(filename == 'demoAfonso1.xml')
+            if(filename == 'sceneGarden.xml')
                 this.background_scene = 1;
             else
                 this.background_scene = 2;
@@ -51,9 +51,9 @@ class XMLscene extends CGFscene {
             console.log(url_split);
             let file = '?file=';
             if(this.background_scene == 1)
-                file += 'demoAfonso1.xml';
+                file += 'sceneGarden.xml';
             else
-                file += 'demoSusana.xml';
+                file += 'sceneSpace.xml';
                 
             window.history.replaceState(history.state, 'CGFexample', url_split + file);
             location.reload();

@@ -304,7 +304,7 @@
 
 	 <component id="full_cup">
 	 <transformation>
-	 	<translate x="-30" y="-5" z="-30" />
+	 	<translate x="-30" y="-5.5" z="-30" />
 	 </transformation>
 	 <materials>
 			 <material id="mat0" />
@@ -318,7 +318,7 @@
 
 	 <component id="full_cup2">
 	 <transformation>
-	 	<translate x="30" y="-5" z="30" />
+	 	<translate x="30" y="-5.5" z="30" />
 	 </transformation>
 	 <materials>
 			 <material id="mat0" />
