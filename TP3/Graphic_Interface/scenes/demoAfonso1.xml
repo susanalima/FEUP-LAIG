@@ -2,13 +2,13 @@
 <scene root="root" axis_length="50.0" />
 
 <views default="player1" >
-	<perspective id="player1" near="0.1" far="1000" angle="70">
-		 <from x="0.0" y="50.0" z="50.0" />
-		 <to x="0.0" y="10.0" z="10.0" />
+	<perspective id="player1" near="0.1" far="1000" angle="60">
+		 <from x="0.0" y="50.0" z="60.0" />
+		 <to x="0.0" y="15.0" z="0.0" />
 	</perspective>
-	<perspective id="player2" near="0.1" far="1000" angle="70">
-		 <from x="0.0" y="50.0" z="-50.0" />
-		 <to x="0.0" y="10.0" z="-10.0" />
+	<perspective id="player2" near="0.1" far="1000" angle="60">
+		 <from x="0.0" y="50.0" z="-60.0" />
+		 <to x="0.0" y="15.0" z="0.0" />
 	</perspective>
 
 	<perspective id="up_view" near="0.1" far="1000" angle="50">
@@ -89,6 +89,10 @@
 		<texture id="fence" file="./scenes/images/fence2.jpg"/>
 		<texture id="beer" file="./scenes/images/cup.jpg"/>
 		<texture id="foam" file="./scenes/images/foam.jpg"/>
+		<texture id="bar_side" file="./scenes/images/bar_side.jpg"/>
+		<texture id="bar_top" file="./scenes/images/boards_white.jpg"/>
+
+
 
 
     </textures>
@@ -223,7 +227,7 @@
     </primitive >
 
 	<primitive id="bar_top">
- 		<rectangle x1="0" y1="0" x2="80" y2="30" />
+		<cylinder base="0.5" top="0.5" height="1" slices="4" stacks="5" />
     </primitive >
 
 
@@ -245,7 +249,7 @@
 			<componentref id="room"/>
 			<componentref id="full_cup"/>
 			<componentref id="full_cup2"/>
-			<componentref id="barWall"/>
+			<componentref id="full_bar"/>
 
 
 		</children>
@@ -541,18 +545,212 @@
 		</children>
 	 </component>
 
-	 <component id="barWall">
+
+	 <component id="full_bar">
+ 		<transformation>
+		</transformation>
+		<materials>
+			 <material id="mat0" />
+		</materials>
+		<texture id="none" length_s="2" length_t="1" />
+		<children>
+			<componentref id="barWall1"/>
+			<componentref id="barWall2"/>
+			<componentref id="barWall3"/>
+			<componentref id="barWall4"/>
+			<componentref id="barFront"/>
+			<componentref id="barFrontInside"/>
+			<componentref id="barTop1"/>
+			<componentref id="barTop2"/>
+			<componentref id="barTop3"/>
+			<componentref id="bar_cup1"/>
+			<componentref id="bar_cup2"/>
+			<componentref id="bar_cup3"/>
+
+
+		</children>
+	 </component>
+
+	 <component id="barWall1">
  		<transformation>
 			<translate x="-200" y="-60" z="50"/>
 		</transformation> 
 		<materials>
 			 <material id="mat4" />
 		</materials>
-		<texture id="fence_grass" length_s="1" length_t="1" />
+		<texture id="bar_side" length_s="1" length_t="1" />
 		<children>
 			<primitiveref id="bar_wall" />
 		</children>
 	 </component>
+
+	 <component id="barWall2">
+ 		<transformation>
+			<translate x="-120" y="-60" z="-50"/>
+			<rotate axis='y' angle="180"/>
+
+		</transformation> 
+		<materials>
+			 <material id="mat4" />
+		</materials>
+		<texture id="bar_side" length_s="1" length_t="1" />
+		<children>
+			<primitiveref id="bar_wall" />
+		</children>
+	 </component>
+
+	 <component id="barWall3">
+ 		<transformation>
+			<translate x="-120" y="-60" z="50"/>
+			<rotate axis='y' angle="180"/>
+		</transformation> 
+		<materials>
+			 <material id="mat4" />
+		</materials>
+		<texture id="bar_side" length_s="1" length_t="1" />
+		<children>
+			<primitiveref id="bar_wall" />
+		</children>
+	 </component>
+
+	 <component id="barWall4">
+ 		<transformation>
+			<translate x="-200" y="-60" z="-50"/>
+		</transformation> 
+		<materials>
+			 <material id="mat4" />
+		</materials>
+		<texture id="bar_side" length_s="1" length_t="1" />
+		<children>
+			<primitiveref id="bar_wall" />
+		</children>
+	 </component>
+
+	  <component id="barFront">
+ 		<transformation>
+			<translate x="-120" y="-60" z="50"/>
+			<rotate axis='y' angle="90"/>
+			<scale x='1.2' y='1' z='1'/>
+		</transformation> 
+		<materials>
+			 <material id="mat4" />
+		</materials>
+		<texture id="bar_side" length_s="1" length_t="1" />
+		<children>
+			<primitiveref id="bar_wall" />
+		</children>
+	 </component>
+
+	 <component id="barFrontInside">
+ 		<transformation>
+			<translate x="-120" y="-60" z="-50"/>
+			<rotate axis='y' angle="90"/>
+			<scale x='-1.2' y='1' z='1'/>
+
+		</transformation> 
+		<materials>
+			 <material id="mat4" />
+		</materials>
+		<texture id="bar_side" length_s="1" length_t="1" />
+		<children>
+			<primitiveref id="bar_wall" />
+		</children>
+	 </component>
+
+	 <component id="barTop1">
+ 		<transformation>
+			<translate x="-150" y="-8" z="50"/>
+			<scale x='150' y='2' z='50'/>
+			<rotate axis='y' angle="45"/>
+			<rotate axis='x' angle="90"/>
+		</transformation> 
+		<materials>
+			 <material id="mat4" />
+		</materials>
+		<texture id="bar_top" length_s="1" length_t="1" />
+		<children>
+			<primitiveref id="bar_top" />
+		</children>
+	 </component>
+
+	  <component id="barTop2">
+ 		<transformation>
+			<translate x="-150" y="-8" z="-50"/>
+			<scale x='150' y='2' z='50'/>
+			<rotate axis='y' angle="45"/>
+			<rotate axis='x' angle="90"/>
+		</transformation> 
+		<materials>
+			 <material id="mat4" />
+		</materials>
+		<texture id="bar_top" length_s="1" length_t="1" />
+		<children>
+			<primitiveref id="bar_top" />
+		</children>
+	 </component>
+
+	  <component id="barTop3">
+ 		<transformation>
+			<translate x="-118.2" y="-8" z="0"/>
+			<scale x='60' y='2' z='91.5'/>
+			<rotate axis='y' angle="45"/>
+			<rotate axis='x' angle="90"/>
+		</transformation> 
+		<materials>
+			 <material id="mat4" />
+		</materials>
+		<texture id="bar_top" length_s="1" length_t="1" />
+		<children>
+			<primitiveref id="bar_top" />
+		</children>
+	 </component>
+
+
+	  <component id="bar_cup1">
+	 <transformation>
+	 	<translate x="-110" y="-19" z="2" />
+	 </transformation>
+	 <materials>
+			 <material id="mat0" />
+	</materials>
+	<texture id="none" length_s="0.1" length_t="0.2"/>
+		<children>
+			<componentref id="cup" />
+			<componentref id="drink" />
+		</children>
+	 </component>
+
+	   <component id="bar_cup2">
+	 <transformation>
+	 	<translate x="-112" y="-19" z="-15" />
+	 </transformation>
+	 <materials>
+			 <material id="mat0" />
+	</materials>
+	<texture id="none" length_s="0.1" length_t="0.2"/>
+		<children>
+			<componentref id="cup" />
+			<componentref id="drink" />
+		</children>
+	 </component>
+
+
+	    <component id="bar_cup3">
+	 <transformation>
+	 	<translate x="-111" y="-19" z="18" />
+	 </transformation>
+	 <materials>
+			 <material id="mat0" />
+	</materials>
+	<texture id="none" length_s="0.1" length_t="0.2"/>
+		<children>
+			<componentref id="cup" />
+			<componentref id="drink" />
+		</children>
+	 </component>
+
+
+
 	 
 
  </components>
