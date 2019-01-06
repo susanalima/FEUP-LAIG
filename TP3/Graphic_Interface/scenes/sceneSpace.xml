@@ -56,7 +56,6 @@
 
     <textures>
 		<texture id="metal" file="./scenes/images/metal2.jpg" />
-		<texture id="ship" file="./scenes/images/ship1.jpg" />
 		<texture id="board" file= "./scenes/images/boardT.jpg" />
 		<texture id="green" file= "./scenes/images/neon.jpg" />
 		<texture id="roxo" file= "./scenes/images/roxo.png" />
@@ -174,10 +173,6 @@
  		<rectangle x1="0" y1="0" x2="35" y2="20" />
     </primitive >
 
-	<primitive id="vehicle">
-			<vehicle />
-		</primitive >
-
  </primitives >
 
  <components>
@@ -196,7 +191,6 @@
 			<componentref id="full_stool2"/>
 			<componentref id="room"/>
 			<componentref id="flag"/>
-			<componentref id="ship"/>
 		</children>
  	</component>
 
@@ -540,24 +534,6 @@
 			<componentref id="flag_top1"/>
 		</children>
 	 </component>
-
-	  <component id="ship">
-	 	<transformation>
-		 	<translate x="100" y="10" z="100"/>
-			<scale x="15" y="15" z="15"/>
-			<rotate axis="y" angle="-130"/>
-		</transformation>
-		<animations>
-		</animations>
-		<materials>
-			 <material id="inherit" />
-		</materials>
-		<texture id="ship" length_s="2" length_t="1" />
-		<children>
-			<primitiveref id="vehicle"/>
-		</children>
-	 </component>
-
 
 	 	<component id="room">
  		<transformation>
