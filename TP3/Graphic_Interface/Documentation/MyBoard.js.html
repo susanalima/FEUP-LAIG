@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: MyBoard.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: MyBoard.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Class MyBoard represents a board
+ */
+class MyBoard extends CGFobject {
+
+    /**
+ 	 * Constructs an object of class MyBoard
+	 * @param {Object} scene Scene in which the board is represented
+     * @param {Object} boardTexture 
+     * @param {Object} cellTexture 
+     */
+    constructor(scene, boardTexture, cellTexture) {
+        super(scene);
+        this.cells = [];
+        this.cellsNumber = 61;
+        this.map_radius = 4;
+        this.cell_space_radius = 3;
+        this.cell_radius = 2.5;
+        this.base = new MyPrism(scene, 6, 1, 0.5, 25);
+        this.boardTexture = boardTexture;
+        this.cellTexture = cellTexture;
+        this.selectedCell = null;
+        this.createCells();
+    };
+
+    /**
+     * Resets the board info
+     */
+    restart(){
+        this.selectedCell = null;
+        this.resetBoard();
+    }
+
+    /**
+     * Matrix multiplication between a hexagon orientation matrix and the vector [q,r]
+     * @param {Object} q 
+     * @param {Object} r 
+     */
+    hex_to_pixel(q, r) {
+        var x = (Math.sqrt(3) * q + Math.sqrt(3) / 2 * r) * (this.cell_space_radius);
+        var y = (0 * q + 3 / 2 * r) * this.cell_space_radius;
+        return [x, y];
+    }
+
+    /**
+     * Creates the boards cells
+     */
+    createCells() {
+        let validText =  new CGFtexture(this.scene, "./scenes/images/red.png");
+        for (var q = -this.map_radius; q &lt;= this.map_radius; q++) {
+            var r1 = Math.max(-this.map_radius, -q - this.map_radius);
+            var r2 = Math.min(this.map_radius, -q + this.map_radius);
+            for (var r = r1; r &lt;= r2; r++) {
+                let center = this.hex_to_pixel(q, r);
+                let line = q + 4;
+                let column = (q + r + 4) * 2;
+                let cell = new BoardCell(this.scene, this.cell_radius, center, column, line, this.cellTexture, validText);
+                this.cells.push(cell);
+            }
+        }
+    }
+
+    /**
+     * Returns a cell with the column and line given as arguments, returns null if no cell with such parameters is found
+     * @param {int} column Column of the cell
+     * @param {int} line Line of the cell
+     */
+    selectCell(column,line)
+    {
+        for(let i = 0; i &lt; this.cells.length; i++)
+        {
+            let cell = this.cells[i];
+            if(cell.column == column &amp;&amp; cell.line == line )
+                return cell;
+        }
+        return null;
+    }
+
+
+
+    /**
+     * Checks if a new cell has been selected
+     * @param {Piece} piece Selected piece
+     */
+    checkSelectedCells(piece){
+        let noSelected = true;
+        for (let i = 0; i &lt; this.cells.length; i++) {
+            if (this.cells[i].getSelected() &amp;&amp; this.cells[i] != null) {
+                if(this.selectedCell != null  &amp;&amp; this.cells[i] != this.selectedCell)
+                    this.selectedCell.selected = false;
+                this.selectedCell = this.cells[i];
+                noSelected = false;
+            }
+        }
+        if(this.selectedCell != null &amp;&amp; this.selectedCell.selected ==false &amp;&amp; piece == null){
+            this.selectedCell = null;
+        }
+    }
+
+ 
+    /**
+     * Resets all cells information
+     */
+    resetBoard(){
+        for (let i = 0; i &lt; this.cells.length; i++) {
+            this.cells[i].selected = false;
+            this.cells[i].valid = false;
+        }
+    }
+
+    /**
+     * Displays all board cells
+     */
+    displayCells(){
+        for(let i = 0; i &lt; this.cells.length ; i++)
+            this.cells[i].display();
+    }
+
+	/**
+	 * Displays the board in member scene
+	 */
+    display() {
+
+        this.scene.pushMatrix();
+        this.scene.translate(0, 0.3, 0);
+        this.scene.rotate(Math.PI, 1,0,0);
+        this.scene.rotate(Math.PI/2, 0,1,0);
+
+        this.boardTexture.bind();
+        this.base.display();
+        this.scene.popMatrix();
+
+    }
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Animation.html">Animation</a></li><li><a href="BoardCell.html">BoardCell</a></li><li><a href="Chronometer.html">Chronometer</a></li><li><a href="CircularAnimation.html">CircularAnimation</a></li><li><a href="Client.html">Client</a></li><li><a href="GameController.html">GameController</a></li><li><a href="GameModel.html">GameModel</a></li><li><a href="GameView.html">GameView</a></li><li><a href="LinearAnimation.html">LinearAnimation</a></li><li><a href="Marker.html">Marker</a></li><li><a href="MyBoard.html">MyBoard</a></li><li><a href="MyCylinder.html">MyCylinder</a></li><li><a href="MyCylinder2.html">MyCylinder2</a></li><li><a href="MyCylinderBase.html">MyCylinderBase</a></li><li><a href="MyCylinderBody.html">MyCylinderBody</a></li><li><a href="MyInterface.html">MyInterface</a></li><li><a href="MyPrism.html">MyPrism</a></li><li><a href="MyPrismBody.html">MyPrismBody</a></li><li><a href="MyRectangle.html">MyRectangle</a></li><li><a href="MySceneGraph.html">MySceneGraph</a></li><li><a href="MySphere.html">MySphere</a></li><li><a href="MyTorus.html">MyTorus</a></li><li><a href="MyTriangle.html">MyTriangle</a></li><li><a href="Patch.html">Patch</a></li><li><a href="Piece.html">Piece</a></li><li><a href="Plane.html">Plane</a></li><li><a href="Terrain.html">Terrain</a></li><li><a href="Vehicle.html">Vehicle</a></li><li><a href="Water.html">Water</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jan 06 2019 17:38:21 GMT+0000 (GMT Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

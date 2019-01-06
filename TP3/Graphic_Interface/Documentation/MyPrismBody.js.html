@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: MyPrismBody.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: MyPrismBody.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * MyPrismBody (regular)
+ * @param gl {WebGLRenderingContext}
+ * @constructor
+ */
+
+class MyPrismBody extends CGFobject
+{
+	constructor(scene, slices, stacks, height, radius)
+	{
+		super(scene);
+
+		this.slices = slices;
+		this.stacks = stacks;
+		this.height = height;
+		this.radius = radius;
+
+		this.initBuffers();
+	};
+
+
+/**
+ * Initializes vertices, normals and indices of the object
+ */
+	initBuffers()
+	{
+		this.vertices = [
+		];
+
+		this.indices = [
+		];
+
+		this.normals = [
+		];
+
+
+		var angle = Math.PI*2/(this.slices);
+		var newangle = 0;
+		var x = 0;
+		var y = 0;
+		var z = 0;
+
+		var count = 0;
+		var v = 0;
+		while(count &lt; this.slices)
+		{
+			v = 0;
+			x = this.radius*Math.cos(newangle);
+			y = this.radius*Math.sin(newangle);
+			
+			for(var i = 0; i &lt;= this.stacks; i++)
+			{
+				this.vertices.push(x);
+				this.vertices.push(y);
+				this.vertices.push(v);
+				v += this.height/this.stacks;
+			}
+			
+	
+			x = Math.cos(newangle+angle/2);
+			y = Math.sin(newangle+angle/2);
+
+			for(var i = 0; i &lt;= this.stacks; i++)
+			{
+				this.normals.push(x);
+				this.normals.push(y);
+				this.normals.push(0);
+			}
+
+			newangle = newangle + angle;
+			count++;
+		}
+
+		newangle = 0;
+		count = 0;
+
+		while(count &lt; this.slices)
+		{
+			v = 0;
+			x = this.radius*Math.cos(newangle);
+			y = this.radius*Math.sin(newangle);
+			
+			for(var i = 0; i &lt;= this.stacks; i++)
+			{
+				this.vertices.push(x);
+				this.vertices.push(y);
+				this.vertices.push(v);
+				v += this.height/this.stacks;
+			}
+			
+	
+			x = Math.cos(newangle-angle/2);
+			y = Math.sin(newangle-angle/2);
+
+			for(var i = 0; i &lt;= this.stacks; i++)
+			{
+				this.normals.push(x);
+				this.normals.push(y);
+				this.normals.push(0);
+			}
+			
+			newangle = newangle + angle;
+			count++;
+		}
+
+
+		for (var i = 0; i &lt; this.slices*(this.stacks+1); i+=(this.stacks+1))
+		{
+
+			if(i == (this.slices-1)*(this.stacks+1))
+			{
+				for(var j = 0; j &lt; this.stacks; j++)
+				{
+					this.indices.push(i+j);
+					this.indices.push(i+j+this.stacks+1);
+					this.indices.push(i+j+this.stacks+2);
+
+					this.indices.push(i+j);
+					this.indices.push(i+j+this.stacks+2);
+					this.indices.push(i+j+1);
+				}
+			}
+			else
+			{
+				for(var j = 0; j &lt; this.stacks; j++)
+				{					
+
+					this.indices.push((i+j+(1+this.stacks)*this.slices) + this.stacks+1+1);
+					this.indices.push(i+j+1);
+					this.indices.push(i+j);
+					
+					this.indices.push(i+j);
+					this.indices.push(i+j+((1+this.stacks)*this.slices) + this.stacks+1);
+					this.indices.push(i+j+((1+this.stacks)*this.slices) + this.stacks+1+1);
+
+				}
+			}
+
+		}
+	
+		this.primitiveType=this.scene.gl.TRIANGLES;
+		this.initGLBuffers();
+	};
+
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Animation.html">Animation</a></li><li><a href="BoardCell.html">BoardCell</a></li><li><a href="Chronometer.html">Chronometer</a></li><li><a href="CircularAnimation.html">CircularAnimation</a></li><li><a href="Client.html">Client</a></li><li><a href="GameController.html">GameController</a></li><li><a href="GameModel.html">GameModel</a></li><li><a href="GameView.html">GameView</a></li><li><a href="LinearAnimation.html">LinearAnimation</a></li><li><a href="Marker.html">Marker</a></li><li><a href="MyBoard.html">MyBoard</a></li><li><a href="MyCylinder.html">MyCylinder</a></li><li><a href="MyCylinder2.html">MyCylinder2</a></li><li><a href="MyCylinderBase.html">MyCylinderBase</a></li><li><a href="MyCylinderBody.html">MyCylinderBody</a></li><li><a href="MyInterface.html">MyInterface</a></li><li><a href="MyPrism.html">MyPrism</a></li><li><a href="MyPrismBody.html">MyPrismBody</a></li><li><a href="MyRectangle.html">MyRectangle</a></li><li><a href="MySceneGraph.html">MySceneGraph</a></li><li><a href="MySphere.html">MySphere</a></li><li><a href="MyTorus.html">MyTorus</a></li><li><a href="MyTriangle.html">MyTriangle</a></li><li><a href="Patch.html">Patch</a></li><li><a href="Piece.html">Piece</a></li><li><a href="Plane.html">Plane</a></li><li><a href="Terrain.html">Terrain</a></li><li><a href="Vehicle.html">Vehicle</a></li><li><a href="Water.html">Water</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jan 06 2019 17:38:21 GMT+0000 (GMT Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Chronometer.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Chronometer.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+/**
+ * Class chronometer responsible for showing how much time a player has to make a play
+ */
+class Chronometer extends CGFobject{
+    constructor(scene, center, fullTime, text1, text2)
+    {
+        super(scene);
+        this.x = center[0];
+        this.y = center[1];
+        this.z = center[2];
+        this.angle = 0;
+        this.actualTime = 0; //ms
+        this.fullTime = fullTime; //ms
+        this.text1 = text1;
+        this.text2 = text2;
+
+        this.clockPointer = new MyTriangle(this.scene, -0.5,-6,0,0,6,0,0.5,-6,0);
+        this.back = new MyCylinder(scene, 40, 1, 10.5, 10.5, 5),
+        this.support_back = new MyCylinder(this.scene, 4, 1,4,4, 3.5);
+
+        this.clock = new MyCylinderBase(this.scene, 40, 10);
+    }
+
+    /**
+     * Updates the time of the chronometer with newT
+     * @param {int} newT New time of the chronometer
+     */
+    updateTime(newT){
+        if(newT != null){
+        this.actualTime = newT;
+        if(this.actualTime > this.fullTime)
+            this.actualTime = this.fullTime;
+        this.angle = this.actualTime * 2 * Math.PI / this.fullTime;
+        }
+    }
+
+    /**
+     * Resets the chronometer
+     */
+    resetTimer()
+    {
+        this.actualTime = 0;
+    }
+
+    /**
+     * Displays the elements of one chronometer
+     */
+    displayElements()
+    {
+        this.scene.pushMatrix();
+    
+        this.scene.translate(this.x, this.y,this.z);
+        this.scene.rotate( Math.PI/3, 0,1,0);
+        this.scene.rotate( Math.PI/4, 1,0,0);
+        this.scene.scale(0.4,0.4,0.4);
+        this.scene.translate(10,0,0);
+        
+        this.scene.pushMatrix();
+        this.scene.translate(0,0,0.2);
+        this.back.display();
+        this.scene.translate(0,-2,8);
+        this.scene.rotate(Math.PI/2,1,0,0);
+        this.support_back.display();
+        this.scene.popMatrix();
+
+        this.scene.pushMatrix();   
+        this.scene.scale(-1,1,1);
+        this.scene.rotate(Math.PI, 0,1,0);
+        this.scene.rotate(Math.PI/4, 0,0,1);
+        this.scene.rotate(Math.PI/4, 0,0,1);
+    
+        this.text2.bind();
+        this.clock.display();
+        this.scene.popMatrix();
+
+        this.scene.pushMatrix();
+        
+        this.scene.scale(-1,1,1);
+        this.scene.rotate(Math.PI, 0,1,0);
+
+
+        this.scene.rotate(this.angle, 0,0,1);
+        this.scene.translate(0.01,3.8,0.01);
+
+        this.text1.bind();
+        this.clockPointer.display();
+        this.scene.popMatrix();
+        this.scene.popMatrix();
+
+
+    }
+
+    /**
+     * Displays both chronometers of the game
+     */
+    display(){
+        this.scene.pushMatrix();
+        
+        this.displayElements();
+        this.scene.rotate(-Math.PI,0,1,0);
+        this.displayElements();
+        this.scene.popMatrix();
+
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Animation.html">Animation</a></li><li><a href="BoardCell.html">BoardCell</a></li><li><a href="Chronometer.html">Chronometer</a></li><li><a href="CircularAnimation.html">CircularAnimation</a></li><li><a href="Client.html">Client</a></li><li><a href="GameController.html">GameController</a></li><li><a href="GameModel.html">GameModel</a></li><li><a href="GameView.html">GameView</a></li><li><a href="LinearAnimation.html">LinearAnimation</a></li><li><a href="Marker.html">Marker</a></li><li><a href="MyBoard.html">MyBoard</a></li><li><a href="MyCylinder.html">MyCylinder</a></li><li><a href="MyCylinder2.html">MyCylinder2</a></li><li><a href="MyCylinderBase.html">MyCylinderBase</a></li><li><a href="MyCylinderBody.html">MyCylinderBody</a></li><li><a href="MyInterface.html">MyInterface</a></li><li><a href="MyPrism.html">MyPrism</a></li><li><a href="MyPrismBody.html">MyPrismBody</a></li><li><a href="MyRectangle.html">MyRectangle</a></li><li><a href="MySceneGraph.html">MySceneGraph</a></li><li><a href="MySphere.html">MySphere</a></li><li><a href="MyTorus.html">MyTorus</a></li><li><a href="MyTriangle.html">MyTriangle</a></li><li><a href="Patch.html">Patch</a></li><li><a href="Piece.html">Piece</a></li><li><a href="Plane.html">Plane</a></li><li><a href="Terrain.html">Terrain</a></li><li><a href="Vehicle.html">Vehicle</a></li><li><a href="Water.html">Water</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jan 06 2019 17:38:21 GMT+0000 (GMT Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

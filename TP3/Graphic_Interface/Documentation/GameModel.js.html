@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: GameModel.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: GameModel.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Class GameModel represents the game's data
+ */
+class GameModel  { 
+    /**
+ 	 * Constructs an object of class GameModel
+	 * @param {Object} scene Scene in which the game is represented
+     */
+    constructor(scene) { 
+        this.scene = scene;
+        this.initialize_values();
+        this.updateConfigs();
+    };
+
+    
+    /**
+     * Initializes some of this GameModel values
+     * currentMoviePlay represents the current index of the play for the game's movie
+     * playsValues array that holds the player and color values for eac play
+     * playsCoords array that holds the coordinates of each play
+     * winner represents the game's winner
+     */
+    initialize_values(){
+        this.currentMoviePlay = 0;
+        this.playsValues = [];
+        this.playsCoords = [];
+        this.winner = 0;  // -1 draw, 0 no winner yet, 1 player1, 2 player2
+    }
+
+    /**
+     * Restarts this GameModel's and its components
+     */
+    restart(){
+        this.initialize_values();
+    }
+
+    /**
+     * updates the game configurations according to the chosen ones in te interface
+     */
+    updateConfigs(){
+        this.level = this.scene.level;
+        this.mode = parseFloat(this.scene.mode);
+    }
+
+    /**
+     * Resets this GameModel's playsValues and playsCoord arrays
+     */
+    resetPlays(){
+        this.playsValues = [];
+        this.playsCoords = [];
+    }
+
+    /**
+     * Adds a play to the playsValues and playsCoords array
+     * @param {Object} x Play x coordinate
+     * @param {Object} y Play y coordinate
+     * @param {Object} player Play player
+     * @param {Object} color Play color
+     */
+    addPlay(x, y, player, color) {
+        let play = this.createPlay(x, y, player, color);
+        this.playsCoords.push(play[0]);
+        this.playsValues.push(play[1]);
+    }
+
+     /**
+     * Creates a play with the given values
+     * @param {Object} x Play x coordinate
+     * @param {Object} y Play y coordinate
+     * @param {Object} player Play player
+     * @param {Object} color Play color
+     */
+    createPlay(x, y, player, color) {
+        return [[x, y], [player, color]];
+    }
+
+    /**
+     * Searches for coords in this GameModel's playsCoords array
+     * @param {Object} coords array containig the coordinates to search
+     */
+    searchCoords(coords) {
+        var coordsJson = JSON.stringify(coords);
+        var playsCoordsJson = this.playsCoords.map(JSON.stringify);
+        return playsCoordsJson.indexOf(coordsJson);
+    }
+
+    /**
+     * Parses the current GameModel's plays stack, represented in the arrays playsValues and playsCoords
+     * @returns {Object} parsed string in the format required by the prolog program, of the game's board
+     */
+    getBoardState() {
+        let board = "[";
+        for (var q = -4; q &lt;= 4; q++) {
+            var r1 = Math.max(-4, -q - 4);
+            var r2 = Math.min(4, -q + 4);
+            for (var r = r1; r &lt;= r2; r++) {
+                let line = q + 4;
+                let column = (q + r + 4) * 2;
+                let index = this.searchCoords([column, line]);
+                if (index != -1) {
+                    let color = this.playsValues[index][1];
+                    board += `cell(${column},${line},${color}),`
+                }
+                else {
+                    board += `cell(${column},${line},emptyCell),`
+                }
+            }
+        }
+        board = board.slice(0, -1);
+        board += ']';
+        return board;
+    }
+
+    /**
+     * Parses a valid plays string to an array with the corresponding coordinates (line, column)
+     * @param {Object} validPlays string to be parsed
+     * @returns {Object} cellCoordsArray array with the parsed coordinates
+     */
+    getValidPlays(validPlays) {
+        let cellCoordsArray = [];
+        let validPlaysarr = validPlays.split('),');
+        for(let i = 0; i &lt; validPlaysarr.length; i++)
+        {
+           let movestr = validPlaysarr[i];
+           let tmparr = movestr.split(',');
+           let line = tmparr[1];
+           let column = tmparr[0].split('(')[1];
+           cellCoordsArray.push([parseFloat(line),parseFloat(column)]);
+        }
+        return cellCoordsArray;
+    }
+
+   /**
+    * Parsed a string corresponding to a play 
+    * @param {Object} reply string to be parsed
+    * @returns {Object} array with the column, line of the cell and color of the piece played
+    */
+    parsePlayReply(reply){
+        let replyarr = reply.split(',');
+        this.winner = parseFloat(replyarr[2]);
+        let player = parseFloat(replyarr[1]);
+        let column = parseFloat(replyarr[3].split('[')[1]);
+        let line = parseFloat(replyarr[4]);
+        let color = replyarr[5].split(']')[0];
+        this.addPlay(column, line, player, color);
+        return [column,line,color];
+    }
+
+    /**
+     * Removes the last played values and coordinates from this playsValues and playsCoords
+     * @returns {Object} The last played values and coordinates 
+     */
+    undoLastPlay(){
+        let lastCoords = this.playsCoords[this.playsCoords.length -1];
+        this.playsCoords.pop();
+        let lastValues = this.playsValues[this.playsValues.length -1];
+        this.playsValues.pop();
+        return [lastCoords, lastValues];
+    }
+
+    /**
+     * Retrieves the coordinates and the values for this GameModel's currentMoviePlay
+     * @returns {Object} The values and coordinates of the currentMoviePlay
+     */
+    getCurrentMoviePlayInfo(){
+        let playCoords = this.playsCoords[this.currentMoviePlay];
+        let playValues = this.playsValues[this.currentMoviePlay];
+        return [playCoords,playValues];
+    }
+
+    /**
+     * Increments this GameModel's currentMoviePlay value
+     */
+    inc_currentMoviePlay(){
+        if(this.currentMoviePlay &lt; this.playsCoords.length - 1)
+            this.currentMoviePlay++;
+    }
+
+    /**
+     * Checks is this GameModels currentMoviePlay value is the last play in the stack
+     * @returns true if the currentMoviePlay value is the last play in the stack, false otherwise
+     */
+    lastMoviePlay()
+    {
+        return (this.currentMoviePlay == this.playsCoords.length - 1);
+    }
+
+    /**
+     * Retrieves this GameModel's currentMoviePlay values from the playsValues array
+     * @returns {Object} the currentMoviePlay values from the playsValues array
+     */
+    getCurrentMoviePlayPlayer()
+    {
+        return this.playsValues[this.currentMoviePlay][0];
+    }
+
+};
+
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Animation.html">Animation</a></li><li><a href="BoardCell.html">BoardCell</a></li><li><a href="Chronometer.html">Chronometer</a></li><li><a href="CircularAnimation.html">CircularAnimation</a></li><li><a href="Client.html">Client</a></li><li><a href="GameController.html">GameController</a></li><li><a href="GameModel.html">GameModel</a></li><li><a href="GameView.html">GameView</a></li><li><a href="LinearAnimation.html">LinearAnimation</a></li><li><a href="Marker.html">Marker</a></li><li><a href="MyBoard.html">MyBoard</a></li><li><a href="MyCylinder.html">MyCylinder</a></li><li><a href="MyCylinder2.html">MyCylinder2</a></li><li><a href="MyCylinderBase.html">MyCylinderBase</a></li><li><a href="MyCylinderBody.html">MyCylinderBody</a></li><li><a href="MyInterface.html">MyInterface</a></li><li><a href="MyPrism.html">MyPrism</a></li><li><a href="MyPrismBody.html">MyPrismBody</a></li><li><a href="MyRectangle.html">MyRectangle</a></li><li><a href="MySceneGraph.html">MySceneGraph</a></li><li><a href="MySphere.html">MySphere</a></li><li><a href="MyTorus.html">MyTorus</a></li><li><a href="MyTriangle.html">MyTriangle</a></li><li><a href="Patch.html">Patch</a></li><li><a href="Piece.html">Piece</a></li><li><a href="Plane.html">Plane</a></li><li><a href="Terrain.html">Terrain</a></li><li><a href="Vehicle.html">Vehicle</a></li><li><a href="Water.html">Water</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jan 06 2019 17:38:21 GMT+0000 (GMT Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

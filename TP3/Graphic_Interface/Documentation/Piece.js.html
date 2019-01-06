@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Piece.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Piece.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Class Piece represents a piece in the game
+ */
+class Piece extends CGFobject {
+
+	/**
+	 * Constructs an object of class Piece
+	 * @param {Object} scene Scene in which the piece is represented
+	 */
+	constructor(scene, center, texture, color, sText) {
+		super(scene);
+		//(scene, slices, stacks, base, top, height)
+		this.piece = new MyCylinder(scene, 30, 20, 1.5, 1.5, 0.8);
+		this.swaped = false;
+		this.texture = texture;
+		this.selectedText = sText;
+		this.center = center;
+		this.color = color;
+		this.x = this.center[0];
+		this.y = this.center[1];
+		this.z = 0.5;
+		this.animationTime = 1 * 1000;
+		this.parabolic = null;
+		this.playedCenter = [];
+		this.midAnimation;
+		this.initialize_values();
+	};
+
+	/**
+	 * Initializes the values of the class members
+	 */
+	initialize_values()
+	{
+		if(this.swaped)
+			this.swapText();
+		this.lastTime = null;
+		this.selected = false;
+		this.locked = false 
+		this.line = null;
+		this.column = null;
+		this.hasRequestedPlay = 0;
+		this.midAnimation = false;
+	}
+
+	/**
+	 * Restarts the values of the class members
+	 */
+	restart(){
+		this.initialize_values();
+	}
+
+	/**
+	 * Updates the parabolic animation of the piece
+	 */
+	update(currTime) {
+		var deltaT;
+		if (this.lastTime == null){
+			deltaT = 0;
+		}
+		else {
+			deltaT = currTime - this.lastTime;
+		}
+		if(this.parabolic != null &amp;&amp; this.parabolic.end == false)
+		{
+			this.selected = false;
+			this.parabolicAnimate(deltaT);
+		}
+			
+		this.lastTime = currTime;
+	}
+
+	/**
+	 * Executes the parabolic animation of the piece
+	 * @param {int} deltaT Amount of time passed (ms) since the last call of this function
+	 */
+	parabolicAnimate(deltaT){
+		console.log('parabolicAnimate');
+		if(this.parabolic.time > this.animationTime){
+			this.parabolic.end = true;
+			this.midAnimation = false;
+			if(this.parabolic.reverse == false)
+			{
+				this.playedCenter = [this.x,this.y];
+				this.locked = true;
+			}
+			if(this.parabolic.cell != null)
+			{
+				this.parabolic.cell.selected = false;
+				this.line = this.parabolic.cell.line;
+				this.column = this.parabolic.cell.column;
+			}
+			return;
+		}
+		
+		let timeX = this.parabolic.deltaX * deltaT /this.animationTime;
+		let timeY = this.parabolic.deltaY * deltaT /this.animationTime;
+		let timeZ = this.parabolic.maxZ * deltaT /this.animationTime;
+
+		this.parabolic.time += deltaT;
+
+		this.x += timeX;
+		this.y += timeY;
+		if(this.parabolic.time > (this.animationTime /2))	
+			this.z -= timeZ;
+		else
+			this.z += timeZ;
+
+		if(this.parabolic.time > this.animationTime){
+			this.x = this.parabolic.endX;
+			this.y = this.parabolic.endY;
+			this.z = 0.5;
+		}
+	}
+	/**
+	 * Creates a parabolic animation for the piece
+	 * @param {Array} begin Starting place of the piece
+	 * @param {int} height Height of the arch of the parabola
+	 * @param {Array} end Destination of the piece 
+	 * @param {BoardCell} cell Destination cell
+	 * @param {Element} reverse Flag for reverse animation
+	 */
+	createParabolicAnimation(begin, height, end, cell, reverse){
+		console.log('createParabolicAnimation')
+		this.midAnimation = true;
+		this.parabolic = {
+			actualX: begin[0],
+			actualZ: 0,
+			actualY: begin[1],
+			maxZ: height,
+			endX: end[0],
+			endY: end[1],
+			deltaX: end[0] - begin[0],
+			deltaY: end[1] - begin[1],
+			time: 0,
+			end: false,
+			cell: cell,
+			reverse: reverse,
+		};
+		
+
+	}
+
+	/**
+	 * Swaps the texture of the piece
+	 */
+	swapText(){
+		let temp = this.selectedText;
+		this.selectedText = this.texture;
+		this.texture = temp;
+		this.swaped = !this.swaped;
+	}
+
+
+	/**
+	 * Displays the piece in member scene
+	 */
+	display() {
+		this.scene.pushMatrix();
+		this.scene.rotate(-Math.PI / 2, 1, 0, 0);
+		if (this.scene.pickIndex == this.scene.pickedIndex){
+			this.selected = true;
+		}
+		
+		if(this.locked)
+			this.selected =false;
+
+		/*if (this.selected &amp;&amp; cell != null &amp;&amp; this.parabolic == null)
+			this.createParabolicAnimation([this.x, this.y], 10, [cell.x,cell.z]);*/
+	
+		this.texture.bind();
+
+
+		this.update(this.scene.currTime);
+		this.scene.translate(this.x, this.y, this.z);
+		
+		this.piece.display();
+		this.scene.popMatrix();
+	}
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Animation.html">Animation</a></li><li><a href="BoardCell.html">BoardCell</a></li><li><a href="Chronometer.html">Chronometer</a></li><li><a href="CircularAnimation.html">CircularAnimation</a></li><li><a href="Client.html">Client</a></li><li><a href="GameController.html">GameController</a></li><li><a href="GameModel.html">GameModel</a></li><li><a href="GameView.html">GameView</a></li><li><a href="LinearAnimation.html">LinearAnimation</a></li><li><a href="Marker.html">Marker</a></li><li><a href="MyBoard.html">MyBoard</a></li><li><a href="MyCylinder.html">MyCylinder</a></li><li><a href="MyCylinder2.html">MyCylinder2</a></li><li><a href="MyCylinderBase.html">MyCylinderBase</a></li><li><a href="MyCylinderBody.html">MyCylinderBody</a></li><li><a href="MyInterface.html">MyInterface</a></li><li><a href="MyPrism.html">MyPrism</a></li><li><a href="MyPrismBody.html">MyPrismBody</a></li><li><a href="MyRectangle.html">MyRectangle</a></li><li><a href="MySceneGraph.html">MySceneGraph</a></li><li><a href="MySphere.html">MySphere</a></li><li><a href="MyTorus.html">MyTorus</a></li><li><a href="MyTriangle.html">MyTriangle</a></li><li><a href="Patch.html">Patch</a></li><li><a href="Piece.html">Piece</a></li><li><a href="Plane.html">Plane</a></li><li><a href="Terrain.html">Terrain</a></li><li><a href="Vehicle.html">Vehicle</a></li><li><a href="Water.html">Water</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jan 06 2019 17:38:21 GMT+0000 (GMT Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

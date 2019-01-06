@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Vehicle.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Vehicle.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ *  Class Vehicle is used to represent a vehicle primitive constructed with NURBS and shaders
+ */
+class Vehicle extends CGFobject {
+
+    /**
+     * Constructor for class Vehicle
+     * @param {Object} scene Scene where the object will be displayed
+     */
+    constructor(scene) {
+        super(scene);
+        this.createPatches();
+        this.cylinder = new MyCylinder2(scene, 20, 10, 0.8, 0.8, 0.4);
+        this.circle = new MyCylinderBase(scene, 20, 0.55);
+        this.backCylinder = new MyCylinder(scene, 20, 10, 0.6, 0.6, 0.1);
+
+        this.explosionTexture = new CGFtexture(this.scene, "./scenes/images/lava.png");
+        this.vertexTexture = new CGFtexture(this.scene, "./scenes/images/height_volcano.jpg");
+        this.explosionVertex = new CGFtexture(this.scene, "scenes/images/explosion_texture.png");
+        this.explosionShaderTop = new CGFshader(this.scene.gl, "waterShader.vert", "terrainShader.frag");
+        this.explosionShaderTop.setUniformsValues({ uSampler2: 6 });
+        this.explosionShaderTop.setUniformsValues({ uSampler1: 5 });
+        this.explosionShaderTop.setUniformsValues({ normScale: 0.2 });
+
+        this.explosionShaderBottom = new CGFshader(this.scene.gl, "propeller.vert", "terrainShader.frag");
+        this.explosionShaderBottom.setUniformsValues({ uSampler2: 4 });
+        this.explosionShaderBottom.setUniformsValues({ uSampler1: 5 });
+        this.explosionShaderBottom.setUniformsValues({ normScale2: 1.2 });
+    };
+
+    /**
+     * Creates the objects of type Patch necessary to construct the vehicle
+     */
+    createPatches() {
+        var controlpointsTop = [
+            [-1.5, -1.5, 0.0],
+            [-1.5, 1.5, 0.0],
+            [0, -1.5, 2.5],
+            [0, 1.5, 2.5],
+            [1.5, -1.5, 0.0],
+            [1.5, 1.5, 0.0]
+        ]
+        this.top = new Patch(this.scene, 3, 2, 20, 20, controlpointsTop);
+        var controlpointsBase = [
+            [-1.5, -1.5, 0.0],
+            [-1.5, 1.5, 0.0],
+            [0, -1.5, 1],
+            [0, 1.5, 1],
+            [1.5, -1.5, 0.0],
+            [1.5, 1.5, 0.0]
+        ]
+        this.base = new Patch(this.scene, 3, 2, 20, 20, controlpointsBase);
+        var controlpointsFrontBase = [
+            [-1.5, 1.5, 0.0],
+            [-0.8, 3, 0.0],
+            [0, 3, 0.0],
+            [0, 1.5, 1],
+            [0, 3, 0.0],
+            [0, 3, 0.0],
+            [1.5, 1.5, 0.0],
+            [0.8, 3, 0.0],
+            [0, 3, 0.0],
+        ]
+        this.frontBase = new Patch(this.scene, 3, 3, 20, 20, controlpointsFrontBase);
+        var controlpointsTopFront = [
+            [-1.5, 1.5, 0.0],
+            [-0.8, 3, 0.0],
+            [0, 3, 0.0],
+            [0, 1.5, 2.5],
+            [0, 3, 0.0],
+            [0, 3, 0.0],
+            [1.5, 1.5, 0.0],
+            [0.8, 3, 0.0],
+            [0, 3, 0.0],
+        ]
+        this.frontTop = new Patch(this.scene, 3, 3, 20, 20, controlpointsTopFront);
+    }
+
+    /**
+     * Displays a rocket propeller
+     * @param {Object} x rocket propeller x coordinate value
+     * @param {Object} y rocket propeller y coordinate value
+     * @param {Object} z rocket propeller z coordinate value
+     */
+    displayRocketPropellers(x, y, z) {
+        this.scene.translate(x, y, z);
+        this.scene.pushMatrix();
+        this.scene.translate(0.15, 0, 0.2);
+        this.scene.setActiveShader(this.explosionShaderTop);
+        this.circle.display();
+        this.scene.rotate(Math.PI, 0, 1, 0);
+        this.scene.pushMatrix();
+        this.scene.setActiveShader(this.explosionShaderBottom);
+        this.circle.display();
+        this.scene.popMatrix();
+        this.scene.popMatrix();
+        this.scene.setActiveShader(this.scene.defaultShader);
+        this.cylinder.display();
+    }
+
+    /**
+     * Display the vehicle and updates the shaderes time factor values
+     */
+    display() {
+        this.scene.pushMatrix();
+        
+        let timeFactor = (Math.sin((this.scene.currTime / 10000) % 256 * 2));
+        let timeFactor2 = (Math.sin((this.scene.currTime / 1000) % 256 * 5));
+        this.explosionShaderTop.setUniformsValues({ time: timeFactor });
+        this.explosionShaderBottom.setUniformsValues({ time2: timeFactor2 });
+
+        this.scene.pushMatrix();
+
+        this.vertexTexture.bind(4);
+        this.explosionTexture.bind(5);
+        this.explosionVertex.bind(6);
+        this.scene.setActiveShader(this.scene.defaultShader);
+        this.scene.rotate(-Math.PI / 2, 1, 0, 0);
+        this.scene.scale(0.5, 0.5, 0.5);
+
+        this.scene.pushMatrix();
+        this.top.display();
+        this.scene.rotate(-Math.PI, 0, 1, 0);
+        this.base.display();
+        this.frontBase.display();
+        this.scene.rotate(-Math.PI, 0, 1, 0);
+        this.frontTop.display();
+        this.scene.rotate(Math.PI, 1, 0, 0);
+        this.frontBase.display();
+        this.scene.rotate(-Math.PI, 0, 1, 0);
+        this.frontTop.display();
+        this.scene.popMatrix();
+
+        this.scene.pushMatrix();
+        this.displayRocketPropellers(2, 1, 0);
+        this.displayRocketPropellers(0, -2, 0);
+        this.displayRocketPropellers(-4.3, 0, 0);
+        this.displayRocketPropellers(0, 2, 0);
+        this.scene.popMatrix();
+
+        this.scene.pushMatrix();
+        this.scene.translate(0,-1,1.2);
+        this.backCylinder.display();
+        this.scene.popMatrix();
+
+        this.scene.popMatrix();
+
+        this.scene.popMatrix();
+
+    }
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Animation.html">Animation</a></li><li><a href="BoardCell.html">BoardCell</a></li><li><a href="Chronometer.html">Chronometer</a></li><li><a href="CircularAnimation.html">CircularAnimation</a></li><li><a href="Client.html">Client</a></li><li><a href="GameController.html">GameController</a></li><li><a href="GameModel.html">GameModel</a></li><li><a href="GameView.html">GameView</a></li><li><a href="LinearAnimation.html">LinearAnimation</a></li><li><a href="Marker.html">Marker</a></li><li><a href="MyBoard.html">MyBoard</a></li><li><a href="MyCylinder.html">MyCylinder</a></li><li><a href="MyCylinder2.html">MyCylinder2</a></li><li><a href="MyCylinderBase.html">MyCylinderBase</a></li><li><a href="MyCylinderBody.html">MyCylinderBody</a></li><li><a href="MyInterface.html">MyInterface</a></li><li><a href="MyPrism.html">MyPrism</a></li><li><a href="MyPrismBody.html">MyPrismBody</a></li><li><a href="MyRectangle.html">MyRectangle</a></li><li><a href="MySceneGraph.html">MySceneGraph</a></li><li><a href="MySphere.html">MySphere</a></li><li><a href="MyTorus.html">MyTorus</a></li><li><a href="MyTriangle.html">MyTriangle</a></li><li><a href="Patch.html">Patch</a></li><li><a href="Piece.html">Piece</a></li><li><a href="Plane.html">Plane</a></li><li><a href="Terrain.html">Terrain</a></li><li><a href="Vehicle.html">Vehicle</a></li><li><a href="Water.html">Water</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jan 06 2019 17:38:21 GMT+0000 (GMT Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

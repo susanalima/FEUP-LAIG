@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Marker.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Marker.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+/**
+ * Class marker is responsible for showing whose turn is it and the game score
+ */
+class Marker extends CGFobject{
+    constructor(scene, center)
+    {
+        super(scene);
+        this.x = center[0];
+        this.y = center[1];
+        this.z = center[2];
+        
+        this.pUnits1 = 0;
+        this.pUnits2 = 0;
+        this.pDozens1 = 0;
+        this.pDozens2 = 0;
+        this.p1banner = new MyRectangle(this.scene, -6.8,-1.5,6.8,1.5);
+        this.p2banner = new MyRectangle(this.scene, -6.8,-1.5,6.8,1.5);
+
+
+        this.indicatorFlag = true;
+
+        this.bodyText = new CGFtexture(this.scene, "./scenes/images/blue.png");
+        this.indicatorText = new CGFtexture(this.scene, "./scenes/images/red.png");
+
+        let tex0 = new CGFtexture(this.scene, "./scenes/images/marker0.png");
+        let tex1 = new CGFtexture(this.scene, "./scenes/images/marker1.png");
+        let tex2 = new CGFtexture(this.scene, "./scenes/images/marker2.png");
+        let tex3 = new CGFtexture(this.scene, "./scenes/images/marker3.png");
+        let tex4 = new CGFtexture(this.scene, "./scenes/images/marker4.png");
+        let tex5 = new CGFtexture(this.scene, "./scenes/images/marker5.png");
+        let tex6 = new CGFtexture(this.scene, "./scenes/images/marker6.png");
+        let tex7 = new CGFtexture(this.scene, "./scenes/images/marker7.png");
+        let tex8 = new CGFtexture(this.scene, "./scenes/images/marker8.png");
+        let tex9 = new CGFtexture(this.scene, "./scenes/images/marker9.png");
+
+        this.bannerText1 = new CGFtexture(this.scene, "./scenes/images/p1banner.png");
+        this.bannerText2 = new CGFtexture(this.scene, "./scenes/images/p2banner.png");
+
+
+        this.textures = [tex0,tex1,tex2,tex3,tex4,tex5,tex6,tex7,tex8,tex9];
+
+        this.body = new MyRectangle(this.scene, -15,-8,15,8);
+        this.back_body = new MyCylinder(this.scene, 4, 1, 11, 11, 3);
+        this.support_body = new MyCylinder(this.scene, 4, 1,3.5,3.5, 3);
+        this.indicator1 = new MyTriangle(this.scene,  -1,0,0,0,1,0,1,0,0);
+        this.indicator2 = new MyTriangle(this.scene,  -1,0,0,0,1,0,1,0,0);
+
+        this.markerUnits1 = new MyRectangle(this.scene, -3,-4.5,3,4.5);
+        this.markerUnits2 = new MyRectangle(this.scene, -3,-4.5,3,4.5);
+        this.markerDozens1 = new MyRectangle(this.scene, -3,-4.5,3,4.5);
+        this.markerDozens2 = new MyRectangle(this.scene, -3,-4.5,3,4.5);
+    }
+
+    /**
+     * Resets the number of wins of both players
+     */
+    resetWins(){
+        this.pUnits1 = 0;
+        this.pUnits2 = 0;
+        this.pDozens1 = 0;
+        this.pDozens2 = 0;
+    }
+
+    /**
+     * Checks if the number of wins of each player surpasses 10 updates the class info accordingly
+     * @param {int} units class member representing units of one of the players score
+     * @param {int} dozens class member representing dozens of one of the players score
+     */
+    checkDozens(units, dozens){
+        if(units >= 10)
+        {
+            dozens++;
+            units = 0;
+        }
+    }
+
+    /**
+     * Switchs the turn
+     */
+    switchPlayer(){
+        this.indicatorFlag = !this.indicatorFlag;
+    }
+
+    /**
+     * Displays both markers needed for the game
+     */
+    display(){
+        this.checkDozens(this.pUnits1, this.pDozens1);
+        this.checkDozens(this.pUnits2, this.pDozens2);
+        
+        this.scene.pushMatrix();
+        this.displayElements();
+        this.scene.rotate(Math.PI, 0,1,0);
+        this.displayElements();
+        this.scene.popMatrix();
+
+
+    }
+
+    /**
+     * Displays the elements of one of the markers
+     */
+    displayElements(){
+        this.scene.pushMatrix();
+    
+        this.scene.translate(this.x, this.y,this.z);
+        this.scene.rotate( Math.PI/3, 0,1,0);
+        this.scene.rotate( -Math.PI/4, 1,0,0);
+        this.scene.scale(0.5,0.5,0.5);
+        //this.scene.rotate( Math.PI/4, 0,1,0);
+        this.scene.translate(30,0,0);
+        this.bodyText.bind();
+        this.body.display();
+
+        this.scene.pushMatrix();
+        this.scene.scale(2,1,1);
+        this.scene.rotate(Math.PI/4,0,0,1);
+        this.scene.translate(0,0,-3);
+        this.back_body.display();
+        this.scene.rotate(-Math.PI/4,0,0,1);
+        this.scene.rotate(Math.PI/2,1,0,0);
+        this.scene.translate(0,-2,0);
+        this.support_body.display();
+        this.scene.popMatrix();
+       
+        this.scene.pushMatrix();
+        this.scene.translate(-5,0,0.01);
+        this.textures[this.pUnits1].bind();
+        this.markerUnits1.display();
+        this.scene.translate(-6.1,0,0.01);
+        this.textures[this.pDozens1].bind();
+        this.markerDozens1.display();
+        this.scene.translate(3,-6,0.01);
+        this.bannerText1.bind();
+        this.p1banner.display();
+        this.scene.popMatrix();
+
+        this.scene.pushMatrix();
+        this.scene.translate(5,0,0.01);
+        this.textures[this.pDozens2].bind();
+        this.markerDozens2.display();
+        this.scene.translate(6.1,0,0.01);
+        this.textures[this.pUnits2].bind();
+        this.markerUnits2.display();
+        this.scene.translate(-3,-6,0.01);
+        this.bannerText2.bind();
+        this.p2banner.display();
+        this.scene.popMatrix();
+
+        this.scene.pushMatrix();
+
+        this.scene.translate(-8,0,0.01);
+        this.scene.translate(0,6,0);
+        this.scene.rotate(Math.PI, 1,0,0);
+
+
+        this.scene.rotate(Math.PI, 0,1,0);
+        this.scene.scale(-1,1,1);
+        this.indicatorText.bind();
+       
+       
+        if(this.indicatorFlag)
+            this.indicator1.display();
+        else{
+            this.scene.translate(16,0,0);
+            this.indicator2.display();
+        }
+        this.scene.popMatrix();
+
+        this.scene.popMatrix();
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Animation.html">Animation</a></li><li><a href="BoardCell.html">BoardCell</a></li><li><a href="Chronometer.html">Chronometer</a></li><li><a href="CircularAnimation.html">CircularAnimation</a></li><li><a href="Client.html">Client</a></li><li><a href="GameController.html">GameController</a></li><li><a href="GameModel.html">GameModel</a></li><li><a href="GameView.html">GameView</a></li><li><a href="LinearAnimation.html">LinearAnimation</a></li><li><a href="Marker.html">Marker</a></li><li><a href="MyBoard.html">MyBoard</a></li><li><a href="MyCylinder.html">MyCylinder</a></li><li><a href="MyCylinder2.html">MyCylinder2</a></li><li><a href="MyCylinderBase.html">MyCylinderBase</a></li><li><a href="MyCylinderBody.html">MyCylinderBody</a></li><li><a href="MyInterface.html">MyInterface</a></li><li><a href="MyPrism.html">MyPrism</a></li><li><a href="MyPrismBody.html">MyPrismBody</a></li><li><a href="MyRectangle.html">MyRectangle</a></li><li><a href="MySceneGraph.html">MySceneGraph</a></li><li><a href="MySphere.html">MySphere</a></li><li><a href="MyTorus.html">MyTorus</a></li><li><a href="MyTriangle.html">MyTriangle</a></li><li><a href="Patch.html">Patch</a></li><li><a href="Piece.html">Piece</a></li><li><a href="Plane.html">Plane</a></li><li><a href="Terrain.html">Terrain</a></li><li><a href="Vehicle.html">Vehicle</a></li><li><a href="Water.html">Water</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jan 06 2019 17:38:21 GMT+0000 (GMT Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
