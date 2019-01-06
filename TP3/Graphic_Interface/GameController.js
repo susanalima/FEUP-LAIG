@@ -82,6 +82,7 @@ class GameController extends CGFobject {
         this.client.requestSwitchPlayer();
         let play = this.model.undoLastPlay();
         this.view.undoPlay(play[0][0], play[0][1], play[1][1]);
+        this.view.counting = true;
     }
 
     /**
