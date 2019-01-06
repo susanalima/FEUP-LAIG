@@ -68,9 +68,10 @@ class Chronometer extends CGFobject{
         this.scene.scale(-1,1,1);
         this.scene.rotate(Math.PI, 0,1,0);
         this.scene.rotate(Math.PI/4, 0,0,1);
-        this.scene.rotate(Math.PI/4, 0,0,1);
-    
+        
+
         this.text2.bind();
+        this.scene.rotate(-Math.PI/4, 0,0,1);
         this.clock.display();
         this.scene.popMatrix();
 
