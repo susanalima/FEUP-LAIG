@@ -80,6 +80,7 @@ class GameController extends CGFobject {
      * Undos the last play
      */
     undoLastPlay() {
+        this.view.updateLastTime();
         this.deselectCurrentPiece();
         this.client.requestSwitchPlayer();
         let play = this.model.undoLastPlay();

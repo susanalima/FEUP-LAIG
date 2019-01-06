@@ -87,7 +87,10 @@ class GameView extends CGFobject {
     stopTimer(){
         this.counting = false;
     }
-
+    
+    updateLastTime(){
+        this.lastTime = this.scene.currTime;
+    }
    
     /**
      * Update the play timer has passes that information to the stopwatch
