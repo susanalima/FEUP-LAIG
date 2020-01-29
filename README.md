@@ -1,11 +1,19 @@
 # FEUP-LAIG
 Projects developed for Graphical Applications Laboratory class.
 
-## First Project
+## First Project and Second Project
+
+Development of a graphics engine in WebGL. 
+
+### First Scene
+
+This scene consists of a small lego inspired room.
 
 ![](https://github.com/susanalima/FEUP-LAIG/blob/master/TP1/scenes/images/readme1.JPG)
 
-## Second Project
+### Second Scene
+
+This scene consists of a small island with a animated spacecraft. This project was developed over the first one by adding shaders (water movement), animations (spaceship movement) and nurbs (spaceship design).
 
 ![](https://github.com/susanalima/FEUP-LAIG/blob/master/TP2/scenes/images/gif1.gif)
 
