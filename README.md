@@ -1,6 +1,8 @@
 # FEUP-LAIG
 Projects developed for Graphical Applications Laboratory class.
 
+Made in colaboration with [Afonso Azevedo](https://github.com/4-Z3r0).
+
 ## First Project and Second Project
 
 Development of a graphics engine in WebGL. 
